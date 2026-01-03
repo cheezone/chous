@@ -1,0 +1,163 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# ========================================
+#  Go projects
+#  Based on: https://github.com/golang-standards/project-layout
+# ========================================
+
+import basic
+
+# Must have Go module file
+must have go.mod
+
+# Core config files for Go projects
+allow [
+  # Go module files
+  go.mod, go.sum, go.work, go.work.sum,
+  
+  # License files (inherited from basic, but explicit here for strict mode)
+  LICENSE*, LICENCE*, COPYING*, COPYRIGHT*,
+  
+  # Go build and tool config
+  Makefile, makefile,
+  
+  # Go linter config
+  golangci.yml, golangci.yaml,
+  
+  # Go test config
+  go.test.sum
+]
+
+# Standard Go project layout directories
+# Reference: https://github.com/golang-standards/project-layout
+allow [
+  # Go Directories
+  cmd, pkg, internal, vendor,
+  
+  # Service Application Directories
+  api,
+  
+  # Web Application Directories
+  web,
+  
+  # Common Application Directories
+  configs, init, scripts, build, deployments, test,
+  
+  # Other Directories
+  docs, tools, examples, third_party, githooks, assets, website
+]
+
+# Go source files
+allow *.go
+
+# ========================================
+#  Standard Go project layout
+# ========================================
+
+# cmd/ - main applications
+# The directory name for each application should match the name of the executable
+# Examples: /cmd/myapp, /cmd/my-app (typically lowercase, may use hyphens or underscores)
+in cmd:
+  allow *.go
+  # Go package names are typically lowercase, may use underscores for multi-word names
+  # Directory names can be flatcase (all lowercase) or snake_case
+  use flatcase, snake_case for dirs *
+
+# pkg/ - library code that's ok to use by external applications
+# Examples: /pkg/mypubliclib, /pkg/my_public_lib
+in pkg:
+  allow *.go
+  use flatcase, snake_case for dirs *
+
+# internal/ - private application and library code
+# Can have /internal/app/myapp and /internal/pkg/myprivlib
+in internal:
+  allow *.go
+  
+  # internal/app/ - actual application code
+  in app:
+    allow *.go
+    use flatcase, snake_case for dirs *
+  
+  # internal/pkg/ - code shared by apps
+  in pkg:
+    allow *.go
+    use flatcase, snake_case for dirs *
+  
+  # Allow other subdirectories in internal
+  use flatcase, snake_case for dirs *
+
+# api/ - OpenAPI/Swagger specs, JSON schema files, protocol definition files
+in api:
+  allow [*.yaml, *.yml, *.json, *.proto, *.pb.go]
+
+# web/ - web application specific components
+# Can have /web/app, /web/static, /web/template
+in web:
+  allow [*.html, *.css, *.js, *.ts, *.tsx, *.vue, *.svelte]
+  use flatcase, snake_case for dirs *
+
+# configs/ - configuration file templates or default configs
+in configs:
+  allow [*.yaml, *.yml, *.json, *.toml, *.ini, *.conf]
+
+# init/ - system init and process manager configs
+in init:
+  allow [*.service, *.conf, *.ini]
+
+# scripts/ - scripts to perform various build, install, analysis, etc operations
+in scripts:
+  allow [*.sh, *.bash, *.py, *.pl, *.rb]
+
+# build/ - packaging and Continuous Integration
+# Can have /build/package and /build/ci
+in build:
+  use flatcase, snake_case for dirs *
+  allow [*.yaml, *.yml, *.json, *.sh, *.bash, *.py, Dockerfile*, *.dockerfile]
+
+# deployments/ - IaaS, PaaS, system and container orchestration deployment configs
+in deployments:
+  allow [*.yaml, *.yml, *.json, *.toml, Dockerfile*, docker-compose.*, *.tf, *.tfvars]
+
+# test/ - additional external test apps and test data
+in test:
+  allow [*.go, *.yaml, *.yml, *.json]
+
+# docs/ - design and user documents
+in docs:
+  allow [*.md, *.txt, *.html, *.pdf]
+
+# tools/ - supporting tools for this project
+in tools:
+  allow *.go
+  use flatcase, snake_case for dirs *
+
+# examples/ - examples for your applications and/or public libraries
+in examples:
+  allow *.go
+  use flatcase, snake_case for dirs *
+
+# third_party/ - external helper tools, forked code and other 3rd party utilities
+in third_party:
+  allow *
+
+# githooks/ - Git hooks
+in githooks:
+  allow [*.sh, *.bash, *.py]
+
+# assets/ - other assets (images, logos, etc)
+in assets:
+  allow [*.png, *.jpg, *.jpeg, *.gif, *.svg, *.ico, *.webp]
+
+# website/ - project's website data
+in website:
+  allow [*.html, *.css, *.js, *.md, *.yaml, *.yml, *.json]
+
+# vendor/ - application dependencies (managed by go mod vendor)
+in vendor:
+  allow *

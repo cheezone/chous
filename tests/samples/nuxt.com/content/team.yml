@@ -1,0 +1,12 @@
+title: The Nuxt Team
+description: The development of Nuxt and its ecosystem is led by an international team.
+navigation: false
+links:
+  - label: Get started
+    size: md
+    color: neutral
+    to: /docs/getting-started/installation
+  - label: Explore examples
+    size: md
+    color: neutral
+    to: /docs/examples

@@ -1,0 +1,5 @@
+# Exclude test files and samples from language statistics
+# These are test fixtures and example projects, not the main codebase
+
+# Exclude entire test directory (contains sample projects in various languages)
+tests/** linguist-vendored

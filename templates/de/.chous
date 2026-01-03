@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Bekämpfe Chaos durch strukturelle Einschränkungen
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# Verhindere, dass KI das Stammverzeichnis als Mülleimer behandelt :)
+# =================================================================================
+
+# Willkürliche Skriptdateierstellung verhindern
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Verhindern, dass das Stammverzeichnis zu einem Durcheinander wird: nur Dateien auf der Whitelist erlauben
+strict files in .
+
+# =================================================================================
+# Jede Ausnahme von heute ist die technische Schuld von morgen.
+# =================================================================================
+
+# Die folgenden Regeln können je nach tatsächlicher Projektsituation angepasst werden
+
+# Spezifische Skripte erlauben (no *.sh Regel überschreiben)
+# allow start.{sh,ps1}
+
+# Sicherstellen, dass erforderliche Projektdateien existieren
+# must have package.json, README.md
+
+# Testdateinamen vereinheitlichen: Mischung von test/ und tests/ verhindern, tests/ konsistent verwenden
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# Testverzeichnis- und Dateinamen vereinheitlichen: tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# Verhindern, dass Protokolldateien verstreut werden: alle .log Dateien müssen im Verzeichnis logs/ sein
+# move *.log to logs
+
+# Beispiel: Wenn Sie ein Deno-Projekt sind, benötigen Sie möglicherweise kein package.json
+# Verwenden Sie optional, um das must have package.json des js Presets zu überschreiben
+# must have deno.json
+# optional package.json
+
+# Komponentennamen: kebab-case und PascalCase erlauben, außer Testdateien
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# Plugin-Namen: numerisches Präfix (z.B. 01.setup.ts) und .client/.server Suffix erlauben
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

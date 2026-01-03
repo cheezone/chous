@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Fight chaos through structural constraints
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# Prevent AI from treating the root directory as a trash can :)
+# =================================================================================
+
+# Prevent arbitrary script file creation
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Prevent root directory from becoming a mess: only allow whitelisted files
+strict files in .
+
+# =================================================================================
+# Every exception today is tomorrow's technical debt.
+# =================================================================================
+
+# The following rules can be adjusted according to the actual project situation
+
+# Allow specific scripts (override no *.sh rule)
+# allow start.{sh,ps1}
+
+# Ensure required project files exist
+# must have package.json, README.md
+
+# Unify test file naming: prevent mixing test/ and tests/, use tests/ consistently
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# Unify test directory and file naming: tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# Prevent log files from scattering: all .log files must be in logs/ directory
+# move *.log to logs
+
+# Example: If you are a Deno project, you may not need package.json
+# Use optional to override js preset's must have package.json
+# must have deno.json
+# optional package.json
+
+# Component naming: allow kebab-case and PascalCase, except test files
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# Plugin naming: allow numeric prefix (e.g., 01.setup.ts) and .client/.server suffix
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

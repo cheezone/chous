@@ -1,0 +1,195 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# ========================================
+#  Nuxt 4 project directory structure
+# ========================================
+# Reference: https://nuxt.com/docs/guide/directory-structure
+
+import js
+
+# Must have Nuxt config file
+must have nuxt.config.{js,ts,mjs}
+
+# Must have app directory
+must have app
+
+# Allow Nuxt standard top-level directories
+allow [public, server, shared, content, modules, app]
+
+# Helper files for nuxt.config.ts imports
+# Not for general utility functions (use app/utils or server/utils or shared/utils instead)
+allow [helpers]
+
+# ========================================
+#  App directory
+# ========================================
+
+in app:
+  # Allow standard app directories and files
+  allow [
+    # Folders in official docs
+    assets, components, composables, layouts,
+    middleware, pages, plugins, utils, types,
+    
+    # Files in official docs
+    app.config.ts, app.vue, error.vue,
+    
+    # Folders in third party
+    constants, styles, i18n
+  ]
+  
+  # Assets - organize into subdirectories
+  # Reference: https://nuxt.com/docs/4.x/directory-structure/app/assets
+  in assets:
+    move *.{css,scss,sass,less,styl} to css
+    move *.{svg,ico} to icons
+    move *.{woff,woff2,ttf,otf,eot} to fonts
+    move *.{png,jpg,jpeg,gif,webp,avif,bmp} to images
+    use kebab-case for dirs *
+  
+  # Components
+  in components:
+    # Default: all .vue files must be PascalCase
+    use PascalCase for files **/*.vue suffix: /(\.(client|server))?$/i
+    # Exception: *.vue in PascalCase directories should be kebab-case
+    use kebab-case for files **/*.vue if-parent-matches PascalCase
+    
+    # Default: all directories must be kebab-case
+    use kebab-case for dirs * except OgImage
+    # Exception: directories containing index.vue can be PascalCase
+    use PascalCase for dirs * if-contains index.vue
+  
+  # Composables
+  in composables:
+    use camelCase, kebab-case for files *.ts
+  
+  # Layouts
+  in layouts:
+    use kebab-case for files *.vue
+  
+  # Pages
+  in pages:
+    use PascalCase for files **/components/**/*.vue suffix: /(\.(client|server))?$/i
+    use kebab-case for files **/*.{vue,js,jsx,mjs,ts,tsx}
+    use kebab-case for dirs *
+  
+  # Plugins
+  in plugins:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs} prefix: /^(\d+\.)?/ suffix: /(\.(client|server))?$/i
+    use kebab-case for dirs *
+  
+  # Middleware
+  in middleware:
+    use kebab-case for files **/*.{ts,js,mjs} prefix: /^(\d+\.)?/ suffix: /(\.global)?$/i
+  
+  # Types
+  in types:
+    use kebab-case for files **/*.{d.ts,ts,js,mjs}
+  
+  # Utils
+  in utils:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs}
+  
+  strict
+
+# ========================================
+#  Server directory
+# ========================================
+
+in server:
+  # Allow standard server directories and files
+  allow [
+    # Folders in official docs
+    api, middleware, plugins, utils, types,
+    
+    # Nitro public assets - automatically served, accessible directly from browser
+    # Reference: https://nitro.build/guide/assets#public-assets
+    public,
+    
+    # Server assets should be stored in server/assets/... and not in app/assets
+    # Reference: https://nuxt.com/docs/4.x/guide/directory-structure/assets#server-assets
+    # Reference: https://nitro.build/guide/assets#server-assets
+    assets,
+    
+    # Nitro features
+    # Reference: https://nitro.build/guide/tasks
+    tasks,
+    
+    # Nitro routes directory - application handlers
+    # Reference: https://nitro.build/guide/routing
+    routes,
+    
+    # Files in official docs
+    tsconfig.json,
+    
+    # @nuxtjs/mcp-toolkit - default directory for MCP server definitions
+    # Reference: https://mcp-toolkit.nuxt.dev/getting-started/configuration
+    mcp, 
+    
+    # Folders in third party
+    db, database, services
+  ]
+  
+  # For `@vue-email/nuxt` users, emails should be stored in server/assets/emails
+  move emails to assets/emails
+  
+  # API - support dynamic routes and HTTP method suffix
+  in api:
+    # Files with HTTP method suffix must be kebab-case
+    use kebab-case for files **/*.{ts,js,mjs} suffix: /\.(get|post|put|delete|patch|head|options)$/i
+    # Files without HTTP method suffix must also be kebab-case
+    use kebab-case for files **/*.{ts,js,mjs}
+    use kebab-case for dirs *
+  
+  # Routes - file names map directly to route paths, flexible naming, no restrictions
+  # Supports dynamic routes ([slug].ts, [...slug].ts), HTTP method suffix (.get.ts), special formats (rss.xml.ts), etc.
+  # No naming restrictions for routes
+  
+  # Middleware
+  in middleware:
+    use kebab-case for files **/*.{ts,js,mjs} prefix: /^\d+\./
+  
+  # Plugins
+  in plugins:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs} prefix: /^\d+\./
+  
+  # Utils
+  in utils:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs}
+  
+  # Types
+  in types:
+    use kebab-case for files **/*.{ts,js,mjs}
+  
+  # MCP - @nuxtjs/mcp-toolkit default directory
+  # Reference: https://mcp-toolkit.nuxt.dev/getting-started/configuration
+  # The module automatically discovers tools, resources, and prompts from:
+  # - {dir}/tools/ - Tool definitions
+  # - {dir}/resources/ - Resource definitions
+  # - {dir}/prompts/ - Prompt definitions
+  in mcp:
+    allow [tools, resources, prompts, *.{ts,js,mjs}]
+    use kebab-case for files **/*.{ts,js,mjs}
+    use kebab-case for dirs *
+  
+  # Services - Business logic services (classes, complex state)
+  # Example: services/file-service/worker-pool.ts
+  # in services:
+  #   use kebab-case for files **/*.{ts,js,mjs}
+  #   use kebab-case for dirs *
+  
+  # DB
+  # in db:
+  #   use kebab-case for files **/*.{ts,js,mjs}
+  #   use kebab-case for dirs *
+  
+  # in database:
+  #   use kebab-case for files **/*.{ts,js,mjs}
+  #   use kebab-case for dirs *
+  
+  strict

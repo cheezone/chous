@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Lute contra o caos através de restrições estruturais
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# Evite que a IA trate o diretório raiz como uma lixeira :)
+# =================================================================================
+
+# Prevenir criação arbitrária de arquivos de script
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Prevenir que o diretório raiz se torne uma bagunça: apenas permitir arquivos na lista branca
+strict files in .
+
+# =================================================================================
+# Cada exceção de hoje é a dívida técnica de amanhã.
+# =================================================================================
+
+# As seguintes regras podem ser ajustadas de acordo com a situação real do projeto
+
+# Permitir scripts específicos (sobrescrever a regra no *.sh)
+# allow start.{sh,ps1}
+
+# Garantir que os arquivos obrigatórios do projeto existam
+# must have package.json, README.md
+
+# Unificar nomenclatura de arquivos de teste: prevenir mistura de test/ e tests/, usar tests/ consistentemente
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# Unificar nomenclatura de diretórios e arquivos de teste: tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# Prevenir que arquivos de log se espalhem: todos os arquivos .log devem estar no diretório logs/
+# move *.log to logs
+
+# Exemplo: Se você é um projeto Deno, pode não precisar de package.json
+# Use optional para sobrescrever o must have package.json do preset js
+# must have deno.json
+# optional package.json
+
+# Nomenclatura de componentes: permitir kebab-case e PascalCase, exceto arquivos de teste
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# Nomenclatura de plugins: permitir prefixo numérico (ex: 01.setup.ts) e sufixo .client/.server
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

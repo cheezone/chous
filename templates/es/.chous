@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Lucha contra el caos a través de restricciones estructurales
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# Evita que la IA trate el directorio raíz como un basurero :)
+# =================================================================================
+
+# Prevenir la creación arbitraria de archivos de script
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Prevenir que el directorio raíz se convierta en un desorden: solo permitir archivos en la lista blanca
+strict files in .
+
+# =================================================================================
+# Cada excepción de hoy es la deuda técnica de mañana.
+# =================================================================================
+
+# Las siguientes reglas se pueden ajustar según la situación real del proyecto
+
+# Permitir scripts específicos (sobrescribir la regla no *.sh)
+# allow start.{sh,ps1}
+
+# Asegurar que existan los archivos requeridos del proyecto
+# must have package.json, README.md
+
+# Unificar el nombrado de archivos de prueba: prevenir la mezcla de test/ y tests/, usar tests/ consistentemente
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# Unificar el nombrado de directorios y archivos de prueba: tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# Prevenir que los archivos de registro se dispersen: todos los archivos .log deben estar en el directorio logs/
+# move *.log to logs
+
+# Ejemplo: Si eres un proyecto Deno, es posible que no necesites package.json
+# Usa optional para sobrescribir el must have package.json del preset js
+# must have deno.json
+# optional package.json
+
+# Nombrado de componentes: permitir kebab-case y PascalCase, excepto archivos de prueba
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# Nombrado de plugins: permitir prefijo numérico (p. ej., 01.setup.ts) y sufijo .client/.server
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

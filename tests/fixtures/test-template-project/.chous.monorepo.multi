@@ -1,0 +1,41 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Monorepo 配置：支持多种工作区类型
+# 
+# 这个配置文件演示了如何使用多个 where 语法来管理不同类型的 monorepo 工作区。
+# 每个 where 指令定义一组工作区，并应用相应的预设和规则。
+# =================================================================================
+
+# Go 工作区配置
+[where:apps/**/go.*]
+
+import basic
+import go
+
+# Go 工作区规则
+must have go.mod
+allow go.mod, go.sum, main.go, *.go, README.md, .gitignore
+
+---
+
+# Nuxt 工作区配置
+[where:apps/**/nuxt.config.ts]
+
+import basic
+import nuxt4
+
+# Nuxt 工作区规则
+must have nuxt.config.ts, package.json, app.vue
+allow nuxt.config.ts, package.json, README.md, .nuxt, .output, node_modules, .gitignore, .env, .env.*
+
+---
+
+# Next.js 工作区配置
+[where:apps/**/next.config.{js,ts}]
+
+import basic
+import nextjs
+
+# Next.js 工作区规则
+must have package.json
+allow package.json, README.md, next.config.*, .next, node_modules, .gitignore

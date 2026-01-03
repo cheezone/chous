@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Combattre le chaos grâce aux contraintes structurelles
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# Empêcher l'IA de traiter le répertoire racine comme une poubelle :)
+# =================================================================================
+
+# Empêcher la création arbitraire de fichiers de script
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Empêcher que le répertoire racine devienne un désordre : n'autoriser que les fichiers de la liste blanche
+strict files in .
+
+# =================================================================================
+# Chaque exception d'aujourd'hui est la dette technique de demain.
+# =================================================================================
+
+# Les règles suivantes peuvent être ajustées selon la situation réelle du projet
+
+# Autoriser des scripts spécifiques (remplacer la règle no *.sh)
+# allow start.{sh,ps1}
+
+# S'assurer que les fichiers requis du projet existent
+# must have package.json, README.md
+
+# Unifier la dénomination des fichiers de test : empêcher le mélange de test/ et tests/, utiliser tests/ de manière cohérente
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# Unifier la dénomination des répertoires et fichiers de test : tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# Empêcher la dispersion des fichiers de journal : tous les fichiers .log doivent être dans le répertoire logs/
+# move *.log to logs
+
+# Exemple : Si vous êtes un projet Deno, vous n'avez peut-être pas besoin de package.json
+# Utilisez optional pour remplacer le must have package.json du preset js
+# must have deno.json
+# optional package.json
+
+# Dénomination des composants : autoriser kebab-case et PascalCase, sauf les fichiers de test
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# Dénomination des plugins : autoriser le préfixe numérique (par ex. 01.setup.ts) et le suffixe .client/.server
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

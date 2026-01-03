@@ -1,0 +1,147 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# ========================================
+#  Next.js project directory structure
+# ========================================
+# Reference: https://nextjs.org/docs/app/getting-started/project-structure
+
+import js
+
+# Must have Next.js config file
+must have next.config.{js,mjs,ts}
+
+# Must have app directory
+must have app
+
+# Next.js standard top-level directories
+allow [
+  # Common project organization directories
+  app, pages, public, src,
+
+  # Generalized placeholders mentioned in docs
+  components, lib, utils, hooks, types, styles,
+
+  # Next.js specific root-level files
+  # Reference docs:
+  # - instrumentation.ts / instrumentation-client.ts (monitoring and analytics)
+  # - instrumentation.node.ts (OpenTelemetry: only loaded in Node.js runtime)
+  # - middleware.ts (deprecated, changed to proxy.ts in v16.0.0, but still supported for backward compatibility)
+  # - proxy.ts (request proxy, renamed from middleware in v16.0.0)
+  # - mdx-components.tsx (MDX support)
+  # - polyfills.ts (browser patches)
+  # - next-env.d.ts (Next.js type declarations)
+  instrumentation.{ts,js,mjs,cjs},
+  instrumentation-client.{ts,js,mjs,cjs},
+  instrumentation.node.{ts,js,mjs,cjs},
+  middleware.{ts,js,mjs,cjs},
+  proxy.{ts,js,mjs,cjs},
+  mdx-components.{tsx,jsx,js},
+  polyfills.{ts,js,mjs,cjs},
+  next-env.d.ts,
+
+  # Common lowercase root-level docs in Next.js example projects
+  # basic.chous only allows README*.md / LICENSE.md (uppercase), but Next.js projects often use readme.md / license.md
+  readme*.md, license.md
+]
+
+# ========================================
+#  App directory
+# ========================================
+
+in app:
+  # Allow App Router special files
+  # In Next.js App Router, any directory in app/ can be a route, so we don't restrict directory names
+  # Only files are restricted to special route files and metadata files
+  allow [
+    # Route files with special meaning in App Router (support all extensions)
+    layout.{tsx,ts,jsx,js}, page.{tsx,ts,jsx,js}, loading.{tsx,ts,jsx,js},
+    not-found.{tsx,ts,jsx,js}, error.{tsx,ts,jsx,js}, global-error.{tsx,ts,jsx,js},
+    route.{tsx,ts,jsx,js}, template.{tsx,ts,jsx,js}, default.{tsx,ts,jsx,js},
+    forbidden.{tsx,ts,jsx,js}, unauthorized.{tsx,ts,jsx,js},
+    # Metadata files (image formats and generated script files)
+    favicon.{ico,jpg,jpeg,png,svg,js,ts,tsx}, icon.{ico,jpg,jpeg,png,svg,js,ts,tsx},
+    apple-icon.{ico,jpg,jpeg,png,svg,js,ts,tsx},
+    opengraph-image.{ico,jpg,jpeg,png,svg,js,ts,tsx}, twitter-image.{ico,jpg,jpeg,png,svg,js,ts,tsx},
+    sitemap.{xml,txt,json,webmanifest,js,ts}, robots.{xml,txt,json,webmanifest,js,ts},
+    manifest.{xml,txt,json,webmanifest,js,ts},
+    # Common files in app directory
+    globals.css,
+    # Documentation files (readme.mdx, readme.md)
+    readme.{mdx,md}
+  ]
+  
+  # Only restrict files, not directories
+  # All directories in app/ can be routes (any name is allowed for route folders)
+  # Files are restricted above, but directories are free-form routes
+  strict files in app
+  
+  # Route files - special naming convention
+  # These file names have special meaning in App Router
+  use kebab-case for files **/{layout,page,loading,not-found,error,global-error,route,template,default,forbidden,unauthorized}.{tsx,ts,jsx,js}
+  
+  # Metadata file conventions
+  # Supports image formats and generated script files
+  use kebab-case for files **/{favicon,icon,apple-icon,opengraph-image,twitter-image}.{ico,jpg,jpeg,png,svg,js,ts,tsx}
+  use kebab-case for files **/{sitemap,robots,manifest}.{xml,txt,json,webmanifest,js,ts}
+  
+  # Components - support kebab-case (Next.js recommended) and PascalCase
+  in components:
+    # Suffix only matches .test/.spec/.stories (without file extension, as getNameWithoutExtension handles compound extensions)
+    use kebab-case, PascalCase for files **/*.{tsx,ts,jsx,js} suffix: /(\.(test|spec|stories))?$/i
+    # Make _ prefix optional for directories
+    use kebab-case, PascalCase for dirs * prefix: /^(_)?/
+  
+  in _components:
+    use kebab-case, PascalCase for files **/*.{tsx,ts,jsx,js} suffix: /(\.(test|spec|stories))?$/i
+    use kebab-case, PascalCase for dirs * prefix: /^(_)?/
+  
+  in _ui:
+    use kebab-case, PascalCase for files **/*.{tsx,ts,jsx,js} suffix: /(\.(test|spec|stories))?$/i
+    use kebab-case, PascalCase for dirs * prefix: /^(_)?/
+  
+  # API routes
+  in api:
+    use kebab-case for files **/*.{ts,js,mjs} suffix: /\.(get|post|put|delete|patch|head|options|route)$/i
+    use kebab-case for dirs *
+  
+  # Dynamic routes, route groups, private directories, parallel routes, intercepting routes
+  # These are defined by directory names, chous currently skips validation of these special symbols
+  # Examples: [slug], (group), @parallel, [...catchall], etc.
+  # Note: We allow all directories (routes) but restrict files to special route files
+  # Use permissive mode: directories are free-form (any directory can be a route), files are restricted
+
+# ========================================
+#  Root-level directories
+# ========================================
+
+# Components - support kebab-case (Next.js recommended) and PascalCase
+in components:
+  use kebab-case, PascalCase for files **/*.{tsx,ts,jsx,js} suffix: /(\.(test|spec|stories))?$/i
+  use kebab-case, PascalCase for dirs * prefix: /^(_)?/
+
+# Lib / Utils / Hooks - support camelCase and kebab-case
+in lib:
+  use camelCase, kebab-case for files **/*.{tsx,ts,jsx,js,mjs}
+  use kebab-case for dirs *
+
+in utils:
+  use camelCase, kebab-case for files **/*.{tsx,ts,jsx,js,mjs}
+  use kebab-case for dirs *
+
+in hooks:
+  use camelCase, kebab-case for files **/*.{tsx,ts,jsx,js,mjs}
+  use kebab-case for dirs *
+
+# Types - kebab-case
+in types:
+  use kebab-case for files **/*.{ts,js,mjs}
+  use kebab-case for dirs *
+
+# Styles - directories kebab-case
+in styles:
+  use kebab-case for dirs *

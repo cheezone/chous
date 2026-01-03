@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# 구조적 제약을 통해 혼란과 싸우기
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# AI가 루트 디렉토리를 쓰레기통으로 취급하는 것을 방지 :)
+# =================================================================================
+
+# 임의의 스크립트 파일 생성 방지
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# 루트 디렉토리가 엉망이 되는 것을 방지: 화이트리스트에 있는 파일만 허용
+strict files in .
+
+# =================================================================================
+# 오늘의 모든 예외는 내일의 기술 부채입니다.
+# =================================================================================
+
+# 다음 규칙은 프로젝트의 실제 상황에 따라 조정할 수 있습니다
+
+# 특정 스크립트 허용 (no *.sh 규칙 덮어쓰기)
+# allow start.{sh,ps1}
+
+# 프로젝트에 필요한 파일이 존재하는지 확인
+# must have package.json, README.md
+
+# 테스트 파일 명명 통일: test/와 tests/ 혼용 방지, tests/를 일관되게 사용
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# 테스트 디렉토리 및 파일 명명 통일: tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# 로그 파일 분산 방지: 모든 .log 파일은 logs/ 디렉토리에 있어야 합니다
+# move *.log to logs
+
+# 예제: Deno 프로젝트인 경우 package.json이 필요하지 않을 수 있습니다
+# optional을 사용하여 js 프리셋의 must have package.json 덮어쓰기
+# must have deno.json
+# optional package.json
+
+# 컴포넌트 명명: 테스트 파일을 제외하고 kebab-case와 PascalCase 허용
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# 플러그인 명명: 숫자 접두사(예: 01.setup.ts)와 .client/.server 접미사 허용
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

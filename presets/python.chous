@@ -1,0 +1,65 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# ========================================
+#  Python projects
+# ========================================
+
+import basic
+
+# Core config files for Python projects
+allow [
+  # Python packaging and dependency management
+  pyproject.toml, setup.py, setup.cfg, MANIFEST.in,
+  requirements*.txt, requirements*.in,
+  Pipfile, Pipfile.lock,
+  poetry.lock, poetry.toml,
+  pdm.lock, pdm.toml,
+  pip-tools-compile.txt,
+  
+  # Python type checking and linting config
+  pyrightconfig.json, pyproject.toml,
+  mypy.ini,
+  pylintrc,
+  flake8, setup.cfg,
+  pytest.ini, tox.ini,
+  
+  # Python runtime config
+  runtime.txt, Procfile,
+  
+  # Python package manager lockfiles
+  poetry.lock, Pipfile.lock, pdm.lock
+]
+
+# Common directories for Python projects
+allow [src, tests, test, scripts, script, lib, libs, app, apps, package, packages]
+
+# Python source files
+allow *.py
+
+# Python package marker files
+allow [__init__.py, __main__.py]
+
+# ========================================
+#  Source directory structure
+# ========================================
+
+in src:
+  allow *.py
+  allow [__init__.py, __main__.py]
+
+# ========================================
+#  Test directory structure
+# ========================================
+
+in tests:
+  allow *.py
+  allow [__init__.py, conftest.py]
+
+in test:
+  allow *.py
+  allow [__init__.py, conftest.py]

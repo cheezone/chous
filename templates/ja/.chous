@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# 構造的制約を通じて混乱と戦う
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# AI がルートディレクトリをゴミ箱として扱うのを防ぐ :)
+# =================================================================================
+
+# 任意のスクリプトファイルの作成を防ぐ
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# ルートディレクトリが混乱になるのを防ぐ：ホワイトリストにあるファイルのみを許可
+strict files in .
+
+# =================================================================================
+# 今日のすべての例外は、明日の技術的負債です。
+# =================================================================================
+
+# 以下のルールは、プロジェクトの実際の状況に応じて調整できます
+
+# 特定のスクリプトを許可（no *.sh ルールを上書き）
+# allow start.{sh,ps1}
+
+# プロジェクトに必要なファイルが存在することを確認
+# must have package.json, README.md
+
+# テストファイルの命名を統一：test/ と tests/ の混在を防ぎ、tests/ を一貫して使用
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# テストディレクトリとファイルの命名を統一：tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# ログファイルの散在を防ぐ：すべての .log ファイルは logs/ ディレクトリに配置する必要があります
+# move *.log to logs
+
+# 例：Deno プロジェクトの場合、package.json が必要ない場合があります
+# optional を使用して js プリセットの must have package.json を上書き
+# must have deno.json
+# optional package.json
+
+# コンポーネントの命名：テストファイルを除き、kebab-case と PascalCase を許可
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# プラグインの命名：数値プレフィックス（例：01.setup.ts）と .client/.server サフィックスを許可
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

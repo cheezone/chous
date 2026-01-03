@@ -1,0 +1,74 @@
+{% extends "users/base.html" %}
+{% load users_tags %}
+
+{% block page_title %}Nominations | {{ SITE_INFO.site_name }}{% endblock %}
+
+{% block body_attributes %}class="psf users default-page"{% endblock %}
+
+
+{% block main-nav_attributes %}psf-navigation{% endblock %}
+
+
+{% block content_attributes %}with-right-sidebar{% endblock %}
+
+
+{% block user_content %}
+
+<div>
+  <h1>Your History of PSF Board Nominations</h1>
+
+  {% for election, nominations in elections.items %}
+  <h2><a href="{% url 'nominations:nominees_list' election=election.slug %}">{{ election.name }} Election</a></h2>
+
+  {% if nominations.nominations_recieved|length > 0 %}
+  <h3>Nominations Received</h3>
+  <ul>
+    {% for nomination in nominations.nominations_recieved %}
+    <li>
+    {% if nomination.nominator == request.user %}
+    Self Nomination
+    {% else %}
+    Nomination from {{ nomination.nominator.first_name }} {{ nomination.nominator.last_name }} {% if nomination.accepted %}<b>Accepted</b>{% else %}<i>Not accepted!</i>{% endif %}
+    {% endif %}
+    <a href="{{ nomination.get_absolute_url }}">
+      {% if nomination.is_editable %}
+          {% if nomination.nominator == request.user %}
+          View / Edit
+          {% else %}
+          View / Manage Acceptance
+          {% endif %}
+      {% else %}
+      View
+      {% endif %}
+    </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+
+  {% if nominations.nominations_made|length > 0 %}
+  <h3>Nominations Made</h3>
+  <ul>
+    {% for nomination in nominations.nominations_made %}
+    <li>
+    {% if nomination.nominee %}
+    {{ nomination.nominee.name }}
+    {% else %}
+    {{ nomination.name }}
+    {% endif %}
+    <a href="{{ nomination.get_absolute_url }}">
+      {% if nomination.is_editable %}
+      View/Edit
+      {% else %}
+      View
+      {% endif %}
+    </a>
+    </li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+  <br>
+  {% endfor %}
+</div>
+
+{% endblock user_content %}

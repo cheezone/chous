@@ -1,0 +1,50 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# Monorepo 配置：针对所有 Nuxt 工作区的通用规则
+# 
+# 这个配置文件演示了如何使用 where 语法来管理 monorepo 中大量同类型的工作区。
+# 对于有 100+ 个 Nuxt 应用的 monorepo，这个配置可以统一管理所有应用的规则。
+# =================================================================================
+
+# 使用 where 语法匹配所有包含 nuxt.config.ts 的目录（Nuxt 工作区）
+# 这会自动找到 apps/ 目录下所有包含 nuxt.config.ts 的子目录作为工作区根
+[where:apps/**/nuxt.config.ts]
+
+import basic
+import nuxt4
+
+# =================================================================================
+# 针对所有 Nuxt 工作区的通用规则
+# =================================================================================
+
+# 确保每个 Nuxt 工作区都有必需的文件
+must have nuxt.config.ts, package.json, app.vue
+
+# Nuxt 工作区根目录只允许特定文件
+# 注意：.nuxt 和 .output 是 Nuxt 的构建输出目录，node_modules 是依赖目录
+allow nuxt.config.ts, package.json, README.md, .nuxt, .output, node_modules, .gitignore, .env, .env.*
+strict files in .
+
+# 组件目录命名规范
+in components:
+  use PascalCase for dirs *
+  use kebab-case, PascalCase for files **/*.{vue,ts,tsx}
+
+# 页面目录命名规范
+in pages:
+  use kebab-case for files **/*.vue
+
+# 布局目录命名规范
+in layouts:
+  use kebab-case for files **/*.vue
+
+# 中间件目录命名规范
+in middleware:
+  use kebab-case for files **/*.{ts,js}
+
+# 工具目录命名规范
+in utils:
+  use kebab-case for files **/*.{ts,js}
+
+# 防止在 Nuxt 工作区根目录创建脚本文件
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py

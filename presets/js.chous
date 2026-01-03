@@ -1,0 +1,50 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+import basic
+
+# ========================================
+#  JavaScript/TypeScript projects
+# ========================================
+
+# Must have package.json
+must have package.json
+
+# Core config files for JS/TS projects
+allow [package.json, {ts,js}config.json]
+
+# Toolchain config files for JS/TS projects (specific files not covered by *.config.*)
+allow [components.json]
+
+# Common directories for JS/TS projects
+allow [src, test, tests, script, scripts, spec, specs]
+
+# Vite specific config files
+allow [vitest.workspace.ts]
+
+# Monorepo specific config files
+allow [turbo.json]
+
+# ========================================
+#  Package manager files
+# ========================================
+# Allowed package manager lockfiles and config files
+# Note: We allow all common package manager files since linting lockfiles has no practical value
+allow [
+  # NPM
+  package-lock.json, npm-shrinkwrap.json,
+  # PNPM (Exclude .pnpmfile.cjs and .npmrc because they start with a dot)
+  pnpm-lock.yaml, pnpm-workspace.yaml,
+  # Yarn
+  yarn.lock,
+  # Bun
+  bun.lock, bun.lockb, bunfig.toml
+]
+
+# Directory for dependency patches
+# Used by pnpm, bun, yarn to fix third-party packages
+allow [patches]

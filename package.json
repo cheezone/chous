@@ -1,0 +1,71 @@
+{
+  "name": "chous",
+  "version": "0.1.0",
+  "module": "dist/index.mjs",
+  "type": "module",
+  "private": false,
+  "bin": {
+    "chous": "dist/cli.mjs"
+  },
+  "scripts": {
+    "dev": "tsdown --watch",
+    "build": "tsdown  --minify",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint --quiet ./src",
+    "run-typesafe-i18n-in-background": "typesafe-i18n"
+  },
+  "description": "The Elegant File Structure Linter",
+  "author": "Cheez Lin <https://cheez.tech>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cheezone/chous.git"
+  },
+  "homepage": "https://github.com/cheezone/chous#readme",
+  "bugs": {
+    "url": "https://github.com/cheezone/chous/issues"
+  },
+  "keywords": [
+    "lint",
+    "linter",
+    "filesystem",
+    "file-structure",
+    "cli",
+    "i18n"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.0.3",
+    "oxlint": "^1.36.0",
+    "tsdown": "^0.18.4",
+    "typescript": "^5.9.3"
+  },
+  "types": "dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "presets",
+    "templates",
+    "README.md",
+    "README.zh.md",
+    "public",
+    "LICENSE"
+  ],
+  "dependencies": {
+    "ignore": "^7.0.5",
+    "tinyglobby": "^0.2.15",
+    "typesafe-i18n": "^5.26.2"
+  }
+}

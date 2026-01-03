@@ -1,0 +1,110 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# strict mode for markdown files
+strict files for ./*.md 
+
+# ========================================
+#  Common project config files
+# ========================================
+
+# allow myself :)
+allow .chous
+
+# license files
+allow [LICENSE*, LICENCE*, COPYING*, COPYRIGHT*, CODEOWNERS]
+
+# common config files
+# This glob pattern covers most standard config files like:
+# - tsconfig.json, vite.config.ts, webpack.config.js, etc.
+allow [
+  *.config.{ts,js,cjs,mjs,json,jsonc,json5,toml,ini,yaml,yml,ymlc}
+]
+
+# documentation files
+allow [
+  README*.md, CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, 
+  GOVERNANCE.md, SUPPORT.md,
+  AGENTS.md, GUIDE.md
+]
+
+# deployment and ci config files
+# These files are NOT covered by the *.config.* glob above, so we list them explicitly:
+allow [
+  # Renovate: https://docs.renovatebot.com/configuration-options/
+  renovate.json,
+
+  # Docker: https://docs.docker.com/compose/compose-file/
+  Dockerfile*, docker-compose.{yml,yaml},
+
+  # Nginx: https://nginx.org/en/docs/
+  nginx.conf,
+
+  # Cloudflare Pages/Workers: https://developers.cloudflare.com/pages/functions/wrangler-configuration/
+  # Cloudflare Pages redirects/headers: https://developers.cloudflare.com/pages/configuration/redirects/
+  wrangler.{toml,json,jsonc}, wrangler.example.{toml,json,jsonc}, _redirects, _headers,
+
+  # EdgeOne Pages: https://pages.edgeone.ai/document/edgeone-json
+  edgeone.json,
+
+  # Vercel: https://vercel.com/docs/project-configuration
+  vercel.json, vercel.yaml,
+
+  # Netlify: https://docs.netlify.com/configure-builds/file-based-configuration/
+  netlify.toml,
+
+  # Fly.io: https://fly.io/docs/reference/configuration/
+  fly.toml,
+
+  # GitHub Pages: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site
+  CNAME,
+
+  # Railway: https://docs.railway.com/reference/config-as-code
+  railway.json, railway.toml,
+
+  # Render: https://render.com/docs/yaml-spec
+  render.yaml,
+
+  # AWS Amplify: https://docs.aws.amazon.com/amplify/latest/userguide/build-settings.html
+  amplify.yml,
+
+  # AWS App Runner: https://docs.aws.amazon.com/apprunner/latest/dg/config-file.html
+  apprunner.yaml,
+
+  # AWS Elastic Beanstalk: https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/single-container-docker-configuration.html
+  Dockerrun.aws.json,
+
+  # AWS SAM: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html
+  template.yaml,
+
+  # CapRover: https://caprover.com/docs/captain-definition-file.html
+  captain-definition,
+
+  # Coolify: https://coolify.io/docs
+  coolify.yml,
+
+  # Firebase Hosting: https://firebase.google.com/docs/hosting/full-config
+  firebase.json,
+
+  # Google App Engine: https://docs.cloud.google.com/appengine/docs/flexible/reference/app-yaml
+  app.yaml, cron.yaml, dispatch.yaml, index.yaml
+
+  # Helm: https://helm.sh/docs/topics/charts/
+  Chart.yaml, values.yaml,
+
+  # Heroku: https://devcenter.heroku.com/articles/procfile
+  Procfile,
+
+  # Kustomize: https://kubectl.docs.kubernetes.io/references/kustomize/glossary/#kustomization
+  kustomization.yaml,
+
+  # Nixpacks: https://nixpacks.com/docs/configuration/file
+  nixpacks.toml,
+
+  # Serverless Framework: https://www.serverless.com/framework/docs/providers/aws/guide/serverless.yml
+  serverless.yml
+]

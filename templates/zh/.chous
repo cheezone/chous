@@ -1,0 +1,54 @@
+# =================================================================================
+# chous by Cheez Lin <https://cheez.tech>
+# 通过结构约束来对抗混乱
+# =================================================================================
+
+import basic
+
+# =================================================================================
+# 阻止人工智能把根目录当成垃圾桶 :)
+# =================================================================================
+
+# 禁止随意创建脚本文件
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# 防止根目录变成垃圾场：只允许白名单文件
+strict files in .
+
+# =================================================================================
+# 今天的每个例外，都是明天的技术债。
+# =================================================================================
+
+# 以下的规则可以根据项目的实际情况进行调整
+
+# 允许特定脚本（覆盖 no *.sh 规则）
+# allow start.{sh,ps1}
+
+# 确保项目必需文件存在
+# must have package.json, README.md
+
+# 统一测试文件命名：防止 test/ 和 tests/ 混用，统一用 tests/
+# rename test, specs, spec to tests
+# rename tests/**/*.{spec,tests}.ts to tests/**/*.test.ts
+
+# 统一测试目录和文件命名：tests/user-service/user-service.test.ts
+# in tests:
+#   use kebab-case for dirs *
+#   use kebab-case for files **/*.test.ts
+
+# 防止日志文件散落：所有 .log 文件必须放在 logs/ 目录
+# move *.log to logs
+
+# 示例：假设你是 Deno 项目并不一定需要 package.json
+# 用 optional 覆盖 js 预设的 must have package.json
+# must have deno.json
+# optional package.json
+
+# 组件命名：允许 kebab-case 和 PascalCase，但测试文件例外
+# in exampleComponents:
+#   use kebab-case, PascalCase for files **/*.{tsx,ts} except **/*.test.ts
+#   use PascalCase for dirs *
+
+# 插件命名：允许数字前缀（如 01.setup.ts）和 .client/.server 后缀
+# in examplePlugins:
+#   use kebab-case for files **/*.ts prefix: /^\d+\./ suffix: /\.(client|server)$/i

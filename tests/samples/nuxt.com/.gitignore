@@ -1,0 +1,24 @@
+node_modules
+.pnpm-store
+*.log
+.nuxt
+nuxt.d.ts
+dist
+.output
+.env
+.DS_STORE
+.history
+.cache
+.data
+.eslintcache
+
+# Local Netlify folder
+.netlify
+.vercel
+
+# Local editor
+*.code-workspace
+.idea/
+
+.wrangler
+test-results/
