@@ -17,6 +17,7 @@
     "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {
+    "pre-commit": "bun run typecheck",
     "commit-msg": "bunx commitlint --edit"
   },
   "description": "The Elegant File Structure Linter",

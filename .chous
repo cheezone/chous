@@ -1,0 +1,8 @@
+import basic
+import js
+
+# Prevent arbitrary script file creation
+no *.sh, *.bash, *.zsh, *.fish, *.ps1, *.psm1, *.cmd, *.bat, *.py
+
+# Prevent root directory from becoming a mess: only allow whitelisted files
+strict files in .

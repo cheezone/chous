@@ -5,3 +5,4 @@
  */
 export const APP_NAME = "chous";
 export const APP_CONFIG_FILE_NAME = ".chous";
+export const APP_IGNORE_FILE_NAME = ".chousignore";

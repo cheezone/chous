@@ -3,6 +3,7 @@ import { existsSync } from "node:fs";
 import { basename, dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
+import { APP_IGNORE_FILE_NAME } from "./constants";
 
 export const DEFAULT_IGNORE_DIRS = new Set([
   "node_modules",
@@ -140,7 +141,7 @@ export async function listTopLevel(root: string, opts?: { gitignore?: boolean })
 export async function loadChousIgnorePatterns(root: string): Promise<string[]> {
   const patterns: string[] = [];
   try {
-    const chousignorePath = resolve(root, ".chousignore");
+    const chousignorePath = resolve(root, APP_IGNORE_FILE_NAME);
     if (!existsSync(chousignorePath)) return patterns;
 
     const content = await readFile(chousignorePath, "utf-8");

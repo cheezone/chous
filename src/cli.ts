@@ -86,10 +86,16 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     else if (a === "--strict" || a === "-s") opts.strict = true;
     else if (a === "--lang" || a === "-l") {
       const code = argv[i + 1];
-      const supportedLangs = locales.join(" / ");
+      const supportedLangs = `${locales.join(" / ")} / auto`;
       if (!code) throw new Error(String(LL.cli.error.missingLangValue({ supported: supportedLangs })));
-      if (!isLocale(code)) throw new Error(String(LL.cli.error.unsupportedLang({ code, supported: supportedLangs })));
-      opts.lang = code;
+      if (code === "auto") {
+        // "auto" means use system language detection
+        opts.lang = "auto";
+      } else if (!isLocale(code)) {
+        throw new Error(String(LL.cli.error.unsupportedLang({ code, supported: supportedLangs })));
+      } else {
+        opts.lang = code;
+      }
       i++;
     }
     else if (a === "--no-color") opts.color = false;
@@ -209,11 +215,6 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
   const cursorDir = resolve(cwd, ".cursor");
   const hooksJsonPath = resolve(cursorDir, "hooks.json");
 
-  // Check if already exists
-  if (existsSync(hooksJsonPath)) {
-    return { code: 0, installed: false };
-  }
-
   // Create .cursor directory if it doesn't exist
   try {
     if (!existsSync(cursorDir)) {
@@ -223,22 +224,87 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
     // Ignore error, let writeFileSync handle it
   }
 
-  // Create hooks.json content
-  const hooksJson = {
-    version: 1,
-    hooks: {
-      afterFileEdit: [
-        {
-          command: `${APP_NAME} cursor after-edit`
-        }
-      ],
-      stop: [
-        {
-          command: `${APP_NAME} cursor stop`
-        }
-      ]
+  // Read existing hooks.json if it exists
+  let existingHooks: any = null;
+  if (existsSync(hooksJsonPath)) {
+    try {
+      const content = readFileSync(hooksJsonPath, "utf8");
+      existingHooks = JSON.parse(content);
+    } catch (err: any) {
+      if (verbose) {
+        console.error(`Failed to read existing hooks.json: ${err.message}`);
+      }
+      // Continue with creating new file
     }
+  }
+
+  // Prepare chous hooks
+  const chousAfterEditHook = {
+    command: `npx ${APP_NAME} cursor after-edit -l auto`
   };
+  const chousStopHook = {
+    command: `npx ${APP_NAME} cursor stop -l auto`
+  };
+
+  // Merge with existing hooks or create new
+  let hooksJson: any;
+  if (existingHooks && existingHooks.hooks) {
+    // Merge with existing hooks
+    hooksJson = {
+      version: existingHooks.version || 1,
+      hooks: {
+        ...existingHooks.hooks
+      }
+    };
+
+    // Check if chous hooks already exist
+    const afterFileEdit = hooksJson.hooks.afterFileEdit || [];
+    const stop = hooksJson.hooks.stop || [];
+
+    // Check if chous hooks are already installed with correct format (npx and -l auto)
+    const hasAfterEdit = Array.isArray(afterFileEdit) && afterFileEdit.some(
+      (hook: any) => hook.command && 
+        hook.command.includes(`${APP_NAME} cursor after-edit`) &&
+        hook.command.includes('npx') &&
+        hook.command.includes('-l auto')
+    );
+    const hasStop = Array.isArray(stop) && stop.some(
+      (hook: any) => hook.command && 
+        hook.command.includes(`${APP_NAME} cursor stop`) &&
+        hook.command.includes('npx') &&
+        hook.command.includes('-l auto')
+    );
+
+    if (hasAfterEdit && hasStop) {
+      // Already installed with correct format
+      return { code: 0, installed: false };
+    }
+
+    // Remove old chous hooks if they exist with wrong format
+    const filteredAfterEdit = Array.isArray(afterFileEdit) 
+      ? afterFileEdit.filter((hook: any) => 
+          !hook.command || !hook.command.includes(`${APP_NAME} cursor after-edit`)
+        )
+      : [];
+    const filteredStop = Array.isArray(stop)
+      ? stop.filter((hook: any) => 
+          !hook.command || !hook.command.includes(`${APP_NAME} cursor stop`)
+        )
+      : [];
+
+    // Add chous hooks with correct format
+    hooksJson.hooks.afterFileEdit = [...filteredAfterEdit, chousAfterEditHook];
+    hooksJson.hooks.stop = [...filteredStop, chousStopHook];
+  } else {
+    // Create new hooks.json
+    hooksJson = {
+      version: 1,
+      hooks: {
+        afterFileEdit: [chousAfterEditHook],
+        stop: [chousStopHook]
+      }
+    };
+  }
 
   try {
     writeFileSync(hooksJsonPath, JSON.stringify(hooksJson, null, 2) + "\n", { encoding: "utf8" });
@@ -635,7 +701,8 @@ async function main() {
 
   const configPath = resolve(opts.cwd, opts.configPath ?? APP_CONFIG_FILE_NAME);
   if (opts.command === "init") {
-    const lang = opts.lang ?? preLang;
+    // If lang is "auto", use system language detection
+    const lang = opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang);
     const r = runInit(LL, opts.cwd, configPath, lang);
     process.exitCode = r.code;
     return;
@@ -648,7 +715,8 @@ async function main() {
       return;
     }
     if (opts.cursorSubcommand === "after-edit" || opts.cursorSubcommand === "stop") {
-      const lang = opts.lang ?? preLang;
+      // If lang is "auto", use system language detection
+      const lang = opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang);
       await handleCursorHook(opts.cursorSubcommand, opts, LL, lang);
       return;
     }
