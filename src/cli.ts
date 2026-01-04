@@ -15,9 +15,10 @@ import { formatFsLintError, isFsLintError } from "./errors";
 import { detectSystemLang } from "./runtime";
 import { fileURLToPath } from "node:url";
 import { glob } from "tinyglobby";
-import { DEFAULT_IGNORE_DIRS } from "./fsutil";
+import { DEFAULT_IGNORE_DIRS, loadChousIgnorePatterns } from "./fsutil";
 import { stat } from "node:fs/promises";
 import { APP_NAME, APP_CONFIG_FILE_NAME } from "./constants";
+import ignore from "ignore";
 
 // Read version from package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -779,11 +780,20 @@ async function main() {
     // Subdirectory config files: recursively find all config files in subdirectories
     // If a root has config file inside, use it (no longer use parent rules to lint that root)
     const delegated = new Set<string>();
+    
+    // Load .chousignore patterns from project root (cwd)
+    const chousIgnorePatterns = await loadChousIgnorePatterns(opts.cwd);
+    const chousIgnore = chousIgnorePatterns.length > 0 ? ignore().add(chousIgnorePatterns) : null;
+    
     for (const root of roots) {
       // First check if root itself has config file (different from config file directory)
       const rootConfig = resolve(root, APP_CONFIG_FILE_NAME);
       if (rootConfig !== absConfigPath && existsSync(rootConfig)) {
-        delegated.add(root);
+        // Check if this config file is ignored by .chousignore
+        const rootConfigRel = relative(opts.cwd, rootConfig);
+        if (!chousIgnore || !chousIgnore.ignores(rootConfigRel)) {
+          delegated.add(root);
+        }
       }
       
         // Recursively find all config files in subdirectories
@@ -800,6 +810,12 @@ async function main() {
         for (const childConfigPath of childConfigs) {
           const absChildConfig = resolve(String(childConfigPath));
           if (absChildConfig !== absConfigPath) {
+            // Check if this config file is ignored by .chousignore
+            const childConfigRel = relative(opts.cwd, absChildConfig);
+            if (chousIgnore && chousIgnore.ignores(childConfigRel)) {
+              continue;
+            }
+            
             const childDir = dirname(absChildConfig);
             // Ensure subdirectory is actually a directory
             try {

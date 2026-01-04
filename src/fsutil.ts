@@ -134,6 +134,30 @@ export async function listTopLevel(root: string, opts?: { gitignore?: boolean })
   return out;
 }
 
+/**
+ * Load .chousignore patterns from project root
+ */
+export async function loadChousIgnorePatterns(root: string): Promise<string[]> {
+  const patterns: string[] = [];
+  try {
+    const chousignorePath = resolve(root, ".chousignore");
+    if (!existsSync(chousignorePath)) return patterns;
+
+    const content = await readFile(chousignorePath, "utf-8");
+    const lines = content.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith("#"));
+
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed) {
+        patterns.push(trimmed);
+      }
+    }
+  } catch {
+    // Ignore errors (e.g., file doesn't exist, permission issues)
+  }
+  return patterns;
+}
+
 export async function isPathIgnored(absPath: string, root: string): Promise<boolean> {
   const base = basename(absPath);
   if (DEFAULT_IGNORE_DIRS.has(base)) return true;
