@@ -13,7 +13,11 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint --quiet ./src",
-    "run-typesafe-i18n-in-background": "typesafe-i18n"
+    "run-typesafe-i18n-in-background": "typesafe-i18n",
+    "prepare": "simple-git-hooks"
+  },
+  "simple-git-hooks": {
+    "commit-msg": "bunx commitlint --edit"
   },
   "description": "The Elegant File Structure Linter",
   "author": "Cheez Lin <https://cheez.tech>",
@@ -41,9 +45,13 @@
     "access": "public"
   },
   "devDependencies": {
+    "@commitlint/cli": "^20.3.0",
+    "@commitlint/config-conventional": "^20.3.0",
     "@types/bun": "latest",
     "@types/node": "^25.0.3",
+    "commitlint-plugin-function-rules": "^4.2.1",
     "oxlint": "^1.36.0",
+    "simple-git-hooks": "^2.13.1",
     "tsdown": "^0.18.4",
     "typescript": "^5.9.3"
   },
