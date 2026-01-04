@@ -50,7 +50,7 @@ function splitCsvLike(input: string): string[] {
 }
 
 function looksLikeGlob(s: string): boolean {
-  return /[*?{}\[\]]/.test(s) || s.includes("**") || s.includes("/");
+  return /[*?{}[\]]/.test(s) || s.includes("**") || s.includes("/");
 }
 
 function isNamingStyle(s: string): boolean {
@@ -457,38 +457,33 @@ function parseFsLintConfigInternal(
         continue;
       }
 
-      try {
-        const importRaw = readFileSync(importPath, "utf8");
-        // Recursively parse (pass the shared importDependencies map)
-        const importedConfig = parseFsLintConfigInternal(importRaw, importPath, importDependencies);
-        // Import rules, but mark thoseOnly rules as needing re-filling
-        // (they were filled with only the imported preset's allow rules)
-        for (const rule of importedConfig.rules) {
-          if (rule.kind === "thoseOnly" && rule.only.length > 0) {
-            // Mark as needing re-filling by setting only to empty
-            // This will be filled again after all rules are collected
-            rule.only = [];
-          }
-          rules.push(rule);
+      const importRaw = readFileSync(importPath, "utf8");
+      // Recursively parse (pass the shared importDependencies map)
+      const importedConfig = parseFsLintConfigInternal(importRaw, importPath, importDependencies);
+      // Import rules, but mark thoseOnly rules as needing re-filling
+      // (they were filled with only the imported preset's allow rules)
+      for (const rule of importedConfig.rules) {
+        if (rule.kind === "thoseOnly" && rule.only.length > 0) {
+          // Mark as needing re-filling by setting only to empty
+          // This will be filled again after all rules are collected
+          rule.only = [];
         }
+        rules.push(rule);
+      }
 
-        // Track import dependencies for topological sorting
-        // If configPath imports importPath, then importPath should come before configPath
-        if (configPath) {
-          const resolvedConfigPath = resolve(configPath);
-          if (!importDependencies.has(resolvedConfigPath)) {
-            importDependencies.set(resolvedConfigPath, []);
-          }
-          importDependencies.get(resolvedConfigPath)!.push(importPath);
+      // Track import dependencies for topological sorting
+      // If configPath imports importPath, then importPath should come before configPath
+      if (configPath) {
+        const resolvedConfigPath = resolve(configPath);
+        if (!importDependencies.has(resolvedConfigPath)) {
+          importDependencies.set(resolvedConfigPath, []);
         }
+        importDependencies.get(resolvedConfigPath)!.push(importPath);
+      }
 
-        imports.push(importPath);
-        if (importedConfig.imports) {
-          imports.push(...importedConfig.imports);
-        }
-      } catch (e) {
-        // Wrap error? Or just propagate.
-        throw e; // FsLintError propagates
+      imports.push(importPath);
+      if (importedConfig.imports) {
+        imports.push(...importedConfig.imports);
       }
 
       continue;
@@ -506,7 +501,6 @@ function parseFsLintConfigInternal(
     // strict [files|dirs] for <pattern> - new syntax for thoseOnly (strict mode for glob patterns)
     const strictForMatch = line.match(/^strict\s+(files|dirs)?\s+for\s+(.+?)\s*$/);
     if (strictForMatch) {
-      const fileType = strictForMatch[1] as "files" | "dirs" | undefined;
       const pattern = strictForMatch[2];
       if (!pattern) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "strict...for", line }, lineNum }, configPath);
 
@@ -616,7 +610,7 @@ function parseFsLintConfigInternal(
 
 
     // in <dir> [files|dirs] naming <style> [prefix: /pattern/] [suffix: /pattern/] [except <names>] - legacy syntax
-    const inNamingMatch = line.match(/^in\s+([^\s]+)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^\/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^\/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
+    const inNamingMatch = line.match(/^in\s+([^\s]+)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
     if (inNamingMatch) {
       const dir = inNamingMatch[1];
       const fileType = inNamingMatch[2] as "files" | "dirs" | undefined;
@@ -642,7 +636,7 @@ function parseFsLintConfigInternal(
     }
 
     // those <pattern> [files|dirs] naming <style> [prefix: /pattern/] [suffix: /pattern/] [except <names>] - legacy syntax
-    const thoseNamingMatch = line.match(/^those\s+(.+?)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^\/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^\/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
+    const thoseNamingMatch = line.match(/^those\s+(.+?)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
     if (thoseNamingMatch) {
       const pattern = thoseNamingMatch[1];
       const fileType = thoseNamingMatch[2] as "files" | "dirs" | undefined;
@@ -784,17 +778,17 @@ function parseFsLintConfigInternal(
     }
 
     // Try to match suffix
-    const suffixMatch = line.match(/\s+suffix:\s+(\/[^\/]+\/[gimuy]*)\s*/);
+    const suffixMatch = line.match(/\s+suffix:\s+(\/[^/]+\/[gimuy]*)\s*/);
     if (suffixMatch) {
       suffix = suffixMatch[1];
-      line = line.replace(/\s+suffix:\s+\/[^\/]+\/[gimuy]*\s*/, " ");
+      line = line.replace(/\s+suffix:\s+\/[^/]+\/[gimuy]*\s*/, " ");
     }
 
     // Try to match prefix
-    const prefixMatch = line.match(/\s+prefix:\s+(\/[^\/]+\/[gimuy]*)\s*/);
+    const prefixMatch = line.match(/\s+prefix:\s+(\/[^/]+\/[gimuy]*)\s*/);
     if (prefixMatch) {
       prefix = prefixMatch[1];
-      line = line.replace(/\s+prefix:\s+\/[^\/]+\/[gimuy]*\s*/, " ");
+      line = line.replace(/\s+prefix:\s+\/[^/]+\/[gimuy]*\s*/, " ");
     }
 
     // Now match the main part: use <style> for [files|dirs] <pattern>

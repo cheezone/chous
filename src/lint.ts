@@ -82,7 +82,7 @@ function computeRequiredTopLevelNames(config: FsLintConfig): string[] {
     if (r.kind === "has") {
       for (const name of r.names) {
         // Skip glob patterns - they will be resolved during lint to actual file paths
-        const isGlobPattern = /[*?{}\[\]]/.test(name) || name.includes("**");
+        const isGlobPattern = /[*?{}[\]]/.test(name) || name.includes("**");
         if (!isGlobPattern) {
           required.add(pickTopLevelName(name));
         }
@@ -115,7 +115,7 @@ function computeRenameDest(fromAbs: string, root: string, rule: Extract<Rule, { 
   }
 
   // Simple fallback: if to is a concrete path (no wildcards), use it directly
-  if (!/[*?{}\[\]]/.test(rule.to) && !rule.to.includes("**")) {
+  if (!/[*?{}[\]]/.test(rule.to) && !rule.to.includes("**")) {
     return resolve(root, rule.to);
   }
 
@@ -251,7 +251,7 @@ export async function lintWorkspace(opts: {
     for (const hasRule of hasRules) {
       for (const name of hasRule.names) {
         // Check if the pattern is a glob pattern
-        const isGlobPattern = /[*?{}\[\]]/.test(name) || name.includes("**");
+        const isGlobPattern = /[*?{}[\]]/.test(name) || name.includes("**");
         if (!isGlobPattern) {
           // Exact file path, add directly
           requiredNames.push(name);
@@ -304,7 +304,6 @@ export async function lintWorkspace(opts: {
     // Even with --strict flag, permissive rules should not require directory to exist
     // Only rules with mode === "strict" or mode === undefined (default strict) require directory
     const hasExplicitStrictMode = group.some((r) => r.mode === "strict" || r.mode === undefined);
-    const fileTypeFilter = group.find((r) => r.fileType)?.fileType;
 
     // Only report missing directory for explicitly strict mode rules
     // Permissive mode rules (in <dir> allow ...) are constraints only, not requirements
@@ -665,7 +664,6 @@ export async function lintWorkspace(opts: {
   // 2. Handle all other rules
   // Track processed patterns for thoseOnly and no rules to allow later rules to override earlier ones
   const processedThoseOnlyPatterns = new Map<string, number>(); // pattern -> last rule index
-  const processedNoPatterns = new Set<string>(); // Track which patterns have been processed by "no" rules
   
   for (let ruleIndex = 0; ruleIndex < config.rules.length; ruleIndex++) {
     const rule = config.rules[ruleIndex]!;
@@ -849,7 +847,7 @@ export async function lintWorkspace(opts: {
     if (rule.kind === "has") {
       for (const name of rule.names) {
         // Check if the pattern is a glob pattern
-        const isGlobPattern = /[*?{}\[\]]/.test(name) || name.includes("**");
+        const isGlobPattern = /[*?{}[\]]/.test(name) || name.includes("**");
         
         if (isGlobPattern) {
           // Use glob scan to find matching files

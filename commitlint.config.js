@@ -27,7 +27,7 @@ export default {
     // Subject cannot be empty
     'subject-empty': [2, 'never'],
     // Subject max length
-    'subject-max-length': [2, 'always', 50],
+    'subject-max-length': [2, 'always', 30],
     // Subject min length
     'subject-min-length': [2, 'always', 3],
     // Disable default subject-case rule
@@ -65,5 +65,8 @@ export default {
         return [true];
       },
     ],
+    // Disable body (description)
+    'body-max-length': [2, 'always', 0],
+    'body-max-line-length': [2, 'always', 0],
   },
 };

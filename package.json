@@ -12,8 +12,8 @@
     "build": "tsdown  --minify",
     "test": "bun test",
     "typecheck": "tsc --noEmit",
-    "lint": "oxlint --quiet ./src",
-    "run-typesafe-i18n-in-background": "typesafe-i18n",
+    "lint": "oxlint ./src",
+    "typesafe-i18n": "typesafe-i18n --no-watch",
     "prepare": "simple-git-hooks"
   },
   "simple-git-hooks": {

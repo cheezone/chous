@@ -2,12 +2,12 @@ import { existsSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
 import type { LintResult, Issue } from "./types";
 import type { IssueMessage } from "./types";
-import { DEFAULT_IGNORE_DIRS, pickTopLevelName, toDisplayPath } from "./fsutil";
+import { DEFAULT_IGNORE_DIRS } from "./fsutil";
 import type { Colorizer } from "./color";
 import type { TranslationFunctions } from "./i18n/i18n-types";
 import { APP_NAME } from "./constants";
 
-const ANSI_RE = /\u001b\[[0-9;]*m/g;
+const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
 function visibleLen(s: string): number {
   return s.replace(ANSI_RE, "").length;
 }
@@ -414,177 +414,6 @@ function buildRelevantSet(opts: {
   for (const p of opts.issueMap.keys()) addAncestors(p, s);
   for (const d of opts.requiredTopLevelNames) addAncestors(d, s);
   return s;
-}
-
-type TreeEntry = { name: string; abs: string; kind: "dir" | "file" | "missingDir" | "missingFile" };
-
-function getTopLevelEntries(
-  result: LintResult,
-  issueMap: Map<string, IssueMeta>,
-  requiredSet: Set<string>,
-): TreeEntry[] {
-  const root = result.root;
-  const actual = listActualTopLevelNames(root, result.visibleSet);
-  const extras = new Set<string>();
-
-  for (const [rel, msg] of issueMap.entries()) {
-    const top = pickTopLevelName(rel);
-    if (top !== ".") extras.add(top);
-  }
-  for (const name of result.requiredTopLevelNames) extras.add(name);
-
-  const all = new Set<string>([...actual, ...extras]);
-  const names = Array.from(all).sort();
-
-  const entries: TreeEntry[] = [];
-  for (const name of names) {
-    const abs = resolve(root, name);
-    if (isDir(abs)) entries.push({ name, abs, kind: "dir" });
-    else if (isFile(abs)) entries.push({ name, abs, kind: "file" });
-    else {
-      const isHas = result.issues.some((i) => i.ruleKind === "has" && i.displayPath === name);
-      entries.push({ name, abs, kind: isHas ? "missingFile" : "missingDir" });
-    }
-  }
-
-  return entries.sort((a, b) => {
-    const aIsDir = a.kind === "dir" || a.kind === "missingDir";
-    const bIsDir = b.kind === "dir" || b.kind === "missingDir";
-    if (aIsDir !== bIsDir) return aIsDir ? -1 : 1;
-    return a.name.localeCompare(b.name);
-  });
-}
-
-function renderVerboseTreeLines(
-  result: LintResult,
-  issueMap: Map<string, IssueMeta>,
-  requiredSet: Set<string>,
-  c: Colorizer,
-  LL: TranslationFunctions,
-  rootLabel?: string,
-): string[] {
-  const out = new AlignedLines();
-  const maxLines = 1200;
-  let linesUsed = 0;
-
-  const push = (left: string, suffix?: string) => {
-    if (linesUsed >= maxLines) return;
-    out.push(left, suffix);
-    linesUsed++;
-  };
-
-  const iconFor = (meta?: { category: "missing" | "forbidden"; severity: "error" | "warn" }, ok?: boolean): string => {
-    if (meta) {
-      if (meta.severity === "warn") return c.yellow("⚠");
-      // error
-      return meta.category === "missing" ? c.yellow("✖") : c.red("✖");
-    }
-    if (ok) return c.green("✔");
-    return c.dim("·");
-  };
-
-  const colorName = (
-    name: string,
-    meta?: { category: "missing" | "forbidden"; severity: "error" | "warn" },
-    ok?: boolean,
-  ): string => {
-    if (meta) {
-      if (meta.severity === "warn") return c.yellow(name);
-      return meta.category === "missing" ? c.yellow(name) : c.red(name);
-    }
-    if (ok) return c.green(name);
-    return c.dim(name);
-  };
-
-  const renderDir = (absDir: string, relDir: string, prefix: string) => {
-    if (linesUsed >= maxLines) return;
-    let ents: { name: string; abs: string; isDir: boolean; isFile: boolean }[] = [];
-    try {
-      ents = readdirSync(absDir).map((name) => {
-        const abs = resolve(absDir, name);
-        return { name, abs, isDir: isDir(abs), isFile: isFile(abs) };
-      });
-    } catch {
-      return;
-    }
-
-    ents = ents
-      .filter((e) => !(e.isDir && DEFAULT_IGNORE_DIRS.has(e.name)))
-      .filter((e) => {
-        if (result.visibleSet && !result.visibleSet.has(resolve(absDir, e.name))) return false;
-        return true;
-      })
-      .filter((e) => e.isDir || e.isFile)
-      .sort((a, b) => {
-        if (a.isDir !== b.isDir) return a.isDir ? -1 : 1;
-        return a.name.localeCompare(b.name);
-      });
-
-    for (let i = 0; i < ents.length; i++) {
-      if (linesUsed >= maxLines) break;
-      const e = ents[i]!;
-      const isLast = i === ents.length - 1;
-      const branch = isLast ? "└──" : "├──";
-      const nextPrefix = prefix + (isLast ? "    " : "│   ");
-      const rel = relDir ? `${relDir}/${e.name}` : e.name;
-      const rawName = e.isDir ? `${e.name}/` : e.name;
-
-      const msg = issueMap.get(rel);
-      const ok = requiredSet.has(rel);
-      const displayName = colorName(rawName, msg, ok);
-      const icon = iconFor(msg, ok);
-      const left = `${prefix}${branch} ${icon} ${displayName}`;
-      if (msg) {
-        const suffix = `${c.dim(String(LL.report.arrow()))} ${c.dim(formatIssueMessage(LL, msg.message))}`;
-        push(left, suffix);
-      } else if (ok) {
-        const suffix = e.isDir
-          ? `${c.dim(String(LL.report.arrow()))} ${c.dim(String(LL.report.foundRequiredDir({ dir: `${e.name}/` })))}`
-          : `${c.dim(String(LL.report.arrow()))} ${c.dim(String(LL.report.foundRequiredFile({ name: e.name })))}`;
-        push(left, suffix);
-      } else {
-        push(left);
-      }
-
-      if (e.isDir) renderDir(e.abs, rel, nextPrefix);
-    }
-  };
-
-  push(rootLabel ?? ".");
-  const top = getTopLevelEntries(result, issueMap, requiredSet);
-
-  for (let i = 0; i < top.length; i++) {
-    if (linesUsed >= maxLines) break;
-    const e = top[i]!;
-    const isLast = i === top.length - 1;
-    const branch = isLast ? "└──" : "├──";
-    const prefix = isLast ? "    " : "│   ";
-    const rel = e.name;
-
-    const msg = issueMap.get(rel);
-    const ok = requiredSet.has(rel);
-    const rawName = e.kind === "dir" || e.kind === "missingDir" ? `${e.name}/` : e.name;
-    const displayName = colorName(rawName, msg, ok);
-    const icon = iconFor(msg, ok);
-    const left = `${branch} ${icon} ${displayName}`;
-    if (msg) {
-      const suffix = `${c.dim(String(LL.report.arrow()))} ${c.dim(formatIssueMessage(LL, msg.message))}`;
-      push(left, suffix);
-    } else if (ok) {
-      const isDir = e.kind === "dir" || e.kind === "missingDir";
-      const suffix = isDir
-        ? `${c.dim(String(LL.report.arrow()))} ${c.dim(String(LL.report.foundRequiredDir({ dir: `${e.name}/` })))}`
-        : `${c.dim(String(LL.report.arrow()))} ${c.dim(String(LL.report.foundRequiredFile({ name: e.name })))}`;
-      push(left, suffix);
-    } else {
-      push(left);
-    }
-
-    if (e.kind === "dir") renderDir(e.abs, rel, prefix);
-  }
-
-  if (linesUsed >= maxLines) out.push(`└── ${String(LL.report.ellipsis())}`);
-  return out.toStrings();
 }
 
 function renderConciseTreeLines(opts: {
