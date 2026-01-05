@@ -1,6 +1,6 @@
 {
   "name": "chous",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "module": "dist/index.mjs",
   "type": "module",
   "private": false,
