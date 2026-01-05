@@ -19,7 +19,7 @@ must have nuxt.config.{js,ts,mjs}
 must have app
 
 # Allow Nuxt standard top-level directories
-allow [public, server, shared, content, modules, app]
+allow [public, server, shared, content, modules, layers, app]
 
 # Helper files for nuxt.config.ts imports
 # Not for general utility functions (use app/utils or server/utils or shared/utils instead)
@@ -37,7 +37,7 @@ in app:
     middleware, pages, plugins, utils, types,
     
     # Files in official docs
-    app.config.ts, app.vue, error.vue,
+    app.config.ts, app.vue, error.vue, router.options.ts,
     
     # Folders in third party
     constants, styles, i18n

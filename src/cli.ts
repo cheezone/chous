@@ -19,6 +19,7 @@ import { DEFAULT_IGNORE_DIRS, loadChousIgnorePatterns } from "./fsutil";
 import { stat } from "node:fs/promises";
 import { APP_NAME, APP_CONFIG_FILE_NAME } from "./constants";
 import ignore from "ignore";
+import { compare } from "compare-versions";
 
 // Read version from package.json
 const __filename = fileURLToPath(import.meta.url);
@@ -180,9 +181,30 @@ function findPromptTemplatePath(lang: string, promptType: "stop"): string | null
   return existsSync(enCandidate) ? enCandidate : null;
 }
 
-function detectFrameworkPreset(cwd: string): "nuxt4" | "nextjs" | undefined {
+function detectFrameworkPreset(cwd: string): "nuxt3" | "nuxt4" | "nextjs" | undefined {
   const nuxtConfigs = ["nuxt.config.ts", "nuxt.config.js", "nuxt.config.mjs", "nuxt.config.cjs"];
-  if (nuxtConfigs.some((f) => existsSync(resolve(cwd, f)))) return "nuxt4";
+  if (nuxtConfigs.some((f) => existsSync(resolve(cwd, f)))) {
+    // Read version from node_modules/nuxt/package.json
+    const nuxtPackageJsonPath = resolve(cwd, "node_modules", "nuxt", "package.json");
+    if (existsSync(nuxtPackageJsonPath)) {
+      try {
+        const nuxtPackageJson = JSON.parse(readFileSync(nuxtPackageJsonPath, "utf8"));
+        const version = nuxtPackageJson.version;
+        if (version) {
+          // Check if version >= 4.0.0
+          if (compare(version, "4.0.0", ">=")) {
+            return "nuxt4";
+          } else if (compare(version, "3.0.0", ">=")) {
+            return "nuxt3";
+          }
+        }
+      } catch {
+        // If reading fails, fall back to nuxt4 (default)
+      }
+    }
+    // Fallback to nuxt4 if version cannot be determined
+    return "nuxt4";
+  }
 
   const nextConfigs = ["next.config.ts", "next.config.js", "next.config.mjs", "next.config.mts", "next.config.cjs"];
   if (nextConfigs.some((f) => existsSync(resolve(cwd, f)))) return "nextjs";
@@ -409,6 +431,7 @@ function generateAutoDetectedConfig(cwd: string, lang: string): { content: strin
       go: 1,
       python: 1,
       nextjs: 2,
+      nuxt3: 2,
       nuxt4: 2,
     };
     

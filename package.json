@@ -73,6 +73,7 @@
     "LICENSE"
   ],
   "dependencies": {
+    "compare-versions": "^6.1.1",
     "ignore": "^7.0.5",
     "tinyglobby": "^0.2.15",
     "typesafe-i18n": "^5.26.2"

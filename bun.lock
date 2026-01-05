@@ -4,6 +4,7 @@
     "": {
       "name": "fslint-cli",
       "dependencies": {
+        "compare-versions": "^6.1.1",
         "ignore": "^7.0.5",
         "tinyglobby": "^0.2.15",
         "typesafe-i18n": "^5.26.2",
@@ -175,6 +176,8 @@
     "commitlint-plugin-function-rules": ["commitlint-plugin-function-rules@4.2.1", "", { "peerDependencies": { "@commitlint/lint": ">=19 <21" } }, "sha512-Ze8xSW6Qtxu6qTL9rMc5Zx5ES5ij6jYaRnjn5MGx5xF19bNqjORZnUe1ur2MlDTFQ4jB3jN1esqErYGVZ/BJFA=="],
 
     "compare-func": ["compare-func@2.0.0", "", { "dependencies": { "array-ify": "^1.0.0", "dot-prop": "^5.1.0" } }, "sha512-zHig5N+tPWARooBnb0Zx1MFcdfpyJrfTJ3Y5L+IFvUm8rM74hHz66z0gw0x4tijh5CorKkKUCnW82R2vmpeCRA=="],
+
+    "compare-versions": ["compare-versions@6.1.1", "", {}, "sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg=="],
 
     "conventional-changelog-angular": ["conventional-changelog-angular@7.0.0", "", { "dependencies": { "compare-func": "^2.0.0" } }, "sha512-ROjNchA9LgfNMTTFSIWPzebCwOGFdgkEq45EnvvrmSLvCtAw0HSmrCs7/ty+wAeYUZyNay0YMUNYFTRL72PkBQ=="],
 

@@ -1,0 +1,183 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+# 
+#  MIT Licensed
+# ========================================
+
+# ========================================
+#  Nuxt 3 project directory structure
+# ========================================
+# Reference: https://nuxt.com/docs/3.x/directory-structure
+
+import js
+
+# Must have Nuxt config file
+must have nuxt.config.{js,ts,mjs}
+
+# Allow Nuxt standard top-level directories
+allow [public, server, shared, content, modules, assets, components, composables, layouts, middleware, pages, plugins, utils]
+
+# Helper files for nuxt.config.ts imports
+# Not for general utility functions (use utils or server/utils or shared/utils instead)
+allow [helpers]
+
+# Root level files
+allow [app.vue, app.config.ts, error.vue, .nuxtrc, .nuxtignore]
+
+# ========================================
+#  Assets directory
+# ========================================
+# Website's assets that the build tool (Vite or webpack) will process
+# Reference: https://nuxt.com/docs/3.x/directory-structure#assets
+
+in assets:
+  # Organize assets into subdirectories
+  move *.{css,scss,sass,less,styl} to css
+  move *.{svg,ico} to icons
+  move *.{woff,woff2,ttf,otf,eot} to fonts
+  move *.{png,jpg,jpeg,gif,webp,avif,bmp} to images
+  use kebab-case for dirs *
+
+# ========================================
+#  Components directory
+# ========================================
+# Vue components of the application
+# Reference: https://nuxt.com/docs/3.x/directory-structure#components
+
+in components:
+  # Default: all .vue files must be PascalCase
+  use PascalCase for files **/*.vue suffix: /(\.(client|server))?$/i
+  # Exception: *.vue in PascalCase directories should be kebab-case
+  use kebab-case for files **/*.vue if-parent-matches PascalCase
+  
+  # Default: all directories must be kebab-case
+  use kebab-case for dirs * except OgImage
+  # Exception: directories containing index.vue can be PascalCase
+  use PascalCase for dirs * if-contains index.vue
+
+# ========================================
+#  Composables directory
+# ========================================
+# Add your Vue composables
+# Reference: https://nuxt.com/docs/3.x/directory-structure#composables
+
+in composables:
+  use camelCase, kebab-case for files *.ts
+
+# ========================================
+#  Layouts directory
+# ========================================
+# Vue components that wrap around your pages and avoid re-rendering between pages
+# Reference: https://nuxt.com/docs/3.x/directory-structure#layouts
+
+in layouts:
+  use kebab-case for files *.vue
+
+# ========================================
+#  Middleware directory
+# ========================================
+# Run code before navigating to a particular route
+# Reference: https://nuxt.com/docs/3.x/directory-structure#middleware
+
+in middleware:
+  use kebab-case for files **/*.{ts,js,mjs} prefix: /^(\d+\.)?/ suffix: /(\.global)?$/i
+
+# ========================================
+#  Pages directory
+# ========================================
+# File-based routing to create routes within your web application
+# Reference: https://nuxt.com/docs/3.x/directory-structure#pages
+
+in pages:
+  use PascalCase for files **/components/**/*.vue suffix: /(\.(client|server))?$/i
+  use kebab-case for files **/*.{vue,js,jsx,mjs,ts,tsx}
+  use kebab-case for dirs *
+
+# ========================================
+#  Plugins directory
+# ========================================
+# Use Vue plugins and more at the creation of your Nuxt application
+# Reference: https://nuxt.com/docs/3.x/directory-structure#plugins
+
+in plugins:
+  use camelCase, kebab-case for files **/*.{ts,js,mjs} prefix: /^(\d+\.)?/ suffix: /(\.(client|server))?$/i
+  use kebab-case for dirs *
+
+# ========================================
+#  Utils directory
+# ========================================
+# Add functions throughout your application that can be used in your components, composables, and pages
+# Reference: https://nuxt.com/docs/3.x/directory-structure#utils
+
+in utils:
+  use camelCase, kebab-case for files **/*.{ts,js,mjs}
+
+# ========================================
+#  Content directory
+# ========================================
+# Enabled by the Nuxt Content module. Used to create a file-based CMS using Markdown files
+# Reference: https://nuxt.com/docs/3.x/directory-structure#content-directory
+
+in content:
+  # Content directory structure is flexible, no strict naming rules
+  allow *
+
+# ========================================
+#  Modules directory
+# ========================================
+# Contains the local modules of the Nuxt application
+# Reference: https://nuxt.com/docs/3.x/directory-structure#modules-directory
+
+in modules:
+  # Module structure is flexible, no strict naming rules
+  allow *
+
+# ========================================
+#  Shared directory
+# ========================================
+# Contains the shared code of the Nuxt application and Nuxt server
+# Reference: https://nuxt.com/docs/3.x/directory-structure#shared-directory
+
+in shared:
+  use camelCase, kebab-case for files **/*.{ts,js,mjs}
+  use kebab-case for dirs *
+
+# ========================================
+#  Server directory
+# ========================================
+# Contains the server-side code of the Nuxt application
+# Reference: https://nuxt.com/docs/3.x/directory-structure#server-directory
+
+in server:
+  # Allow standard server directories only
+  # Reference: https://nuxt.com/docs/3.x/directory-structure#server-directory
+  # Server directory should only contain subdirectories: api/, routes/, middleware/, plugins/, utils/
+  allow [api, routes, middleware, plugins, utils]
+  
+  # API - contains the API routes of the application
+  in api:
+    # Files with HTTP method suffix must be kebab-case
+    use kebab-case for files **/*.{ts,js,mjs} suffix: /\.(get|post|put|delete|patch|head|options)$/i
+    # Files without HTTP method suffix must also be kebab-case
+    use kebab-case for files **/*.{ts,js,mjs}
+    use kebab-case for dirs *
+  
+  # Routes - contains the server routes (e.g. dynamic /sitemap.xml)
+  # File names map directly to route paths, flexible naming, no restrictions
+  # Supports dynamic routes ([slug].ts, [...slug].ts), HTTP method suffix (.get.ts), special formats (rss.xml.ts), etc.
+  # No naming restrictions for routes
+  
+  # Middleware - run code before a server route is processed
+  in middleware:
+    use kebab-case for files **/*.{ts,js,mjs} prefix: /^\d+\./
+  
+  # Plugins - use plugins and more at the creation of the server
+  in plugins:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs} prefix: /^\d+\./
+  
+  # Utils - add functions throughout your application that can be used in your server code
+  in utils:
+    use camelCase, kebab-case for files **/*.{ts,js,mjs}
+  
+  strict
