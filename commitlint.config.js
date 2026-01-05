@@ -37,8 +37,22 @@ export default {
       2,
       'always',
       (parsed) => {
-        const { subject } = parsed;
+        const { subject, scope } = parsed;
         if (!subject) return [true];
+        
+        // Allow version format like "v0.1.4" for release commits
+        const isVersionFormat = /^v\d+\.\d+\.\d+/.test(subject);
+        if (isVersionFormat && scope === 'release') {
+          // Check if contains Chinese characters
+          const hasChinese = /[\u4e00-\u9fa5]/.test(subject);
+          if (hasChinese) {
+            return [
+              false,
+              `subject must not contain Chinese characters, but got: "${subject}"`,
+            ];
+          }
+          return [true];
+        }
         
         // Check if first letter is uppercase (if it's a letter)
         const firstChar = subject[0];
