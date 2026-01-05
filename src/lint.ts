@@ -158,6 +158,44 @@ export async function lintWorkspace(opts: {
   const cachedGlobScan = createCachedGlobScan();
 
   // Calculate visibleSet for report tree filtering
+  // Optimize: detect if rules are mostly root-level constraints to avoid full filesystem scan
+  const hasRootLevelOnlyRules = config.rules.every(rule => {
+    if (rule.kind === "inDirOnly") {
+      return rule.dir === "." || rule.dir === "";
+    }
+    if (rule.kind === "thoseOnly") {
+      // Check if pattern is root-level (starts with ./ or is a simple filename without / or **)
+      const pattern = rule.pattern.trim();
+      // Pattern like "./*.md" or "*.md" (root-level) vs "**/*.md" or "src/**/*.md" (recursive)
+      return (pattern.startsWith("./") || (!pattern.includes("/") && !pattern.includes("**"))) &&
+             !pattern.startsWith("**");
+    }
+    if (rule.kind === "has" || rule.kind === "no" || rule.kind === "allow") {
+      // Check if all names are root-level (no /, no **, no recursive patterns)
+      return rule.names.every(name => {
+        const trimmed = name.trim();
+        // Allow patterns like "*.config.{ts,js}" (root-level glob) but not "src/**/*.ts" (recursive)
+        return !trimmed.includes("/") && !trimmed.includes("**") && 
+               (trimmed.startsWith("./") || trimmed.match(/^\.?\/?[^/]*$/));
+      });
+    }
+    if (rule.kind === "naming") {
+      // Check if pattern is root-level
+      const pattern = rule.pattern.trim();
+      // Pattern is root-level if:
+      // 1. It's "." or empty (root directory)
+      // 2. It starts with "./" and doesn't contain "**" (like "./*.md")
+      // 3. It doesn't contain "/" and doesn't start with "**" (like "*.md")
+      // Patterns like "app/components/**/*.vue" or "**/*.vue" are NOT root-level
+      // (they require scanning subdirectories or the entire filesystem)
+      return pattern === "." || pattern === "" || 
+             (pattern.startsWith("./") && !pattern.includes("**") && !pattern.includes("*")) ||
+             (!pattern.includes("/") && !pattern.startsWith("**") && pattern.includes("*"));
+    }
+    // For other rules (move, rename, etc.), assume they might need full scan
+    return false;
+  });
+
   // If relevantDirs is provided, only scan those directories
   let visiblePaths: string[];
   if (relevantDirs && relevantDirs.size > 0) {
@@ -183,7 +221,11 @@ export async function lintWorkspace(opts: {
       paths.add(p);
     }
     visiblePaths = Array.from(paths);
+  } else if (hasRootLevelOnlyRules) {
+    // Optimize: if all rules are root-level, only scan root directory
+    visiblePaths = await cachedGlobScan("*", root, root, { onlyFiles: false, ig });
   } else {
+    // Full filesystem scan for rules that need it
     visiblePaths = await cachedGlobScan("**/*", root, root, { onlyFiles: false, ig });
   }
   const visibleSet = new Set(visiblePaths);
