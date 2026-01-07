@@ -20,7 +20,7 @@ function runCli(args: string[], cwd: string) {
   };
 }
 
-// 自动发现 fixtures 目录下的所有项目
+// Automatically discover all projects in the fixtures directory
 function getFixtureProjects(): string[] {
   const projects: string[] = [];
   try {

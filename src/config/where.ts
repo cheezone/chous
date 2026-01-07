@@ -1,6 +1,6 @@
 import { dirname, resolve, sep } from "node:path";
-import type { WhereDirective } from "./types";
-import { DEFAULT_IGNORE_DIRS } from "./fsutil";
+import type { WhereDirective } from "../types";
+import { DEFAULT_IGNORE_DIRS } from "../fsutil";
 import { existsSync } from "node:fs";
 import { stat } from "node:fs/promises";
 import { glob } from "tinyglobby";

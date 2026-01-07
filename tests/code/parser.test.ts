@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { parseFsLintConfig } from "../../src/parser";
+import { parseFsLintConfig } from "../../src/config/parser";
 import { FsLintError } from "../../src/errors";
 
 describe("parser", () => {

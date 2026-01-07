@@ -1,9 +1,9 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { FsLintConfig, Rule, WhereDirective } from "./types";
-import { FsLintError } from "./errors";
-import { APP_CONFIG_FILE_NAME } from "./constants";
+import type { FsLintConfig, Rule, WhereDirective } from "../types";
+import { FsLintError } from "../errors";
+import { APP_CONFIG_FILE_NAME } from "../constants";
 
 // Determine preset directory logic.
 // In development (src/), presets are at ../presets relative to this file? No, relative to project root.
@@ -15,15 +15,15 @@ function findPresetPath(name: string): string | null {
   // 2. Check standard preset locations.
 
   // Hacky resolution for dev vs prod structure:
-  // Prod: /.../dist/parser.mjs -> /.../presets/name.chous
-  // Dev: /.../src/parser.ts -> /.../presets/name.chous
+  // Prod: /.../dist/config/parser.mjs -> /.../presets/name.chous
+  // Dev: /.../src/config/parser.ts -> /.../presets/name.chous
 
   // We don't have __dirname in ESM unless we construct it.
   // Use fileURLToPath for cross-platform compatibility (Windows support)
   const selfDir = dirname(fileURLToPath(import.meta.url));
 
-  // Look up one level then presets/
-  const candidate = resolve(selfDir, "..", "presets", `${name}${APP_CONFIG_FILE_NAME}`);
+  // Look up two levels then presets/ (since we're now in config/ subdirectory)
+  const candidate = resolve(selfDir, "..", "..", "presets", `${name}${APP_CONFIG_FILE_NAME}`);
   if (existsSync(candidate)) return candidate;
 
   return null;
@@ -626,7 +626,7 @@ function parseFsLintConfigInternal(
         kind: "naming",
         target: "in",
         pattern: dir.trim(),
-        style: style as import("./types").NamingStyle,
+        style: style as import("../types").NamingStyle,
         fileType,
         prefix,
         suffix,
@@ -652,7 +652,7 @@ function parseFsLintConfigInternal(
         kind: "naming",
         target: "those",
         pattern: pattern.trim(),
-        style: style as import("./types").NamingStyle,
+        style: style as import("../types").NamingStyle,
         fileType,
         prefix,
         suffix,
@@ -841,7 +841,7 @@ function parseFsLintConfigInternal(
             kind: "naming",
             target: "in",
             pattern: trimmedPattern,
-            style: style as import("./types").NamingStyle,
+            style: style as import("../types").NamingStyle,
             fileType: fileTypeTyped,
             prefix,
             suffix,
@@ -854,12 +854,12 @@ function parseFsLintConfigInternal(
             kind: "naming",
             target: "those",
             pattern: trimmedPattern,
-            style: style as import("./types").NamingStyle,
+            style: style as import("../types").NamingStyle,
             fileType: fileTypeTyped,
             prefix,
             suffix,
             except: except ? splitCsvLike(except) : undefined,
-            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("./types").NamingStyle) : undefined
+            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined
           });
         } else {
           // It's a directory, use "in" target
@@ -867,12 +867,12 @@ function parseFsLintConfigInternal(
             kind: "naming",
             target: "in",
             pattern: trimmedPattern,
-            style: style as import("./types").NamingStyle,
+            style: style as import("../types").NamingStyle,
             fileType: fileTypeTyped,
             prefix,
             suffix,
             except: except ? splitCsvLike(except) : undefined,
-            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("./types").NamingStyle) : undefined
+            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined
           });
         }
       }

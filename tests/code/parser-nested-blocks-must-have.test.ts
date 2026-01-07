@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { parseFsLintConfig } from "../../src/parser";
+import { parseFsLintConfig } from "../../src/config/parser";
 
 describe("parser - nested blocks with must have", () => {
   describe("must have rules in nested blocks", () => {
@@ -71,7 +71,7 @@ in app:
 `);
       expect(config.rules).toHaveLength(1);
       if (config.rules[0]?.kind === "has") {
-        // 注意：大括号扩展的模式应该被正确处理
+        // Note: brace expansion patterns should be handled correctly
         expect(config.rules[0].names.length).toBeGreaterThan(0);
       }
     });

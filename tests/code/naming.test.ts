@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { checkNamingStyle } from "../../src/utils/naming";
+import { checkNamingStyle } from "../../src/rules/utils/naming";
 import type { NamingStyle } from "../../src/types";
 
 describe("naming style validation", () => {

@@ -2,8 +2,8 @@ import { basename, dirname, resolve, relative, sep } from "node:path";
 import { readdir } from "node:fs/promises";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
-import type { FsLintConfig, Issue, IssueMessage, LintResult, Rule } from "./types";
-import { DEFAULT_IGNORE_DIRS, exists, isDirectory, listTopLevel, loadGitIgnorePatterns, pickTopLevelName, toDisplayPath, walkFiles } from "./fsutil";
+import type { FsLintConfig, Issue, IssueMessage, LintResult, Rule } from "../types";
+import { DEFAULT_IGNORE_DIRS, exists, isDirectory, listTopLevel, loadGitIgnorePatterns, pickTopLevelName, toDisplayPath, walkFiles } from "../fsutil";
 import { checkNamingStyle } from "./utils/naming";
 
 // Type guard to safely extract params from IssueMessage

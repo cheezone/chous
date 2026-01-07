@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { parseFsLintConfig } from "../../src/parser";
+import { parseFsLintConfig } from "../../src/config/parser";
 
 describe("parser - nested blocks (in xxx:)", () => {
   describe("allow rules in nested blocks", () => {
@@ -56,7 +56,7 @@ in tests:
       expect(config.rules[0]?.kind).toBe("inDirOnly");
       if (config.rules[0]?.kind === "inDirOnly") {
         expect(config.rules[0].dir).toBe("tests");
-        // 注意：** 开头的模式不应该添加前缀
+        // Note: patterns starting with ** should not be prefixed
         expect(config.rules[0].only).toEqual(["**/*.test.ts", "**/*.spec.ts"]);
       }
     });
@@ -81,8 +81,8 @@ in src:
 `);
       expect(config.rules).toHaveLength(1);
       if (config.rules[0]?.kind === "inDirOnly") {
-        // subdir/*.ts 应该被前缀化
-        // **/*.test.ts 不应该被前缀化（因为包含 **）
+        // subdir/*.ts should be prefixed
+        // **/*.test.ts should not be prefixed (because it contains **)
         expect(config.rules[0].only).toContain("src/subdir/*.ts");
         expect(config.rules[0].only).toContain("**/*.test.ts");
       }
@@ -253,7 +253,7 @@ in app:
 `);
       expect(config.rules).toHaveLength(1);
       if (config.rules[0]?.kind === "inDirOnly") {
-        // 应该正确处理，不重复添加前缀
+        // Should handle correctly without duplicating the prefix
         expect(config.rules[0].dir).toBe("app");
         expect(config.rules[0].only).toEqual(["components"]);
       }
@@ -266,7 +266,7 @@ in app:
 `);
       expect(config.rules).toHaveLength(1);
       if (config.rules[0]?.kind === "inDirOnly") {
-        // 如果模式已经以 currentDir 开头，不应该重复添加
+        // If the pattern already starts with currentDir, it should not be duplicated
         expect(config.rules[0].only).toEqual(["app/components"]);
       }
     });

@@ -1,11 +1,11 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
 import { resolve } from "node:path";
-import type { LintResult, Issue } from "./types";
-import type { IssueMessage } from "./types";
-import { DEFAULT_IGNORE_DIRS } from "./fsutil";
-import type { Colorizer } from "./color";
-import type { TranslationFunctions } from "./i18n/i18n-types";
-import { APP_NAME } from "./constants";
+import type { LintResult, Issue } from "../types";
+import type { IssueMessage } from "../types";
+import { DEFAULT_IGNORE_DIRS } from "../fsutil";
+import type { Colorizer } from "../color";
+import type { TranslationFunctions } from "../i18n/i18n-types";
+import { APP_NAME } from "../constants";
 
 const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
 function visibleLen(s: string): number {
@@ -518,7 +518,7 @@ function renderConciseTreeLines(opts: {
     }
   };
 
-  // 顶层：只列出“相关”的 top-level（issues / required / moved），无关隐藏到 `└── ...`
+  // Top level: only list "relevant" top-level (issues / required / moved), hide irrelevant ones to `└── ...`
   const topAll = listActualTopLevelNames(result.root, result.visibleSet);
   const extraTop = new Set<string>();
   for (const p of relevantSet) extraTop.add(p.split("/")[0]!);

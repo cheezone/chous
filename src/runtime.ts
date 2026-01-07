@@ -63,7 +63,7 @@ export function detectSystemLang(): SupportedLang {
     // ignore
   }
 
-  // 仅支持这些 locale：其他语言默认用英文（更接近“非中文用户”的预期）
+  // Only these locales are supported: other languages default to English (closer to the expectation of "non-Chinese users")
   return "en";
 }
 

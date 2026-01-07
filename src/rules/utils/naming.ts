@@ -1,4 +1,4 @@
-import type { NamingStyle } from "../types";
+import type { NamingStyle } from "../../types";
 
 /**
  * Parse a regex pattern string (e.g., "/^\\d+\\./" or "/\\.(get|post)$/i")

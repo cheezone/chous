@@ -20,7 +20,7 @@ function runCli(args: string[], cwd: string) {
   };
 }
 
-// 自动发现 samples 目录下的所有项目
+// Automatically discover all projects in the samples directory
 function getSampleProjects(): string[] {
   const projects: string[] = [];
   try {
