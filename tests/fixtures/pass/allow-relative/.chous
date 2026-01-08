@@ -1,0 +1,3 @@
+# Test: Relative path patterns in allow
+in src:
+  allow subdir/*.ts, utils/*.ts

@@ -1,0 +1,6 @@
+in app:
+  allow [
+    components,
+    layouts,
+    pages
+  ]

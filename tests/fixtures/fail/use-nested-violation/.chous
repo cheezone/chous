@@ -1,0 +1,2 @@
+in components:
+  use PascalCase for files *.vue

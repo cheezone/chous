@@ -1,0 +1,7 @@
+# Test: Array syntax for allow
+in app:
+  allow [
+    components,
+    layouts,
+    pages
+  ]

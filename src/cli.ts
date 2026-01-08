@@ -5,6 +5,7 @@ import { stdin } from "node:process";
 import { parseFsLintConfig, parseFsLintConfigGroups } from "./config/parser";
 import { lintWorkspace } from "./rules/lint";
 import { renderReport } from "./rules/report";
+import { writeStatsJson } from "./rules/stats";
 import { createColorizer } from "./color";
 import { formatIssueMessage } from "./rules/report";
 import { getLL } from "./i18n/runtime";
@@ -37,6 +38,7 @@ type CliOptions = {
   color: boolean;
   help: boolean;
   strict: boolean;
+  statsOutput?: string; // Output rule performance statistics to JSON file
   filePaths?: string[]; // File paths from lint-staged or similar tools
 };
 
@@ -85,6 +87,12 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
     else if (a === "--strict" || a === "-s") opts.strict = true;
+    else if (a === "--stats-output") {
+      const path = argv[i + 1];
+      if (!path) throw new Error(String(LL.cli.error.missingStatsOutputValue()));
+      opts.statsOutput = path;
+      i++;
+    }
     else if (a === "--lang" || a === "-l") {
       const code = argv[i + 1];
       const supportedLangs = `${locales.join(" / ")} / auto`;
@@ -134,6 +142,7 @@ ${String(LL.cli.help.options())}
   -v, --verbose        ${String(LL.cli.help.verboseHint())}
   -l, --lang <code>    ${String(LL.cli.help.langHint())}
   -s, --strict         ${String(LL.cli.help.strictHint())}
+  --stats-output <path> ${String(LL.cli.help.statsHint())}
   --no-color           ${String(LL.cli.help.noColorHint())}
   -h, --help           ${String(LL.cli.help.helpHint())}
 `,
@@ -261,11 +270,13 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
   }
 
   // Prepare chous hooks
+  // Use bunx instead of npx for better performance (bunx is faster than npx)
+  // bunx will use local installation if available, otherwise download on first use
   const chousAfterEditHook = {
-    command: `npx ${APP_NAME} cursor after-edit -l auto`
+    command: `bunx ${APP_NAME} cursor after-edit -l auto`
   };
   const chousStopHook = {
-    command: `npx ${APP_NAME} cursor stop -l auto`
+    command: `bunx ${APP_NAME} cursor stop -l auto`
   };
 
   // Merge with existing hooks or create new
@@ -283,17 +294,17 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
     const afterFileEdit = hooksJson.hooks.afterFileEdit || [];
     const stop = hooksJson.hooks.stop || [];
 
-    // Check if chous hooks are already installed with correct format (npx and -l auto)
+    // Check if chous hooks are already installed with correct format (bunx and -l auto)
     const hasAfterEdit = Array.isArray(afterFileEdit) && afterFileEdit.some(
       (hook: any) => hook.command && 
         hook.command.includes(`${APP_NAME} cursor after-edit`) &&
-        hook.command.includes('npx') &&
+        (hook.command.includes('bunx') || hook.command.includes('npx')) &&
         hook.command.includes('-l auto')
     );
     const hasStop = Array.isArray(stop) && stop.some(
       (hook: any) => hook.command && 
         hook.command.includes(`${APP_NAME} cursor stop`) &&
-        hook.command.includes('npx') &&
+        (hook.command.includes('bunx') || hook.command.includes('npx')) &&
         hook.command.includes('-l auto')
     );
 
@@ -980,6 +991,12 @@ async function main() {
         version: VERSION,
       });
       console.log(report + "\n");
+      
+      // Write statistics to JSON file if requested
+      if (opts.statsOutput) {
+        writeStatsJson(result, opts.statsOutput);
+      }
+      
       if (result.issues.length !== 0) exit = 1;
     }
 

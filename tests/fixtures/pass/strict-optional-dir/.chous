@@ -1,0 +1,7 @@
+# Test: strict rules do NOT require directory to exist
+# They only constrain content IF the directory exists
+# This project has no "server" directory, which is perfectly valid
+
+in server:
+  allow [api, utils]
+  strict

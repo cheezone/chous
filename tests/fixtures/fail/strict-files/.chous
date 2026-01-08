@@ -1,0 +1,4 @@
+# Test: Violate strict files mode
+in docs:
+  strict files
+  allow *.md

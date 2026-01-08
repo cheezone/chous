@@ -1,8 +1,7 @@
 import { describe, expect, it } from "bun:test";
-import { resolve } from "node:path";
+import { resolve, join } from "node:path";
 import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
 
 const PROJECT_ROOT = resolve(import.meta.dir, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "dist/cli.mjs");

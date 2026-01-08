@@ -1,0 +1,8 @@
+in app:
+  allow components, assets
+  
+  in components:
+    use PascalCase for files *.vue
+  
+  in assets:
+    move *.css to css

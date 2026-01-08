@@ -4,6 +4,18 @@ export type WhereDirective =
   | { type: "glob"; patterns: string[] } // Scan multiple workspaces: match marker files/directories
   | { type: "paths"; paths: string[] }; // Explicitly specify root directories (can write relative paths/multiple)
 
+export type RuleSource = {
+  file: string; // .chous 文件的绝对路径
+  line: number; // 定义所在的行号
+};
+
+export type Condition =
+  | { type: "isEmpty" } // 是否为空目录
+  | { type: "fileSize"; op: ">" | "<"; value: string } // 大小 (如 "1MB")
+  | { type: "contains"; pattern: string } // 包含
+  | { type: "parentMatches"; style: NamingStyle } // 父目录匹配
+  | { type: "exists"; pattern: string }; // 模式存在
+
 export type NamingStyle =
   | "PascalCase"
   | "camelCase"
@@ -28,24 +40,32 @@ export type MoveRule = {
   kind: "move";
   from: string; // glob (root-level)
   toDir: string; // directory name relative to root
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type ThoseOnlyRule = {
   kind: "thoseOnly";
   pattern: string; // glob (root-level)
   only: string[]; // globs (root-level)
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type RenameDirRule = {
   kind: "renameDir";
   fromNames: string[]; // directory names (root-level)
   toName: string; // directory name (root-level)
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type RenameGlobRule = {
   kind: "renameGlob";
   from: string; // glob (root-relative, may include **)
   to: string; // glob-like target pattern (best-effort support)
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type InDirOnlyRule = {
@@ -54,11 +74,15 @@ export type InDirOnlyRule = {
   only: string[]; // globs relative to that dir (usually **/*.ts)
   mode?: "strict" | "permissive"; // strict = enforce whitelist, permissive = suggest only
   fileType?: "files" | "dirs"; // Optional filter for files or directories
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type AllowRule = {
   kind: "allow";
   names: string[]; // file/directory names (root-level) - permissive suggestions
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type NamingRule = {
@@ -70,24 +94,32 @@ export type NamingRule = {
   prefix?: string; // Optional regex pattern to remove from the start (e.g., "/^\\d+\\./")
   suffix?: string; // Optional regex pattern to remove from the end (e.g., "/\\.(get|post)$/i")
   except?: string[]; // Optional list of names to exclude from naming checks (only for naming, not directory whitelist)
-  // Conditional rules
+  // Conditional rules (deprecated, use when instead)
   ifContains?: string; // For dirs: only apply this rule if the directory contains this file (e.g., "index.vue")
   ifParentStyle?: NamingStyle; // For files: only apply this rule if the parent directory matches this naming style
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type NoFilesRule = {
   kind: "no";
   names: string[]; // file names (root-level)
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type HasFileRule = {
   kind: "has";
   names: string[]; // file names (root-level)
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type OptionalRule = {
   kind: "optional";
   names: string[]; // file names (root-level) - makes has rules optional
+  source: RuleSource;
+  when?: Condition[];
 };
 
 export type FsLintConfig = {
@@ -127,6 +159,11 @@ export type Issue = {
   severity: "error" | "warn";
 };
 
+export type RuleMetrics = {
+  duration: number; // Duration in milliseconds
+  hitCount: number; // Number of files/directories matched by this rule
+};
+
 export type LintResult = {
   root: string;
   configPath: string;
@@ -136,5 +173,7 @@ export type LintResult = {
   imports?: string[]; // Propagated from config
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
+  ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index
+  rules?: Rule[]; // Rules from config for statistics display
 };
 

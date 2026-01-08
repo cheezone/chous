@@ -1,0 +1,2 @@
+allow README.md, CHANGELOG.md
+strict files for *.md

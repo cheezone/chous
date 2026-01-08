@@ -1,3 +1,16 @@
 [test]
 root = "tests/code"
 coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "./coverage"
+coverageSkipTestFiles = true
+coveragePathIgnorePatterns = [
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/node_modules/**",
+  "**/dist/**",
+  "**/tests/**",
+  "**/samples/**",
+  "**/fixtures/**"
+]
+concurrentTestGlob = ["**/code.test.ts"]

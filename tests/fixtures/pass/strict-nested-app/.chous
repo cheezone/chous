@@ -1,0 +1,3 @@
+in app:
+  allow *.ts
+  strict

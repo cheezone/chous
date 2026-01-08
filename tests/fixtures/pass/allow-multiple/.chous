@@ -1,0 +1,3 @@
+# Test: Multiple extensions with allow
+in src:
+  allow *.ts, *.tsx, *.js, *.jsx

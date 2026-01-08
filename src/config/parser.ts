@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { FsLintConfig, Rule, WhereDirective } from "../types";
+import type { FsLintConfig, Rule, WhereDirective, RuleSource, Condition, NamingStyle } from "../types";
 import { FsLintError } from "../errors";
 import { APP_CONFIG_FILE_NAME } from "../constants";
 
@@ -55,6 +55,74 @@ function looksLikeGlob(s: string): boolean {
 
 function isNamingStyle(s: string): boolean {
   return ["PascalCase", "camelCase", "kebab-case", "snake_case", "SCREAMING_SNAKE_CASE", "flatcase"].includes(s);
+}
+
+/**
+ * Create RuleSource from config path and line number
+ */
+function createRuleSource(configPath: string | undefined, lineNum: number): RuleSource {
+  if (!configPath) {
+    throw new Error("configPath is required to create RuleSource");
+  }
+  return {
+    file: resolve(configPath),
+    line: lineNum,
+  };
+}
+
+/**
+ * Parse when conditions from a rule line
+ * Supports: if empty, if contains <pattern>, if exists <pattern>, if parent-matches <style>, if file-size > <value>
+ */
+function parseWhenConditions(line: string, lineNum: number, configPath: string | undefined): Condition[] {
+  const conditions: Condition[] = [];
+  let remaining = line;
+
+  // Match if empty
+  const emptyMatch = remaining.match(/\s+if\s+empty\s*/i);
+  if (emptyMatch) {
+    conditions.push({ type: "isEmpty" });
+    remaining = remaining.replace(/\s+if\s+empty\s*/i, "");
+  }
+
+  // Match if contains <pattern>
+  const containsMatch = remaining.match(/\s+if\s+contains\s+([^\s]+)\s*/i);
+  if (containsMatch) {
+    conditions.push({ type: "contains", pattern: containsMatch[1]!.trim() });
+    remaining = remaining.replace(/\s+if\s+contains\s+[^\s]+\s*/i, "");
+  }
+
+  // Match if exists <pattern>
+  const existsMatch = remaining.match(/\s+if\s+exists\s+([^\s]+)\s*/i);
+  if (existsMatch) {
+    conditions.push({ type: "exists", pattern: existsMatch[1]!.trim() });
+    remaining = remaining.replace(/\s+if\s+exists\s+[^\s]+\s*/i, "");
+  }
+
+  // Match if parent-matches <style>
+  const parentMatchesMatch = remaining.match(/\s+if\s+parent-matches\s+([^\s]+)\s*/i);
+  if (parentMatchesMatch) {
+    const style = parentMatchesMatch[1]!.trim();
+    if (!isNamingStyle(style)) {
+      throw new FsLintError(
+        { key: "parser.ruleFormatError", params: { rule: `if parent-matches style "${style}" (must be PascalCase/camelCase/kebab-case/snake_case/SCREAMING_SNAKE_CASE/flatcase)`, line }, lineNum },
+        configPath
+      );
+    }
+    conditions.push({ type: "parentMatches", style: style as NamingStyle });
+    remaining = remaining.replace(/\s+if\s+parent-matches\s+[^\s]+\s*/i, "");
+  }
+
+  // Match if file-size > <value> or if file-size < <value>
+  const fileSizeMatch = remaining.match(/\s+if\s+file-size\s+(>|<)\s+([^\s]+)\s*/i);
+  if (fileSizeMatch) {
+    const op = fileSizeMatch[1] as ">" | "<";
+    const value = fileSizeMatch[2]!.trim();
+    conditions.push({ type: "fileSize", op, value });
+    remaining = remaining.replace(/\s+if\s+file-size\s+[><]\s+[^\s]+\s*/i, "");
+  }
+
+  return conditions.length > 0 ? conditions : [];
 }
 
 // Calculate the indentation level of a line (number of spaces)
@@ -494,7 +562,14 @@ function parseFsLintConfigInternal(
       const from = moveMatch[1];
       const toDir = moveMatch[2];
       if (!from || !toDir) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "move", line }, lineNum }, configPath);
-      rules.push({ kind: "move", from: from.trim(), toDir: toDir.trim() });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "move",
+        from: from.trim(),
+        toDir: toDir.trim(),
+        source: createRuleSource(configPath, lineNum),
+        ...(when && when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -506,10 +581,13 @@ function parseFsLintConfigInternal(
 
       // Create thoseOnly rule with empty only list - will be filled after all rules are parsed
       // This allows strict rules to be placed anywhere in the config file
+      const when = parseWhenConditions(line, lineNum, configPath);
       rules.push({
         kind: "thoseOnly",
         pattern: pattern.trim(),
         only: [], // Will be filled after all rules are parsed
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
       });
       continue;
     }
@@ -536,12 +614,15 @@ function parseFsLintConfigInternal(
         allowedItems.push(...allowRule.names);
       }
 
+      const when = parseWhenConditions(line, lineNum, configPath);
       rules.push({
         kind: "inDirOnly",
         dir: dir.trim(),
         only: allowedItems,
         mode: "strict",
-        fileType: undefined
+        fileType: undefined,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
       });
       continue;
     }
@@ -568,12 +649,15 @@ function parseFsLintConfigInternal(
         allowedItems.push(...allowRule.names);
       }
 
+      const when = parseWhenConditions(line, lineNum, configPath);
       rules.push({
         kind: "inDirOnly",
         dir: dir.trim(),
         only: allowedItems,
         mode: "strict",
-        fileType
+        fileType,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
       });
       continue;
     }
@@ -584,7 +668,15 @@ function parseFsLintConfigInternal(
       const only = allowInMatch[2];
       const dir = allowInMatch[3];
       if (!dir || !only) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: `${allowInMatch[1] || "allow"}...in`, line }, lineNum }, configPath);
-      rules.push({ kind: "inDirOnly", dir: dir.trim(), only: splitCsvLike(only), mode: "permissive" });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "inDirOnly",
+        dir: dir.trim(),
+        only: splitCsvLike(only),
+        mode: "permissive",
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -593,7 +685,13 @@ function parseFsLintConfigInternal(
     if (allowMatch) {
       const names = allowMatch[2];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: allowMatch[1] || "allow", line }, lineNum }, configPath);
-      rules.push({ kind: "allow", names: splitCsvLike(names) });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "allow",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -604,7 +702,15 @@ function parseFsLintConfigInternal(
       const dir = inAllowMatch[1];
       const only = inAllowMatch[3];
       if (!dir || !only) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: `in...${inAllowMatch[2] || "allow"}`, line }, lineNum }, configPath);
-      rules.push({ kind: "inDirOnly", dir: dir.trim(), only: splitCsvLike(only), mode: "permissive" });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "inDirOnly",
+        dir: dir.trim(),
+        only: splitCsvLike(only),
+        mode: "permissive",
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -622,6 +728,7 @@ function parseFsLintConfigInternal(
       if (!isNamingStyle(style)) {
         throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "naming style (must be PascalCase/camelCase/kebab-case/snake_case/SCREAMING_SNAKE_CASE/flatcase)", line: style }, lineNum }, configPath);
       }
+      const when = parseWhenConditions(line, lineNum, configPath);
       rules.push({
         kind: "naming",
         target: "in",
@@ -630,7 +737,9 @@ function parseFsLintConfigInternal(
         fileType,
         prefix,
         suffix,
-        except: except ? splitCsvLike(except) : undefined
+        except: except ? splitCsvLike(except) : undefined,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
       });
       continue;
     }
@@ -648,6 +757,7 @@ function parseFsLintConfigInternal(
       if (!isNamingStyle(style)) {
         throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "naming style", line: style }, lineNum }, configPath);
       }
+      const when = parseWhenConditions(line, lineNum, configPath);
       rules.push({
         kind: "naming",
         target: "those",
@@ -656,7 +766,9 @@ function parseFsLintConfigInternal(
         fileType,
         prefix,
         suffix,
-        except: except ? splitCsvLike(except) : undefined
+        except: except ? splitCsvLike(except) : undefined,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
       });
       continue;
     }
@@ -668,7 +780,13 @@ function parseFsLintConfigInternal(
     if (noMatch) {
       const names = noMatch[2];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: noMatch[1] || "no", line }, lineNum }, configPath);
-      rules.push({ kind: "no", names: splitCsvLike(names) });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "no",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -677,7 +795,13 @@ function parseFsLintConfigInternal(
     if (mustHaveMatch) {
       const names = mustHaveMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "must have", line }, lineNum }, configPath);
-      rules.push({ kind: "has", names: splitCsvLike(names) });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "has",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -685,7 +809,13 @@ function parseFsLintConfigInternal(
     if (hasMatch) {
       const names = hasMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "has", line }, lineNum }, configPath);
-      rules.push({ kind: "has", names: splitCsvLike(names) });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "has",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -694,7 +824,13 @@ function parseFsLintConfigInternal(
     if (optionalMatch) {
       const names = optionalMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "optional", line }, lineNum }, configPath);
-      rules.push({ kind: "optional", names: splitCsvLike(names) });
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "optional",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -726,12 +862,25 @@ function parseFsLintConfigInternal(
         }
       }
 
+      const when = parseWhenConditions(line, lineNum, configPath);
       if (looksLikeGlob(left) || looksLikeGlob(right)) {
-        rules.push({ kind: "renameGlob", from: left, to: right });
+        rules.push({
+          kind: "renameGlob",
+          from: left,
+          to: right,
+          source: createRuleSource(configPath, lineNum),
+          ...(when.length > 0 ? { when } : {}),
+        });
       } else {
         const fromNames = splitCsvLike(left);
         if (fromNames.length === 0) throw new FsLintError({ key: "parser.renameMissingSources", params: { line }, lineNum }, configPath);
-        rules.push({ kind: "renameDir", fromNames, toName: right });
+        rules.push({
+          kind: "renameDir",
+          fromNames,
+          toName: right,
+          source: createRuleSource(configPath, lineNum),
+          ...(when.length > 0 ? { when } : {}),
+        });
       }
       continue;
     }
@@ -830,6 +979,7 @@ function parseFsLintConfigInternal(
 
       // Determine if pattern is a directory (for "in") or a glob (for "those")
       const trimmedPattern = pattern.trim();
+      const when = parseWhenConditions(line, lineNum, configPath);
 
       // Create a rule for each style
       for (const style of styles) {
@@ -846,7 +996,9 @@ function parseFsLintConfigInternal(
             prefix,
             suffix,
             except: except ? splitCsvLike(except) : undefined,
-            ifContains: ifContains ? ifContains.trim() : undefined
+            ifContains: ifContains ? ifContains.trim() : undefined,
+            source: createRuleSource(configPath, lineNum),
+            ...(when.length > 0 ? { when } : {}),
           });
         } else if (looksLikeGlob(trimmedPattern) || trimmedPattern.includes("**") || trimmedPattern.includes("*")) {
           // It's a glob pattern, use "those" target
@@ -859,7 +1011,9 @@ function parseFsLintConfigInternal(
             prefix,
             suffix,
             except: except ? splitCsvLike(except) : undefined,
-            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined
+            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined,
+            source: createRuleSource(configPath, lineNum),
+            ...(when.length > 0 ? { when } : {}),
           });
         } else {
           // It's a directory, use "in" target
@@ -872,7 +1026,9 @@ function parseFsLintConfigInternal(
             prefix,
             suffix,
             except: except ? splitCsvLike(except) : undefined,
-            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined
+            ifParentStyle: ifParentStyle ? (ifParentStyle.trim() as import("../types").NamingStyle) : undefined,
+            source: createRuleSource(configPath, lineNum),
+            ...(when.length > 0 ? { when } : {}),
           });
         }
       }

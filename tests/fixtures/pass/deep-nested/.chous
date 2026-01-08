@@ -1,0 +1,7 @@
+# Test: Deep nested directory behavior
+in src:
+  allow *.ts
+  in components:
+    allow *.tsx
+    in ui:
+      allow *.tsx, *.css

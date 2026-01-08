@@ -65,6 +65,10 @@ type RootTranslation = {
 			 */
 			strictHint: string
 			/**
+			 * O​u​t​p​u​t​ ​r​u​l​e​ ​p​e​r​f​o​r​m​a​n​c​e​ ​s​t​a​t​i​s​t​i​c​s​ ​t​o​ ​J​S​O​N​ ​f​i​l​e
+			 */
+			statsHint: string
+			/**
 			 * D​i​s​a​b​l​e​ ​c​o​l​o​r​e​d​ ​o​u​t​p​u​t
 			 */
 			noColorHint: string
@@ -89,6 +93,10 @@ type RootTranslation = {
 			 * M​i​s​s​i​n​g​ ​v​a​l​u​e​ ​f​o​r​ ​-​-​c​o​n​f​i​g
 			 */
 			missingConfigValue: string
+			/**
+			 * M​i​s​s​i​n​g​ ​v​a​l​u​e​ ​f​o​r​ ​-​-​s​t​a​t​s​-​o​u​t​p​u​t
+			 */
+			missingStatsOutputValue: string
 			/**
 			 * U​n​k​n​o​w​n​ ​a​r​g​u​m​e​n​t​:​ ​{​a​r​g​}
 			 * @param {unknown} arg
@@ -437,6 +445,10 @@ export type TranslationFunctions = {
 			 */
 			strictHint: () => LocalizedString
 			/**
+			 * Output rule performance statistics to JSON file
+			 */
+			statsHint: () => LocalizedString
+			/**
 			 * Disable colored output
 			 */
 			noColorHint: () => LocalizedString
@@ -458,6 +470,10 @@ export type TranslationFunctions = {
 			 * Missing value for --config
 			 */
 			missingConfigValue: () => LocalizedString
+			/**
+			 * Missing value for --stats-output
+			 */
+			missingStatsOutputValue: () => LocalizedString
 			/**
 			 * Unknown argument: {arg}
 			 */

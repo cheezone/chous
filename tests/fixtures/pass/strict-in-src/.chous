@@ -1,0 +1,2 @@
+allow **/*.ts
+strict in src

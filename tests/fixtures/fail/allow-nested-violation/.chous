@@ -1,0 +1,3 @@
+in docs:
+  allow *.md
+  strict files

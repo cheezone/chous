@@ -1,0 +1,6 @@
+# Test: strict rules constrain content when directory exists
+# This project HAS a "server" directory with forbidden content
+
+in server:
+  allow [api, utils]
+  strict

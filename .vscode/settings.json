@@ -1,0 +1,8 @@
+{
+    "coverage-gutters.showLineCoverage": false,
+    "coverage-gutters.showRulerCoverage": false,
+    "coverage-gutters.watchOnActivate": true,
+    "files.exclude": {
+        "**/tests/{fixtures,samples}/**/*.{test,spec}.*": true
+    }
+}

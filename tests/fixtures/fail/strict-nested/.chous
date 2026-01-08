@@ -1,0 +1,4 @@
+# Test: Violate strict mode in nested directory
+in src:
+  strict
+  allow *.ts

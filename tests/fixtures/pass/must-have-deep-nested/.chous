@@ -1,0 +1,3 @@
+in app:
+  in public:
+    must have index.html, favicon.ico

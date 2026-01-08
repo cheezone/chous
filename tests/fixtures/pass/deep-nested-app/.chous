@@ -1,0 +1,4 @@
+in app:
+  in assets:
+    in images:
+      allow *.png, *.jpg

@@ -1,0 +1,1 @@
+rename tests/**/*.spec.ts to tests/**/*.test.ts

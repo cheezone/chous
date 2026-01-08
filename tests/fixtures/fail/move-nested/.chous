@@ -1,0 +1,3 @@
+# Test: Violate move rule in nested directory
+in src:
+  move *.log to logs
