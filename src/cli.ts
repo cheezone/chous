@@ -7,10 +7,9 @@ import { lintWorkspace } from "./rules/lint";
 import { renderReport } from "./rules/report";
 import { writeStatsJson } from "./rules/stats";
 import { createColorizer } from "./color";
-import { formatIssueMessage } from "./rules/report";
 import { getLL } from "./i18n/runtime";
 import type { TranslationFunctions } from "./i18n/i18n-types";
-import { isLocale, locales } from "./i18n/i18n-util";
+import { baseLocale, isLocale, locales } from "./i18n/i18n-util";
 import { resolveWorkspaceRoots } from "./config/where";
 import { formatFsLintError, isFsLintError } from "./errors";
 import { detectSystemLang } from "./runtime";
@@ -57,7 +56,11 @@ type CursorHookData = {
 function detectLangArg(argv: string[]): string | undefined {
   for (let i = 0; i < argv.length; i++) {
     const a = argv[i];
-    if (a === "--lang" || a === "-l") return argv[i + 1];
+    if (a === "--lang" || a === "-l") {
+      const code = argv[i + 1];
+      // "auto" means follow the system language, exactly like omitting --lang
+      return code === "auto" ? detectSystemLang() : code;
+    }
   }
   return undefined;
 }
@@ -159,35 +162,36 @@ function findBuiltInPresetPath(name: string): string | null {
   return existsSync(candidate) ? candidate : null;
 }
 
+/**
+ * Resolve a localized template file under `templates/<lang>/`.
+ * Prefers the template matching the UI language, falls back to the base locale
+ * for languages without a template directory, and to the base locale's template
+ * when a localized file is missing.
+ */
+function resolveLangTemplate(selfDir: string, fileName: string, lang: string): string | null {
+  const templateLang = isLocale(lang) ? lang : baseLocale;
+  const candidate = resolve(selfDir, "..", "templates", templateLang, fileName);
+  if (existsSync(candidate)) return candidate;
+
+  if (templateLang !== baseLocale) {
+    const fallback = resolve(selfDir, "..", "templates", baseLocale, fileName);
+    if (existsSync(fallback)) return fallback;
+  }
+  return null;
+}
+
 function findTemplatePath(lang: string): string | null {
   // Prod: /.../dist/cli.mjs -> /.../templates/lang/.chous
   // Dev:  /.../src/cli.ts  -> /.../templates/lang/.chous
   // Use fileURLToPath for cross-platform compatibility (Windows support)
-  const selfDir = dirname(fileURLToPath(import.meta.url));
-  // Supported languages use corresponding template, other languages default to English template
-  const templateLang = (lang === "zh") ? "zh" : "en";
-  const candidate = resolve(selfDir, "..", "templates", templateLang, APP_CONFIG_FILE_NAME);
-  return existsSync(candidate) ? candidate : null;
+  return resolveLangTemplate(dirname(fileURLToPath(import.meta.url)), APP_CONFIG_FILE_NAME, lang);
 }
 
 function findPromptTemplatePath(lang: string, promptType: "stop"): string | null {
   // Prod: /.../dist/cli.mjs -> /.../templates/lang/stop.prompt
   // Dev:  /.../src/cli.ts  -> /.../templates/lang/stop.prompt
   // Use fileURLToPath for cross-platform compatibility (Windows support)
-  const selfDir = dirname(fileURLToPath(import.meta.url));
-  
-  // List of supported languages
-  const supportedLangs = ["zh", "en", "es", "pt-BR", "de", "fr", "ja", "ko"];
-  
-  // First try to use the specified language
-  if (supportedLangs.includes(lang)) {
-    const candidate = resolve(selfDir, "..", "templates", lang, `${promptType}.prompt`);
-    if (existsSync(candidate)) return candidate;
-  }
-  
-  // If not found, fall back to English template
-  const enCandidate = resolve(selfDir, "..", "templates", "en", `${promptType}.prompt`);
-  return existsSync(enCandidate) ? enCandidate : null;
+  return resolveLangTemplate(dirname(fileURLToPath(import.meta.url)), `${promptType}.prompt`, lang);
 }
 
 function detectFrameworkPreset(cwd: string): "nuxt3" | "nuxt4" | "nextjs" | undefined {
@@ -242,6 +246,38 @@ function detectPythonPreset(cwd: string): boolean {
          existsSync(resolve(cwd, "poetry.lock"));
 }
 
+/**
+ * Detect the package manager of a JS/TS project from its lockfile.
+ * Returns undefined when no known lockfile exists, so callers can skip reporting it.
+ */
+function detectPackageManager(cwd: string): "npm" | "pnpm" | "yarn" | "bun" | undefined {
+  if (existsSync(resolve(cwd, "bun.lockb")) || existsSync(resolve(cwd, "bun.lock"))) return "bun";
+  if (existsSync(resolve(cwd, "pnpm-lock.yaml"))) return "pnpm";
+  if (existsSync(resolve(cwd, "yarn.lock"))) return "yarn";
+  if (existsSync(resolve(cwd, "package-lock.json"))) return "npm";
+  return undefined;
+}
+
+type PackageManager = "npm" | "pnpm" | "yarn" | "bun";
+
+/**
+ * Pick the package runner embedded into Cursor hooks.
+ * bunx is faster and reuses local installs, but only exists when Bun is installed,
+ * so fall back to npx for Node-only environments.
+ */
+function getRunnerCommand(): "bunx" | "npx" {
+  try {
+    // Bun is not typed here (no @types/bun), so probe it through globalThis
+    const bun = (globalThis as { Bun?: { which?: (cmd: string) => string | null } }).Bun;
+    if (typeof bun?.which === "function" && bun.which("bun")) {
+      return "bunx";
+    }
+  } catch {
+    // Ignore detection failures and fall back to npx
+  }
+  return "npx";
+}
+
 function installCursorHook(cwd: string, verbose: boolean = false): { code: number; installed: boolean } {
   const cursorDir = resolve(cwd, ".cursor");
   const hooksJsonPath = resolve(cursorDir, "hooks.json");
@@ -269,14 +305,13 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
     }
   }
 
-  // Prepare chous hooks
-  // Use bunx instead of npx for better performance (bunx is faster than npx)
-  // bunx will use local installation if available, otherwise download on first use
+  // Prepare chous hooks, preferring bunx when Bun is available
+  const runner = getRunnerCommand();
   const chousAfterEditHook = {
-    command: `bunx ${APP_NAME} cursor after-edit -l auto`
+    command: `${runner} ${APP_NAME} cursor after-edit -l auto`
   };
   const chousStopHook = {
-    command: `bunx ${APP_NAME} cursor stop -l auto`
+    command: `${runner} ${APP_NAME} cursor stop -l auto`
   };
 
   // Merge with existing hooks or create new
@@ -294,17 +329,17 @@ function installCursorHook(cwd: string, verbose: boolean = false): { code: numbe
     const afterFileEdit = hooksJson.hooks.afterFileEdit || [];
     const stop = hooksJson.hooks.stop || [];
 
-    // Check if chous hooks are already installed with correct format (bunx and -l auto)
+    // Check if chous hooks are already installed with the expected runner
     const hasAfterEdit = Array.isArray(afterFileEdit) && afterFileEdit.some(
       (hook: any) => hook.command && 
         hook.command.includes(`${APP_NAME} cursor after-edit`) &&
-        (hook.command.includes('bunx') || hook.command.includes('npx')) &&
+        hook.command.startsWith(`${runner} `) &&
         hook.command.includes('-l auto')
     );
     const hasStop = Array.isArray(stop) && stop.some(
       (hook: any) => hook.command && 
         hook.command.includes(`${APP_NAME} cursor stop`) &&
-        (hook.command.includes('bunx') || hook.command.includes('npx')) &&
+        hook.command.startsWith(`${runner} `) &&
         hook.command.includes('-l auto')
     );
 
@@ -398,8 +433,14 @@ function findAutoDetectedPresetPath(cwd: string): { presetPath: string | null; p
   return { presetPath, presets };
 }
 
-function generateAutoDetectedConfig(cwd: string, lang: string): { content: string; presets: string[] } {
+function generateAutoDetectedConfig(cwd: string, lang: string): {
+  content: string;
+  presets: string[];
+  framework: "nuxt3" | "nuxt4" | "nextjs" | undefined;
+  packageManager: PackageManager | undefined;
+} {
   const framework = detectFrameworkPreset(cwd);
+  const packageManager = detectPackageManager(cwd);
   const hasJs = detectJsPreset(cwd);
   const hasGo = detectGoPreset(cwd);
   const hasPython = detectPythonPreset(cwd);
@@ -438,7 +479,6 @@ function generateAutoDetectedConfig(cwd: string, lang: string): { content: strin
     const presetOrder: Record<string, number> = {
       basic: 0,
       js: 1,
-      ts: 1,
       go: 1,
       python: 1,
       nextjs: 2,
@@ -489,7 +529,7 @@ function generateAutoDetectedConfig(cwd: string, lang: string): { content: strin
     content = presets.map((p) => `import ${p}`).join("\n") + "\n";
   }
 
-  return { content, presets };
+  return { content, presets, framework, packageManager };
 }
 
 function runInit(
@@ -506,7 +546,7 @@ function runInit(
     return { code: 0, created: false, presets: [], hooksInstalled: false };
   }
 
-  const { content, presets } = generateAutoDetectedConfig(cwd, lang);
+  const { content, presets, framework, packageManager } = generateAutoDetectedConfig(cwd, lang);
 
   try {
     writeFileSync(configPath, content, { encoding: "utf8", flag: "wx" });
@@ -518,6 +558,20 @@ function runInit(
       return { code: 0, created: false, presets: [], hooksInstalled: false };
     }
     throw err;
+  }
+
+  if (!opts?.quiet) {
+    console.log(String(LL.cli.initCmd.created()));
+    if (framework) {
+      console.log(String(LL.cli.initCmd.detectedFramework({ name: framework })));
+    }
+    if (packageManager) {
+      console.log(String(LL.cli.initCmd.detectedPackageManager({ name: packageManager })));
+    }
+    if (presets.length > 0) {
+      console.log(String(LL.cli.initCmd.enabledPresets({ names: presets.join(", ") })));
+    }
+    console.log(String(LL.cli.initCmd.nextStep()));
   }
 
   return { code: 0, created: true, presets, hooksInstalled: false };
@@ -542,7 +596,6 @@ async function readStdin(): Promise<string> {
 async function handleCursorHook(
   subcommand: "after-edit" | "stop",
   opts: CliOptions,
-  LL: TranslationFunctions,
   lang: string,
 ): Promise<void> {
   try {
@@ -597,7 +650,6 @@ async function handleCursorHook(
     // Run lint for each workspace root
     createColorizer({ enabled: opts.color });
     const allIssues: Array<{ root: string; issues: any[] }> = [];
-    const configPaths = new Set<string>(); // Collect all config paths for reference
 
     for (const root of workspaceRoots) {
       const configPath = resolve(root, opts.configPath ?? APP_CONFIG_FILE_NAME);
@@ -606,8 +658,6 @@ async function handleCursorHook(
         // Skip if no config file exists
         continue;
       }
-
-      configPaths.add(configPath);
 
       let raw: string;
       try {
@@ -661,31 +711,8 @@ async function handleCursorHook(
       // Check loop_count to prevent infinite loops (max 5 auto-followups)
       const loopCount = hookData.loop_count ?? 0;
       if (allIssues.length > 0 && loopCount < 5) {
-        // Collect all issues with their details
-        const issueDetails: string[] = [];
-        for (const { issues } of allIssues) {
-          for (const issue of issues) {
-            const issueMsg = formatIssueMessage(LL, issue.message);
-            // Use displayPath (relative path) for better readability
-            issueDetails.push(`- \`${issue.displayPath}\`: ${issueMsg}`);
-          }
-        }
-        
-        // Build config file references (relative to workspace roots for readability)
-        const configRefs: string[] = [];
-        for (const configPath of configPaths) {
-          // Find the workspace root this config belongs to
-          for (const root of workspaceRoots) {
-            if (configPath.startsWith(root)) {
-              const relConfigPath = relative(root, configPath);
-              configRefs.push(relConfigPath === APP_CONFIG_FILE_NAME ? APP_CONFIG_FILE_NAME : relConfigPath);
-              break;
-            }
-          }
-        }
-        
-        // Build the followup message using template (no need to include issue details, Agent will run the app --verbose)
-        // Try to load prompt template
+        // Build the followup message using template
+        // The template is self-contained: the Agent inspects the details by running the app with --verbose
         const promptTemplatePath = findPromptTemplatePath(lang, "stop");
         let followupMessage: string;
         
@@ -745,13 +772,16 @@ async function main() {
   if (opts.command === "cursor" && opts.cursorSubcommand) {
     if (opts.cursorSubcommand === "install") {
       const result = installCursorHook(opts.cwd, opts.verbose);
+      if (result.code === 0 && result.installed) {
+        console.log(String(LL.cli.initCmd.cursorHooksInstalled()));
+      }
       process.exitCode = result.code;
       return;
     }
     if (opts.cursorSubcommand === "after-edit" || opts.cursorSubcommand === "stop") {
       // If lang is "auto", use system language detection
       const lang = opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang);
-      await handleCursorHook(opts.cursorSubcommand, opts, LL, lang);
+      await handleCursorHook(opts.cursorSubcommand, opts, lang);
       return;
     }
   }
@@ -828,7 +858,6 @@ async function main() {
 
   const visitedConfigs = new Set<string>();
   const visitedConfigRoot = new Set<string>(); // `${configPath}::${root}`
-  let totalFileCount = 0;
   const initMessages: string[] | undefined = isAutoDetected 
     ? [String(LL.cli.initCmd.suggestInit())]
     : undefined;
@@ -972,11 +1001,6 @@ async function main() {
         relevantDirs: rootRelevantDirs
       });
       
-      // Accumulate file count
-      if (result.fileCount !== undefined) {
-        totalFileCount += result.fileCount;
-      }
-
       const rel = relative(groupDir, root).split("\\").join("/");
       const label = rel && rel !== "" ? rel : groupDir.split("/").pop() ?? ".";
 
@@ -1006,8 +1030,6 @@ async function main() {
       if (childExit !== 0) exit = Math.max(exit, childExit);
     }
     
-    // Note: File count is already accumulated inside runConfigGroup, no additional processing needed here
-
     return exit;
   }
 

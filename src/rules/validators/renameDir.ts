@@ -12,9 +12,7 @@ export class RenameDirRuleValidator extends BaseRuleValidator<RenameDirRule> {
 
   protected async validateInternal(
     rule: RenameDirRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, rawIssues } = context;
 

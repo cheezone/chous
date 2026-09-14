@@ -29,7 +29,7 @@ by: 'by',
 			cannotReadRulesFile: 'ルールファイルを読み取れません: {path}',
 		},
 		initCmd: {
-			created: 'ルールファイルを作成しました: {path}',
+			created: 'ルールファイルを作成しました',
 			exists: 'ルールファイルは既に存在します（スキップ）: {path}',
 			detectedFramework: 'フレームワークを検出: {name}',
 			detectedPackageManager: 'パッケージマネージャーを検出: {name}',

@@ -75,6 +75,28 @@ npm install -g chous
    chous
    ```
 
+## 🧰 CLI Reference
+
+```bash
+chous                    # Lint the current project
+chous init               # Create a .chous rules file from the detected stack
+chous cursor install     # Install Cursor hooks for automatic linting
+chous --help             # Show all commands and options
+```
+
+| Option | Description |
+| --- | --- |
+| `-c, --config <path>` | Specify rules file (default: `./.chous`) |
+| `-v, --verbose` | Show full filesystem tree (mode: verbose) |
+| `-l, --lang <code>` | Set output language — `de` / `en` / `es` / `fr` / `ja` / `ko` / `pt-BR` / `zh`, or `auto` to follow the system language |
+| `-s, --strict` | Enable strict mode for all directory-only rules |
+| `--stats-output <path>` | Output rule performance statistics to a JSON file |
+| `--no-color` | Disable colored output |
+| `-h, --help` | Show help |
+
+> [!TIP]
+> `chous --verbose` is exactly what the Cursor hook asks your AI agent to run, and it is also the fastest way to see every issue together with its fix suggestion.
+
 ## 🎯 Editor Integration (Cursor Hooks)
 
 If you are using **Cursor**, you can install an automated hook that runs `chous` after every AI-powered edit:
@@ -128,11 +150,43 @@ in assets:
   move *.{png,jpg,svg} to images
 ```
 
+## 📖 Rule Cheatsheet
+
+| Keyword | Purpose |
+| --- | --- |
+| `import <preset>` | Import a built-in preset. |
+| `must have <paths>` / `has <paths>` | Require that the given files or directories exist. |
+| `optional <paths>` | Cancel a `must have` requirement inherited from a preset. |
+| `no <globs>` | Forbid matching files or directories (`deny` / `reject` are aliases). |
+| `allow [...]` | Whitelist entries of a directory (meaningful together with `strict`). |
+| `use <style> for files\|dirs <glob>` | Enforce a naming style: `PascalCase`, `camelCase`, `kebab-case`, `snake_case`, `SCREAMING_SNAKE_CASE`, `flatcase`. |
+| `strict` | Only whitelisted entries may live at that level. |
+| `strict files in <dir>` | Apply the whitelist to a directory's files only. |
+| `in <dir>: ...` | Nested block — every rule inside is scoped to `<dir>`. |
+| `move <glob> to <dir>` | Suggest moving matching files into `<dir>`. |
+| `rename <glob> to <newglob>` | Suggest renaming matching files. |
+| `[where: <glob>]` | Scope a whole config (or group) to specific paths. |
+| `---` | Separate multiple config groups inside one file. |
+
+**Modifiers** (append to `use` rules):
+
+| Modifier | Effect |
+| --- | --- |
+| `except <glob>` | Skip matching entries. |
+| `prefix: /re/` | Ignore a leading pattern before checking the name. |
+| `suffix: /re/` | Ignore a trailing pattern before checking the name. |
+| `if-contains <name>` | Only apply when the directory contains `<name>`. |
+| `if-parent-matches <style>` | Only apply when the parent directory matches `<style>`. |
+| `if empty` / `if exists <path>` / `if file-size > <n>` | Apply the rule conditionally. |
+
+Paths can be excluded globally with a `.chousignore` file (gitignore syntax).
+
 ## 📂 Available Presets
 
 - `basic`: Standard ignores and root files.
-- `js` / `ts`: Common JavaScript/TypeScript patterns.
+- `js`: Common JavaScript/TypeScript patterns.
 - `nextjs`: App router and Page router conventions.
+- `nuxt3`: Nuxt 3 directory structures and dynamic routes.
 - `nuxt4`: Nuxt 4 directory structures and dynamic routes.
 - `go`: Standard Go workspace layouts.
 - `python`: PEP 8 and common Python project structures.

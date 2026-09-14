@@ -11,9 +11,7 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
 
   protected async validateInternal(
     rule: NoFilesRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues } = context;
 

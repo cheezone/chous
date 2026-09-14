@@ -12,8 +12,7 @@ export class ThoseOnlyRuleValidator extends BaseRuleValidator<ThoseOnlyRule> {
   protected async validateInternal(
     rule: ThoseOnlyRule,
     context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    ruleIndex: number
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues, debugLogMsg } = context;
 

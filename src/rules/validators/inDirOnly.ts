@@ -11,10 +11,8 @@ export class InDirOnlyRuleValidator extends BaseRuleValidator<InDirOnlyRule> {
   }
 
   protected async validateInternal(
-    rule: InDirOnlyRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    _rule: InDirOnlyRule,
+    _context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     // Note: inDirOnly rules are handled specially in the main lint function
     // because they need to be grouped by directory first

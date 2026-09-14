@@ -61,8 +61,7 @@ export abstract class BaseRuleValidator<R extends Rule = Rule> implements RuleVa
   protected abstract validateInternal(
     rule: R,
     context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: Rule[] }
+    ruleIndex: number
   ): Promise<{ hitCount: number }>;
 
   /**
@@ -104,8 +103,7 @@ export abstract class BaseRuleValidator<R extends Rule = Rule> implements RuleVa
   async validate(
     rule: R,
     context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: Rule[] }
+    ruleIndex: number
   ): Promise<void> {
     const startTime = performance.now();
     
@@ -125,7 +123,7 @@ export abstract class BaseRuleValidator<R extends Rule = Rule> implements RuleVa
     }
     
     // Execute the actual validation
-    const result = await this.validateInternal(rule, context, ruleIndex, config);
+    const result = await this.validateInternal(rule, context, ruleIndex);
     
     const endTime = performance.now();
     const duration = Math.round(endTime - startTime);

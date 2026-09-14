@@ -1,5 +1,5 @@
 import { basename, resolve } from "node:path";
-import type { MoveRule, Issue } from "../../types";
+import type { MoveRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { exists, isDirectory, toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
@@ -11,9 +11,7 @@ export class MoveRuleValidator extends BaseRuleValidator<MoveRule> {
 
   protected async validateInternal(
     rule: MoveRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues } = context;
 

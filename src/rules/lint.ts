@@ -727,7 +727,7 @@ export async function lintWorkspace(opts: {
     // Find and use validator for this rule
     const validator = findValidator(rule);
     if (validator) {
-      await validator.validate(rule, validatorContext, ruleIndex, config);
+      await validator.validate(rule, validatorContext, ruleIndex);
     }
   }
 

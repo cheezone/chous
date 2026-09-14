@@ -1,5 +1,5 @@
 import { basename, dirname, relative, resolve, sep } from "node:path";
-import type { NamingRule, Rule } from "../../types";
+import type { NamingRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { isDirectory, listTopLevel, toDisplayPath } from "../../fsutil";
 import { checkNamingStyle } from "../utils/naming";
@@ -12,11 +12,9 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
 
   protected async validateInternal(
     rule: NamingRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: Rule[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
-    const { root, cachedGlobScan, ig, rawIssues, inDirGroups } = context;
+    const { root, cachedGlobScan, ig, rawIssues, inDirGroups, config } = context;
 
     let hitCount = 0;
 

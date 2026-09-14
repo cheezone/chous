@@ -23,7 +23,8 @@ export interface RuleValidatorContext {
   rootAllowedSet?: Set<string>;
   filesMatchedByMoveRules?: Set<string>;
   forceStrict?: boolean;
-  config?: { rules: Rule[] };
+  // Full rule list, for validators that need to inspect sibling rules
+  config: { rules: Rule[] };
   // Track processed patterns for thoseOnly rules to allow later rules to override earlier ones
   processedThoseOnlyPatterns?: Map<string, number>;
   // Track matched glob files from "has" rules
@@ -45,7 +46,6 @@ export interface RuleValidator<R extends Rule = Rule> {
   validate(
     rule: R,
     context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: Rule[] }
+    ruleIndex: number
   ): Promise<void>;
 }

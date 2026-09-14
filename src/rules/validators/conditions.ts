@@ -1,8 +1,8 @@
-import { basename, dirname, resolve } from "node:path";
+import { basename, dirname } from "node:path";
 import { stat } from "node:fs/promises";
-import type { Condition, NamingStyle } from "../../types";
+import type { Condition } from "../../types";
 import type { RuleValidatorContext } from "./types";
-import { isDirectory, listTopLevel, exists } from "../../fsutil";
+import { isDirectory, listTopLevel } from "../../fsutil";
 import { checkNamingStyle } from "../utils/naming";
 
 /**

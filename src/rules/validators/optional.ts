@@ -10,9 +10,7 @@ export class OptionalRuleValidator extends BaseRuleValidator<OptionalRule> {
 
   protected async validateInternal(
     rule: OptionalRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues } = context;
 

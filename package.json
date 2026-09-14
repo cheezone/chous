@@ -10,16 +10,17 @@
   "scripts": {
     "dev": "tsdown --watch",
     "build": "tsdown  --minify",
-    "test": "bun test",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint ./src",
     "typesafe-i18n": "typesafe-i18n --no-watch",
     "prepare": "simple-git-hooks",
-    "release": "bun run test && bun run build && changelogen --release --push --no-output --no-changelog"
+    "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog"
   },
   "simple-git-hooks": {
-    "pre-commit": "bun run typecheck",
-    "commit-msg": "bunx commitlint --edit"
+    "pre-commit": "pnpm run typecheck",
+    "commit-msg": "pnpm exec commitlint --edit"
   },
   "description": "The Elegant File Structure Linter",
   "author": "Cheez Lin <https://cheez.tech>",
@@ -41,15 +42,16 @@
     "i18n"
   ],
   "engines": {
-    "node": ">=20"
+    "node": ">=20",
+    "pnpm": ">=10"
   },
+  "packageManager": "pnpm@12.4.1",
   "publishConfig": {
     "access": "public"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.2.2",
     "@commitlint/config-conventional": "^21.2.2",
-    "@types/bun": "latest",
     "@types/node": "^26.5.1",
     "@types/picomatch": "^4.0.3",
     "changelogen": "^0.6.2",
@@ -57,8 +59,10 @@
     "oxlint": "^1.82.0",
     "simple-git-hooks": "^2.14.0",
     "tsdown": "^0.23.0",
+    "tsx": "^4.23.13",
     "typesafe-i18n": "^5.27.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.0"
   },
   "types": "dist/index.d.mts",
   "exports": {

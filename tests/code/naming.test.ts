@@ -1,4 +1,4 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
 import { checkNamingStyle } from "../../src/rules/utils/naming";
 import type { NamingStyle } from "../../src/types";
 

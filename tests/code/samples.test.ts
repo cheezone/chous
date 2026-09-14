@@ -1,22 +1,23 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
+import { spawnSync } from "node:child_process";
 import { resolve } from "node:path";
 import { readdirSync, statSync } from "node:fs";
 
-const PROJECT_ROOT = resolve(import.meta.dir, "../..");
+const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
 const SAMPLES_ROOT = resolve(PROJECT_ROOT, "tests/samples");
 
 function runCli(args: string[], cwd: string) {
-  const proc = Bun.spawnSync(["bun", "run", CLI_PATH, ...args], {
+  // Run the TypeScript CLI directly through tsx
+  const proc = spawnSync(process.execPath, ["--import", "tsx", CLI_PATH, ...args], {
     cwd,
-    stdout: "pipe",
-    stderr: "pipe",
+    encoding: "utf8",
     env: { ...process.env, NO_COLOR: "1" },
   });
   return {
-    code: proc.exitCode,
-    stdout: proc.stdout.toString(),
-    stderr: proc.stderr.toString(),
+    code: proc.status,
+    stdout: proc.stdout ?? "",
+    stderr: proc.stderr ?? "",
   };
 }
 

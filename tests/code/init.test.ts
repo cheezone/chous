@@ -1,15 +1,16 @@
-import { describe, expect, it } from "bun:test";
+import { describe, expect, it } from "vitest";
+import { spawnSync } from "node:child_process";
 import { resolve, join } from "node:path";
 import { existsSync, readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 
-const PROJECT_ROOT = resolve(import.meta.dir, "../..");
+const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "dist/cli.mjs");
 
 /**
  * Helper to create a temporary directory that is automatically deleted
  * when the 'using' scope ends.
- * Bun/Node compatibility: Implement Symbolic.dispose for Explicit Resource Management.
+ * Implements Symbol.dispose for Explicit Resource Management.
  */
 class DisposableTempDir {
     path: string;
@@ -41,16 +42,15 @@ describe("chous init", () => {
     }
 
     function runInit(cwd: string, lang = "en") {
-        const proc = Bun.spawnSync(["node", CLI_PATH, "init", "-l", lang], {
+        const proc = spawnSync(process.execPath, [CLI_PATH, "init", "-l", lang], {
             cwd,
-            stdout: "pipe",
-            stderr: "pipe",
+            encoding: "utf8",
             env: { ...process.env, NO_COLOR: "1" },
         });
         return {
-            code: proc.exitCode,
-            stdout: proc.stdout.toString(),
-            stderr: proc.stderr.toString(),
+            code: proc.status,
+            stdout: proc.stdout ?? "",
+            stderr: proc.stderr ?? "",
         };
     }
 
@@ -154,6 +154,38 @@ describe("chous init", () => {
 
         // Verify some Chinese characters from the template
         expect(content).toContain("通过结构约束来对抗混乱");
+    });
+
+    it("should generate localized config (Japanese)", () => {
+        using tmp = new DisposableTempDir("fslint-init-test-");
+        const projectDir = tmp.path;
+        const r = runInit(projectDir, "ja");
+
+        expect(r.code).toBe(0);
+        const content = readFileSync(resolve(projectDir, ".chous"), "utf8");
+
+        // Every supported language has its own template; ja must not fall back to English
+        expect(content).toContain("構造的制約を通じて混乱と戦う");
+        expect(content).not.toContain("Fight chaos through structural constraints");
+
+        // Success feedback is printed in the requested language
+        expect(r.stdout).toContain("ルールファイルを作成しました");
+        expect(r.stdout).toContain("次: chous を実行");
+    });
+
+    it("should report the generated config to stdout", () => {
+        using tmp = new DisposableTempDir("fslint-init-test-");
+        const projectDir = tmp.path;
+        writeFileSync(resolve(projectDir, "package.json"), "{}");
+        writeFileSync(resolve(projectDir, "package-lock.json"), "{}");
+
+        const r = runInit(projectDir);
+
+        expect(r.code).toBe(0);
+        expect(r.stdout).toContain("Created rules file");
+        expect(r.stdout).toContain("Detected package manager: npm");
+        expect(r.stdout).toContain("Enabled presets: basic, js");
+        expect(r.stdout).toContain("Next: run chous");
     });
 
     it("should not overwrite existing .chous", () => {

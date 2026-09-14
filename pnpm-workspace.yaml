@@ -1,0 +1,7 @@
+# Do not use symlinked (junction) layout: some sandboxed/CI filesystems
+# cannot traverse reparse points. Drop this line to restore pnpm's default.
+nodeLinker: hoisted
+
+allowBuilds:
+  esbuild: true
+  simple-git-hooks: true

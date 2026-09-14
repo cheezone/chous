@@ -1,4 +1,8 @@
-type SupportedLang = "zh" | "en" | "es" | "pt-BR" | "de" | "fr" | "ja" | "ko";
+import type { Locales } from "./i18n/i18n-types";
+
+// Supported languages are exactly the locales provided by the i18n dictionaries.
+// Deriving the type from the generated `Locales` keeps a single source of truth.
+type SupportedLang = Locales;
 
 function getEnv(name: string): string | undefined {
   return process.env[name];

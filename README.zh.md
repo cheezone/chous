@@ -79,6 +79,28 @@ npm install -g chous
    chous
    ```
 
+## 🧰 命令行参考
+
+```bash
+chous                    # 校验当前项目
+chous init               # 根据检测到的技术栈创建 .chous 规则文件
+chous cursor install     # 安装 Cursor 钩子以自动校验
+chous --help             # 查看所有命令与选项
+```
+
+| 选项 | 说明 |
+| --- | --- |
+| `-c, --config <path>` | 指定规则文件（默认：`./.chous`） |
+| `-v, --verbose` | 显示更完整的文件结构（信息模式：详细） |
+| `-l, --lang <code>` | 设置输出语言 —— `de` / `en` / `es` / `fr` / `ja` / `ko` / `pt-BR` / `zh`，或使用 `auto` 跟随系统语言 |
+| `-s, --strict` | 为所有目录规则启用严格模式 |
+| `--stats-output <path>` | 将规则性能统计输出到 JSON 文件 |
+| `--no-color` | 禁用彩色输出 |
+| `-h, --help` | 显示帮助 |
+
+> [!TIP]
+> `chous --verbose` 正是 Cursor 钩子要求 AI 执行的命令，也是查看每条问题及其修复建议最快的方式。
+
 ## 🎯 编辑器集成 (Cursor Hooks)
 
 如果你在使用 **Cursor**，可以安装自动化钩子，在每次 AI 生成/修改代码后自动运行 `chous`：
@@ -132,11 +154,43 @@ in assets:
   move *.{png,jpg,svg} to images
 ```
 
+## 📖 规则速查表
+
+| 关键字 | 作用 |
+| --- | --- |
+| `import <preset>` | 导入内置预设。 |
+| `must have <paths>` / `has <paths>` | 要求指定的文件或目录必须存在。 |
+| `optional <paths>` | 取消预设继承来的 `must have` 要求。 |
+| `no <globs>` | 禁止匹配的文件或目录（`deny` / `reject` 为别名）。 |
+| `allow [...]` | 为目录建立白名单（与 `strict` 配合才有意义）。 |
+| `use <style> for files\|dirs <glob>` | 强制命名风格：`PascalCase`、`camelCase`、`kebab-case`、`snake_case`、`SCREAMING_SNAKE_CASE`、`flatcase`。 |
+| `strict` | 该层级只允许白名单中的条目存在。 |
+| `strict files in <dir>` | 仅对某目录下的文件应用白名单。 |
+| `in <dir>: ...` | 嵌套块 —— 块内所有规则都作用于 `<dir>`。 |
+| `move <glob> to <dir>` | 建议把匹配文件移动到 `<dir>`。 |
+| `rename <glob> to <newglob>` | 建议重命名匹配文件。 |
+| `[where: <glob>]` | 将整个配置（或配置组）限定到指定路径。 |
+| `---` | 在单个文件中分隔多个配置组。 |
+
+**修饰符**（追加在 `use` 规则之后）：
+
+| 修饰符 | 作用 |
+| --- | --- |
+| `except <glob>` | 跳过匹配的条目。 |
+| `prefix: /re/` | 检查名称前先忽略开头匹配的部分。 |
+| `suffix: /re/` | 检查名称前先忽略结尾匹配的部分。 |
+| `if-contains <name>` | 仅当目录包含 `<name>` 时生效。 |
+| `if-parent-matches <style>` | 仅当父目录符合 `<style>` 时生效。 |
+| `if empty` / `if exists <path>` / `if file-size > <n>` | 按条件生效。 |
+
+可通过 `.chousignore` 文件（gitignore 语法）全局排除路径。
+
 ## 📂 可用预设 (Presets)
 
 - `basic`: 标准的忽略规则和根目录文件。
-- `js` / `ts`: 常见的 JavaScript/TypeScript 模式。
+- `js`: 常见的 JavaScript/TypeScript 模式。
 - `nextjs`: 支持 App router 和 Page router 规范。
+- `nuxt3`: Nuxt 3 目录结构及动态路由支持。
 - `nuxt4`: Nuxt 4 目录结构及动态路由支持。
 - `go`: 标准的 Go 工作区布局。
 - `python`: PEP 8 及常见的 Python 项目结构。

@@ -1,4 +1,4 @@
-import type { BaseTranslation } from '../i18n-types.js'
+import type { Translation } from '../i18n-types.js'
 import { APP_NAME, APP_CONFIG_FILE_NAME } from '../../constants'
 
 const zh = {
@@ -113,7 +113,7 @@ const zh = {
 			cannotParseLine: '无法解析规则行：{line}',
 		},
 	},
-} satisfies BaseTranslation
+} satisfies Translation
 
 export default zh
 

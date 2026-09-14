@@ -28,9 +28,7 @@ export class RenameGlobRuleValidator extends BaseRuleValidator<RenameGlobRule> {
 
   protected async validateInternal(
     rule: RenameGlobRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues } = context;
 

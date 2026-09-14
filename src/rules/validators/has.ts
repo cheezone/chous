@@ -11,9 +11,7 @@ export class HasFileRuleValidator extends BaseRuleValidator<HasFileRule> {
 
   protected async validateInternal(
     rule: HasFileRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues, rootAllowedSet, matchedGlobFiles } = context;
 

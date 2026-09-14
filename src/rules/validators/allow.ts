@@ -10,9 +10,7 @@ export class AllowRuleValidator extends BaseRuleValidator<AllowRule> {
 
   protected async validateInternal(
     rule: AllowRule,
-    context: RuleValidatorContext,
-    ruleIndex: number,
-    config: { rules: any[] }
+    context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
     const { root, cachedGlobScan, ig, rawIssues } = context;
 

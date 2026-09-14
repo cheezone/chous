@@ -1,6 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import type { LintResult, Rule, RuleMetrics } from "../types";
+import type { LintResult, Rule } from "../types";
 
 export type RuleStatsEntry = {
   index: number;
