@@ -37,5 +37,8 @@ report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
 # third party code
 third
 
+# IDE / agent local data
+.codebuddy
+
 # cursor
 .cursor
