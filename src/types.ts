@@ -1,5 +1,5 @@
 export type WhereDirective =
-  | { type: "config" } // Default: use rule file's directory as root
+  | { type: "config"; implicit?: boolean } // Default: use rule file's directory as root; implicit when no [where:] was written
   | { type: "cwd" } // Explicit: use process cwd as root
   | { type: "glob"; patterns: string[] } // Scan multiple workspaces: match marker files/directories
   | { type: "paths"; paths: string[] }; // Explicitly specify root directories (can write relative paths/multiple)
@@ -24,6 +24,8 @@ export type NamingStyle =
   | "SCREAMING_SNAKE_CASE"
   | "flatcase";
 
+export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
+
 export type Rule =
   | MoveRule
   | ThoseOnlyRule
@@ -34,7 +36,10 @@ export type Rule =
   | NoFilesRule
   | HasFileRule
   | AllowRule
-  | OptionalRule;
+  | OptionalRule
+  | PackageManagerRule
+  | DepsRule
+  | ReplaceDepRule;
 
 export type MoveRule = {
   kind: "move";
@@ -122,10 +127,39 @@ export type OptionalRule = {
   when?: Condition[];
 };
 
+export type PackageManagerRule = {
+  kind: "packageManager";
+  manager: PackageManagerName;
+  source: RuleSource;
+  when?: Condition[];
+};
+
+export type DepsRule = {
+  kind: "deps";
+  mode: "must" | "no";
+  names: string[]; // package names, or a scope wildcard such as @scope/*
+  source: RuleSource;
+  when?: Condition[];
+};
+
+export type ReplaceDepRule = {
+  kind: "replaceDep";
+  from: string;
+  to: string;
+  source: RuleSource;
+  when?: Condition[];
+};
+
+export type Persona = {
+  name: string;
+  url?: string;
+};
+
 export type FsLintConfig = {
   where: WhereDirective;
   rules: Rule[];
   imports?: string[]; // Resolved paths of imported presets
+  persona?: Persona;
 };
 
 export type IssueMessage =
@@ -144,6 +178,11 @@ export type IssueMessage =
   | { key: "issue.inDirOnly.forbiddenOnlyAllowed"; params: { dir: string; only: string | string[] } }
   | { key: "issue.no.forbidden"; params: { name: string } }
   | { key: "issue.has.mustExist"; params: { name: string } }
+  | { key: "issue.packageManager.wrong"; params: { expected: string; actual: string } }
+  | { key: "issue.packageManager.missing"; params: { expected: string } }
+  | { key: "issue.deps.missing"; params: { name: string } }
+  | { key: "issue.deps.forbidden"; params: { name: string } }
+  | { key: "issue.replaceDep.replace"; params: { from: string; to: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
   | { key: "issue.naming.invalidPrefix"; params: { pattern: string } }
   | { key: "issue.naming.invalidSuffix"; params: { pattern: string } }
@@ -171,6 +210,7 @@ export type LintResult = {
   requiredTopLevelNames: string[];
   visibleSet?: Set<string>;
   imports?: string[]; // Propagated from config
+  persona?: Persona;
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
   ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index

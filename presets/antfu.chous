@@ -1,0 +1,35 @@
+# ========================================
+#  © 2025 Cheez Lin
+#  https://cheez.tech
+#
+#  MIT Licensed
+#
+#  Persona: Anthony Fu (@antfu)
+#  Reference: https://github.com/antfu/starter-ts
+# ========================================
+
+import js
+
+persona antfu https://github.com/antfu/starter-ts
+
+# Signature files from antfu/starter-ts
+must have [eslint.config.{js,ts}, pnpm-workspace.yaml, tsdown.config.ts]
+
+allow [knip.json, vitest.config.ts, CLAUDE.md, .githooks, skills-lock.json]
+
+# antfu keeps tests in test/, not tests/
+rename tests to test
+
+# Formatters, legacy eslint and alternate bundlers do not belong here
+no [.prettierrc*, .eslintrc*, jest.config.*, tsup.config.*]
+rename .husky to .githooks
+
+package manager pnpm
+
+must have deps [@antfu/eslint-config, eslint, typescript, vitest, tsdown]
+no deps [prettier, jest, husky, lint-staged, tsup]
+replace dep prettier with @antfu/eslint-config
+replace dep jest with vitest
+replace dep husky with simple-git-hooks
+replace dep lint-staged with nano-staged
+replace dep tsup with tsdown

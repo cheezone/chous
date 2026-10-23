@@ -163,6 +163,9 @@ export async function lintWorkspace(opts: {
                (trimmed.startsWith("./") || trimmed.match(/^\.?\/?[^/]*$/));
       });
     }
+    if (rule.kind === "packageManager" || rule.kind === "deps" || rule.kind === "replaceDep") {
+      return true;
+    }
     if (rule.kind === "naming") {
       // Check if pattern is root-level
       const pattern = rule.pattern.trim();
@@ -822,7 +825,8 @@ export async function lintWorkspace(opts: {
     issues: finalIssues, 
     requiredTopLevelNames: finalRequiredTopLevelNames, 
     visibleSet, 
-    imports: config.imports, 
+    imports: config.imports,
+    persona: config.persona,
     fileCount, 
     duration,
     ruleMetrics: statisticsCollector.getAllMetrics(),

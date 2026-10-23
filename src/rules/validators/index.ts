@@ -8,6 +8,7 @@ import { AllowRuleValidator } from "./allow";
 import { OptionalRuleValidator } from "./optional";
 import { NamingRuleValidator } from "./naming";
 import { InDirOnlyRuleValidator } from "./inDirOnly";
+import { StackRuleValidator } from "./deps";
 import type { RuleValidator } from "./types";
 
 /**
@@ -24,6 +25,7 @@ export const validators: RuleValidator[] = [
   new OptionalRuleValidator(),
   new NamingRuleValidator(),
   new InDirOnlyRuleValidator(),
+  new StackRuleValidator(),
 ];
 
 /**

@@ -44,6 +44,8 @@ type RootTranslation = {
 			 * I​n​s​t​a​l​l​ ​C​u​r​s​o​r​ ​h​o​o​k​s​ ​f​o​r​ ​a​u​t​o​m​a​t​i​c​ ​l​i​n​t​i​n​g
 			 */
 			installCursorHookDesc: string
+			installClaudeHookDesc: string
+			updateCmdDesc: string
 			/**
 			 * O​p​t​i​o​n​s​:
 			 */
@@ -60,6 +62,7 @@ type RootTranslation = {
 			 * S​p​e​c​i​f​y​ ​r​u​l​e​s​ ​f​i​l​e​ ​(​d​e​f​a​u​l​t​:​ ​.​/​.​c​h​o​u​s​)
 			 */
 			configHint: string
+			presetHint: string
 			/**
 			 * E​n​a​b​l​e​ ​s​t​r​i​c​t​ ​m​o​d​e​ ​f​o​r​ ​a​l​l​ ​d​i​r​e​c​t​o​r​y​-​o​n​l​y​ ​r​u​l​e​s
 			 */
@@ -93,6 +96,8 @@ type RootTranslation = {
 			 * M​i​s​s​i​n​g​ ​v​a​l​u​e​ ​f​o​r​ ​-​-​c​o​n​f​i​g
 			 */
 			missingConfigValue: string
+			missingPresetValue: string
+			presetAndConfig: string
 			/**
 			 * M​i​s​s​i​n​g​ ​v​a​l​u​e​ ​f​o​r​ ​-​-​s​t​a​t​s​-​o​u​t​p​u​t
 			 */
@@ -133,6 +138,7 @@ type RootTranslation = {
 			 * @param {unknown} names
 			 */
 			enabledPresets: RequiredParams<'names'>
+			usingPreset: RequiredParams<'name'>
 			/**
 			 * N​e​x​t​:​ ​r​u​n​ ​c​h​o​u​s
 			 */
@@ -141,6 +147,8 @@ type RootTranslation = {
 			 * C​u​r​s​o​r​ ​h​o​o​k​s​ ​i​n​s​t​a​l​l​e​d
 			 */
 			cursorHooksInstalled: string
+			claudeHooksInstalled: string
+			installCredit: string
 			/**
 			 * �​�​ ​T​i​p​:​ ​N​o​ ​.​c​h​o​u​s​ ​c​o​n​f​i​g​ ​f​i​l​e​ ​f​o​u​n​d​.​ ​A​u​t​o​-​d​e​t​e​c​t​e​d​ ​p​r​o​j​e​c​t​ ​t​y​p​e​ ​a​n​d​ ​u​s​e​d​ ​p​r​e​s​e​t​ ​r​u​l​e​s​.​ ​R​u​n​ ​`​c​h​o​u​s​ ​i​n​i​t​`​ ​t​o​ ​c​r​e​a​t​e​ ​a​ ​c​o​n​f​i​g​ ​f​i​l​e​ ​f​o​r​ ​c​u​s​t​o​m​ ​r​u​l​e​s​.
 			 */
@@ -178,6 +186,16 @@ type RootTranslation = {
 		 * @param {unknown} fileCount
 		 */
 		performance: RequiredParams<'duration' | 'fileCount'>
+		following: RequiredParams<'credit' | 'name'>
+		curated: string
+	}
+	agent: {
+		intro: string
+		follow: RequiredParams<'name'>
+		fix: string
+		updated: RequiredParams<'count'>
+		upToDate: string
+		downloadFailed: RequiredParams<'name'>
 	}
 	mode: {
 		/**
@@ -346,6 +364,17 @@ type RootTranslation = {
 			 */
 			mustExist: RequiredParams<'name'>
 		}
+		packageManager: {
+			wrong: RequiredParams<'actual' | 'expected'>
+			missing: RequiredParams<'expected'>
+		}
+		deps: {
+			missing: RequiredParams<'name'>
+			forbidden: RequiredParams<'name'>
+		}
+		replaceDep: {
+			replace: RequiredParams<'from' | 'to'>
+		}
 		naming: {
 			/**
 			 * s​h​o​u​l​d​ ​b​e​ ​{​s​t​y​l​e​}
@@ -390,6 +419,7 @@ type RootTranslation = {
 			 * @param {unknown} name
 			 */
 			unknownPreset: RequiredParams<'name'>
+			remotePresetMissing: RequiredParams<'name'>
 			/**
 			 * c​a​n​n​o​t​ ​p​a​r​s​e​ ​r​u​l​e​ ​l​i​n​e​:​ ​{​l​i​n​e​}
 			 * @param {unknown} line
@@ -424,6 +454,8 @@ export type TranslationFunctions = {
 			 * Install Cursor hooks for automatic linting
 			 */
 			installCursorHookDesc: () => LocalizedString
+			installClaudeHookDesc: () => LocalizedString
+			updateCmdDesc: () => LocalizedString
 			/**
 			 * Options:
 			 */
@@ -440,6 +472,7 @@ export type TranslationFunctions = {
 			 * Specify rules file (default: ./.chous)
 			 */
 			configHint: () => LocalizedString
+			presetHint: () => LocalizedString
 			/**
 			 * Enable strict mode for all directory-only rules
 			 */
@@ -470,6 +503,8 @@ export type TranslationFunctions = {
 			 * Missing value for --config
 			 */
 			missingConfigValue: () => LocalizedString
+			missingPresetValue: () => LocalizedString
+			presetAndConfig: () => LocalizedString
 			/**
 			 * Missing value for --stats-output
 			 */
@@ -504,6 +539,7 @@ export type TranslationFunctions = {
 			 * Enabled presets: {names}
 			 */
 			enabledPresets: (arg: { names: unknown }) => LocalizedString
+			usingPreset: (arg: { name: unknown }) => LocalizedString
 			/**
 			 * Next: run chous
 			 */
@@ -512,6 +548,8 @@ export type TranslationFunctions = {
 			 * Cursor hooks installed
 			 */
 			cursorHooksInstalled: () => LocalizedString
+			claudeHooksInstalled: () => LocalizedString
+			installCredit: () => LocalizedString
 			/**
 			 * 💡 Tip: No .chous config file found. Auto-detected project type and used preset rules. Run `chous init` to create a config file for custom rules.
 			 */
@@ -543,6 +581,16 @@ export type TranslationFunctions = {
 		 * Scanned {fileCount} files in {duration}ms
 		 */
 		performance: (arg: { duration: unknown, fileCount: unknown }) => LocalizedString
+		following: (arg: { credit: unknown, name: unknown }) => LocalizedString
+		curated: () => LocalizedString
+	}
+	agent: {
+		intro: () => LocalizedString
+		follow: (arg: { name: unknown }) => LocalizedString
+		fix: () => LocalizedString
+		updated: (arg: { count: unknown }) => LocalizedString
+		upToDate: () => LocalizedString
+		downloadFailed: (arg: { name: unknown }) => LocalizedString
 	}
 	mode: {
 		/**
@@ -687,6 +735,17 @@ export type TranslationFunctions = {
 			 */
 			mustExist: (arg: { name: unknown }) => LocalizedString
 		}
+		packageManager: {
+			wrong: (arg: { actual: unknown, expected: unknown }) => LocalizedString
+			missing: (arg: { expected: unknown }) => LocalizedString
+		}
+		deps: {
+			missing: (arg: { name: unknown }) => LocalizedString
+			forbidden: (arg: { name: unknown }) => LocalizedString
+		}
+		replaceDep: {
+			replace: (arg: { from: unknown, to: unknown }) => LocalizedString
+		}
 		naming: {
 			/**
 			 * should be {style}
@@ -724,6 +783,7 @@ export type TranslationFunctions = {
 			 * unknown preset: {name}
 			 */
 			unknownPreset: (arg: { name: unknown }) => LocalizedString
+			remotePresetMissing: (arg: { name: unknown }) => LocalizedString
 			/**
 			 * cannot parse rule line: {line}
 			 */

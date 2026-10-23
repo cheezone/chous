@@ -5,9 +5,9 @@
 <h1 align="center">chous</h1>
 
 <p align="center">
-  <b>The World's First Dedicated File Structure Linter</b>
+  <b>Stop AI slop. Follow a real person.</b>
   <br />
-  Enforce a clean repository layout with an expressive <code>.chous</code> rules file.
+  Pick a persona preset and chous keeps the repository layout and the stack on that person's path.
   <br />
   <br />
   Created by <b><a href="https://cheez.tech">Cheez Lin</a></b>
@@ -20,9 +20,15 @@
 
 ---
 
-## 🚀 The World's First
+## 🚀 Follow a real person
 
-`chous` is the **world's first** dedicated linter for file structures. While other linters focus on what's *inside* your files, `chous` focuses on where those files *live* and how they are *named*.
+AI editors invent folders, formatters and test runners that the project never asked for. `chous` checks the layout and the stack against a persona you choose, then tells the agent what to change.
+
+```chous
+import antfu
+```
+
+That one line follows Anthony Fu's starter: `pnpm`, `test/` instead of `tests/`, `@antfu/eslint-config` instead of Prettier. When something drifts, the report says what to replace it with.
 
 > **chous** /tʃoʊs/ - From Chinese "抽丝" (chōu sī), meaning "to draw out silk threads, to untangle". Just as this tool helps you untangle complex file structure issues. 
 
@@ -47,9 +53,11 @@ Are you a **Vibe Coder** using AI editors? Use this 5-step workflow to let the A
 ## ✨ Key Features
 
 - **Expressive DSL**: A human-readable language designed specifically for file systems.
-- **Built-in Presets**: Instant support for **Next.js**, **Nuxt 4**, **Go**, **Python**, and more.
-- **Nested Blocks**: Group rules naturally with `in <dir>: ...` syntax.
-- **AI Editor Integration**: Native hooks for **Cursor**, providing real-time feedback as you code.
+- **Persona presets**: Follow a real person's layout and stack. `antfu` ships in the box; anyone can publish another.
+- **Built-in presets**: **Next.js**, **Nuxt 4**, **Go**, **Python**, and more.
+- **Stack rules**: Require a package manager and dependencies, and tell the agent what to use instead.
+- **Nested blocks**: Group rules naturally with `in <dir>: ...` syntax.
+- **AI editor hooks**: **Cursor** and **Claude Code** send the issues back to the agent.
 - **Elegant Reporting**: Beautiful, tree-style terminal reports that pinpoint exact inconsistencies.
 
 ## 📦 Installation
@@ -79,14 +87,19 @@ npm install -g chous
 
 ```bash
 chous                    # Lint the current project
+chous --preset antfu     # Try the antfu persona without writing a .chous file
+chous -p antfu -p js      # Compare several personas on the same repository
 chous init               # Create a .chous rules file from the detected stack
+chous update             # Download remote persona presets
 chous cursor install     # Install Cursor hooks for automatic linting
+chous claude install     # Install Claude Code hooks for automatic linting
 chous --help             # Show all commands and options
 ```
 
 | Option | Description |
 | --- | --- |
 | `-c, --config <path>` | Specify rules file (default: `./.chous`) |
+| `-p, --preset <name>` | Try a persona on this directory without writing a `.chous` file. Repeat to compare |
 | `-v, --verbose` | Show full filesystem tree (mode: verbose) |
 | `-l, --lang <code>` | Set output language — `de` / `en` / `es` / `fr` / `ja` / `ko` / `pt-BR` / `zh`, or `auto` to follow the system language |
 | `-s, --strict` | Enable strict mode for all directory-only rules |
@@ -107,6 +120,19 @@ chous cursor install
 
 > [!IMPORTANT]
 > It is recommended to run this command **only after** you have successfully configured your `.chous` and all manual lint checks pass. This ensures the AI has a clear "source of truth" to follow.
+
+## Claude Code
+
+```bash
+chous claude install
+```
+
+This merges two hooks into `.claude/settings.json` and leaves hooks you already have in place:
+
+- `PostToolUse` on `Write`, `Edit` and `MultiEdit` feeds the issue list back to Claude as soon as a file changes.
+- `Stop` blocks the turn while issues remain. A second stop in the same continuation is ignored, so the loop cannot run forever.
+
+`chous init` installs these hooks on its own when the project already has a `.claude/` directory.
 
 ---
 
@@ -154,7 +180,14 @@ in assets:
 
 | Keyword | Purpose |
 | --- | --- |
-| `import <preset>` | Import a built-in preset. |
+| `import <preset>` | Import a built-in preset (`antfu`, `js`, `nextjs`, ...). |
+| `import npm:<pkg>` | Import a persona published on npm. The package's `chous` field points at the rules file. |
+| `import github:owner/repo[/path][@ref]` | Import a persona from GitHub. `chous update` refreshes the local cache. |
+| `persona <name> <url>` | Name the person these rules follow. The report prints one credit line. |
+| `package manager <npm\|pnpm\|yarn\|bun>` | Require that package manager. |
+| `must have deps [a, b]` | Require those dependencies. Versions are ignored. `@scope/*` matches the scope. |
+| `no deps [a, b]` | Forbid those dependencies. |
+| `replace dep <from> with <to>` | When `<from>` is installed, tell the agent to switch to `<to>`. |
 | `must have <paths>` / `has <paths>` | Require that the given files or directories exist. |
 | `optional <paths>` | Cancel a `must have` requirement inherited from a preset. |
 | `no <globs>` | Forbid matching files or directories (`deny` / `reject` are aliases). |
@@ -183,6 +216,7 @@ Paths can be excluded globally with a `.chousignore` file (gitignore syntax).
 
 ## 📂 Available Presets
 
+- `antfu`: Anthony Fu's TypeScript starter. pnpm, `test/`, `@antfu/eslint-config`, tsdown. Reference: https://github.com/antfu/starter-ts
 - `basic`: Standard ignores and root files.
 - `js`: Common JavaScript/TypeScript patterns.
 - `nextjs`: App router and Page router conventions.
@@ -191,7 +225,29 @@ Paths can be excluded globally with a `.chousignore` file (gitignore syntax).
 - `go`: Standard Go workspace layouts.
 - `python`: PEP 8 and common Python project structures.
 
+## Publish your own persona
+
+A persona is a `.chous` file other people can import.
+
+**npm.** Put the rules in the package and point `package.json` at them:
+
+```json
+{ "name": "chous-preset-you", "chous": "persona.chous" }
+```
+
+Projects then write `import npm:chous-preset-you`.
+
+**GitHub.** Commit the rules file and import it directly:
+
+```chous
+import github:you/chous-presets/persona.chous@main
+```
+
+The first run downloads it to `~/.cache/chous`. `chous update` fetches a fresh copy. Offline runs keep the cached file.
+
 ## 📜 License
 
 This project is licensed under the [MIT License](LICENSE).
+
+Created by [Cheez Lin](https://cheez.tech). Source: https://github.com/cheezone/chous
 

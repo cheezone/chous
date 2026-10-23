@@ -22,7 +22,7 @@
     "pre-commit": "pnpm run typecheck",
     "commit-msg": "pnpm exec commitlint --edit"
   },
-  "description": "The Elegant File Structure Linter",
+  "description": "Stop AI slop. Follow a real person's project structure and stack.",
   "author": "Cheez Lin <https://cheez.tech>",
   "license": "MIT",
   "repository": {

@@ -1,0 +1,13 @@
+{
+  "name": "preset-antfu",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.0.0",
+  "devDependencies": {
+    "@antfu/eslint-config": "1.0.0",
+    "eslint": "9.0.0",
+    "typescript": "5.0.0",
+    "vitest": "3.0.0",
+    "tsdown": "0.1.0"
+  }
+}

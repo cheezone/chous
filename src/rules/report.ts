@@ -175,6 +175,16 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.no.forbidden(msg.params));
     case "issue.has.mustExist":
       return String(LL.issue.has.mustExist(msg.params));
+    case "issue.packageManager.wrong":
+      return String(LL.issue.packageManager.wrong(msg.params));
+    case "issue.packageManager.missing":
+      return String(LL.issue.packageManager.missing(msg.params));
+    case "issue.deps.missing":
+      return String(LL.issue.deps.missing(msg.params));
+    case "issue.deps.forbidden":
+      return String(LL.issue.deps.forbidden(msg.params));
+    case "issue.replaceDep.replace":
+      return String(LL.issue.replaceDep.replace(msg.params));
     case "issue.naming.invalid":
       return String(LL.issue.naming.invalid(msg.params));
     case "issue.naming.invalidPrefix":
@@ -849,6 +859,11 @@ export function renderReport(
       for (const imp of result.imports) {
         lines.push(c.dim(String(t.meta.importedRules({ path: imp }))));
       }
+    }
+    if (result.persona) {
+      const curated = String(t.meta.curated());
+      const credit = result.persona.url ? `${result.persona.url} · ${curated}` : curated;
+      lines.push(c.dim(String(t.meta.following({ name: result.persona.name, credit }))));
     }
 
     // Language and mode - only show in verbose mode

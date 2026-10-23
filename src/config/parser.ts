@@ -1,15 +1,17 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { FsLintConfig, Rule, WhereDirective, RuleSource, Condition, NamingStyle } from "../types";
+import type { FsLintConfig, Persona, Rule, WhereDirective, RuleSource, Condition, NamingStyle, PackageManagerName } from "../types";
 import { FsLintError } from "../errors";
 import { APP_CONFIG_FILE_NAME } from "../constants";
+import { parseGithubImport, readCachedGithub } from "./github";
+import { resolveNpmPreset } from "./npm";
 
 // Determine preset directory logic.
 // In development (src/), presets are at ../presets relative to this file? No, relative to project root.
 // In production (dist/), presets are at ../presets.
 // We can try to find them relative to __dirname.
-function findPresetPath(name: string): string | null {
+export function findPresetPath(name: string): string | null {
   // Built-in presets map? Or just try to find files.
   // 1. Check relative to current working directory? No, presets are usually absolute or package relative.
   // 2. Check standard preset locations.
@@ -22,9 +24,12 @@ function findPresetPath(name: string): string | null {
   // Use fileURLToPath for cross-platform compatibility (Windows support)
   const selfDir = dirname(fileURLToPath(import.meta.url));
 
-  // Look up two levels then presets/ (since we're now in config/ subdirectory)
-  const candidate = resolve(selfDir, "..", "..", "presets", `${name}${APP_CONFIG_FILE_NAME}`);
-  if (existsSync(candidate)) return candidate;
+  // Source lives in src/config/, but the bundle flattens this module into dist/,
+  // so presets/ is two levels up in dev and one level up in the published package.
+  for (const up of [["..", ".."], [".."]]) {
+    const candidate = resolve(selfDir, ...up, "presets", `${name}${APP_CONFIG_FILE_NAME}`);
+    if (existsSync(candidate)) return candidate;
+  }
 
   return null;
 }
@@ -215,6 +220,12 @@ function preprocessNestedBlocks(raw: string): string {
 
     // Process rules within the block, add parent directory prefix
     let processedLine = trimmed;
+
+    // Stack rules always apply to the workspace root, even inside an `in` block.
+    if (/^(persona|package\s+manager|must\s+have\s+deps|no\s+deps|replace\s+dep)\b/.test(processedLine)) {
+      output.push(processedLine);
+      continue;
+    }
 
     if (currentDir) {
       // move rule: move <pattern> to <dir>
@@ -451,7 +462,8 @@ function parseFsLintConfigInternal(
     processedLines.push({ content: line, lineNum: startLineNum });
   }
 
-  let where: WhereDirective = { type: "config" };
+  let where: WhereDirective = { type: "config", implicit: true };
+  let persona: Persona | undefined;
   const rules: Rule[] = [];
 
   for (let idx = 0; idx < processedLines.length; idx++) {
@@ -481,6 +493,7 @@ function parseFsLintConfigInternal(
       const v = whereMatch[1]?.trim();
       if (!v) throw new FsLintError({ key: "parser.invalidWhereDirective", lineNum }, configPath);
       if (v === "cwd") where = { type: "cwd" };
+      else if (v === "config") where = { type: "config" };
       else where = { type: "glob", patterns: [v] };
       continue;
     }
@@ -500,8 +513,20 @@ function parseFsLintConfigInternal(
 
       let importPath: string | null = null;
 
+      if (importName.startsWith("npm:")) {
+        importPath = configPath ? resolveNpmPreset(importName.slice("npm:".length), configPath) : null;
+      } else if (importName.startsWith("github:")) {
+        if (!parseGithubImport(importName)) {
+          throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "import", line }, lineNum }, configPath);
+        }
+        importPath = readCachedGithub(importName);
+        if (!importPath) {
+          throw new FsLintError({ key: "parser.remotePresetMissing", params: { name: importName }, lineNum }, configPath);
+        }
+      }
+
       // 1. Try to resolve as a file relative to the config file (if we have a config path)
-      if (configPath) {
+      if (!importPath && configPath) {
         const localCandidate = resolve(dirname(configPath), importName);
         if (existsSync(localCandidate)) {
           importPath = localCandidate;
@@ -553,7 +578,75 @@ function parseFsLintConfigInternal(
       if (importedConfig.imports) {
         imports.push(...importedConfig.imports);
       }
+      if (!persona && importedConfig.persona) persona = importedConfig.persona;
 
+      continue;
+    }
+
+    const personaMatch = line.match(/^persona\s+(\S+)(?:\s+(\S+))?\s*$/);
+    if (personaMatch) {
+      const name = personaMatch[1];
+      if (!name) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "persona", line }, lineNum }, configPath);
+      persona = { name, ...(personaMatch[2] ? { url: personaMatch[2] } : {}) };
+      continue;
+    }
+
+    const packageManagerMatch = line.match(/^package\s+manager\s+(npm|pnpm|yarn|bun)\s*$/);
+    if (packageManagerMatch) {
+      const manager = packageManagerMatch[1] as PackageManagerName;
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "packageManager",
+        manager,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
+      continue;
+    }
+
+    const mustDepsMatch = line.match(/^must\s+have\s+deps\s+(.+?)\s*$/);
+    if (mustDepsMatch) {
+      const names = mustDepsMatch[1];
+      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "must have deps", line }, lineNum }, configPath);
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "deps",
+        mode: "must",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
+      continue;
+    }
+
+    const noDepsMatch = line.match(/^no\s+deps\s+(.+?)\s*$/);
+    if (noDepsMatch) {
+      const names = noDepsMatch[1];
+      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "no deps", line }, lineNum }, configPath);
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "deps",
+        mode: "no",
+        names: splitCsvLike(names),
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
+      continue;
+    }
+
+    const replaceDepMatch = line.match(/^replace\s+dep\s+(\S+)\s+with\s+(\S+)\s*$/);
+    if (replaceDepMatch) {
+      const from = replaceDepMatch[1];
+      const to = replaceDepMatch[2];
+      if (!from || !to) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "replace dep", line }, lineNum }, configPath);
+      const when = parseWhenConditions(line, lineNum, configPath);
+      rules.push({
+        kind: "replaceDep",
+        from,
+        to,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
       continue;
     }
 
@@ -1192,5 +1285,5 @@ function parseFsLintConfigInternal(
     }
   }
 
-  return { where, rules, imports: sortedImports };
+  return { where, rules, imports: sortedImports, ...(persona ? { persona } : {}) };
 }

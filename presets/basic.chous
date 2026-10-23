@@ -22,8 +22,13 @@ allow [LICENSE*, LICENCE*, COPYING*, COPYRIGHT*, CODEOWNERS]
 # This glob pattern covers most standard config files like:
 # - tsconfig.json, vite.config.ts, webpack.config.js, etc.
 allow [
-  *.config.{ts,js,cjs,mjs,json,jsonc,json5,toml,ini,yaml,yml,ymlc}
+  *.config.{ts,js,cjs,mjs,json,jsonc,json5,toml,ini,yaml,yml,ymlc},
+  # Variant configs such as eslint.config.lint-staged.js / oxlint.config.lint-staged.ts
+  *.config.*.{ts,js,cjs,mjs,json,jsonc,json5,toml,ini,yaml,yml,ymlc}
 ]
+
+# Common top-level directories for docs, examples and deployment
+allow [docs, examples, docker, charts]
 
 # documentation files
 allow [
@@ -91,7 +96,7 @@ allow [
   firebase.json,
 
   # Google App Engine: https://docs.cloud.google.com/appengine/docs/flexible/reference/app-yaml
-  app.yaml, cron.yaml, dispatch.yaml, index.yaml
+  app.yaml, cron.yaml, dispatch.yaml, index.yaml,
 
   # Helm: https://helm.sh/docs/topics/charts/
   Chart.yaml, values.yaml,

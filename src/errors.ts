@@ -6,6 +6,7 @@ export type FsLintErrorKey =
   | { key: "parser.ruleFormatError"; params: { rule: string; line: string }; lineNum: number }
   | { key: "parser.renameMissingSources"; params: { line: string }; lineNum: number }
   | { key: "parser.unknownPreset"; params: { name: string }; lineNum: number }
+  | { key: "parser.remotePresetMissing"; params: { name: string }; lineNum: number }
   | { key: "parser.cannotParseLine"; params: { line: string }; lineNum: number };
 
 export class FsLintError extends Error {
@@ -39,6 +40,8 @@ export function formatFsLintError(LL: TranslationFunctions, err: FsLintError): s
       return prefix + String(LL.errors.parser.renameMissingSources(i.params));
     case "parser.unknownPreset":
       return prefix + String(LL.errors.parser.unknownPreset(i.params));
+    case "parser.remotePresetMissing":
+      return prefix + String(LL.errors.parser.remotePresetMissing(i.params));
     case "parser.cannotParseLine":
       return prefix + String(LL.errors.parser.cannotParseLine(i.params));
   }

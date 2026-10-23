@@ -2,7 +2,12 @@
 import { dirname, relative, resolve, sep } from "node:path";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { stdin } from "node:process";
-import { parseFsLintConfig, parseFsLintConfigGroups } from "./config/parser";
+import { parseFsLintConfigGroups } from "./config/parser";
+import { prefetchImports } from "./config/prefetch";
+import { ensureGithubCached } from "./config/github";
+import { resolveNpmPreset } from "./config/npm";
+import { checkWorkspaces } from "./agents/core";
+import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
 import { renderReport } from "./rules/report";
 import { writeStatsJson } from "./rules/stats";
@@ -28,10 +33,12 @@ const packageJson = JSON.parse(readFileSync(resolve(__dirname, "../package.json"
 const VERSION = packageJson.version;
 
 type CliOptions = {
-  command: "lint" | "init" | "cursor";
+  command: "lint" | "init" | "cursor" | "claude" | "update";
   cursorSubcommand?: "after-edit" | "stop" | "install";
+  claudeSubcommand?: "after-edit" | "stop" | "install";
   cwd: string;
   configPath?: string;
+  presets?: string[];
   verbose: boolean;
   lang?: string;
   color: boolean;
@@ -87,6 +94,19 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
       }
       continue;
     }
+    if (a === "claude") {
+      opts.command = "claude";
+      const subcommand = argv[i + 1];
+      if (subcommand === "after-edit" || subcommand === "stop" || subcommand === "install") {
+        opts.claudeSubcommand = subcommand;
+        i++;
+      }
+      continue;
+    }
+    if (a === "update") {
+      opts.command = "update";
+      continue;
+    }
     if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
     else if (a === "--strict" || a === "-s") opts.strict = true;
@@ -116,6 +136,12 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
       if (!p) throw new Error(String(LL.cli.error.missingConfigValue()));
       opts.configPath = p;
       i++;
+    }
+    else if (a === "--preset" || a === "-p") {
+      const name = argv[i + 1];
+      if (!name || name.startsWith("-")) throw new Error(String(LL.cli.error.missingPresetValue()));
+      opts.presets = [...(opts.presets ?? []), name];
+      i++;
     } else if (a && a.startsWith("-")) {
       // Unknown flag argument
       throw new Error(String(LL.cli.error.unknownArg({ arg: a })));
@@ -128,6 +154,9 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
   if (filePaths.length > 0) {
     opts.filePaths = filePaths;
   }
+  if (opts.presets?.length && opts.configPath) {
+    throw new Error(String(LL.cli.error.presetAndConfig()));
+  }
   
   return opts;
 }
@@ -138,10 +167,13 @@ function printHelp(LL: TranslationFunctions): void {
 
 ${String(LL.cli.help.commands())}
   init                  ${String(LL.cli.help.initCmdDesc())}
+  update                ${String(LL.cli.help.updateCmdDesc())}
   cursor install        ${String(LL.cli.help.installCursorHookDesc())}
+  claude install        ${String(LL.cli.help.installClaudeHookDesc())}
 
 ${String(LL.cli.help.options())}
   -c, --config <path>  ${String(LL.cli.help.configHint())}
+  -p, --preset <name>  ${String(LL.cli.help.presetHint())}
   -v, --verbose        ${String(LL.cli.help.verboseHint())}
   -l, --lang <code>    ${String(LL.cli.help.langHint())}
   -s, --strict         ${String(LL.cli.help.strictHint())}
@@ -532,6 +564,15 @@ function generateAutoDetectedConfig(cwd: string, lang: string): {
   return { content, presets, framework, packageManager };
 }
 
+function installDetectedAgentHooks(LL: TranslationFunctions, cwd: string, quiet?: boolean): void {
+  if (!existsSync(resolve(cwd, ".claude"))) return;
+  const result = installClaudeHooks(cwd, getRunnerCommand());
+  if (!quiet && result.code === 0 && result.installed) {
+    console.log(String(LL.cli.initCmd.claudeHooksInstalled()));
+    console.log(String(LL.cli.initCmd.installCredit()));
+  }
+}
+
 function runInit(
   LL: TranslationFunctions,
   cwd: string,
@@ -543,6 +584,7 @@ function runInit(
     if (!opts?.quiet) {
       console.log(String(LL.cli.initCmd.exists({ path: configPath })));
     }
+    installDetectedAgentHooks(LL, cwd, opts?.quiet);
     return { code: 0, created: false, presets: [], hooksInstalled: false };
   }
 
@@ -559,6 +601,8 @@ function runInit(
     }
     throw err;
   }
+
+  installDetectedAgentHooks(LL, cwd, opts?.quiet);
 
   if (!opts?.quiet) {
     console.log(String(LL.cli.initCmd.created()));
@@ -607,98 +651,16 @@ async function handleCursorHook(
 
     const hookData: CursorHookData = JSON.parse(stdinData);
     const workspaceRoots = hookData.workspace_roots || [opts.cwd];
-
-    // For after-edit, we can optimize by only checking directories containing edited files
-    let relevantDirs: Set<string> | undefined;
-    if (subcommand === "after-edit" && hookData.file_path && hookData.edits) {
-      relevantDirs = new Set<string>();
-      // file_path from Cursor can be absolute or relative path
-      let filePath = hookData.file_path;
-      
-      // Find which workspace root this file belongs to
-      for (const root of workspaceRoots) {
-        // If file_path is relative, resolve it relative to workspace root
-        // If it's absolute, use it directly
-        const absFilePath = filePath.startsWith("/") || filePath.startsWith("\\") 
-          ? filePath 
-          : resolve(root, filePath);
-        
-        const relPath = relative(root, absFilePath);
-        // If the file is within this workspace root
-        if (!relPath.startsWith("..") && !relPath.startsWith("/")) {
-          const parts = relPath.split(sep).filter(Boolean);
-          for (let i = 0; i < parts.length; i++) {
-            const dir = parts.slice(0, i + 1).join("/");
-            if (dir !== ".") {
-              relevantDirs.add(dir);
-            }
-          }
-          // Also add parent directory
-          if (parts.length > 1) {
-            const parentDir = parts.slice(0, -1).join("/");
-            if (parentDir !== ".") {
-              relevantDirs.add(parentDir);
-            }
-          }
-          // Always include root for root-level rules
-          relevantDirs.add(".");
-          break; // File can only belong to one workspace root
-        }
-      }
-    }
-
-    // Run lint for each workspace root
-    createColorizer({ enabled: opts.color });
-    const allIssues: Array<{ root: string; issues: any[] }> = [];
-
-    for (const root of workspaceRoots) {
-      const configPath = resolve(root, opts.configPath ?? APP_CONFIG_FILE_NAME);
-      
-      if (!existsSync(configPath)) {
-        // Skip if no config file exists
-        continue;
-      }
-
-      let raw: string;
-      try {
-        raw = readFileSync(configPath, "utf8");
-      } catch {
-        continue;
-      }
-
-      const config = parseFsLintConfig(raw, configPath);
-      const configDir = dirname(configPath);
-      const roots = await resolveWorkspaceRoots({ cwd: root, configDir, where: config.where });
-
-      for (const workspaceRoot of roots) {
-        // Calculate relevant directories for this root
-        let rootRelevantDirs: Set<string> | undefined;
-        if (relevantDirs) {
-          rootRelevantDirs = new Set<string>();
-          for (const dir of relevantDirs) {
-            // dir is relative to workspace root, check if it's within this workspaceRoot
-            const dirAbs = resolve(root, dir);
-            const rootRel = relative(workspaceRoot, dirAbs);
-            if (!rootRel.startsWith("..") && !rootRel.startsWith("/")) {
-              rootRelevantDirs.add(rootRel === "" ? "." : rootRel);
-            }
-          }
-          rootRelevantDirs.add(".");
-        }
-
-        const result = await lintWorkspace({
-          root: workspaceRoot,
-          config,
-          configPath,
-          strict: opts.strict,
-          relevantDirs: rootRelevantDirs,
-        });
-
-        if (result.issues.length > 0) {
-          allIssues.push({ root: workspaceRoot, issues: result.issues });
-        }
-      }
-    }
+    const editedFile = subcommand === "after-edit" && hookData.file_path && hookData.edits
+      ? hookData.file_path
+      : undefined;
+    const checked = await checkWorkspaces({
+      workspaceRoots,
+      configPath: opts.configPath,
+      strict: opts.strict,
+      lang,
+      editedFile,
+    });
 
     // Handle output based on hook type
     if (subcommand === "after-edit") {
@@ -710,24 +672,20 @@ async function handleCursorHook(
       // stop: return JSON with followup_message if there are issues
       // Check loop_count to prevent infinite loops (max 5 auto-followups)
       const loopCount = hookData.loop_count ?? 0;
-      if (allIssues.length > 0 && loopCount < 5) {
+      if (checked.issues.length > 0 && loopCount < 5) {
         // Build the followup message using template
         // The template is self-contained: the Agent inspects the details by running the app with --verbose
         const promptTemplatePath = findPromptTemplatePath(lang, "stop");
-        let followupMessage: string;
-        
+        const issueLines = checked.issues.slice(0, 40).map((issue) => `- ${issue.displayPath}: ${issue.message}`).join("\n");
+        const fallback = `Some file structure inconsistencies with the project rules were found.\n\n1. Fix the issues listed below\n2. Run \`${APP_NAME} --verbose\` and confirm there are no issues\n3. Do not claim the issues are fixed before that command passes`;
+        let followupMessage = `${fallback}\n\n${issueLines}`;
         if (promptTemplatePath) {
           try {
-            const template = readFileSync(promptTemplatePath, "utf8");
-            // No placeholders to replace - template is self-contained
-            followupMessage = template;
+            const template = readFileSync(promptTemplatePath, "utf8").trim();
+            if (template) followupMessage = `${template}\n\n${issueLines}`;
           } catch {
-            // Fallback to English message if template read fails
-            followupMessage = `Cheez Lin reminds you: Some file structure inconsistencies with current conventions have been detected. Please review and decide whether adjustments are needed based on your project design goals.\n\n**Please follow these steps**:\n1. Run \`${APP_NAME} --verbose\` to see specific issue details and fix suggestions\n2. Decide how to fix based on the actual situation\n3. **After fixing, you MUST run \`${APP_NAME} --verbose\` to verify all issues are resolved**\n\n**Please start your reply with "Thanks Cheez!"**`;
+            // Keep the English fallback above.
           }
-        } else {
-          // Fallback to English message if template not found
-          followupMessage = `Cheez Lin reminds you: Some file structure inconsistencies with current conventions have been detected. Please review and decide whether adjustments are needed based on your project design goals.\n\n**Please follow these steps**:\n1. Run \`${APP_NAME} --verbose\` to see specific issue details and fix suggestions\n2. Decide how to fix based on the actual situation\n3. **After fixing, you MUST run \`${APP_NAME} --verbose\` to verify all issues are resolved**\n\n**Please start your reply with "Thanks Cheez!"**`;
         }
         
         // Output JSON format as required by Cursor hooks
@@ -775,6 +733,7 @@ async function main() {
       if (result.code === 0 && result.installed) {
         console.log(String(LL.cli.initCmd.cursorHooksInstalled()));
       }
+      if (result.code === 0) console.log(String(LL.cli.initCmd.installCredit()));
       process.exitCode = result.code;
       return;
     }
@@ -784,6 +743,52 @@ async function main() {
       await handleCursorHook(opts.cursorSubcommand, opts, lang);
       return;
     }
+  }
+
+  if (opts.command === "claude" && opts.claudeSubcommand) {
+    const lang = opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang);
+    if (opts.claudeSubcommand === "install") {
+      const result = installClaudeHooks(opts.cwd, getRunnerCommand());
+      if (result.code === 0 && result.installed) {
+        console.log(String(LL.cli.initCmd.claudeHooksInstalled()));
+      }
+      if (result.code === 0) console.log(String(LL.cli.initCmd.installCredit()));
+      process.exitCode = result.code;
+      return;
+    }
+    try {
+      const output = await handleClaudeHook({
+        subcommand: opts.claudeSubcommand,
+        stdin: await readStdin(),
+        cwd: opts.cwd,
+        configPath: opts.configPath,
+        strict: opts.strict,
+        lang,
+      });
+      if (output) console.log(output);
+    } catch (err) {
+      if (opts.verbose) console.error(err instanceof Error ? err.message : String(err));
+    }
+    return;
+  }
+
+  if (opts.command === "update") {
+    if (!existsSync(configPath)) {
+      console.error(String(LL.cli.error.cannotReadRulesFile({ path: configPath })));
+      process.exitCode = 2;
+      return;
+    }
+    const result = await prefetchImports(configPath, { force: true });
+    if (result.updated.length > 0) {
+      console.log(String(LL.agent.updated({ count: result.updated.length })));
+    } else {
+      console.log(String(LL.agent.upToDate()));
+    }
+    for (const name of result.failed) {
+      console.error(String(LL.agent.downloadFailed({ name })));
+    }
+    process.exitCode = result.failed.length > 0 && result.updated.length === 0 ? 1 : 0;
+    return;
   }
 
   // Extract relevant directories from file paths (for lint-staged optimization)
@@ -828,39 +833,65 @@ async function main() {
     }
   }
 
-  let raw: string;
-  let isAutoDetected = false;
-  let actualConfigPath = configPath;
-  try {
-    raw = readFileSync(configPath, "utf8");
-  } catch {
-    // Missing rules file: auto-detect project type and use preset file directly
-    const autoDetected = findAutoDetectedPresetPath(opts.cwd);
-    if (autoDetected.presetPath) {
-      actualConfigPath = autoDetected.presetPath;
-      raw = readFileSync(actualConfigPath, "utf8");
-      isAutoDetected = true;
-      
-      // Ensure workspace root is cwd, not preset file directory
-      // Add [where:cwd] directive if not present
-      if (!raw.match(/^\[where:/m)) {
-        raw = "[where:cwd]\n" + raw;
-      }
-    } else {
-      // Fallback: cannot find any preset, report error
-      console.error(String(LL.cli.error.cannotReadRulesFile({ path: configPath })));
-      process.exitCode = 2;
-      return;
-    }
+  type RulesSource = { path: string; raw: string; autoDetected: boolean; trying?: string };
+
+  async function resolvePresetSpec(spec: string): Promise<string | null> {
+    if (spec.startsWith("npm:")) return resolveNpmPreset(spec.slice("npm:".length), resolve(opts.cwd, "package.json"));
+    if (spec.startsWith("github:")) return (await ensureGithubCached(spec, false)).file;
+    return findBuiltInPresetPath(spec);
   }
+
+  function forceCwd(raw: string): string {
+    if (/^\[where:/m.test(raw)) return raw;
+    return `[where:cwd]\n${raw}`;
+  }
+
+  const sources: RulesSource[] = [];
+  if (opts.presets?.length) {
+    for (const name of opts.presets) {
+      const presetPath = await resolvePresetSpec(name);
+      if (!presetPath) {
+        console.error(String(LL.errors.parser.unknownPreset({ name })));
+        process.exitCode = 2;
+        return;
+      }
+      sources.push({ path: presetPath, raw: forceCwd(readFileSync(presetPath, "utf8")), autoDetected: false, trying: name });
+    }
+  } else {
+    let raw: string;
+    let isAutoDetected = false;
+    let actualConfigPath = configPath;
+    try {
+      raw = readFileSync(configPath, "utf8");
+    } catch {
+      const autoDetected = findAutoDetectedPresetPath(opts.cwd);
+      if (autoDetected.presetPath) {
+        actualConfigPath = autoDetected.presetPath;
+        raw = forceCwd(readFileSync(actualConfigPath, "utf8"));
+        isAutoDetected = true;
+      } else {
+        console.error(String(LL.cli.error.cannotReadRulesFile({ path: configPath })));
+        process.exitCode = 2;
+        return;
+      }
+    }
+    sources.push({ path: actualConfigPath, raw, autoDetected: isAutoDetected });
+  }
+
+  let raw = sources[0]!.raw;
+  let isAutoDetected = sources[0]!.autoDetected;
+  let actualConfigPath = sources[0]!.path;
+  let tryingPreset = sources[0]!.trying;
 
   const c = createColorizer({ enabled: opts.color });
 
   const visitedConfigs = new Set<string>();
   const visitedConfigRoot = new Set<string>(); // `${configPath}::${root}`
-  const initMessages: string[] | undefined = isAutoDetected 
-    ? [String(LL.cli.initCmd.suggestInit())]
-    : undefined;
+  let initMessages: string[] | undefined = tryingPreset
+    ? [String(LL.cli.initCmd.usingPreset({ name: tryingPreset }))]
+    : isAutoDetected
+      ? [String(LL.cli.initCmd.suggestInit())]
+      : undefined;
 
   async function runConfigGroup(groupConfigPath: string, forcedHeader: boolean, providedRaw?: string): Promise<number> {
     const absConfigPath = resolve(groupConfigPath);
@@ -880,15 +911,25 @@ async function main() {
       }
     }
 
+    await prefetchImports(absConfigPath);
     // Check if config contains multiple groups (separated by ---)
     const configGroups = parseFsLintConfigGroups(groupRaw, absConfigPath);
     const groupDir = dirname(absConfigPath);
+
+    // `-c <file>` names a rules file, not a project: without an explicit [where:],
+    // lint the current directory. Delegated child configs keep their own directory.
+    const whereFor = (groupConfig: import("./types").FsLintConfig): import("./types").WhereDirective => {
+      const w = groupConfig.where;
+      if (opts.presets?.length && !forcedHeader && w.type === "config") return { type: "cwd" };
+      if (opts.configPath && !forcedHeader && w.type === "config" && w.implicit) return { type: "cwd" };
+      return w;
+    };
     
     // If multiple groups, process each one separately
     if (configGroups.length > 1) {
       let exit = 0;
       for (const groupConfig of configGroups) {
-        const roots = await resolveWorkspaceRoots({ cwd: opts.cwd, configDir: groupDir, where: groupConfig.where });
+        const roots = await resolveWorkspaceRoots({ cwd: opts.cwd, configDir: groupDir, where: whereFor(groupConfig) });
         const groupExit = await processConfigGroup(groupConfig, roots, groupDir, absConfigPath, forcedHeader);
         if (groupExit !== 0) exit = Math.max(exit, groupExit);
       }
@@ -897,7 +938,7 @@ async function main() {
     
     // Single config group (backward compatible)
     const groupConfig = configGroups[0]!;
-    const roots = await resolveWorkspaceRoots({ cwd: opts.cwd, configDir: groupDir, where: groupConfig.where });
+    const roots = await resolveWorkspaceRoots({ cwd: opts.cwd, configDir: groupDir, where: whereFor(groupConfig) });
     return await processConfigGroup(groupConfig, roots, groupDir, absConfigPath, forcedHeader);
   }
 
@@ -916,10 +957,16 @@ async function main() {
     const chousIgnorePatterns = await loadChousIgnorePatterns(opts.cwd);
     const chousIgnore = chousIgnorePatterns.length > 0 ? ignore().add(chousIgnorePatterns) : null;
     
+    // An explicit `-c` owns the cwd root even if that directory has its own .chous.
+    const presetMode = Boolean(opts.presets?.length);
+    const isExplicitCwdRoot = (dir: string) =>
+      (Boolean(opts.configPath) || presetMode) && !forcedHeader && resolve(dir) === resolve(opts.cwd);
+
     for (const root of roots) {
+      if (presetMode) continue;
       // First check if root itself has config file (different from config file directory)
       const rootConfig = resolve(root, APP_CONFIG_FILE_NAME);
-      if (rootConfig !== absConfigPath && existsSync(rootConfig)) {
+      if (rootConfig !== absConfigPath && existsSync(rootConfig) && !isExplicitCwdRoot(root)) {
         // Check if this config file is ignored by .chousignore
         const rootConfigRel = relative(opts.cwd, rootConfig);
         if (!chousIgnore || !chousIgnore.ignores(rootConfigRel)) {
@@ -948,6 +995,7 @@ async function main() {
             }
             
             const childDir = dirname(absChildConfig);
+            if (isExplicitCwdRoot(childDir)) continue;
             // Ensure subdirectory is actually a directory
             try {
               const stats = await stat(childDir);
@@ -1033,7 +1081,20 @@ async function main() {
     return exit;
   }
 
-  const overallExit = await runConfigGroup(actualConfigPath, false, isAutoDetected ? raw : undefined);
+  let overallExit = 0;
+  for (const source of sources) {
+    raw = source.raw;
+    isAutoDetected = source.autoDetected;
+    actualConfigPath = source.path;
+    tryingPreset = source.trying;
+    initMessages = tryingPreset
+      ? [String(LL.cli.initCmd.usingPreset({ name: tryingPreset }))]
+      : isAutoDetected
+        ? [String(LL.cli.initCmd.suggestInit())]
+        : undefined;
+    const code = await runConfigGroup(actualConfigPath, false, source.autoDetected || source.trying ? raw : undefined);
+    if (code !== 0) overallExit = Math.max(overallExit, code);
+  }
 
   process.exitCode = overallExit;
 }
