@@ -56,6 +56,7 @@ const zh = {
 		performance: '在 {duration}ms 内遍历了 {fileCount} 个文件',
 		following: '跟随 @{name} · {credit}',
 		curated: '预设由 cheez.tech 整理',
+		workspacePackages: '工作区包：{count}',
 	},
 	agent: {
 		intro: '项目规则发现了文件和依赖问题。',

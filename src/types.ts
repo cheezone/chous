@@ -211,6 +211,7 @@ export type LintResult = {
   visibleSet?: Set<string>;
   imports?: string[]; // Propagated from config
   persona?: Persona;
+  workspacePackages?: string[]; // Packages discovered from pnpm-workspace.yaml
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
   ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index

@@ -56,6 +56,7 @@ Are you a **Vibe Coder** using AI editors? Use this 5-step workflow to let the A
 - **Persona presets**: Follow a real person's layout and stack. `antfu` ships in the box; anyone can publish another.
 - **Built-in presets**: **Next.js**, **Nuxt 4**, **Go**, **Python**, and more.
 - **Stack rules**: Require a package manager and dependencies, and tell the agent what to use instead.
+- **pnpm workspaces**: Detects `pnpm-workspace.yaml`, recognizes each package, and applies root allow / strict rules inside packages — no hand-written `in packages:` needed.
 - **Nested blocks**: Group rules naturally with `in <dir>: ...` syntax.
 - **AI editor hooks**: **Cursor** and **Claude Code** send the issues back to the agent.
 - **Elegant Reporting**: Beautiful, tree-style terminal reports that pinpoint exact inconsistencies.

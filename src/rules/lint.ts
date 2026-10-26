@@ -1,9 +1,10 @@
 import { basename, resolve, relative, sep } from "node:path";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
-import type { FsLintConfig, Issue, IssueMessage, LintResult, Rule } from "../types";
+import type { FsLintConfig, Issue, IssueMessage, LintResult, NoFilesRule, Rule } from "../types";
 import { DEFAULT_IGNORE_DIRS, isDirectory, listTopLevel, loadGitIgnorePatterns, pickTopLevelName, toDisplayPath, walkFiles } from "../fsutil";
 import { findValidator, processInDirOnlyGroup, type RuleValidatorContext, RuleStatisticsCollector } from "./validators";
+import { listPnpmWorkspacePackages, topLevelWorkspaceDirs } from "../config/pnpm-workspace";
 
 // Type guard to safely extract params from IssueMessage
 function hasParams(msg: IssueMessage): msg is Extract<IssueMessage, { params: any }> {
@@ -251,6 +252,7 @@ export async function lintWorkspace(opts: {
   // Merge root-level "allow" rules into "inDirOnly" for root directory
   // "allow" at root is equivalent to "in . allow"
   const rootAllowRules = config.rules.filter((r): r is Extract<Rule, { kind: "allow" }> => r.kind === "allow");
+  const rootAllowOnly = rootAllowRules.flatMap((r) => r.names);
   if (rootAllowRules.length > 0) {
     debugLogMsg("Found root-level allow rules", { count: rootAllowRules.length, rules: rootAllowRules.map(r => r.names) });
     const rootDir = "."; // Root directory
@@ -269,6 +271,11 @@ export async function lintWorkspace(opts: {
     }
     inDirGroups.set(rootDir, rootGroup);
   }
+
+  // Root "strict in ." (and bare strict) rules — cloned onto workspace packages later
+  const rootStrictRules = inDirRules.filter(
+    (r) => (r.dir === "." || r.dir === "") && (r.mode === "strict" || r.mode === undefined),
+  );
 
   // Merge "must have" (has) rules into "inDirOnly" for root directory
   // Files that are required should automatically be allowed
@@ -316,6 +323,71 @@ export async function lintWorkspace(opts: {
         });
       }
       inDirGroups.set(rootDir, rootGroup);
+    }
+  }
+
+  // pnpm workspace: single lint root, but recognize packages and apply root
+  // allow / strict-in-. inside each package. must-have and stack rules stay at root.
+  const workspacePackages = await listPnpmWorkspacePackages(root);
+  const workspaceSource = { file: resolve(root, "pnpm-workspace.yaml"), line: 0 };
+  const expandedNoRules: NoFilesRule[] = [];
+  if (workspacePackages.length > 0) {
+    debugLogMsg("Detected pnpm workspace packages", { packages: workspacePackages });
+    const topDirs = topLevelWorkspaceDirs(workspacePackages);
+    if (topDirs.length > 0) {
+      const rootGroup = inDirGroups.get(".") ?? [];
+      rootGroup.push({
+        kind: "inDirOnly",
+        dir: ".",
+        only: topDirs,
+        mode: "permissive",
+        source: workspaceSource,
+      });
+      inDirGroups.set(".", rootGroup);
+      rootAllowOnly.push(...topDirs);
+    }
+
+    for (const pkg of workspacePackages) {
+      if (inDirGroups.has(pkg)) continue;
+      const pkgGroup: Extract<Rule, { kind: "inDirOnly" }>[] = [];
+      if (rootAllowOnly.length > 0) {
+        pkgGroup.push({
+          kind: "inDirOnly",
+          dir: pkg,
+          only: [...rootAllowOnly],
+          mode: "permissive",
+          source: workspaceSource,
+        });
+      }
+      for (const strictRule of rootStrictRules) {
+        pkgGroup.push({
+          ...strictRule,
+          dir: pkg,
+          only: [...strictRule.only],
+          source: workspaceSource,
+        });
+      }
+      // CLI --strict with no explicit "strict in ." still needs a strict group entry
+      if (forceStrict && !pkgGroup.some((r) => r.mode === "strict" || r.mode === undefined)) {
+        pkgGroup.push({
+          kind: "inDirOnly",
+          dir: pkg,
+          only: [],
+          mode: "strict",
+          source: workspaceSource,
+        });
+      }
+      if (pkgGroup.length > 0) inDirGroups.set(pkg, pkgGroup);
+    }
+
+    for (const rule of config.rules) {
+      if (rule.kind !== "no") continue;
+      const packageScoped = rule.names
+        .filter((name) => !name.includes("/") && !name.includes("**"))
+        .flatMap((name) => workspacePackages.map((pkg) => `${pkg}/${name}`));
+      if (packageScoped.length > 0) {
+        expandedNoRules.push({ ...rule, names: packageScoped });
+      }
     }
   }
 
@@ -734,6 +806,15 @@ export async function lintWorkspace(opts: {
     }
   }
 
+  // Root-level `no` patterns also apply inside each workspace package
+  for (let i = 0; i < expandedNoRules.length; i++) {
+    const rule = expandedNoRules[i]!;
+    const validator = findValidator(rule);
+    if (validator) {
+      await validator.validate(rule, validatorContext, config.rules.length + i);
+    }
+  }
+
 
   // Output debug logs
   if (DEBUG_FILE && debugLog.length > 0) {
@@ -827,6 +908,7 @@ export async function lintWorkspace(opts: {
     visibleSet, 
     imports: config.imports,
     persona: config.persona,
+    ...(workspacePackages.length > 0 ? { workspacePackages } : {}),
     fileCount, 
     duration,
     ruleMetrics: statisticsCollector.getAllMetrics(),

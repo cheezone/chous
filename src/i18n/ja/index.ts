@@ -56,6 +56,7 @@ by: 'by',
 		performance: '{fileCount} 個のファイルを {duration}ms でスキャンしました',
 		following: 'Following @{name} · {credit}',
 		curated: 'preset curated by cheez.tech',
+		workspacePackages: 'workspace packages: {count}',
 	},
 	agent: {
 		intro: 'The project rules found file and dependency issues.',

@@ -865,6 +865,9 @@ export function renderReport(
       const credit = result.persona.url ? `${result.persona.url} · ${curated}` : curated;
       lines.push(c.dim(String(t.meta.following({ name: result.persona.name, credit }))));
     }
+    if (result.workspacePackages && result.workspacePackages.length > 0) {
+      lines.push(c.dim(String(t.meta.workspacePackages({ count: result.workspacePackages.length }))));
+    }
 
     // Language and mode - only show in verbose mode
     if (opts.verbose) {

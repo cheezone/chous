@@ -188,6 +188,7 @@ type RootTranslation = {
 		performance: RequiredParams<'duration' | 'fileCount'>
 		following: RequiredParams<'credit' | 'name'>
 		curated: string
+		workspacePackages: RequiredParams<'count'>
 	}
 	agent: {
 		intro: string
@@ -583,6 +584,7 @@ export type TranslationFunctions = {
 		performance: (arg: { duration: unknown, fileCount: unknown }) => LocalizedString
 		following: (arg: { credit: unknown, name: unknown }) => LocalizedString
 		curated: () => LocalizedString
+		workspacePackages: (arg: { count: unknown }) => LocalizedString
 	}
 	agent: {
 		intro: () => LocalizedString

@@ -56,6 +56,7 @@ by: 'by',
 		performance: '{fileCount}개 파일을 {duration}ms에 스캔했습니다',
 		following: 'Following @{name} · {credit}',
 		curated: 'preset curated by cheez.tech',
+		workspacePackages: 'workspace packages: {count}',
 	},
 	agent: {
 		intro: 'The project rules found file and dependency issues.',

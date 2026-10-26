@@ -1,0 +1,7 @@
+packages:
+  - 'packages/*'
+  - 'components/*'
+  - '!packages/ignore'
+
+catalog:
+  unused: ^1.0.0
