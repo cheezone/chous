@@ -13,6 +13,9 @@ export type AgentIssue = {
   root: string;
   displayPath: string;
   message: string;
+  severity?: "error" | "warn";
+  reason?: string;
+  fixSummary?: string;
 };
 
 export type AgentCheckResult = {
@@ -103,10 +106,21 @@ export async function checkWorkspaces(opts: {
       });
       if (!persona && result.persona) persona = result.persona;
       for (const issue of result.issues) {
+        let fixSummary: string | undefined;
+        if (issue.fix) {
+          const f = issue.fix;
+          if (f.type === "rename") fixSummary = `rename ${f.fromPath} → ${f.toPath}`;
+          else if (f.type === "deleteEmptyDir") fixSummary = `delete empty dir ${f.path}`;
+          else if (f.type === "pkgSetManager") fixSummary = `set packageManager to ${f.manager}`;
+          else if (f.type === "pkgReplaceDep") fixSummary = `replace dep ${f.from} with ${f.to}`;
+        }
         issues.push({
           root: workspaceRoot,
           displayPath: issue.displayPath,
           message: formatIssueMessage(LL, issue.message),
+          severity: issue.severity,
+          reason: issue.reason,
+          fixSummary,
         });
       }
     }
@@ -121,7 +135,10 @@ export function formatAgentSummary(lang: string, issues: AgentIssue[], persona?:
   if (persona) lines.push(String(LL.agent.follow({ name: persona.name })));
   lines.push("");
   for (const issue of issues.slice(0, SUMMARY_ISSUE_LIMIT)) {
-    lines.push(`- ${issue.displayPath}: ${issue.message}`);
+    const sev = issue.severity ? `[${issue.severity}] ` : "";
+    lines.push(`- ${sev}${issue.displayPath}: ${issue.message}`);
+    if (issue.reason) lines.push(`  ${String(LL.agent.reason({ reason: issue.reason }))}`);
+    if (issue.fixSummary) lines.push(`  ${String(LL.agent.fixHint({ fix: issue.fixSummary }))}`);
   }
   if (issues.length > SUMMARY_ISSUE_LIMIT) {
     lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`);

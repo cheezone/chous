@@ -2,11 +2,7 @@ import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
-import {
-  listPnpmWorkspacePackages,
-  parsePnpmWorkspacePackagesField,
-  topLevelWorkspaceDirs,
-} from "../../src/config/pnpm-workspace";
+import { getPackages } from "@manypkg/get-packages";
 
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
@@ -22,59 +18,38 @@ function runCli(args: string[], cwd: string) {
   return { code: proc.status, stdout: proc.stdout ?? "", stderr: proc.stderr ?? "" };
 }
 
-describe("parsePnpmWorkspacePackagesField", () => {
-  it("reads include and exclude patterns and ignores catalog", () => {
-    const patterns = parsePnpmWorkspacePackagesField(`
-packages:
-  - 'packages/*'
-  - "apps/**"
-  - '!packages/ignore'
-  - components/ui
-
-catalog:
-  chalk: ^4.1.2
-`);
-    expect(patterns).toEqual(["packages/*", "apps/**", "!packages/ignore", "components/ui"]);
+describe("@manypkg/get-packages on fixtures", () => {
+  it("lists pnpm packages and respects excludes", async () => {
+    const { tool, packages, rootDir } = await getPackages(PASS);
+    expect(tool.type).toBe("pnpm");
+    expect(resolve(rootDir)).toBe(PASS);
+    const rels = packages.map((p) => p.relativeDir.replace(/\\/g, "/")).sort();
+    expect(rels).toEqual(["components/ui", "packages/core"]);
   });
 
-  it("returns an empty list when packages is missing", () => {
-    expect(parsePnpmWorkspacePackagesField("catalog:\n  x: 1\n")).toEqual([]);
-  });
-});
-
-describe("listPnpmWorkspacePackages", () => {
-  it("resolves packages and respects excludes", async () => {
-    const dir = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-pnpm-ws-"));
+  it("only counts directories that have package.json under packages/**", async () => {
+    const dir = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-pnpm-pkgjson-"));
     try {
-      writeFileSync(
-        join(dir, "pnpm-workspace.yaml"),
-        "packages:\n  - 'packages/*'\n  - '!packages/ignore'\n\ncatalog:\n  x: 1\n",
-        "utf8",
-      );
-      mkdirSync(join(dir, "packages", "core"), { recursive: true });
-      mkdirSync(join(dir, "packages", "ignore"), { recursive: true });
-      writeFileSync(join(dir, "packages", "core", "package.json"), "{}", "utf8");
-      writeFileSync(join(dir, "packages", "ignore", "package.json"), "{}", "utf8");
+      writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - 'packages/**'\n", "utf8");
+      writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "tmp", private: true }), "utf8");
+      mkdirSync(join(dir, "packages", "core", "src", "comp"), { recursive: true });
+      writeFileSync(join(dir, "packages", "core", "package.json"), JSON.stringify({ name: "@demo/core" }), "utf8");
+      writeFileSync(join(dir, "packages", "core", "src", "main.ts"), "export {}\n", "utf8");
+      writeFileSync(join(dir, "packages", "core", "src", "comp", "rect.ts"), "export {}\n", "utf8");
 
-      const pkgs = await listPnpmWorkspacePackages(dir);
-      expect(pkgs).toEqual(["packages/core"]);
-      expect(topLevelWorkspaceDirs(pkgs)).toEqual(["packages"]);
-    } finally {
-      rmSync(dir, { recursive: true, force: true });
-    }
-  });
-
-  it("returns [] when the workspace file is absent", async () => {
-    const dir = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-pnpm-none-"));
-    try {
-      expect(await listPnpmWorkspacePackages(dir)).toEqual([]);
+      const { packages, rootDir } = await getPackages(dir);
+      expect(resolve(rootDir)).toBe(dir);
+      const rels = packages.map((p) => p.relativeDir.replace(/\\/g, "/"));
+      expect(rels).toEqual(["packages/core"]);
+      expect(rels).not.toContain("packages/core/src");
+      expect(rels).not.toContain("packages/core/src/comp");
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
   });
 });
 
-describe("pnpm workspace lint", () => {
+describe("workspace lint", () => {
   it("allows a workspace whose packages follow root allow rules", () => {
     const r = runCli(["--no-color", "-l", "en", "-v"], PASS);
     if (r.code !== 0) console.log(r.stdout, r.stderr);
@@ -88,5 +63,36 @@ describe("pnpm workspace lint", () => {
     expect(r.stdout).toMatch(/packages\/core\/stray\.xyz/);
     expect(r.stdout).not.toMatch(/packages\/core\/.*eslint\.config/);
     expect(r.stdout).toContain("workspace packages: 1");
+  });
+
+  it("does not treat nested source dirs as packages under packages/**", () => {
+    const dir = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-pnpm-nested-"));
+    try {
+      writeFileSync(join(dir, ".chous"), "import js\n\nstrict in .\n", "utf8");
+      writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "nested", private: true }), "utf8");
+      writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - 'packages/**'\n", "utf8");
+      mkdirSync(join(dir, "packages", "core", "src", "comp"), { recursive: true });
+      writeFileSync(join(dir, "packages", "core", "package.json"), JSON.stringify({ name: "@demo/core" }), "utf8");
+      writeFileSync(join(dir, "packages", "core", "src", "index.ts"), "export {}\n", "utf8");
+      writeFileSync(join(dir, "packages", "core", "src", "comp", "rect.ts"), "export {}\n", "utf8");
+
+      const r = runCli(["--no-color", "-l", "en", "-v"], dir);
+      if (r.code !== 0) console.log(r.stdout, r.stderr);
+      expect(r.code).toBe(0);
+      expect(r.stdout).toContain("workspace packages: 1");
+      expect(r.stdout).not.toMatch(/rect\.ts/);
+      expect(r.stdout).not.toMatch(/main\.ts/);
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("does not inherit a parent monorepo when linting a nested non-workspace project", () => {
+    // preset-antfu lives under this repo but has no workspace of its own
+    const nested = resolve(PROJECT_ROOT, "tests/fixtures/pass/preset-antfu");
+    const r = runCli(["--no-color", "-l", "en", "-v"], nested);
+    if (r.code !== 0) console.log(r.stdout, r.stderr);
+    expect(r.code).toBe(0);
+    expect(r.stdout).not.toContain("workspace packages:");
   });
 });

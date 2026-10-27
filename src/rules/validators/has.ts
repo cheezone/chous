@@ -1,7 +1,8 @@
 import { resolve } from "node:path";
 import type { HasFileRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
-import { exists, pickTopLevelName, toDisplayPath } from "../../fsutil";
+import { issueFromRule } from "./types";
+import { pickTopLevelName, toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
 
 export class HasFileRuleValidator extends BaseRuleValidator<HasFileRule> {
@@ -13,65 +14,48 @@ export class HasFileRuleValidator extends BaseRuleValidator<HasFileRule> {
     rule: HasFileRule,
     context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
-    const { root, cachedGlobScan, ig, rawIssues, rootAllowedSet, matchedGlobFiles } = context;
+    const { root, snapshot, rawIssues, rootAllowedSet, matchedGlobFiles } = context;
 
     let hitCount = 0;
     for (const name of rule.names) {
-      // Check if the pattern is a glob pattern
       const isGlobPattern = /[*?{}[\]]/.test(name) || name.includes("**");
-      
+
       if (isGlobPattern) {
-        // Use glob scan to find matching files
-        const matches = await cachedGlobScan(name, root, root, { onlyFiles: true, ig });
+        const matches = snapshot.match(name, { onlyFiles: true });
         if (matches.length > 0) {
-          // At least one file matches, rule is satisfied
           hitCount += matches.length;
-          // Add actual matched file paths to requiredTopLevelNames for display
           for (const match of matches) {
             const relPath = toDisplayPath(match, root);
             if (matchedGlobFiles) {
-              const topLevelName = pickTopLevelName(relPath);
-              matchedGlobFiles.add(topLevelName);
+              matchedGlobFiles.add(pickTopLevelName(relPath));
             }
-            // Add to root allowed set if it exists
-            if (rootAllowedSet) {
-              rootAllowedSet.add(relPath);
-            }
+            if (rootAllowedSet) rootAllowedSet.add(relPath);
           }
           continue;
         }
-        
-        // No files match the glob pattern, report error
-        // Use the pattern itself as the path for error reporting
+
         const abs = resolve(root, name);
-        rawIssues.push({
-          ruleKind: rule.kind,
+        rawIssues.push(issueFromRule(rule, {
           path: abs,
           displayPath: toDisplayPath(abs, root),
           message: { key: "issue.has.mustExist", params: { name } },
           category: "missing",
           severity: "error",
-        });
+        }));
       } else {
-        // Exact file path, use original logic
         const abs = resolve(root, name);
-        if (exists(abs)) {
+        if (snapshot.exists(abs)) {
           hitCount++;
-          // File exists, add to root allowed set if it exists
-          if (rootAllowedSet) {
-            const relPath = toDisplayPath(abs, root);
-            rootAllowedSet.add(relPath);
-          }
+          if (rootAllowedSet) rootAllowedSet.add(toDisplayPath(abs, root));
           continue;
         }
-        rawIssues.push({
-          ruleKind: rule.kind,
+        rawIssues.push(issueFromRule(rule, {
           path: abs,
           displayPath: toDisplayPath(abs, root),
           message: { key: "issue.has.mustExist", params: { name } },
           category: "missing",
           severity: "error",
-        });
+        }));
       }
     }
 

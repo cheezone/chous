@@ -1,33 +1,80 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { FsLintConfig, Persona, Rule, WhereDirective, RuleSource, Condition, NamingStyle, PackageManagerName } from "../types";
+import type { FsLintConfig, Persona, Rule, WhereDirective, RuleSource, Condition, NamingStyle, PackageManagerName, Severity } from "../types";
 import { FsLintError } from "../errors";
 import { APP_CONFIG_FILE_NAME } from "../constants";
 import { parseGithubImport, readCachedGithub } from "./github";
 import { resolveNpmPreset } from "./npm";
+
+/** Strip leading `warn`/`error` and trailing `because "..."` from a rule line. */
+function extractRuleDecorators(line: string): { line: string; severity?: Severity; reason?: string } {
+  let remaining = line.trim();
+  let severity: Severity | undefined;
+  let reason: string | undefined;
+
+  const severityMatch = remaining.match(/^(warn|error)\s+(.+)$/i);
+  if (severityMatch) {
+    severity = severityMatch[1]!.toLowerCase() as Severity;
+    remaining = severityMatch[2]!.trim();
+  }
+
+  // because "..." or because '...' (greedy last occurrence so nested quotes in the rule stay intact)
+  const becauseMatch = remaining.match(/\s+because\s+(?:"((?:\\.|[^"\\])*)"|'((?:\\.|[^'\\])*)')\s*$/i);
+  if (becauseMatch) {
+    reason = (becauseMatch[1] ?? becauseMatch[2] ?? "").replace(/\\(["'\\])/g, "$1");
+    remaining = remaining.slice(0, becauseMatch.index).trim();
+  }
+
+  return { line: remaining, severity, reason };
+}
+
+/** True for decorative separator comments like `# =====` or `# ---`. */
+function isSeparatorComment(trimmed: string): boolean {
+  if (!trimmed.startsWith("#")) return false;
+  const body = trimmed.slice(1).trim();
+  if (!body) return true;
+  if (/^@reason\b/i.test(body)) return false;
+  // Separators, copyright lines, and license banners are not rule reasons
+  return /^[=\-_*\u2500\u2014]{3,}/.test(body) || /^(\u00A9|Copyright\b)/i.test(body) || /^MIT\b/i.test(body);
+}
+
+function commentReasonText(trimmed: string): string | null {
+  if (!trimmed.startsWith("#")) return null;
+  if (isSeparatorComment(trimmed)) return null;
+  const body = trimmed.slice(1).trim();
+  const reasonTag = body.match(/^@reason\s+(.+)$/i);
+  if (reasonTag) return reasonTag[1]!.trim();
+  // Skip header-style attribution lines that are not rule explanations
+  if (/^https?:\/\//i.test(body)) return null;
+  if (/^Persona:/i.test(body)) return null;
+  if (/^Evidence\b/i.test(body)) return null;
+  if (/^\s*-\s+\S+\s+./.test(body)) return null;
+  if (/^Intersection only/i.test(body)) return null;
+  return body || null;
+}
 
 // Determine preset directory logic.
 // In development (src/), presets are at ../presets relative to this file? No, relative to project root.
 // In production (dist/), presets are at ../presets.
 // We can try to find them relative to __dirname.
 export function findPresetPath(name: string): string | null {
-  // Built-in presets map? Or just try to find files.
-  // 1. Check relative to current working directory? No, presets are usually absolute or package relative.
-  // 2. Check standard preset locations.
+  // Nested personas: `antfu/lib` ? presets/antfu/lib.chous
+  // Reject path escape; keep `/` so scene sub-presets resolve.
+  if (!name || name.includes("..") || name.startsWith("/") || name.startsWith("\\") || /^[A-Za-z]:/.test(name)) {
+    return null;
+  }
+  const segments = name.split(/[/\\]/).filter(Boolean);
+  if (segments.length === 0 || segments.some((s) => s === "." || s === "..")) return null;
 
-  // Hacky resolution for dev vs prod structure:
-  // Prod: /.../dist/config/parser.mjs -> /.../presets/name.chous
-  // Dev: /.../src/config/parser.ts -> /.../presets/name.chous
-
-  // We don't have __dirname in ESM unless we construct it.
-  // Use fileURLToPath for cross-platform compatibility (Windows support)
+  // Prod: /.../dist/... -> /.../presets/<name>.chous
+  // Dev:  /.../src/config/ -> /.../presets/<name>.chous
   const selfDir = dirname(fileURLToPath(import.meta.url));
+  const fileName = `${segments[segments.length - 1]}${APP_CONFIG_FILE_NAME}`;
+  const nested = segments.slice(0, -1);
 
-  // Source lives in src/config/, but the bundle flattens this module into dist/,
-  // so presets/ is two levels up in dev and one level up in the published package.
   for (const up of [["..", ".."], [".."]]) {
-    const candidate = resolve(selfDir, ...up, "presets", `${name}${APP_CONFIG_FILE_NAME}`);
+    const candidate = resolve(selfDir, ...up, "presets", ...nested, fileName);
     if (existsSync(candidate)) return candidate;
   }
 
@@ -240,10 +287,10 @@ function preprocessNestedBlocks(raw: string): string {
         processedLine = `move ${prefixedFrom} to ${prefixedTo}`;
       } else {
         // allow rule: allow [...] or allow [...] in <dir>
-        const allowMatch = processedLine.match(/^(allow|yes|ohyes)\s+(.+?)(?:\s+in\s+(.+?))?\s*$/);
+        const allowMatch = processedLine.match(/^allow\s+(.+?)(?:\s+in\s+(.+?))?\s*$/);
         if (allowMatch) {
           // Extract pattern part, handle array syntax [...] or comma-separated patterns
-          let patternsStr = allowMatch[2]!.trim();
+          let patternsStr = allowMatch[1]!.trim();
           const originalWasArray = patternsStr.startsWith("[");
           // Remove array syntax brackets
           if (originalWasArray) {
@@ -279,14 +326,13 @@ function preprocessNestedBlocks(raw: string): string {
             ? `[${prefixedPatterns.join(', ')}]`
             : prefixedPatterns.join(', ');
 
-          if (!allowMatch[3]) {
+          if (!allowMatch[2]) {
             // If there's no in <dir>, add it
-            processedLine = `${allowMatch[1]} ${patternsStrResult} in ${currentDir}`;
+            processedLine = `allow ${patternsStrResult} in ${currentDir}`;
           } else {
             // If there's in <dir>, ensure path is correct, but pattern shouldn't be prefixed (already in block)
-            const targetDir = allowMatch[3]!.startsWith(currentDir) ? allowMatch[3] : `${currentDir}/${allowMatch[3]}`;
-            // If in <dir> already exists, pattern shouldn't be prefixed
-            processedLine = `${allowMatch[1]} ${allowMatch[2]} in ${targetDir}`;
+            const targetDir = allowMatch[2].startsWith(currentDir) ? allowMatch[2] : `${currentDir}/${allowMatch[2]}`;
+            processedLine = `allow ${allowMatch[1]} in ${targetDir}`;
           }
         } else {
           // strict rule: strict or strict [files|dirs] or strict in <dir>
@@ -417,14 +463,28 @@ function parseFsLintConfigInternal(
   // Preprocess nested block syntax
   raw = preprocessNestedBlocks(raw);
   const imports: string[] = []; // To track imported files
-  const processedLines: { content: string; lineNum: number }[] = [];
+  const processedLines: { content: string; lineNum: number; commentReason?: string }[] = [];
   const rawLines = raw.split(/\r?\n/);
+  let pendingReasonLines: string[] = [];
   for (let i = 0; i < rawLines.length; i++) {
     const startLineNum = i + 1;
     const rawLine = rawLines[i];
     if (rawLine === undefined) continue;
     let line = rawLine.trim();
-    if (!line || line.startsWith("#")) continue;
+    if (!line) {
+      // Blank line breaks adjacent-comment association
+      pendingReasonLines = [];
+      continue;
+    }
+    if (line.startsWith("#")) {
+      if (isSeparatorComment(line)) {
+        pendingReasonLines = [];
+      } else {
+        const text = commentReasonText(line);
+        if (text) pendingReasonLines.push(text);
+      }
+      continue;
+    }
 
     // Handle backslash line continuation
     while (line.endsWith("\\") && i + 1 < rawLines.length) {
@@ -459,16 +519,38 @@ function parseFsLintConfigInternal(
       i = j;
     }
 
-    processedLines.push({ content: line, lineNum: startLineNum });
+    const commentReason = pendingReasonLines.length > 0 ? pendingReasonLines.join(" ") : undefined;
+    pendingReasonLines = [];
+    processedLines.push({ content: line, lineNum: startLineNum, commentReason });
   }
 
   let where: WhereDirective = { type: "config", implicit: true };
   let persona: Persona | undefined;
   const rules: Rule[] = [];
+  /** Applied to the next locally-authored rule(s) on this line. */
+  let lineMeta: { severity?: Severity; reason?: string } = {};
+
+  function finalizeRule<T extends Rule>(rule: T): T {
+    if (lineMeta.severity) rule.severity = lineMeta.severity;
+    if (lineMeta.reason) rule.reason = lineMeta.reason;
+    return rule;
+  }
+
+  function pushLocal(rule: Rule): void {
+    rules.push(finalizeRule(rule));
+  }
 
   for (let idx = 0; idx < processedLines.length; idx++) {
-    let { content: line, lineNum } = processedLines[idx]!;
+    let { content: line, lineNum, commentReason } = processedLines[idx]!;
     if (!line) continue;
+
+    // Extract warn/error prefix and because "..." before matching rule shapes
+    const decorated = extractRuleDecorators(line);
+    line = decorated.line;
+    lineMeta = {
+      severity: decorated.severity,
+      reason: decorated.reason ?? commentReason,
+    };
 
     // Handle array syntax: extract items from [...] and replace with comma-separated list
     // Use [\s\S] instead of . with s flag for ES2017 compatibility
@@ -595,7 +677,7 @@ function parseFsLintConfigInternal(
     if (packageManagerMatch) {
       const manager = packageManagerMatch[1] as PackageManagerName;
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "packageManager",
         manager,
         source: createRuleSource(configPath, lineNum),
@@ -609,7 +691,7 @@ function parseFsLintConfigInternal(
       const names = mustDepsMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "must have deps", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "deps",
         mode: "must",
         names: splitCsvLike(names),
@@ -624,7 +706,7 @@ function parseFsLintConfigInternal(
       const names = noDepsMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "no deps", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "deps",
         mode: "no",
         names: splitCsvLike(names),
@@ -640,7 +722,7 @@ function parseFsLintConfigInternal(
       const to = replaceDepMatch[2];
       if (!from || !to) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "replace dep", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "replaceDep",
         from,
         to,
@@ -656,7 +738,7 @@ function parseFsLintConfigInternal(
       const toDir = moveMatch[2];
       if (!from || !toDir) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "move", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "move",
         from: from.trim(),
         toDir: toDir.trim(),
@@ -675,7 +757,7 @@ function parseFsLintConfigInternal(
       // Create thoseOnly rule with empty only list - will be filled after all rules are parsed
       // This allows strict rules to be placed anywhere in the config file
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "thoseOnly",
         pattern: pattern.trim(),
         only: [], // Will be filled after all rules are parsed
@@ -708,7 +790,7 @@ function parseFsLintConfigInternal(
       }
 
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "inDirOnly",
         dir: dir.trim(),
         only: allowedItems,
@@ -743,7 +825,7 @@ function parseFsLintConfigInternal(
       }
 
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "inDirOnly",
         dir: dir.trim(),
         only: allowedItems,
@@ -755,14 +837,14 @@ function parseFsLintConfigInternal(
       continue;
     }
 
-    // allow <items> in <dir> (permissive mode) - simplified syntax (check before root-level allow)
-    const allowInMatch = line.match(/^(allow|yes|ohyes)\s+(.+?)\s+in\s+([^\s]+)\s*$/);
+    // allow <items> in <dir> (permissive mode) - check before root-level allow
+    const allowInMatch = line.match(/^allow\s+(.+?)\s+in\s+([^\s]+)\s*$/);
     if (allowInMatch) {
-      const only = allowInMatch[2];
-      const dir = allowInMatch[3];
-      if (!dir || !only) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: `${allowInMatch[1] || "allow"}...in`, line }, lineNum }, configPath);
+      const only = allowInMatch[1];
+      const dir = allowInMatch[2];
+      if (!dir || !only) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "allow...in", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "inDirOnly",
         dir: dir.trim(),
         only: splitCsvLike(only),
@@ -773,13 +855,13 @@ function parseFsLintConfigInternal(
       continue;
     }
 
-    // Root-level allow (permissive) - supports allow / yes / ohyes aliases
-    const allowMatch = line.match(/^(allow|yes|ohyes)\s+(.+?)\s*$/);
+    // Root-level allow (permissive)
+    const allowMatch = line.match(/^allow\s+(.+?)\s*$/);
     if (allowMatch) {
-      const names = allowMatch[2];
-      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: allowMatch[1] || "allow", line }, lineNum }, configPath);
+      const names = allowMatch[1];
+      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "allow", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "allow",
         names: splitCsvLike(names),
         source: createRuleSource(configPath, lineNum),
@@ -788,93 +870,13 @@ function parseFsLintConfigInternal(
       continue;
     }
 
-
-    // in <dir> allow <items> (permissive mode) - legacy syntax
-    const inAllowMatch = line.match(/^in\s+([^\s]+)\s+(allow|yes|ohyes)\s+(.+?)\s*$/);
-    if (inAllowMatch) {
-      const dir = inAllowMatch[1];
-      const only = inAllowMatch[3];
-      if (!dir || !only) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: `in...${inAllowMatch[2] || "allow"}`, line }, lineNum }, configPath);
-      const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
-        kind: "inDirOnly",
-        dir: dir.trim(),
-        only: splitCsvLike(only),
-        mode: "permissive",
-        source: createRuleSource(configPath, lineNum),
-        ...(when.length > 0 ? { when } : {}),
-      });
-      continue;
-    }
-
-
-    // in <dir> [files|dirs] naming <style> [prefix: /pattern/] [suffix: /pattern/] [except <names>] - legacy syntax
-    const inNamingMatch = line.match(/^in\s+([^\s]+)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
-    if (inNamingMatch) {
-      const dir = inNamingMatch[1];
-      const fileType = inNamingMatch[2] as "files" | "dirs" | undefined;
-      const style = inNamingMatch[3];
-      const prefix = inNamingMatch[4];
-      const suffix = inNamingMatch[5];
-      const except = inNamingMatch[6];
-      if (!dir || !style) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "in...naming", line }, lineNum }, configPath);
-      if (!isNamingStyle(style)) {
-        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "naming style (must be PascalCase/camelCase/kebab-case/snake_case/SCREAMING_SNAKE_CASE/flatcase)", line: style }, lineNum }, configPath);
-      }
-      const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
-        kind: "naming",
-        target: "in",
-        pattern: dir.trim(),
-        style: style as import("../types").NamingStyle,
-        fileType,
-        prefix,
-        suffix,
-        except: except ? splitCsvLike(except) : undefined,
-        source: createRuleSource(configPath, lineNum),
-        ...(when.length > 0 ? { when } : {}),
-      });
-      continue;
-    }
-
-    // those <pattern> [files|dirs] naming <style> [prefix: /pattern/] [suffix: /pattern/] [except <names>] - legacy syntax
-    const thoseNamingMatch = line.match(/^those\s+(.+?)\s+(?:(files|dirs)\s+)?naming\s+([^\s]+)(?:\s+prefix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+suffix:\s+(\/[^/]+\/[gimuy]*))?(?:\s+except\s+(.+?))?\s*$/);
-    if (thoseNamingMatch) {
-      const pattern = thoseNamingMatch[1];
-      const fileType = thoseNamingMatch[2] as "files" | "dirs" | undefined;
-      const style = thoseNamingMatch[3];
-      const prefix = thoseNamingMatch[4];
-      const suffix = thoseNamingMatch[5];
-      const except = thoseNamingMatch[6];
-      if (!pattern || !style) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "those...naming", line }, lineNum }, configPath);
-      if (!isNamingStyle(style)) {
-        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "naming style", line: style }, lineNum }, configPath);
-      }
-      const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
-        kind: "naming",
-        target: "those",
-        pattern: pattern.trim(),
-        style: style as import("../types").NamingStyle,
-        fileType,
-        prefix,
-        suffix,
-        except: except ? splitCsvLike(except) : undefined,
-        source: createRuleSource(configPath, lineNum),
-        ...(when.length > 0 ? { when } : {}),
-      });
-      continue;
-    }
-
-
-
-    // no / deny / reject (forbidden rules)
-    const noMatch = line.match(/^(no|deny|reject)\s+(.+?)\s*$/);
+    // no (forbidden rules)
+    const noMatch = line.match(/^no\s+(.+?)\s*$/);
     if (noMatch) {
-      const names = noMatch[2];
-      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: noMatch[1] || "no", line }, lineNum }, configPath);
+      const names = noMatch[1];
+      if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "no", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "no",
         names: splitCsvLike(names),
         source: createRuleSource(configPath, lineNum),
@@ -889,7 +891,7 @@ function parseFsLintConfigInternal(
       const names = mustHaveMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "must have", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "has",
         names: splitCsvLike(names),
         source: createRuleSource(configPath, lineNum),
@@ -903,7 +905,7 @@ function parseFsLintConfigInternal(
       const names = hasMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "has", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "has",
         names: splitCsvLike(names),
         source: createRuleSource(configPath, lineNum),
@@ -918,7 +920,7 @@ function parseFsLintConfigInternal(
       const names = optionalMatch[1];
       if (!names) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "optional", line }, lineNum }, configPath);
       const when = parseWhenConditions(line, lineNum, configPath);
-      rules.push({
+      pushLocal({
         kind: "optional",
         names: splitCsvLike(names),
         source: createRuleSource(configPath, lineNum),
@@ -957,7 +959,7 @@ function parseFsLintConfigInternal(
 
       const when = parseWhenConditions(line, lineNum, configPath);
       if (looksLikeGlob(left) || looksLikeGlob(right)) {
-        rules.push({
+        pushLocal({
           kind: "renameGlob",
           from: left,
           to: right,
@@ -967,7 +969,7 @@ function parseFsLintConfigInternal(
       } else {
         const fromNames = splitCsvLike(left);
         if (fromNames.length === 0) throw new FsLintError({ key: "parser.renameMissingSources", params: { line }, lineNum }, configPath);
-        rules.push({
+        pushLocal({
           kind: "renameDir",
           fromNames,
           toName: right,
@@ -1080,7 +1082,7 @@ function parseFsLintConfigInternal(
         // If fileType is "files" or undefined and pattern is a glob, use "those" target
         if (fileTypeTyped === "dirs") {
           // For directory naming, always use "in" target
-          rules.push({
+          pushLocal({
             kind: "naming",
             target: "in",
             pattern: trimmedPattern,
@@ -1095,7 +1097,7 @@ function parseFsLintConfigInternal(
           });
         } else if (looksLikeGlob(trimmedPattern) || trimmedPattern.includes("**") || trimmedPattern.includes("*")) {
           // It's a glob pattern, use "those" target
-          rules.push({
+          pushLocal({
             kind: "naming",
             target: "those",
             pattern: trimmedPattern,
@@ -1110,7 +1112,7 @@ function parseFsLintConfigInternal(
           });
         } else {
           // It's a directory, use "in" target
-          rules.push({
+          pushLocal({
             kind: "naming",
             target: "in",
             pattern: trimmedPattern,

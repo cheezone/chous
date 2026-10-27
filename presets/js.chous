@@ -25,14 +25,15 @@ allow [*.d.ts]
 allow [components.json]
 
 # Common directories for JS/TS projects
-allow [src, test, tests, script, scripts, spec, specs]
+# __tests__ is Jest's default; public is Vite/CRA static assets
+allow [src, test, tests, __tests__, script, scripts, spec, specs, public]
 
 # Vite specific config files
 allow [vitest.workspace.ts]
 
 # Monorepo layout and tool configs (Turborepo, Nx, Lerna, Rush)
 allow [packages, apps, libs, tools]
-allow [turbo.json, nx.json, lerna.json, rush.json]
+allow [turbo.json, nx.json, lerna.json, rush.json, project.json]
 
 # Docs generator config
 allow [typedoc.json]

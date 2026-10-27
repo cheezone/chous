@@ -36,49 +36,67 @@ export async function isDirectory(p: string): Promise<boolean> {
   }
 }
 
+function appendGitIgnoreFile(
+  allPatterns: string[],
+  content: string,
+  prefix: string,
+): void {
+  const lines = content.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith("#"));
+  for (let line of lines) {
+    let isNegation = line.startsWith("!");
+    if (isNegation) line = line.slice(1);
+
+    const hasSlash = line.slice(0, -1).includes("/");
+    let p = line;
+    if (hasSlash || p.startsWith("/")) {
+      // Has slash or starts with slash → relative to this .gitignore's directory
+      if (p.startsWith("/")) p = p.slice(1);
+      p = prefix + p;
+    } else {
+      // No slash → match this name in current directory and any subdirectories
+      p = prefix + "**/" + p;
+    }
+
+    if (isNegation) p = "!" + p;
+    allPatterns.push(p);
+  }
+}
+
 /**
- * Load all levels of .gitignore and convert to patterns relative to root
+ * Load .gitignore patterns relative to root.
+ * `rootOnly` skips the expensive nested-gitignore walk — enough for shallow scans.
  */
-export async function loadGitIgnorePatterns(root: string): Promise<string[]> {
+export async function loadGitIgnorePatterns(
+  root: string,
+  opts?: { rootOnly?: boolean },
+): Promise<string[]> {
   const allPatterns: string[] = [];
   try {
-    // Detect all .gitignore files in the project
+    if (opts?.rootOnly) {
+      const abs = resolve(root, ".gitignore");
+      if (existsSync(abs)) {
+        try {
+          appendGitIgnoreFile(allPatterns, await readFile(abs, "utf-8"), "");
+        } catch { /* ignore */ }
+      }
+      return allPatterns;
+    }
+
     const gitignoreFiles = await glob("**/.gitignore", {
       cwd: root,
       dot: true,
-      ignore: ["**/node_modules/**", "**/.git/**"]
+      ignore: ["**/node_modules/**", "**/.git/**"],
     });
 
     for (const relFile of gitignoreFiles) {
       const absFile = resolve(root, relFile);
       const dir = dirname(relFile);
       const prefix = dir === "." ? "" : dir + "/";
-
       try {
-        const content = await readFile(absFile, "utf-8");
-        const lines = content.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith("#"));
-
-        for (let line of lines) {
-          let isNegation = line.startsWith("!");
-          if (isNegation) line = line.slice(1);
-
-          const hasSlash = line.slice(0, -1).includes("/");
-          let p = line;
-          if (hasSlash || p.startsWith("/")) {
-            // Has slash or starts with slash, means relative to the directory where current .gitignore is located
-            if (p.startsWith("/")) p = p.slice(1);
-            p = prefix + p;
-          } else {
-            // No slash, means match this name in current directory and any subdirectories
-            p = prefix + "**/" + p;
-          }
-
-          if (isNegation) p = "!" + p;
-          allPatterns.push(p);
-        }
-      } catch { }
+        appendGitIgnoreFile(allPatterns, await readFile(absFile, "utf-8"), prefix);
+      } catch { /* ignore */ }
     }
-  } catch { }
+  } catch { /* ignore */ }
   return allPatterns;
 }
 

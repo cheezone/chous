@@ -22,7 +22,7 @@
     "pre-commit": "pnpm run typecheck",
     "commit-msg": "pnpm exec commitlint --edit"
   },
-  "description": "Stop AI slop. Follow a real person's project structure and stack.",
+  "description": "Opinionated taste linter. Follow a real person's layout and stack.",
   "author": "Cheez Lin <https://cheez.tech>",
   "license": "MIT",
   "repository": {
@@ -36,6 +36,8 @@
   "keywords": [
     "lint",
     "linter",
+    "taste",
+    "persona",
     "filesystem",
     "file-structure",
     "cli",
@@ -81,6 +83,7 @@
     "LICENSE"
   ],
   "dependencies": {
+    "@manypkg/get-packages": "^3.1.0",
     "compare-versions": "^6.1.1",
     "ignore": "^7.0.9",
     "picomatch": "^4.0.7",

@@ -1,4 +1,4 @@
-import type { Translation } from '../i18n-types.js'
+﻿import type { Translation } from '../i18n-types.js'
 import { APP_NAME, APP_CONFIG_FILE_NAME } from '../../constants'
 
 const zh = {
@@ -19,6 +19,9 @@ const zh = {
 			configHint: `指定规则文件（默认：当前目录的 ${APP_CONFIG_FILE_NAME}）`,
 			presetHint: '用人设检查当前目录，不写入 .chous。可重复指定来对比',
 			strictHint: '为所有目录规则启用严格模式',
+			fixHint: '应用安全的自动修复',
+			failOnWarningsHint: '存在警告时以错误码退出',
+			ignoreWarningsHint: '仅报告错误（隐藏警告）',
 			statsHint: '将规则性能统计输出到 JSON 文件',
 			noColorHint: '禁用彩色输出',
 			helpHint: '显示帮助',
@@ -29,6 +32,7 @@ const zh = {
 			missingConfigValue: '缺少 --config 参数值',
 			missingPresetValue: '缺少 --preset 参数值',
 			presetAndConfig: '--preset 和 --config 不能同时使用',
+			conflictIgnoreAndFailWarnings: '--ignore-warnings 与 --fail-on-warnings 不能同时使用',
 			missingStatsOutputValue: '缺少 --stats-output 参数值',
 			unknownArg: '未知参数：{arg}',
 			cannotReadRulesFile: '无法读取规则文件：{path}',
@@ -62,6 +66,8 @@ const zh = {
 		intro: '项目规则发现了文件和依赖问题。',
 		follow: '跟随 @{name}。',
 		fix: '先处理下面的问题，再运行 `chous --verbose`，确认已经没有问题。在那条命令报告没有问题之前，不要说已经修好了。',
+		reason: '原因：{reason}',
+		fixHint: '安全修复：{fix}',
 		updated: '已更新 {count} 个远程预设。',
 		upToDate: '远程预设已在本地缓存中。',
 		downloadFailed: '无法下载 {name}。如果本地已有缓存，会继续使用缓存。',
@@ -72,7 +78,11 @@ const zh = {
 	},
 	report: {
 		foundIssues: '发现 {count} 个问题',
+		foundErrorsAndWarnings: '发现 {errors} 个错误，{warnings} 个警告',
 		foundIssuesWithHint: '发现 {count} 个问题（添加 `--verbose` 参数获得详细信息）',
+		fixable: '[可自动修复]',
+		reason: '（{reason}）',
+		fixedCount: '已自动修复 {count} 个问题',
 		noIssues: '未发现问题',
 		arrow: '→',
 		foundRequiredDir: '已找到必需目录：{dir}',

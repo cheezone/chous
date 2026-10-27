@@ -1,7 +1,8 @@
 import { basename, dirname, relative, resolve, sep } from "node:path";
 import type { NamingRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
-import { isDirectory, listTopLevel, toDisplayPath } from "../../fsutil";
+import { issueFromRule } from "./types";
+import { toDisplayPath } from "../../fsutil";
 import { checkNamingStyle } from "../utils/naming";
 import { BaseRuleValidator } from "./base";
 
@@ -14,7 +15,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
     rule: NamingRule,
     context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
-    const { root, cachedGlobScan, ig, rawIssues, inDirGroups, config } = context;
+    const { root, snapshot, rawIssues, inDirGroups, config } = context;
 
     let hitCount = 0;
 
@@ -37,16 +38,15 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
           if (globIndex > 0) {
             const parentDirPattern = rule.pattern.substring(0, globIndex).replace(/\/+$/, "");
             const parentDirAbs = resolve(root, parentDirPattern);
-            if (await isDirectory(parentDirAbs)) {
+            if (snapshot.isDirectory(parentDirAbs)) {
               dirsToCheck.push(parentDirAbs);
             }
           }
         } else {
           // For file naming rules with glob patterns, find all matching directories
-          const matches = await cachedGlobScan(rule.pattern, root, root, { onlyFiles: false, ig });
-          // Filter to only directories
+          const matches = snapshot.match(rule.pattern, { onlyFiles: false });
           for (const match of matches) {
-            if (await isDirectory(match)) {
+            if (snapshot.isDirectory(match)) {
               dirsToCheck.push(match);
             }
           }
@@ -54,7 +54,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
       } else {
         // For non-glob patterns, treat as a single directory
         const dirAbs = resolve(root, rule.pattern);
-        if (await isDirectory(dirAbs)) {
+        if (snapshot.isDirectory(dirAbs)) {
           dirsToCheck.push(dirAbs);
         }
       }
@@ -66,20 +66,21 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
       
       // Process each matching directory
       for (const dirAbs of dirsToCheck) {
-        const entries = await listTopLevel(dirAbs, { gitignore: true });
+        const entries = snapshot.listDir(dirAbs).map((e) => ({
+          name: e.name,
+          abs: e.absPath,
+          isDir: e.isDir,
+        }));
         
         // Check if there are any allow rules for this directory (for naming exceptions)
         const allowRulesForDir = inDirGroups?.get(rule.pattern)?.filter(r => r.mode === "permissive") || [];
         const allowedNamesSet = new Set<string>();
         for (const allowRule of allowRulesForDir) {
-          // For permissive allow rules, collect all allowed names/patterns
           for (const allowedPattern of allowRule.only) {
-            // For exact matches (no glob), add directly
             if (!allowedPattern.includes("*") && !allowedPattern.includes("?")) {
               allowedNamesSet.add(allowedPattern);
             } else {
-              // For glob patterns, resolve them and collect matching names
-              const matches = await cachedGlobScan(allowedPattern, dirAbs, root, { onlyFiles: false, ig });
+              const matches = snapshot.match(allowedPattern, { cwd: dirAbs, onlyFiles: false });
               for (const match of matches) {
                 allowedNamesSet.add(basename(match));
               }
@@ -108,7 +109,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
               if (exceptPattern.includes("*") || exceptPattern.includes("**")) {
                 // For "in" target, the except pattern is relative to the pattern directory
                 const patternDirAbs = resolve(root, rule.pattern);
-                const matches = await cachedGlobScan(exceptPattern, patternDirAbs, root, { onlyFiles: !entry.isDir, ig });
+                const matches = snapshot.match(exceptPattern, { cwd: patternDirAbs, onlyFiles: !entry.isDir });
                 if (matches.some(m => resolve(root, m) === entry.abs)) {
                   isInExceptList = true;
                   break;
@@ -149,7 +150,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
             // Check if-contains condition (for dirs)
             // This applies to directory naming rules: only apply if the directory contains the specified file
             if (r.ifContains && entry.isDir && r.fileType === "dirs") {
-              const dirEntries = await listTopLevel(entry.abs, { gitignore: true });
+              const dirEntries = snapshot.listDir(entry.abs);
               const hasFile = dirEntries.some(e => !e.isDir && e.name === r.ifContains);
               if (!hasFile) continue; // Condition not met, skip this rule
             }
@@ -225,20 +226,19 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
               const firstRule = defaultRules[0] || conditionalRules[0] || rule;
               message = { key: "issue.naming.invalid", params: { style: firstRule.style } };
             }
-            rawIssues.push({
-              ruleKind: rule.kind,
+            rawIssues.push(issueFromRule(lastFailedRule?.rule ?? rule, {
               path: entry.abs,
               displayPath: toDisplayPath(entry.abs, root),
               message,
               category: "forbidden",
-              severity: "error"
-            });
+              severity: "error",
+            }));
           }
         }
       }
     } else {
       // target: "those"
-      const matches = await cachedGlobScan(rule.pattern, root, root, { onlyFiles: rule.fileType !== "dirs", ig });
+      const matches = snapshot.match(rule.pattern, { onlyFiles: rule.fileType !== "dirs" });
       
       // Collect all naming rules (not just same pattern) to check if file passes any rule
       // This allows more specific rules (like pages/**/components/**/*.vue) to work alongside broader rules
@@ -246,9 +246,18 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
         r.kind === "naming" && r.target === "those"
       );
       
+      // Precompute match sets once per naming rule (avoid O(files × rules × tree) rescans)
+      const matchesByRule = new Map<NamingRule, Set<string>>();
+      for (const r of allNamingRules) {
+        matchesByRule.set(
+          r,
+          new Set(snapshot.match(r.pattern, { onlyFiles: r.fileType !== "dirs" })),
+        );
+      }
+
       for (const abs of matches) {
         // Filter by fileType if specified
-        const isDir = await isDirectory(abs);
+        const isDir = snapshot.isDirectory(abs);
         if (rule.fileType === "files" && isDir) continue;
         if (rule.fileType === "dirs" && !isDir) continue;
 
@@ -256,11 +265,10 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
         const base = basename(abs);
         const relPath = relative(root, abs).split(sep).join("/");
         
-        // Find all naming rules that match this file by checking their patterns
+        // Find all naming rules that match this file
         const matchingRules: NamingRule[] = [];
         for (const r of allNamingRules) {
-          const ruleMatches = await cachedGlobScan(r.pattern, root, root, { onlyFiles: r.fileType !== "dirs", ig });
-          if (ruleMatches.includes(abs)) {
+          if (matchesByRule.get(r)!.has(abs)) {
             matchingRules.push(r);
           }
         }
@@ -286,7 +294,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
                   scanDir = resolve(root, patternDir);
                 }
               }
-              const matches = await cachedGlobScan(exceptPattern, scanDir, root, { onlyFiles: !isDir, ig });
+              const matches = snapshot.match(exceptPattern, { cwd: scanDir, onlyFiles: !isDir });
               if (matches.some(m => resolve(root, m) === abs)) {
                 isInExceptList = true;
                 break;
@@ -326,7 +334,7 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
           
           // Check if-contains condition (for dirs)
           if (r.ifContains && isDir) {
-            const dirEntries = await listTopLevel(abs, { gitignore: true });
+            const dirEntries = snapshot.listDir(abs);
             const hasFile = dirEntries.some(e => !e.isDir && e.name === r.ifContains);
             if (!hasFile) continue; // Condition not met, skip this rule
           }
@@ -400,14 +408,13 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
             const firstRule = defaultRules[0] || conditionalRules[0] || rule;
             message = { key: "issue.naming.invalid", params: { style: firstRule.style } };
           }
-          rawIssues.push({
-            ruleKind: rule.kind,
+          rawIssues.push(issueFromRule(lastFailedRule?.rule ?? rule, {
             path: abs,
             displayPath: toDisplayPath(abs, root),
             message,
             category: "forbidden",
-            severity: "error"
-          });
+            severity: "error",
+          }));
         }
       }
     }

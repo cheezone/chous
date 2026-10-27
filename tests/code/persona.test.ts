@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
+import { cpSync, mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { platform } from "node:os";
 import { join, resolve } from "node:path";
 import { depMatches } from "../../src/rules/validators/deps";
@@ -27,15 +27,89 @@ describe("persona presets", () => {
     expect(r.code).not.toBe(0);
     expect(r.stdout).toContain("Following @antfu");
     expect(r.stdout).toContain("replace dependency prettier with @antfu/eslint-config");
+    // replace already covers the ban — do not also emit "not allowed"
+    expect(r.stdout).not.toContain("dependency prettier is not allowed");
     expect(r.stdout).toContain("package manager should be pnpm");
     expect(r.stdout).not.toContain("Thanks Cheez");
   });
 
-  it("accepts an antfu-shaped project", () => {
+  it("accepts antfu/app (vite + vitest, no tsdown)", () => {
+    const tmp = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-antfu-vite-"));
+    try {
+      cpSync(PASS_ANTFU, tmp, { recursive: true });
+      writeFileSync(join(tmp, ".chous"), "import antfu/app\n", "utf8");
+      writeFileSync(
+        join(tmp, "package.json"),
+        JSON.stringify({
+          name: "antfu-vitesse-ok",
+          private: true,
+          packageManager: "pnpm@10.0.0",
+          devDependencies: {
+            "@antfu/eslint-config": "1.0.0",
+            eslint: "9.0.0",
+            typescript: "5.0.0",
+            vitest: "3.0.0",
+            vite: "6.0.0",
+            "lint-staged": "15.0.0",
+          },
+        }),
+        "utf8",
+      );
+      rmSync(join(tmp, "tsdown.config.ts"), { force: true });
+      writeFileSync(join(tmp, "vite.config.ts"), "export default {}\n", "utf8");
+      const r = runCli(["--no-color", "-l", "en", "-v"], tmp);
+      if (r.code !== 0) console.log(r.stdout, r.stderr);
+      expect(r.code).toBe(0);
+      expect(r.stdout).not.toContain("tsdown");
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts antfu/fullstack (nuxt app+server, no vitest)", () => {
+    const tmp = mkdtempSync(join(PROJECT_ROOT, "tests", "tmp-antfu-nuxt-"));
+    try {
+      cpSync(PASS_ANTFU, tmp, { recursive: true });
+      writeFileSync(join(tmp, ".chous"), "import antfu/fullstack\n", "utf8");
+      writeFileSync(
+        join(tmp, "package.json"),
+        JSON.stringify({
+          name: "antfu-nuxt-ok",
+          private: true,
+          packageManager: "pnpm@10.0.0",
+          devDependencies: {
+            "@antfu/eslint-config": "1.0.0",
+            eslint: "9.0.0",
+            typescript: "5.0.0",
+            nuxt: "4.0.0",
+          },
+        }),
+        "utf8",
+      );
+      rmSync(join(tmp, "tsdown.config.ts"), { force: true });
+      rmSync(join(tmp, "test"), { recursive: true, force: true });
+      mkdirSync(join(tmp, "app"), { recursive: true });
+      mkdirSync(join(tmp, "server"), { recursive: true });
+      // Empty dirs are omitted from the file-only VFS walk — drop a marker file.
+      writeFileSync(join(tmp, "app", "app.vue"), "", "utf8");
+      writeFileSync(join(tmp, "server", ".gitkeep"), "", "utf8");
+      writeFileSync(join(tmp, "nuxt.config.ts"), "export default {}\n", "utf8");
+      const r = runCli(["--no-color", "-l", "en", "-v"], tmp);
+      if (r.code !== 0) console.log(r.stdout, r.stderr);
+      expect(r.code).toBe(0);
+      expect(r.stdout).not.toContain("vitest");
+      expect(r.stdout).not.toContain("tsdown");
+    } finally {
+      rmSync(tmp, { recursive: true, force: true });
+    }
+  });
+
+  it("accepts an antfu/lib project", () => {
     const r = runCli(["--no-color", "-l", "en", "-v"], PASS_ANTFU);
     if (r.code !== 0) console.log(r.stdout, r.stderr);
     expect(r.code).toBe(0);
     expect(r.stdout).toContain("preset curated by cheez.tech");
+    expect(r.stdout).toMatch(/antfu[/\\]lib\.chous/);
   });
 });
 

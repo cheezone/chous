@@ -1,0 +1,11 @@
+# ========================================
+#  antfu / library — evidence: antfu/starter-ts
+#  TS library: tsdown + vitest + test/
+# ========================================
+
+import antfu
+
+must have [tsdown.config.ts, test]
+must have deps [tsdown, vitest]
+
+allow [knip.json]

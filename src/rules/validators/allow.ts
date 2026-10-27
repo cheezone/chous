@@ -12,19 +12,15 @@ export class AllowRuleValidator extends BaseRuleValidator<AllowRule> {
     rule: AllowRule,
     context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
-    const { root, cachedGlobScan, ig, rawIssues } = context;
+    const { root, snapshot, rawIssues } = context;
 
-    // Remove issues from "no" rules that match the allowed patterns
-    // This allows "allow" rules to override "no" rules
     const allowedFiles = new Set<string>();
     for (const name of rule.names) {
-      const matches = await cachedGlobScan(name, root, root, { onlyFiles: true, ig });
-      for (const match of matches) {
+      for (const match of snapshot.match(name, { onlyFiles: true })) {
         allowedFiles.add(resolve(root, match));
       }
     }
-    
-    // Remove "no" rule issues that match allowed patterns
+
     let hitCount = 0;
     for (let i = rawIssues.length - 1; i >= 0; i--) {
       const issue = rawIssues[i]!;

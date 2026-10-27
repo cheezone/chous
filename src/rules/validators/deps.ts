@@ -1,64 +1,15 @@
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import type { DepsRule, Issue, PackageManagerName, PackageManagerRule, ReplaceDepRule, Rule } from "../../types";
+import type { DepsRule, PackageManagerRule, ReplaceDepRule, Rule } from "../../types";
 import type { RuleValidatorContext } from "./types";
+import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
+import { readPackageManifestSnapshot } from "../../vfs/snapshot";
 
 type StackRule = PackageManagerRule | DepsRule | ReplaceDepRule;
 
-type PackageManifest = {
-  exists: boolean;
-  manager?: PackageManagerName;
-  deps: Set<string>;
-};
-
-const MANAGERS: PackageManagerName[] = ["npm", "pnpm", "yarn", "bun"];
-
-function isManager(value: string): value is PackageManagerName {
-  return (MANAGERS as string[]).includes(value);
-}
-
-function managerFromField(value: unknown): PackageManagerName | undefined {
-  if (typeof value !== "string") return undefined;
-  const name = value.split("@")[0]?.trim() ?? "";
-  return isManager(name) ? name : undefined;
-}
-
-function managerFromLockfile(root: string): PackageManagerName | undefined {
-  if (existsSync(resolve(root, "bun.lock")) || existsSync(resolve(root, "bun.lockb"))) return "bun";
-  if (existsSync(resolve(root, "pnpm-lock.yaml"))) return "pnpm";
-  if (existsSync(resolve(root, "yarn.lock"))) return "yarn";
-  if (existsSync(resolve(root, "package-lock.json")) || existsSync(resolve(root, "npm-shrinkwrap.json"))) return "npm";
-  return undefined;
-}
-
-function collectDepNames(section: unknown, into: Set<string>): void {
-  if (!section || typeof section !== "object") return;
-  for (const name of Object.keys(section as Record<string, unknown>)) {
-    if (name) into.add(name);
-  }
-}
-
-export function readPackageManifest(root: string): PackageManifest {
-  const pkgPath = resolve(root, "package.json");
-  if (!existsSync(pkgPath)) {
-    return { exists: false, manager: managerFromLockfile(root), deps: new Set() };
-  }
-  try {
-    const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as Record<string, unknown>;
-    const deps = new Set<string>();
-    collectDepNames(pkg.dependencies, deps);
-    collectDepNames(pkg.devDependencies, deps);
-    collectDepNames(pkg.peerDependencies, deps);
-    collectDepNames(pkg.optionalDependencies, deps);
-    return {
-      exists: true,
-      manager: managerFromField(pkg.packageManager) ?? managerFromLockfile(root),
-      deps,
-    };
-  } catch {
-    return { exists: true, manager: managerFromLockfile(root), deps: new Set() };
-  }
+/** Re-export for tests that import the old helper. */
+export function readPackageManifest(root: string) {
+  const snap = readPackageManifestSnapshot(root);
+  return { exists: snap.exists, manager: snap.manager, deps: snap.deps };
 }
 
 /** `name` or a scope wildcard such as `@scope/*`. */
@@ -78,13 +29,8 @@ function namesMatching(pattern: string, deps: Set<string>): string[] {
   return matched.sort();
 }
 
-function pkgIssue(root: string, id: string, issue: Omit<Issue, "path" | "displayPath"> & { label: string }): Issue {
-  const { label, ...rest } = issue;
-  return {
-    ...rest,
-    path: `${resolve(root, "package.json")}#${id}`,
-    displayPath: `package.json (${label})`,
-  };
+function safeLabel(label: string): string {
+  return label.replaceAll("/", "∕");
 }
 
 export class StackRuleValidator extends BaseRuleValidator<StackRule> {
@@ -96,20 +42,21 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
     rule: StackRule,
     context: RuleValidatorContext,
   ): Promise<{ hitCount: number }> {
-    const manifest = readPackageManifest(context.root);
+    const manifest = context.snapshot.manifest;
     let hitCount = 0;
 
     if (rule.kind === "packageManager") {
       if (manifest.manager === rule.manager) return { hitCount: 0 };
       hitCount = 1;
-      context.rawIssues.push(pkgIssue(context.root, `manager:${rule.manager}`, {
-        label: rule.manager,
-        ruleKind: rule.kind,
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${manifest.path}#manager:${rule.manager}`,
+        displayPath: `package.json (${safeLabel(rule.manager)})`,
         message: manifest.manager
           ? { key: "issue.packageManager.wrong", params: { expected: rule.manager, actual: manifest.manager } }
           : { key: "issue.packageManager.missing", params: { expected: rule.manager } },
         category: manifest.manager ? "forbidden" : "missing",
         severity: "error",
+        fix: { type: "pkgSetManager", pkgJsonPath: manifest.path, manager: rule.manager },
       }));
       return { hitCount };
     }
@@ -121,9 +68,9 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
           continue;
         }
         hitCount++;
-        context.rawIssues.push(pkgIssue(context.root, `missing:${pattern}`, {
-          label: pattern,
-          ruleKind: rule.kind,
+        context.rawIssues.push(issueFromRule(rule, {
+          path: `${manifest.path}#missing:${pattern}`,
+          displayPath: `package.json (${safeLabel(pattern)})`,
           message: { key: "issue.deps.missing", params: { name: pattern } },
           category: "missing",
           severity: "error",
@@ -133,12 +80,17 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
     }
 
     if (rule.kind === "deps" && rule.mode === "no") {
+      const replaceFrom = context.config.rules
+        .filter((r): r is ReplaceDepRule => r.kind === "replaceDep")
+        .map((r) => r.from);
+
       for (const pattern of rule.names) {
         for (const name of namesMatching(pattern, manifest.deps)) {
+          if (replaceFrom.some((from) => depMatches(from, name))) continue;
           hitCount++;
-          context.rawIssues.push(pkgIssue(context.root, `forbidden:${name}`, {
-            label: name,
-            ruleKind: rule.kind,
+          context.rawIssues.push(issueFromRule(rule, {
+            path: `${manifest.path}#forbidden:${name}`,
+            displayPath: `package.json (${safeLabel(name)})`,
             message: { key: "issue.deps.forbidden", params: { name } },
             category: "forbidden",
             severity: "error",
@@ -151,12 +103,16 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
     if (rule.kind !== "replaceDep") return { hitCount };
     for (const name of namesMatching(rule.from, manifest.deps)) {
       hitCount++;
-        context.rawIssues.push(pkgIssue(context.root, `replace:${name}`, {
-          label: `replace ${name}`,
-        ruleKind: rule.kind,
+      const canFix = !rule.from.endsWith("/*");
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${manifest.path}#replace:${name}`,
+        displayPath: `package.json (replace ${safeLabel(name)})`,
         message: { key: "issue.replaceDep.replace", params: { from: name, to: rule.to } },
         category: "forbidden",
         severity: "error",
+        ...(canFix
+          ? { fix: { type: "pkgReplaceDep" as const, pkgJsonPath: manifest.path, from: name, to: rule.to } }
+          : {}),
       }));
     }
     return { hitCount };

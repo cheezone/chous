@@ -9,6 +9,18 @@ export type RuleSource = {
   line: number; // 定义所在的行号
 };
 
+export type Severity = "error" | "warn";
+
+/** Shared metadata on every rule produced by the DSL parser. */
+export type RuleBase = {
+  source: RuleSource;
+  /** Explicit severity from `warn` / `error` prefix; undefined means engine default. */
+  severity?: Severity;
+  /** Why this rule exists — from `because "..."` or adjacent comments. */
+  reason?: string;
+  when?: Condition[];
+};
+
 export type Condition =
   | { type: "isEmpty" } // 是否为空目录
   | { type: "fileSize"; op: ">" | "<"; value: string } // 大小 (如 "1MB")
@@ -41,56 +53,44 @@ export type Rule =
   | DepsRule
   | ReplaceDepRule;
 
-export type MoveRule = {
+export type MoveRule = RuleBase & {
   kind: "move";
   from: string; // glob (root-level)
   toDir: string; // directory name relative to root
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type ThoseOnlyRule = {
+export type ThoseOnlyRule = RuleBase & {
   kind: "thoseOnly";
   pattern: string; // glob (root-level)
   only: string[]; // globs (root-level)
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type RenameDirRule = {
+export type RenameDirRule = RuleBase & {
   kind: "renameDir";
   fromNames: string[]; // directory names (root-level)
   toName: string; // directory name (root-level)
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type RenameGlobRule = {
+export type RenameGlobRule = RuleBase & {
   kind: "renameGlob";
   from: string; // glob (root-relative, may include **)
   to: string; // glob-like target pattern (best-effort support)
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type InDirOnlyRule = {
+export type InDirOnlyRule = RuleBase & {
   kind: "inDirOnly";
   dir: string; // directory (root-level)
   only: string[]; // globs relative to that dir (usually **/*.ts)
   mode?: "strict" | "permissive"; // strict = enforce whitelist, permissive = suggest only
   fileType?: "files" | "dirs"; // Optional filter for files or directories
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type AllowRule = {
+export type AllowRule = RuleBase & {
   kind: "allow";
   names: string[]; // file/directory names (root-level) - permissive suggestions
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type NamingRule = {
+export type NamingRule = RuleBase & {
   kind: "naming";
   target: "in" | "those";
   pattern: string; // dir (for "in") or glob (for "those")
@@ -102,52 +102,38 @@ export type NamingRule = {
   // Conditional rules (deprecated, use when instead)
   ifContains?: string; // For dirs: only apply this rule if the directory contains this file (e.g., "index.vue")
   ifParentStyle?: NamingStyle; // For files: only apply this rule if the parent directory matches this naming style
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type NoFilesRule = {
+export type NoFilesRule = RuleBase & {
   kind: "no";
   names: string[]; // file names (root-level)
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type HasFileRule = {
+export type HasFileRule = RuleBase & {
   kind: "has";
   names: string[]; // file names (root-level)
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type OptionalRule = {
+export type OptionalRule = RuleBase & {
   kind: "optional";
   names: string[]; // file names (root-level) - makes has rules optional
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type PackageManagerRule = {
+export type PackageManagerRule = RuleBase & {
   kind: "packageManager";
   manager: PackageManagerName;
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type DepsRule = {
+export type DepsRule = RuleBase & {
   kind: "deps";
   mode: "must" | "no";
   names: string[]; // package names, or a scope wildcard such as @scope/*
-  source: RuleSource;
-  when?: Condition[];
 };
 
-export type ReplaceDepRule = {
+export type ReplaceDepRule = RuleBase & {
   kind: "replaceDep";
   from: string;
   to: string;
-  source: RuleSource;
-  when?: Condition[];
 };
 
 export type Persona = {
@@ -161,6 +147,13 @@ export type FsLintConfig = {
   imports?: string[]; // Resolved paths of imported presets
   persona?: Persona;
 };
+
+/** Machine-executable, zero-data-loss fixes for `--fix`. */
+export type SafeFix =
+  | { type: "rename"; fromPath: string; toPath: string }
+  | { type: "deleteEmptyDir"; path: string }
+  | { type: "pkgSetManager"; pkgJsonPath: string; manager: string }
+  | { type: "pkgReplaceDep"; pkgJsonPath: string; from: string; to: string };
 
 export type IssueMessage =
   | { key: "issue.move.shouldMoveToDir"; params: { dir: string } }
@@ -191,11 +184,15 @@ export type IssueMessage =
 
 export type Issue = {
   ruleKind: Rule["kind"];
+  ruleSource: RuleSource;
+  reason?: string;
   path: string; // absolute
   displayPath: string; // relative to root (posix-ish for display)
   message: IssueMessage;
   category: "missing" | "forbidden"; // Missing vs violation/forbidden
-  severity: "error" | "warn";
+  severity: Severity;
+  /** Present only when the fix is 100% safe (no overwrite / no data loss). */
+  fix?: SafeFix;
 };
 
 export type RuleMetrics = {
@@ -209,12 +206,14 @@ export type LintResult = {
   issues: Issue[];
   requiredTopLevelNames: string[];
   visibleSet?: Set<string>;
+  /** Prefer over readdir/stat when rendering the report tree (avoids Windows stat tax). */
+  listDir?: (absDir: string) => Array<{ name: string; absPath: string; isDir: boolean }>;
   imports?: string[]; // Propagated from config
   persona?: Persona;
-  workspacePackages?: string[]; // Packages discovered from pnpm-workspace.yaml
+  workspacePackages?: string[]; // Packages discovered via @manypkg/get-packages
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
   ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index
   rules?: Rule[]; // Rules from config for statistics display
+  fixedCount?: number; // Number of issues auto-fixed when --fix was used
 };
-

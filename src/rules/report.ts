@@ -49,9 +49,16 @@ function isFile(p: string): boolean {
 }
 
 
-function listActualTopLevelNames(root: string, visibleSet?: Set<string>): string[] {
+function listActualTopLevelNames(
+  root: string,
+  visibleSet?: Set<string>,
+  listDir?: LintResult["listDir"],
+): string[] {
   try {
-    return readdirSync(root).filter((n) => {
+    const names = listDir
+      ? listDir(root).map((e) => e.name)
+      : readdirSync(root);
+    return names.filter((n) => {
       if (DEFAULT_IGNORE_DIRS.has(n)) return false;
       if (visibleSet && !visibleSet.has(resolve(root, n))) return false;
       return true;
@@ -469,10 +476,19 @@ function renderConciseTreeLines(opts: {
   const renderDir = (absDir: string, relDir: string, prefix: string) => {
     let ents: { name: string; abs: string; isDir: boolean; isFile: boolean }[] = [];
     try {
-      ents = readdirSync(absDir).map((name) => {
-        const abs = resolve(absDir, name);
-        return { name, abs, isDir: isDir(abs), isFile: isFile(abs) };
-      });
+      if (result.listDir) {
+        ents = result.listDir(absDir).map((e) => ({
+          name: e.name,
+          abs: e.absPath,
+          isDir: e.isDir,
+          isFile: !e.isDir,
+        }));
+      } else {
+        ents = readdirSync(absDir).map((name) => {
+          const abs = resolve(absDir, name);
+          return { name, abs, isDir: isDir(abs), isFile: isFile(abs) };
+        });
+      }
     } catch {
       return;
     }
@@ -529,7 +545,7 @@ function renderConciseTreeLines(opts: {
   };
 
   // Top level: only list "relevant" top-level (issues / required / moved), hide irrelevant ones to `└── ...`
-  const topAll = listActualTopLevelNames(result.root, result.visibleSet);
+  const topAll = listActualTopLevelNames(result.root, result.visibleSet, result.listDir);
   const extraTop = new Set<string>();
   for (const p of relevantSet) extraTop.add(p.split("/")[0]!);
   for (const t of topAll) {
@@ -643,14 +659,20 @@ export function renderReport(
   // Use merged issueMap to calculate issue count
   const uniqueIssueCount = issueMap.size;
 
+  if (result.fixedCount && result.fixedCount > 0) {
+    lines.push(c.green(String(t.report.fixedCount({ count: result.fixedCount }))));
+  }
+
   if (uniqueIssueCount === 0) {
     lines.push(c.green(String(t.report.noIssues())));
   } else {
+    const errorCount = issues.filter((i) => i.severity === "error").length;
+    const warnCount = issues.filter((i) => i.severity === "warn").length;
     // Show hint in the message if not in verbose mode
     const issueMessage = opts.verbose
-      ? String(t.report.foundIssues({ count: uniqueIssueCount }))
+      ? String(t.report.foundErrorsAndWarnings({ errors: errorCount, warnings: warnCount }))
       : String(t.report.foundIssuesWithHint({ count: uniqueIssueCount }));
-    lines.push(c.red(issueMessage));
+    lines.push(errorCount > 0 ? c.red(issueMessage) : c.yellow(issueMessage));
 
     // Only show issue list in verbose mode
     if (opts.verbose && issues.length > 0) {
@@ -701,26 +723,47 @@ export function renderReport(
         }
       }
 
-      // Build whitelist label to global index mapping
-      const whitelistLabelToIndex = new Map<string, number>();
-      const whitelistsByLabel = new Map<string, Set<string>>();
+      // Build whitelist mapping keyed by content (not by dir), so monorepo packages
+      // that share the same allow list reuse one index instead of dumping N copies.
+      const whitelistContentKey = (only: string[]) => [...only].map(String).sort().join("\0");
+      const whitelistLabelToContent = new Map<string, string>();
+      const whitelistsByContent = new Map<string, Set<string>>();
       for (const { whitelists } of mergedWhitelistIssues) {
         for (const wl of whitelists) {
           const label = wl.label === "./" || wl.label === "." ? "." : wl.label;
-          if (!whitelistsByLabel.has(label)) {
-            whitelistsByLabel.set(label, new Set());
+          const key = whitelistContentKey(wl.only);
+          whitelistLabelToContent.set(label, key);
+          if (!whitelistsByContent.has(key)) {
+            whitelistsByContent.set(key, new Set());
           }
-          // Merge all whitelist items
           for (const item of wl.only) {
-            whitelistsByLabel.get(label)!.add(item);
+            whitelistsByContent.get(key)!.add(item);
           }
         }
       }
-      // Assign global index to each unique label
+      const whitelistContentToIndex = new Map<string, number>();
+      const whitelistLabelToIndex = new Map<string, number>();
       let whitelistGlobalIndex = 1;
-      for (const label of Array.from(whitelistsByLabel.keys()).sort()) {
-        whitelistLabelToIndex.set(label, whitelistGlobalIndex);
+      for (const key of Array.from(whitelistsByContent.keys()).sort()) {
+        whitelistContentToIndex.set(key, whitelistGlobalIndex);
         whitelistGlobalIndex++;
+      }
+      for (const [label, key] of whitelistLabelToContent.entries()) {
+        whitelistLabelToIndex.set(label, whitelistContentToIndex.get(key)!);
+      }
+      // For the detail footer: one entry per unique content
+      const whitelistsByLabel = new Map<string, Set<string>>();
+      for (const [key, items] of whitelistsByContent.entries()) {
+        const index = whitelistContentToIndex.get(key)!;
+        const dirs = Array.from(whitelistLabelToContent.entries())
+          .filter(([, k]) => k === key)
+          .map(([d]) => d)
+          .sort();
+        const footerLabel = dirs.length <= 1 ? (dirs[0] ?? ".") : `${dirs[0]} +${dirs.length - 1}`;
+        // Stable key for sorting/display: use index-prefixed synthetic label
+        whitelistsByLabel.set(`#${index}:${footerLabel}`, items);
+        // Point the synthetic footer label at the same index for rendering
+        whitelistLabelToIndex.set(`#${index}:${footerLabel}`, index);
       }
 
       // Build blacklist label to global index mapping
@@ -791,7 +834,19 @@ export function renderReport(
           }
         }
 
-        lines.push(c.dim(`  ${icon} ${displayPath} ${c.dim(String(t.report.arrow()))} ${c.dim(formatIssueMessage(t, messageToDisplay))}`));
+        // Prefer the first original issue for reason / fixable metadata.
+        // Whitelist / blacklist: numbered footer is the only explanation — never append reason.
+        const originals = issuesByFile.get(displayPath) ?? [];
+        const primary = originals[0];
+        const fixableTag = primary?.fix ? ` ${c.cyan(String(t.report.fixable()))}` : "";
+        const isAllowListIssue =
+          meta.message.key === "issue.merged.forbiddenOnlyAllowed" ||
+          meta.message.key === "issue.merged.forbiddenBlacklist";
+        const reasonSuffix =
+          !isAllowListIssue && primary?.reason
+            ? ` ${c.dim(String(t.report.reason({ reason: primary.reason })))}`
+            : "";
+        lines.push(c.dim(`  ${icon} ${displayPath} ${c.dim(String(t.report.arrow()))} ${c.dim(formatIssueMessage(t, messageToDisplay))}${fixableTag}${reasonSuffix}`));
       }
 
       // Display blacklist details after issue list (same level as "Found X issues", no indentation)
@@ -837,10 +892,12 @@ export function renderReport(
         for (let i = 0; i < whitelistEntries.length; i++) {
           const [label, items] = whitelistEntries[i]!;
           const globalIndex = whitelistLabelToIndex.get(label) || (i + 1);
+          // Footer keys look like "#1:." or "#2:packages/core +197"
+          const displayLabel = label.includes(":") ? label.slice(label.indexOf(":") + 1) : label;
           const itemsArray = Array.from(items).sort();
           const itemsStr = itemsArray.join(", ");
           // title uses darker color (c.bold), items use lighter color (c.dim), and indent 2 spaces
-          lines.push(c.bold(`${String(t.report.whitelist())} ${globalIndex} (${label})`));
+          lines.push(c.bold(`${String(t.report.whitelist())} ${globalIndex} (${displayLabel})`));
           lines.push(c.dim(`  ${itemsStr}`));
           // Add empty line between entries (except the last one)
           if (i < whitelistEntries.length - 1) {

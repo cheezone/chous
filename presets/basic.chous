@@ -34,7 +34,7 @@ allow [docs, examples, docker, charts]
 allow [
   README*.md, CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, 
   GOVERNANCE.md, SUPPORT.md,
-  AGENTS.md, GUIDE.md
+  AGENTS.md, CLAUDE.md, GUIDE.md
 ]
 
 # deployment and ci config files

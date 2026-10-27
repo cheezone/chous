@@ -1,0 +1,10 @@
+# ========================================
+#  antfu / fullstack — evidence: antfu/vitesse-nuxt
+#  Nuxt app/ + server/ (Nitro). No vitest/tsdown required.
+# ========================================
+
+import antfu
+
+must have [nuxt.config.ts, app, server]
+
+allow [app, server]

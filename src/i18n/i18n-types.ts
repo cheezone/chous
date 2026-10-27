@@ -67,6 +67,9 @@ type RootTranslation = {
 			 * E​n​a​b​l​e​ ​s​t​r​i​c​t​ ​m​o​d​e​ ​f​o​r​ ​a​l​l​ ​d​i​r​e​c​t​o​r​y​-​o​n​l​y​ ​r​u​l​e​s
 			 */
 			strictHint: string
+			fixHint: string
+			failOnWarningsHint: string
+			ignoreWarningsHint: string
 			/**
 			 * O​u​t​p​u​t​ ​r​u​l​e​ ​p​e​r​f​o​r​m​a​n​c​e​ ​s​t​a​t​i​s​t​i​c​s​ ​t​o​ ​J​S​O​N​ ​f​i​l​e
 			 */
@@ -98,6 +101,7 @@ type RootTranslation = {
 			missingConfigValue: string
 			missingPresetValue: string
 			presetAndConfig: string
+			conflictIgnoreAndFailWarnings: string
 			/**
 			 * M​i​s​s​i​n​g​ ​v​a​l​u​e​ ​f​o​r​ ​-​-​s​t​a​t​s​-​o​u​t​p​u​t
 			 */
@@ -194,6 +198,8 @@ type RootTranslation = {
 		intro: string
 		follow: RequiredParams<'name'>
 		fix: string
+		reason: RequiredParams<'reason'>
+		fixHint: RequiredParams<'fix'>
 		updated: RequiredParams<'count'>
 		upToDate: string
 		downloadFailed: RequiredParams<'name'>
@@ -214,11 +220,15 @@ type RootTranslation = {
 		 * @param {unknown} count
 		 */
 		foundIssues: RequiredParams<'count'>
+		foundErrorsAndWarnings: RequiredParams<'errors' | 'warnings'>
 		/**
 		 * F​o​u​n​d​ ​{​c​o​u​n​t​}​ ​i​s​s​u​e​s​ ​(​a​d​d​ ​`​-​-​v​e​r​b​o​s​e​`​ ​f​l​a​g​ ​f​o​r​ ​d​e​t​a​i​l​s​)
 		 * @param {unknown} count
 		 */
 		foundIssuesWithHint: RequiredParams<'count'>
+		fixable: string
+		reason: RequiredParams<'reason'>
+		fixedCount: RequiredParams<'count'>
 		/**
 		 * N​o​ ​i​s​s​u​e​s​ ​f​o​u​n​d
 		 */
@@ -478,6 +488,9 @@ export type TranslationFunctions = {
 			 * Enable strict mode for all directory-only rules
 			 */
 			strictHint: () => LocalizedString
+			fixHint: () => LocalizedString
+			failOnWarningsHint: () => LocalizedString
+			ignoreWarningsHint: () => LocalizedString
 			/**
 			 * Output rule performance statistics to JSON file
 			 */
@@ -506,6 +519,7 @@ export type TranslationFunctions = {
 			missingConfigValue: () => LocalizedString
 			missingPresetValue: () => LocalizedString
 			presetAndConfig: () => LocalizedString
+			conflictIgnoreAndFailWarnings: () => LocalizedString
 			/**
 			 * Missing value for --stats-output
 			 */
@@ -590,6 +604,8 @@ export type TranslationFunctions = {
 		intro: () => LocalizedString
 		follow: (arg: { name: unknown }) => LocalizedString
 		fix: () => LocalizedString
+		reason: (arg: { reason: unknown }) => LocalizedString
+		fixHint: (arg: { fix: unknown }) => LocalizedString
 		updated: (arg: { count: unknown }) => LocalizedString
 		upToDate: () => LocalizedString
 		downloadFailed: (arg: { name: unknown }) => LocalizedString
@@ -609,10 +625,14 @@ export type TranslationFunctions = {
 		 * Found {count} issues
 		 */
 		foundIssues: (arg: { count: unknown }) => LocalizedString
+		foundErrorsAndWarnings: (arg: { errors: unknown, warnings: unknown }) => LocalizedString
 		/**
 		 * Found {count} issues (add `--verbose` flag for details)
 		 */
 		foundIssuesWithHint: (arg: { count: unknown }) => LocalizedString
+		fixable: () => LocalizedString
+		reason: (arg: { reason: unknown }) => LocalizedString
+		fixedCount: (arg: { count: unknown }) => LocalizedString
 		/**
 		 * No issues found
 		 */

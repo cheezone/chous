@@ -1,0 +1,11 @@
+# ========================================
+#  antfu / blog — evidence: antfu/antfu.me
+#  Vite SSG + pages/. No vitest/tsdown required.
+# ========================================
+
+import antfu
+
+must have [vite.config.ts, pages]
+must have deps [vite]
+
+allow [pages, data, photos, demo]

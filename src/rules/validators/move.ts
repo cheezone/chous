@@ -1,7 +1,8 @@
 import { basename, resolve } from "node:path";
 import type { MoveRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
-import { exists, isDirectory, toDisplayPath } from "../../fsutil";
+import { issueFromRule } from "./types";
+import { toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
 
 export class MoveRuleValidator extends BaseRuleValidator<MoveRule> {
@@ -13,42 +14,38 @@ export class MoveRuleValidator extends BaseRuleValidator<MoveRule> {
     rule: MoveRule,
     context: RuleValidatorContext
   ): Promise<{ hitCount: number }> {
-    const { root, cachedGlobScan, ig, rawIssues } = context;
+    const { root, snapshot, rawIssues } = context;
 
     const destDirAbs = resolve(root, rule.toDir);
-    const destDirExists = exists(destDirAbs);
-    const destDirIsDir = await isDirectory(destDirAbs);
-    
-    // Only check if destination exists and is not a directory (target directory doesn't need to exist)
+    const destDirExists = snapshot.exists(destDirAbs);
+    const destDirIsDir = snapshot.isDirectory(destDirAbs);
+
     if (destDirExists && !destDirIsDir) {
-      rawIssues.push({
-        ruleKind: rule.kind,
+      rawIssues.push(issueFromRule(rule, {
         path: destDirAbs,
         displayPath: toDisplayPath(destDirAbs, root),
         message: { key: "issue.move.destMustBeDir", params: { from: rule.from, toDir: rule.toDir } },
         category: "forbidden",
         severity: "warn",
-      });
+      }));
     }
 
-    const matches = await cachedGlobScan(rule.from, root, root, { onlyFiles: true, ig });
+    const matches = snapshot.match(rule.from, { onlyFiles: true });
     const safeDestDir = destDirIsDir || !destDirExists;
     let hitCount = 0;
-    
+
     for (const abs of matches) {
-      // Check target-level conditions
       const shouldApply = await this.shouldApplyToTarget(rule, abs, context);
-      if (!shouldApply) continue; // Skip this file if conditions not met
-      
+      if (!shouldApply) continue;
+
       const base = basename(abs);
       const target = resolve(root, rule.toDir, base);
       if (toDisplayPath(abs, root).startsWith(`${rule.toDir}/`)) continue;
-      const targetExists = exists(target);
+      const targetExists = snapshot.exists(target);
       const safeToFix = safeDestDir && !targetExists;
-      
+
       hitCount++;
-      rawIssues.push({
-        ruleKind: rule.kind,
+      rawIssues.push(issueFromRule(rule, {
         path: abs,
         displayPath: toDisplayPath(abs, root),
         message: safeToFix
@@ -56,7 +53,8 @@ export class MoveRuleValidator extends BaseRuleValidator<MoveRule> {
           : { key: "issue.move.unsafeManual", params: { dir: `${rule.toDir}/` } },
         category: "forbidden",
         severity: safeToFix ? "error" : "warn",
-      });
+        ...(safeToFix ? { fix: { type: "rename" as const, fromPath: abs, toPath: target } } : {}),
+      }));
     }
 
     return { hitCount };

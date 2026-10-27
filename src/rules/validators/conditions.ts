@@ -1,52 +1,38 @@
 import { basename, dirname } from "node:path";
-import { stat } from "node:fs/promises";
 import type { Condition } from "../../types";
 import type { RuleValidatorContext } from "./types";
-import { isDirectory, listTopLevel } from "../../fsutil";
 import { checkNamingStyle } from "../utils/naming";
 
 /**
- * Evaluate a single condition
+ * Evaluate a single condition against the in-memory snapshot.
  */
 async function evaluateCondition(
   condition: Condition,
-  targetPath: string, // Absolute path to the file/directory being checked
+  targetPath: string,
   context: RuleValidatorContext
 ): Promise<boolean> {
-  const { root, cachedGlobScan, ig } = context;
+  const { snapshot } = context;
 
   switch (condition.type) {
     case "isEmpty": {
-      // Check if directory is empty
-      const isDir = await isDirectory(targetPath);
-      if (!isDir) return false; // Files are never "empty"
-      const entries = await listTopLevel(targetPath, { gitignore: true });
-      return entries.length === 0;
+      if (!snapshot.isDirectory(targetPath)) return false;
+      return snapshot.listDir(targetPath).length === 0;
     }
 
     case "contains": {
-      // Check if directory contains a file matching the pattern
-      const isDir = await isDirectory(targetPath);
-      if (!isDir) return false; // Files don't "contain" other files
-      
-      // Try exact filename match first
-      const entries = await listTopLevel(targetPath, { gitignore: true });
-      const exactMatch = entries.some(e => e.name === condition.pattern);
-      if (exactMatch) return true;
-
-      // Try glob pattern match
-      const matches = await cachedGlobScan(condition.pattern, targetPath, root, { onlyFiles: true, ig });
+      if (!snapshot.isDirectory(targetPath)) return false;
+      const entries = snapshot.listDir(targetPath);
+      if (entries.some((e) => e.name === condition.pattern)) return true;
+      const matches = snapshot.match(condition.pattern, { cwd: targetPath, onlyFiles: true });
       return matches.length > 0;
     }
 
     case "exists": {
-      // Check if pattern exists (glob match)
-      const matches = await cachedGlobScan(condition.pattern, root, root, { onlyFiles: false, ig });
+      const matches = snapshot.match(condition.pattern, { onlyFiles: false });
       return matches.length > 0;
     }
 
     case "parentMatches": {
-      // Check if parent directory matches naming style
       const parentDirPath = dirname(targetPath);
       const parentDirName = basename(parentDirPath);
       const result = checkNamingStyle(parentDirName, condition.style);
@@ -54,52 +40,51 @@ async function evaluateCondition(
     }
 
     case "fileSize": {
-      // Check file size (only applies to files, not directories)
-      const isDir = await isDirectory(targetPath);
-      if (isDir) return false; // Directories don't have file size
-
-      try {
-        const stats = await stat(targetPath);
-        const sizeBytes = stats.size;
-        
-        // Parse size value (e.g., "1MB", "500KB", "2GB")
-        const sizeStr = condition.value.toUpperCase();
-        const sizeMatch = sizeStr.match(/^(\d+(?:\.\d+)?)\s*(B|KB|MB|GB|TB)$/);
-        if (!sizeMatch) return false;
-
-        const sizeValue = parseFloat(sizeMatch[1]!);
-        const sizeUnit = sizeMatch[2]!;
-        
-        let sizeInBytes: number;
-        switch (sizeUnit) {
-          case "B":
-            sizeInBytes = sizeValue;
-            break;
-          case "KB":
-            sizeInBytes = sizeValue * 1024;
-            break;
-          case "MB":
-            sizeInBytes = sizeValue * 1024 * 1024;
-            break;
-          case "GB":
-            sizeInBytes = sizeValue * 1024 * 1024 * 1024;
-            break;
-          case "TB":
-            sizeInBytes = sizeValue * 1024 * 1024 * 1024 * 1024;
-            break;
-          default:
-            return false;
+      if (snapshot.isDirectory(targetPath)) return false;
+      const entry = snapshot.byAbs.get(targetPath);
+      if (!entry) return false;
+      // Size is lazy (0 until needed) to avoid per-file stat during snapshot build
+      if (entry.size === 0) {
+        try {
+          const { statSync } = await import("node:fs");
+          entry.size = statSync(targetPath).size;
+        } catch {
+          return false;
         }
-
-        if (condition.op === ">") {
-          return sizeBytes > sizeInBytes;
-        } else if (condition.op === "<") {
-          return sizeBytes < sizeInBytes;
-        }
-        return false;
-      } catch {
-        return false; // File doesn't exist or can't be read
       }
+      const sizeBytes = entry.size;
+
+      const sizeStr = condition.value.toUpperCase();
+      const sizeMatch = sizeStr.match(/^(\d+(?:\.\d+)?)\s*(B|KB|MB|GB|TB)$/);
+      if (!sizeMatch) return false;
+
+      const sizeValue = parseFloat(sizeMatch[1]!);
+      const sizeUnit = sizeMatch[2]!;
+
+      let sizeInBytes: number;
+      switch (sizeUnit) {
+        case "B":
+          sizeInBytes = sizeValue;
+          break;
+        case "KB":
+          sizeInBytes = sizeValue * 1024;
+          break;
+        case "MB":
+          sizeInBytes = sizeValue * 1024 * 1024;
+          break;
+        case "GB":
+          sizeInBytes = sizeValue * 1024 * 1024 * 1024;
+          break;
+        case "TB":
+          sizeInBytes = sizeValue * 1024 * 1024 * 1024 * 1024;
+          break;
+        default:
+          return false;
+      }
+
+      if (condition.op === ">") return sizeBytes > sizeInBytes;
+      if (condition.op === "<") return sizeBytes < sizeInBytes;
+      return false;
     }
 
     default:
@@ -108,25 +93,18 @@ async function evaluateCondition(
 }
 
 /**
- * Evaluate all when conditions for a rule
- * Returns true if all conditions are met (AND logic)
+ * Evaluate all when conditions for a rule (AND logic).
  */
 export async function evaluateWhenConditions(
   when: Condition[] | undefined,
-  targetPath: string, // Absolute path to the file/directory being checked
+  targetPath: string,
   context: RuleValidatorContext
 ): Promise<boolean> {
-  if (!when || when.length === 0) {
-    return true; // No conditions means rule always applies
-  }
+  if (!when || when.length === 0) return true;
 
-  // All conditions must be true (AND logic)
   for (const condition of when) {
     const result = await evaluateCondition(condition, targetPath, context);
-    if (!result) {
-      return false; // One condition failed, rule doesn't apply
-    }
+    if (!result) return false;
   }
-
-  return true; // All conditions passed
+  return true;
 }

@@ -1,0 +1,11 @@
+# ========================================
+#  antfu / SPA app — evidence: antfu-collective/vitesse
+#  Vite + vitest + test/; no tsdown
+# ========================================
+
+import antfu
+
+must have [vite.config.ts, test]
+must have deps [vite, vitest]
+
+allow [locales, cypress]

@@ -2,13 +2,14 @@
 import { dirname, relative, resolve, sep } from "node:path";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { stdin } from "node:process";
-import { parseFsLintConfigGroups } from "./config/parser";
+import { findPresetPath, parseFsLintConfigGroups } from "./config/parser";
 import { prefetchImports } from "./config/prefetch";
 import { ensureGithubCached } from "./config/github";
 import { resolveNpmPreset } from "./config/npm";
 import { checkWorkspaces } from "./agents/core";
 import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
+import { applySafeFixes } from "./rules/autofix";
 import { renderReport } from "./rules/report";
 import { writeStatsJson } from "./rules/stats";
 import { createColorizer } from "./color";
@@ -44,6 +45,9 @@ type CliOptions = {
   color: boolean;
   help: boolean;
   strict: boolean;
+  fix: boolean;
+  failOnWarnings: boolean;
+  ignoreWarnings: boolean;
   statsOutput?: string; // Output rule performance statistics to JSON file
   filePaths?: string[]; // File paths from lint-staged or similar tools
 };
@@ -74,7 +78,17 @@ function detectLangArg(argv: string[]): string | undefined {
 
 function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
   const defaultColor = Boolean(process.stdout.isTTY) && process.env.NO_COLOR == null;
-  const opts: CliOptions = { command: "lint", cwd: process.cwd(), verbose: false, color: defaultColor, help: false, strict: false };
+  const opts: CliOptions = {
+    command: "lint",
+    cwd: process.cwd(),
+    verbose: false,
+    color: defaultColor,
+    help: false,
+    strict: false,
+    fix: false,
+    failOnWarnings: false,
+    ignoreWarnings: false,
+  };
   const filePaths: string[] = [];
   
   for (let i = 0; i < argv.length; i++) {
@@ -110,6 +124,9 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
     else if (a === "--strict" || a === "-s") opts.strict = true;
+    else if (a === "--fix") opts.fix = true;
+    else if (a === "--fail-on-warnings") opts.failOnWarnings = true;
+    else if (a === "--ignore-warnings") opts.ignoreWarnings = true;
     else if (a === "--stats-output") {
       const path = argv[i + 1];
       if (!path) throw new Error(String(LL.cli.error.missingStatsOutputValue()));
@@ -157,6 +174,9 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
   if (opts.presets?.length && opts.configPath) {
     throw new Error(String(LL.cli.error.presetAndConfig()));
   }
+  if (opts.ignoreWarnings && opts.failOnWarnings) {
+    throw new Error(String(LL.cli.error.conflictIgnoreAndFailWarnings()));
+  }
   
   return opts;
 }
@@ -177,6 +197,9 @@ ${String(LL.cli.help.options())}
   -v, --verbose        ${String(LL.cli.help.verboseHint())}
   -l, --lang <code>    ${String(LL.cli.help.langHint())}
   -s, --strict         ${String(LL.cli.help.strictHint())}
+  --fix               ${String(LL.cli.help.fixHint())}
+  --fail-on-warnings   ${String(LL.cli.help.failOnWarningsHint())}
+  --ignore-warnings    ${String(LL.cli.help.ignoreWarningsHint())}
   --stats-output <path> ${String(LL.cli.help.statsHint())}
   --no-color           ${String(LL.cli.help.noColorHint())}
   -h, --help           ${String(LL.cli.help.helpHint())}
@@ -184,15 +207,7 @@ ${String(LL.cli.help.options())}
   );
 }
 
-function findBuiltInPresetPath(name: string): string | null {
-  // Keep consistent with parser.ts resolution:
-  // Prod: /.../dist/cli.mjs -> /.../presets/name.chous
-  // Dev:  /.../src/cli.ts  -> /.../presets/name.chous
-  // Use fileURLToPath for cross-platform compatibility (Windows support)
-  const selfDir = dirname(fileURLToPath(import.meta.url));
-  const candidate = resolve(selfDir, "..", "presets", `${name}${APP_CONFIG_FILE_NAME}`);
-  return existsSync(candidate) ? candidate : null;
-}
+const findBuiltInPresetPath = findPresetPath;
 
 /**
  * Resolve a localized template file under `templates/<lang>/`.
@@ -1048,6 +1063,15 @@ async function main() {
         strict: opts.strict,
         relevantDirs: rootRelevantDirs
       });
+
+      if (opts.fix && result.issues.some((i) => i.fix)) {
+        const fixed = await applySafeFixes(result.issues);
+        result = { ...result, issues: fixed.remaining, fixedCount: fixed.applied };
+      }
+
+      if (opts.ignoreWarnings) {
+        result = { ...result, issues: result.issues.filter((i) => i.severity === "error") };
+      }
       
       const rel = relative(groupDir, root).split("\\").join("/");
       const label = rel && rel !== "" ? rel : groupDir.split("/").pop() ?? ".";
@@ -1068,8 +1092,11 @@ async function main() {
       if (opts.statsOutput) {
         writeStatsJson(result, opts.statsOutput);
       }
-      
-      if (result.issues.length !== 0) exit = 1;
+
+      const errorCount = result.issues.filter((i) => i.severity === "error").length;
+      const warnCount = result.issues.filter((i) => i.severity === "warn").length;
+      if (errorCount > 0) exit = 1;
+      else if (warnCount > 0 && opts.failOnWarnings) exit = 1;
     }
 
     for (const root of delegated) {

@@ -1,33 +1,33 @@
-import type { Issue, Rule, InDirOnlyRule } from "../../types";
-import type ignore from "ignore";
+import type { Issue, Rule, InDirOnlyRule, Severity, SafeFix, IssueMessage, RuleSource } from "../../types";
+import type { WorkspaceSnapshot } from "../../vfs/snapshot";
 import type { RuleStatisticsCollector } from "./base";
-
 /**
- * Shared context for all rule validators
+ * Shared context for all rule validators.
+ * Validators read the workspace exclusively through `snapshot` — no extra disk I/O.
  */
 export interface RuleValidatorContext {
   root: string;
+  snapshot: WorkspaceSnapshot;
+  /**
+   * Backward-compatible glob helper backed by the in-memory snapshot.
+   * Returns absolute paths.
+   */
   cachedGlobScan: (
     pattern: string | string[],
     cwd: string,
     root: string,
-    opts?: { onlyFiles?: boolean; ig?: ReturnType<typeof ignore> }
+    opts?: { onlyFiles?: boolean; ig?: unknown }
   ) => Promise<string[]>;
-  ig: ReturnType<typeof ignore>;
+  ig: WorkspaceSnapshot["ig"];
   rawIssues: Issue[];
   debugLogMsg?: (msg: string, ...args: any[]) => void;
-  // Statistics collector for rule metrics
   statisticsCollector?: RuleStatisticsCollector;
-  // Additional context for complex rules
   inDirGroups?: Map<string, InDirOnlyRule[]>;
   rootAllowedSet?: Set<string>;
   filesMatchedByMoveRules?: Set<string>;
   forceStrict?: boolean;
-  // Full rule list, for validators that need to inspect sibling rules
   config: { rules: Rule[] };
-  // Track processed patterns for thoseOnly rules to allow later rules to override earlier ones
   processedThoseOnlyPatterns?: Map<string, number>;
-  // Track matched glob files from "has" rules
   matchedGlobFiles?: Set<string>;
 }
 
@@ -35,17 +35,48 @@ export interface RuleValidatorContext {
  * Base interface for rule validators
  */
 export interface RuleValidator<R extends Rule = Rule> {
-  /**
-   * Check if this validator can handle the given rule
-   */
   canHandle(rule: Rule): rule is R;
+  validate(rule: R, context: RuleValidatorContext, ruleIndex: number): Promise<void>;
+}
 
-  /**
-   * Validate the rule and add issues to rawIssues
-   */
-  validate(
-    rule: R,
-    context: RuleValidatorContext,
-    ruleIndex: number
-  ): Promise<void>;
+/** Build an Issue inheriting rule source / optional severity override.
+ * Only author-written `reason` (because / @reason / intentional adjacent comment)
+ * is attached — never English builtin defaults. Whitelist/blacklist issues should
+ * pass `reason: false` so the numbered footer stays the sole explanation.
+ */
+export function issueFromRule(
+  rule: Rule,
+  partial: {
+    path: string;
+    displayPath: string;
+    message: IssueMessage;
+    category: "missing" | "forbidden";
+    severity?: Severity;
+    fix?: SafeFix;
+    /** `false` = omit reason even if the rule has one (allow-list / deny-list). */
+    reason?: string | false;
+  },
+): Issue {
+  const reason =
+    partial.reason === false
+      ? undefined
+      : partial.reason !== undefined
+        ? partial.reason
+        : rule.reason;
+  return {
+    ruleKind: rule.kind,
+    ruleSource: rule.source,
+    ...(reason ? { reason } : {}),
+    path: partial.path,
+    displayPath: partial.displayPath,
+    message: partial.message,
+    category: partial.category,
+    severity: rule.severity ?? partial.severity ?? "error",
+    ...(partial.fix ? { fix: partial.fix } : {}),
+  };
+}
+
+/** Fallback source when a synthetic issue has no originating rule. */
+export function syntheticSource(file: string, line = 0): RuleSource {
+  return { file, line };
 }
