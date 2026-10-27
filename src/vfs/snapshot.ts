@@ -50,6 +50,13 @@ export type PackageManifestSnapshot = {
   deps: Set<string>;
   /** dependency name -> section key it was found in */
   depSections: Map<string, "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies">;
+  /** package.json scripts (name -> command). */
+  scripts?: Record<string, string>;
+  /**
+   * Selected top-level package.json fields used by stack/kind detection
+   * (packageManager, bin, exports, main, private, simple-git-hooks, …).
+   */
+  fields?: Record<string, unknown>;
 };
 
 export type WorkspaceInfo = {
@@ -116,6 +123,35 @@ function collectDepNames(
   }
 }
 
+const MANIFEST_FIELD_KEYS = [
+  "packageManager",
+  "bin",
+  "exports",
+  "main",
+  "module",
+  "types",
+  "private",
+  "simple-git-hooks",
+  "name",
+] as const;
+
+function collectManifestFields(pkg: Record<string, unknown>): Record<string, unknown> {
+  const fields: Record<string, unknown> = {};
+  for (const key of MANIFEST_FIELD_KEYS) {
+    if (key in pkg) fields[key] = pkg[key];
+  }
+  return fields;
+}
+
+function collectScripts(value: unknown): Record<string, string> | undefined {
+  if (!value || typeof value !== "object") return undefined;
+  const out: Record<string, string> = {};
+  for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+    if (typeof v === "string") out[k] = v;
+  }
+  return out;
+}
+
 export function readPackageManifestSnapshot(root: string): PackageManifestSnapshot {
   const pkgPath = resolve(root, "package.json");
   if (!existsSync(pkgPath)) {
@@ -138,6 +174,8 @@ export function readPackageManifestSnapshot(root: string): PackageManifestSnapsh
       manager: managerFromField(pkg.packageManager) ?? managerFromLockfile(root),
       deps,
       depSections,
+      scripts: collectScripts(pkg.scripts),
+      fields: collectManifestFields(pkg),
     };
   } catch {
     return { exists: true, path: pkgPath, manager: managerFromLockfile(root), deps: new Set(), depSections: new Map() };

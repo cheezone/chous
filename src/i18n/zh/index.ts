@@ -68,6 +68,10 @@ const zh = {
 		fix: '先处理下面的问题，再运行 `chous --verbose`，确认已经没有问题。在那条命令报告没有问题之前，不要说已经修好了。',
 		reason: '原因：{reason}',
 		fixHint: '安全修复：{fix}',
+		see: '参考：{url}',
+		autoSection: '可直接运行 `chous --fix`：',
+		agentSection: '需要你（或 AI）迁移：',
+		infoSection: '仅提示：',
 		updated: '已更新 {count} 个远程预设。',
 		upToDate: '远程预设已在本地缓存中。',
 		downloadFailed: '无法下载 {name}。如果本地已有缓存，会继续使用缓存。',
@@ -136,6 +140,14 @@ const zh = {
 		},
 		replaceDep: {
 			replace: '把依赖 {from} 换成 {to}',
+		},
+		role: {
+			mismatch: '{role} 应为 {expected}（当前是 {actual}）',
+			missing: '{role} 应为 {expected}',
+			deprecated: '{tool} 已过时',
+		},
+		rotten: {
+			dep: '依赖 {name} 可替换 → {replacement}',
 		},
 		naming: {
 			invalid: '命名规范错误（应为 {style}）',

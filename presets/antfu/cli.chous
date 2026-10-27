@@ -1,11 +1,11 @@
 # ========================================
-#  antfu / CLI — evidence: antfu-collective/ni
-#  Same toolchain as lib; ships a bin/
+#  antfu / cli — evidence: antfu/ni
 # ========================================
 
 import antfu
 
+bundler     tsdown
+test runner vitest
+
 must have [tsdown.config.ts, test, bin]
 must have deps [tsdown, vitest]
-
-allow [bin]

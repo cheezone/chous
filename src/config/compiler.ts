@@ -5,11 +5,13 @@ import type {
   HasFileRule,
   InDirOnlyRule,
   NoFilesRule,
+  RoleRule,
   Rule,
   RuleSource,
 } from "../types";
 import { pickTopLevelName } from "../fsutil";
 import type { WorkspaceInfo } from "../vfs/snapshot";
+import { toolFileEffects, type RoleId } from "../knowledge";
 
 export type DirectoryWhitelistGroup = {
   dir: string;
@@ -68,7 +70,43 @@ export function compileConfig(
     inDirGroups.set(r.dir, list);
   }
 
-  const rootAllowRules = config.rules.filter((r): r is AllowRule => r.kind === "allow");
+  // Stack → structure bridge: declared tools auto-allow their files; siblings auto-forbid.
+  const roleRules = config.rules.filter((r): r is RoleRule => r.kind === "role");
+  const declaredByRole = new Map<RoleId, string[]>();
+  for (const r of roleRules) {
+    const role = r.role as RoleId;
+    const existing = declaredByRole.get(role) ?? [];
+    for (const t of r.tools) {
+      if (!existing.includes(t)) existing.push(t);
+    }
+    declaredByRole.set(role, existing);
+  }
+  const fileEffects = toolFileEffects(declaredByRole);
+  const syntheticSource: RuleSource = roleRules[0]?.source ?? {
+    file: resolve(root, ".chous"),
+    line: 0,
+  };
+  const syntheticRules: Rule[] = [];
+  if (fileEffects.allow.length > 0) {
+    syntheticRules.push({
+      kind: "allow",
+      names: fileEffects.allow,
+      source: syntheticSource,
+    });
+  }
+  if (fileEffects.forbid.length > 0) {
+    syntheticRules.push({
+      kind: "no",
+      names: fileEffects.forbid,
+      source: syntheticSource,
+      severity: "warn",
+      reason: "Sibling tool config for a role you did not declare.",
+    });
+  }
+
+  const rulesWithToolFiles: Rule[] = [...config.rules, ...syntheticRules];
+
+  const rootAllowRules = rulesWithToolFiles.filter((r): r is AllowRule => r.kind === "allow");
   const rootAllowOnly = rootAllowRules.flatMap((r) => r.names);
 
   if (rootAllowRules.length > 0) {
@@ -88,7 +126,7 @@ export function compileConfig(
     inDirGroups.set(".", rootGroup);
   }
 
-  const hasRules = config.rules.filter((r): r is HasFileRule => r.kind === "has");
+  const hasRules = rulesWithToolFiles.filter((r): r is HasFileRule => r.kind === "has");
   if (hasRules.length > 0) {
     const rootGroup = inDirGroups.get(".") ?? [];
     const requiredNames: string[] = [];
@@ -117,12 +155,13 @@ export function compileConfig(
     }
   }
 
+  // Fold synthetic `no` into expanded rules (allow already folded into inDirGroups above)
   const rootStrictRules = inDirRules.filter(
     (r) => (r.dir === "." || r.dir === "") && (r.mode === "strict" || r.mode === undefined),
   );
 
   const workspacePackages = workspace.packages;
-  const expandedRules: Rule[] = [...config.rules];
+  const expandedRules: Rule[] = [...rulesWithToolFiles];
   const expandedAllowOnly = [...rootAllowOnly];
 
   if (workspacePackages.length > 0) {
@@ -172,7 +211,7 @@ export function compileConfig(
       if (pkgGroup.length > 0) inDirGroups.set(pkg, pkgGroup);
     }
 
-    for (const rule of config.rules) {
+    for (const rule of rulesWithToolFiles) {
       if (rule.kind !== "no") continue;
       const packageScoped = (rule as NoFilesRule).names
         .filter((name) => !name.includes("/") && !name.includes("**"))
@@ -185,7 +224,7 @@ export function compileConfig(
 
   const required = new Set<string>();
   const optional = new Set<string>();
-  for (const r of config.rules) {
+  for (const r of rulesWithToolFiles) {
     if (r.kind === "has") {
       for (const name of r.names) {
         if (!isGlobPattern(name)) required.add(pickTopLevelName(name));

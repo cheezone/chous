@@ -26,9 +26,9 @@ describe("persona presets", () => {
     const r = runCli(["--no-color", "-l", "en", "-v"], FAIL_ANTFU);
     expect(r.code).not.toBe(0);
     expect(r.stdout).toContain("Following @antfu");
-    expect(r.stdout).toContain("replace dependency prettier with @antfu/eslint-config");
-    // replace already covers the ban — do not also emit "not allowed"
-    expect(r.stdout).not.toContain("dependency prettier is not allowed");
+    // Role mismatch (formatter) + tool-file blacklist for .prettierrc
+    expect(r.stdout).toContain("formatter should be @antfu/eslint-config");
+    expect(r.stdout).toContain("prettier");
     expect(r.stdout).toContain("package manager should be pnpm");
     expect(r.stdout).not.toContain("Thanks Cheez");
   });

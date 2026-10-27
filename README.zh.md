@@ -53,6 +53,25 @@ jest.config.ts
 npx chous
 ```
 
+### 技术栈角色
+
+预设只声明**角色**选了谁，不对工具贴好恶标签：
+
+```
+package manager pnpm
+runtime         bun
+linter          oxlint
+test runner     vitest
+bundler         tsdown
+```
+
+Chous 会识别每个角色当前被谁占着，自动放行所选工具的配置文件，并标记同角色的其它工具（例如 formatter 选了 `@antfu/eslint-config` 时禁止 `.prettierrc`）。能不能自动迁、有什么坑，查内置知识库——作者不用在 DSL 里写这些。
+
+```bash
+npx chous scan .          # 找 git 仓库，识别项目类型 / 角色
+npx chous knowledge       # 导出内置工具 / 类型 / 迁移知识 JSON
+```
+
 ## 许可证
 
 [MIT](LICENSE)

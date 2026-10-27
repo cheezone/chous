@@ -53,6 +53,25 @@ jest.config.ts
 npx chous
 ```
 
+### Stack roles
+
+Presets declare **roles**, not attitudes toward tools:
+
+```
+package manager pnpm
+runtime         bun
+linter          oxlint
+test runner     vitest
+bundler         tsdown
+```
+
+Chous detects what occupies each role, auto-allows the chosen tool's config files, and flags siblings (e.g. `.prettierrc` when the formatter role is `@antfu/eslint-config`). Migration difficulty comes from the built-in knowledge base — authors don't write `because` / `see` for that.
+
+```bash
+npx chous scan .          # find git repos, detect kinds / roles
+npx chous knowledge       # dump built-in tool / kind / migration JSON
+```
+
 ## License
 
 [MIT](LICENSE)

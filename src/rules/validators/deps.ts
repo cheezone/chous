@@ -57,7 +57,7 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
         category: manifest.manager ? "forbidden" : "missing",
         severity: "error",
         fix: { type: "pkgSetManager", pkgJsonPath: manifest.path, manager: rule.manager },
-      }));
+      })); // resolution:auto via issueFromRule when fix is set
       return { hitCount };
     }
 

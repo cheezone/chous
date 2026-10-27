@@ -1,11 +1,12 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import type { FsLintConfig, Persona, Rule, WhereDirective, RuleSource, Condition, NamingStyle, PackageManagerName, Severity } from "../types";
+import type { FsLintConfig, Persona, Rule, WhereDirective, RuleSource, Condition, NamingStyle, PackageManagerName, Severity, KindScopedImport } from "../types";
 import { FsLintError } from "../errors";
 import { APP_CONFIG_FILE_NAME } from "../constants";
 import { parseGithubImport, readCachedGithub } from "./github";
 import { resolveNpmPreset } from "./npm";
+import { ROLE_DSL_NAMES, parseRoleDslName } from "../knowledge/roles";
 
 /** Strip leading `warn`/`error` and trailing `because "..."` from a rule line. */
 function extractRuleDecorators(line: string): { line: string; severity?: Severity; reason?: string } {
@@ -268,8 +269,13 @@ function preprocessNestedBlocks(raw: string): string {
     // Process rules within the block, add parent directory prefix
     let processedLine = trimmed;
 
-    // Stack rules always apply to the workspace root, even inside an `in` block.
-    if (/^(persona|package\s+manager|must\s+have\s+deps|no\s+deps|replace\s+dep)\b/.test(processedLine)) {
+    // Stack / meta rules always apply to the workspace root, even inside an `in` block.
+    if (
+      /^(persona|package\s+manager|must\s+have\s+deps|no\s+deps|replace\s+dep|for\s+)\b/.test(processedLine) ||
+      /^(runtime|linter|formatter|typechecker|test\s+runner|e2e|bundler|framework|git\s+hooks|monorepo|release)\b/.test(
+        processedLine,
+      )
+    ) {
       output.push(processedLine);
       continue;
     }
@@ -527,8 +533,43 @@ function parseFsLintConfigInternal(
   let where: WhereDirective = { type: "config", implicit: true };
   let persona: Persona | undefined;
   const rules: Rule[] = [];
+  const kindImports: KindScopedImport[] = [];
   /** Applied to the next locally-authored rule(s) on this line. */
   let lineMeta: { severity?: Severity; reason?: string } = {};
+
+  function resolveImportName(importName: string, lineNum: number, line: string): string {
+    let importPath: string | null = null;
+
+    if (importName.startsWith("npm:")) {
+      importPath = configPath ? resolveNpmPreset(importName.slice("npm:".length), configPath) : null;
+    } else if (importName.startsWith("github:")) {
+      if (!parseGithubImport(importName)) {
+        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "import", line }, lineNum }, configPath);
+      }
+      importPath = readCachedGithub(importName);
+      if (!importPath) {
+        throw new FsLintError({ key: "parser.remotePresetMissing", params: { name: importName }, lineNum }, configPath);
+      }
+    }
+
+    if (!importPath && configPath) {
+      const localCandidate = resolve(dirname(configPath), importName);
+      if (existsSync(localCandidate)) {
+        importPath = localCandidate;
+      } else if (existsSync(localCandidate + APP_CONFIG_FILE_NAME)) {
+        importPath = localCandidate + APP_CONFIG_FILE_NAME;
+      }
+    }
+
+    if (!importPath) {
+      importPath = findPresetPath(importName);
+    }
+
+    if (!importPath) {
+      throw new FsLintError({ key: "parser.unknownPreset", params: { name: importName }, lineNum }, configPath);
+    }
+    return importPath;
+  }
 
   function finalizeRule<T extends Rule>(rule: T): T {
     if (lineMeta.severity) rule.severity = lineMeta.severity;
@@ -593,61 +634,25 @@ function parseFsLintConfigInternal(
       const importName = importMatch[1]?.trim();
       if (!importName) throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "import", line }, lineNum }, configPath);
 
-      let importPath: string | null = null;
-
-      if (importName.startsWith("npm:")) {
-        importPath = configPath ? resolveNpmPreset(importName.slice("npm:".length), configPath) : null;
-      } else if (importName.startsWith("github:")) {
-        if (!parseGithubImport(importName)) {
-          throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "import", line }, lineNum }, configPath);
-        }
-        importPath = readCachedGithub(importName);
-        if (!importPath) {
-          throw new FsLintError({ key: "parser.remotePresetMissing", params: { name: importName }, lineNum }, configPath);
-        }
-      }
-
-      // 1. Try to resolve as a file relative to the config file (if we have a config path)
-      if (!importPath && configPath) {
-        const localCandidate = resolve(dirname(configPath), importName);
-        if (existsSync(localCandidate)) {
-          importPath = localCandidate;
-        } else if (existsSync(localCandidate + APP_CONFIG_FILE_NAME)) {
-          importPath = localCandidate + APP_CONFIG_FILE_NAME;
-        }
-      }
-
-      // 2. Try to resolve as a "preset"
-      if (!importPath) {
-        importPath = findPresetPath(importName);
-      }
-
-      if (!importPath) {
-        throw new FsLintError({ key: "parser.unknownPreset", params: { name: importName }, lineNum }, configPath);
-      }
+      const importPath = resolveImportName(importName, lineNum, line);
 
       // Check for cycles? (Simplistic check: don't import self)
       if (configPath && resolve(importPath) === resolve(configPath)) {
-        // Cycle detected or self-import, ignore or error. Ignoring for now to be safe.
         continue;
       }
 
       const importRaw = readFileSync(importPath, "utf8");
-      // Recursively parse (pass the shared importDependencies map)
       const importedConfig = parseFsLintConfigInternal(importRaw, importPath, importDependencies);
-      // Import rules, but mark thoseOnly rules as needing re-filling
-      // (they were filled with only the imported preset's allow rules)
       for (const rule of importedConfig.rules) {
         if (rule.kind === "thoseOnly" && rule.only.length > 0) {
-          // Mark as needing re-filling by setting only to empty
-          // This will be filled again after all rules are collected
           rule.only = [];
         }
         rules.push(rule);
       }
+      if (importedConfig.kindImports?.length) {
+        kindImports.push(...importedConfig.kindImports);
+      }
 
-      // Track import dependencies for topological sorting
-      // If configPath imports importPath, then importPath should come before configPath
       if (configPath) {
         const resolvedConfigPath = resolve(configPath);
         if (!importDependencies.has(resolvedConfigPath)) {
@@ -662,6 +667,24 @@ function parseFsLintConfigInternal(
       }
       if (!persona && importedConfig.persona) persona = importedConfig.persona;
 
+      continue;
+    }
+
+    // `for cli import antfu/cli` ? kind-scoped preset (applied at lint time when kind matches)
+    const forImportMatch = line.match(/^for\s+(\S+)\s+import\s+(.+?)\s*$/i);
+    if (forImportMatch) {
+      const kind = forImportMatch[1]?.trim();
+      const importName = forImportMatch[2]?.trim();
+      if (!kind || !importName) {
+        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "for ? import", line }, lineNum }, configPath);
+      }
+      const resolvedPath = resolveImportName(importName, lineNum, line);
+      kindImports.push({
+        kind,
+        importName,
+        resolvedPath,
+        source: createRuleSource(configPath, lineNum),
+      });
       continue;
     }
 
@@ -680,6 +703,43 @@ function parseFsLintConfigInternal(
       pushLocal({
         kind: "packageManager",
         manager,
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
+      // Also emit a RoleRule so tool-file allow/forbid and occupancy checks share one path.
+      pushLocal({
+        kind: "role",
+        role: "package-manager",
+        tools: [manager],
+        source: createRuleSource(configPath, lineNum),
+        ...(when.length > 0 ? { when } : {}),
+      });
+      continue;
+    }
+
+    // Role declarations: `linter oxlint` / `test runner vitest, node:test`
+    const roleNamePattern = Object.keys(ROLE_DSL_NAMES)
+      .filter((n) => n !== "package manager")
+      .sort((a, b) => b.length - a.length)
+      .map((n) => n.replace(/\s+/g, "\\s+"))
+      .join("|");
+    const roleMatch = line.match(new RegExp(`^(${roleNamePattern})\\s+(.+?)\\s*$`, "i"));
+    if (roleMatch) {
+      const roleName = roleMatch[1]!.replace(/\s+/g, " ").toLowerCase();
+      const role = parseRoleDslName(roleName);
+      const toolsRaw = roleMatch[2];
+      if (!role || !toolsRaw) {
+        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "role", line }, lineNum }, configPath);
+      }
+      const when = parseWhenConditions(line, lineNum, configPath);
+      const tools = splitCsvLike(toolsRaw);
+      if (tools.length === 0) {
+        throw new FsLintError({ key: "parser.ruleFormatError", params: { rule: "role", line }, lineNum }, configPath);
+      }
+      pushLocal({
+        kind: "role",
+        role,
+        tools,
         source: createRuleSource(configPath, lineNum),
         ...(when.length > 0 ? { when } : {}),
       });
@@ -1287,5 +1347,11 @@ function parseFsLintConfigInternal(
     }
   }
 
-  return { where, rules, imports: sortedImports, ...(persona ? { persona } : {}) };
+  return {
+    where,
+    rules,
+    imports: sortedImports,
+    ...(persona ? { persona } : {}),
+    ...(kindImports.length > 0 ? { kindImports } : {}),
+  };
 }

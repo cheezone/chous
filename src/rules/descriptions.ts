@@ -15,6 +15,7 @@ const DEFAULT_REASONS: Partial<Record<Rule["kind"], string>> = {
   packageManager: "The project must use the declared package manager.",
   deps: "Dependency allow/deny list for this persona or preset.",
   replaceDep: "Replace a banned dependency with the preferred alternative.",
+  role: "This stack role must be occupied by the declared tool.",
 };
 
 export function defaultReasonFor(kind: Rule["kind"]): string | undefined {

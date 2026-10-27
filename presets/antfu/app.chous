@@ -5,6 +5,9 @@
 
 import antfu
 
+bundler     vite
+test runner vitest
+
 must have [vite.config.ts, test]
 must have deps [vite, vitest]
 

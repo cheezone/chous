@@ -200,6 +200,10 @@ type RootTranslation = {
 		fix: string
 		reason: RequiredParams<'reason'>
 		fixHint: RequiredParams<'fix'>
+		see: RequiredParams<'url'>
+		autoSection: string
+		agentSection: string
+		infoSection: string
 		updated: RequiredParams<'count'>
 		upToDate: string
 		downloadFailed: RequiredParams<'name'>
@@ -385,6 +389,14 @@ type RootTranslation = {
 		}
 		replaceDep: {
 			replace: RequiredParams<'from' | 'to'>
+		}
+		role: {
+			mismatch: RequiredParams<'role' | 'expected' | 'actual'>
+			missing: RequiredParams<'role' | 'expected'>
+			deprecated: RequiredParams<'tool'>
+		}
+		rotten: {
+			dep: RequiredParams<'name' | 'replacement'>
 		}
 		naming: {
 			/**
@@ -606,6 +618,10 @@ export type TranslationFunctions = {
 		fix: () => LocalizedString
 		reason: (arg: { reason: unknown }) => LocalizedString
 		fixHint: (arg: { fix: unknown }) => LocalizedString
+		see: (arg: { url: unknown }) => LocalizedString
+		autoSection: () => LocalizedString
+		agentSection: () => LocalizedString
+		infoSection: () => LocalizedString
 		updated: (arg: { count: unknown }) => LocalizedString
 		upToDate: () => LocalizedString
 		downloadFailed: (arg: { name: unknown }) => LocalizedString
@@ -767,6 +783,14 @@ export type TranslationFunctions = {
 		}
 		replaceDep: {
 			replace: (arg: { from: unknown, to: unknown }) => LocalizedString
+		}
+		role: {
+			mismatch: (arg: { role: unknown, expected: unknown, actual: unknown }) => LocalizedString
+			missing: (arg: { role: unknown, expected: unknown }) => LocalizedString
+			deprecated: (arg: { tool: unknown }) => LocalizedString
+		}
+		rotten: {
+			dep: (arg: { name: unknown, replacement?: unknown }) => LocalizedString
 		}
 		naming: {
 			/**

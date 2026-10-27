@@ -5,7 +5,7 @@
 #  MIT Licensed
 #
 #  Persona core: Anthony Fu (@antfu)
-#  Only the intersection across his projects. Scene stacks are separate:
+#  Stack roles only (intersection across his projects). Scene stacks:
 #    import antfu/lib | antfu/cli | antfu/app | antfu/fullstack | antfu/blog
 # ========================================
 
@@ -13,18 +13,14 @@ import js
 
 persona antfu https://github.com/antfu
 
-must have [eslint.config.{js,ts,mjs,cjs}]
-
 package manager pnpm
+linter          @antfu/eslint-config
+formatter       @antfu/eslint-config
+typechecker     typescript
+git hooks       simple-git-hooks
 
+must have [eslint.config.{js,ts,mjs,cjs}]
 must have deps [@antfu/eslint-config, eslint, typescript]
-
-no [.prettierrc*, .eslintrc*, jest.config.*, tsup.config.*]
-no deps [prettier, jest, husky, tsup]
-replace dep prettier with @antfu/eslint-config
-replace dep jest with vitest
-replace dep husky with simple-git-hooks
-replace dep tsup with tsdown
 
 rename tests to test
 rename .husky to .githooks

@@ -5,6 +5,8 @@
 
 import antfu
 
+framework nuxt
+
 must have [nuxt.config.ts, app, server]
 
 allow [app, server]

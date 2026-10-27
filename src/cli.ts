@@ -34,7 +34,7 @@ const packageJson = JSON.parse(readFileSync(resolve(__dirname, "../package.json"
 const VERSION = packageJson.version;
 
 type CliOptions = {
-  command: "lint" | "init" | "cursor" | "claude" | "update";
+  command: "lint" | "init" | "cursor" | "claude" | "update" | "scan" | "knowledge";
   cursorSubcommand?: "after-edit" | "stop" | "install";
   claudeSubcommand?: "after-edit" | "stop" | "install";
   cwd: string;
@@ -50,6 +50,8 @@ type CliOptions = {
   ignoreWarnings: boolean;
   statsOutput?: string; // Output rule performance statistics to JSON file
   filePaths?: string[]; // File paths from lint-staged or similar tools
+  json?: boolean;
+  scanDir?: string;
 };
 
 // Cursor hooks JSON types
@@ -121,6 +123,23 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
       opts.command = "update";
       continue;
     }
+    if (a === "scan") {
+      opts.command = "scan";
+      const next = argv[i + 1];
+      if (next && !next.startsWith("-")) {
+        opts.scanDir = next;
+        i++;
+      }
+      continue;
+    }
+    if (a === "knowledge") {
+      opts.command = "knowledge";
+      continue;
+    }
+    if (a === "--json") {
+      opts.json = true;
+      continue;
+    }
     if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
     else if (a === "--strict" || a === "-s") opts.strict = true;
@@ -188,6 +207,8 @@ function printHelp(LL: TranslationFunctions): void {
 ${String(LL.cli.help.commands())}
   init                  ${String(LL.cli.help.initCmdDesc())}
   update                ${String(LL.cli.help.updateCmdDesc())}
+  scan [dir]            Discover git repos, detect stack roles / kinds
+  knowledge             Dump built-in stack knowledge (--json)
   cursor install        ${String(LL.cli.help.installCursorHookDesc())}
   claude install        ${String(LL.cli.help.installClaudeHookDesc())}
 
@@ -784,6 +805,32 @@ async function main() {
     } catch (err) {
       if (opts.verbose) console.error(err instanceof Error ? err.message : String(err));
     }
+    return;
+  }
+
+  if (opts.command === "knowledge") {
+    const { knowledgeToJSON } = await import("./knowledge");
+    console.log(JSON.stringify(knowledgeToJSON(), null, 2));
+    return;
+  }
+
+  if (opts.command === "scan") {
+    const { scanDirectory, formatScanText } = await import("./scan");
+    const dir = resolve(opts.cwd, opts.scanDir ?? ".");
+    const result = await scanDirectory({
+      dir,
+      lang: opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang),
+      json: opts.json,
+      withKnowledge: Boolean(opts.json && opts.verbose),
+      withSpecfy: true,
+    });
+    if (opts.json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      console.log(formatScanText(result));
+    }
+    const hasErrors = result.repos.some((r) => r.issues.some((i) => i.severity === "error"));
+    process.exitCode = hasErrors ? 1 : 0;
     return;
   }
 

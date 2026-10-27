@@ -73,6 +73,7 @@ export function issueFromRule(
     category: partial.category,
     severity: rule.severity ?? partial.severity ?? "error",
     ...(partial.fix ? { fix: partial.fix } : {}),
+    ...(partial.fix ? { resolution: "auto" as const } : {}),
   };
 }
 

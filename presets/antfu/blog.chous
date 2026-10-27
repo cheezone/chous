@@ -5,6 +5,8 @@
 
 import antfu
 
+bundler vite
+
 must have [vite.config.ts, pages]
 must have deps [vite]
 

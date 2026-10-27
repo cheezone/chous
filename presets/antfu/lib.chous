@@ -5,6 +5,9 @@
 
 import antfu
 
+bundler     tsdown
+test runner vitest
+
 must have [tsdown.config.ts, test]
 must have deps [tsdown, vitest]
 

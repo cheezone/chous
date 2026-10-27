@@ -9,6 +9,8 @@ import {
   RuleStatisticsCollector,
   type RuleValidatorContext,
 } from "./validators";
+import { applyKindImports } from "./apply-kind-imports";
+import { collectRottenDepIssues } from "./validators/rotten";
 
 function hasRootLevelOnlyRules(rules: Rule[]): boolean {
   return rules.every((rule) => {
@@ -27,7 +29,12 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
           (trimmed.startsWith("./") || trimmed.match(/^\.?\/?[^/]*$/));
       });
     }
-    if (rule.kind === "packageManager" || rule.kind === "deps" || rule.kind === "replaceDep") {
+    if (
+      rule.kind === "packageManager" ||
+      rule.kind === "deps" ||
+      rule.kind === "replaceDep" ||
+      rule.kind === "role"
+    ) {
       return true;
     }
     if (rule.kind === "naming") {
@@ -61,7 +68,9 @@ export async function lintWorkspace(opts: {
     relevantDirs,
   });
 
-  const compiled = compileConfig(config, snapshot.workspace, { forceStrict, root });
+  const effectiveConfig = applyKindImports(config, snapshot);
+
+  const compiled = compileConfig(effectiveConfig, snapshot.workspace, { forceStrict, root });
 
   // Track files claimed by move rules so strict whitelist skips them
   const moveRules = compiled.rules.filter((r): r is MoveRule => r.kind === "move");
@@ -130,7 +139,11 @@ export async function lintWorkspace(opts: {
     }
   }
 
-  // 3. Dedup + gitignore filter
+  // 3. Built-in rotten dep knowledge (e18e module-replacements)
+  const rotten = await collectRottenDepIssues(snapshot);
+  rawIssues.push(...rotten);
+
+  // 4. Dedup + gitignore filter
   const finalIssues: Issue[] = [];
   const seen = new Set<string>();
   for (const i of rawIssues) {
@@ -154,8 +167,8 @@ export async function lintWorkspace(opts: {
     visibleSet: snapshot.visibleAbs,
     listDir: (absDir) =>
       snapshot.listDir(absDir).map((e) => ({ name: e.name, absPath: e.absPath, isDir: e.isDir })),
-    imports: config.imports,
-    persona: config.persona,
+    imports: effectiveConfig.imports,
+    persona: effectiveConfig.persona,
     ...(compiled.workspacePackages.length > 0 ? { workspacePackages: compiled.workspacePackages } : {}),
     fileCount: snapshot.fileCount,
     duration: Math.round(performance.now() - startTime),

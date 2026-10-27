@@ -7,7 +7,7 @@ import { APP_CONFIG_FILE_NAME } from "../constants";
 import { getLL } from "../i18n/runtime";
 import { lintWorkspace } from "../rules/lint";
 import { formatIssueMessage } from "../rules/report";
-import type { Persona } from "../types";
+import type { Persona, Resolution } from "../types";
 
 export type AgentIssue = {
   root: string;
@@ -16,6 +16,8 @@ export type AgentIssue = {
   severity?: "error" | "warn";
   reason?: string;
   fixSummary?: string;
+  resolution?: Resolution;
+  see?: string;
 };
 
 export type AgentCheckResult = {
@@ -121,6 +123,8 @@ export async function checkWorkspaces(opts: {
           severity: issue.severity,
           reason: issue.reason,
           fixSummary,
+          resolution: issue.resolution ?? (issue.fix ? "auto" : "agent"),
+          see: issue.see,
         });
       }
     }
@@ -129,21 +133,52 @@ export async function checkWorkspaces(opts: {
   return { issues, summary: formatAgentSummary(opts.lang, issues, persona), persona };
 }
 
+function formatIssueBlock(
+  LL: ReturnType<typeof getLL>["LL"],
+  issues: AgentIssue[],
+): string[] {
+  const lines: string[] = [];
+  for (const issue of issues) {
+    const sev = issue.severity ? `[${issue.severity}] ` : "";
+    lines.push(`- ${sev}${issue.displayPath}: ${issue.message}`);
+    if (issue.reason) lines.push(`  ${String(LL.agent.reason({ reason: issue.reason }))}`);
+    if (issue.see) lines.push(`  ${String(LL.agent.see({ url: issue.see }))}`);
+    if (issue.fixSummary) lines.push(`  ${String(LL.agent.fixHint({ fix: issue.fixSummary }))}`);
+  }
+  return lines;
+}
+
 export function formatAgentSummary(lang: string, issues: AgentIssue[], persona?: Persona): string {
   const { LL } = getLL(lang);
   const lines = [String(LL.agent.intro())];
   if (persona) lines.push(String(LL.agent.follow({ name: persona.name })));
   lines.push("");
-  for (const issue of issues.slice(0, SUMMARY_ISSUE_LIMIT)) {
-    const sev = issue.severity ? `[${issue.severity}] ` : "";
-    lines.push(`- ${sev}${issue.displayPath}: ${issue.message}`);
-    if (issue.reason) lines.push(`  ${String(LL.agent.reason({ reason: issue.reason }))}`);
-    if (issue.fixSummary) lines.push(`  ${String(LL.agent.fixHint({ fix: issue.fixSummary }))}`);
+
+  const limited = issues.slice(0, SUMMARY_ISSUE_LIMIT);
+  const auto = limited.filter((i) => i.resolution === "auto");
+  const agent = limited.filter((i) => i.resolution === "agent" || !i.resolution);
+  const info = limited.filter((i) => i.resolution === "info");
+
+  if (auto.length) {
+    lines.push(String(LL.agent.autoSection()));
+    lines.push(...formatIssueBlock(LL, auto));
+    lines.push("");
   }
+  if (agent.length) {
+    lines.push(String(LL.agent.agentSection()));
+    lines.push(...formatIssueBlock(LL, agent));
+    lines.push("");
+  }
+  if (info.length) {
+    lines.push(String(LL.agent.infoSection()));
+    lines.push(...formatIssueBlock(LL, info));
+    lines.push("");
+  }
+
   if (issues.length > SUMMARY_ISSUE_LIMIT) {
     lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`);
+    lines.push("");
   }
-  lines.push("");
   lines.push(String(LL.agent.fix()));
   return lines.join("\n");
 }

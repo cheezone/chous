@@ -51,7 +51,8 @@ export type Rule =
   | OptionalRule
   | PackageManagerRule
   | DepsRule
-  | ReplaceDepRule;
+  | ReplaceDepRule
+  | RoleRule;
 
 export type MoveRule = RuleBase & {
   kind: "move";
@@ -136,9 +137,31 @@ export type ReplaceDepRule = RuleBase & {
   to: string;
 };
 
+/**
+ * Stack-layer role declaration: which tool(s) occupy a role.
+ * First name is the preferred migration target when others are detected.
+ * DSL: `linter oxlint` / `test runner vitest, node:test`
+ */
+export type RoleRule = RuleBase & {
+  kind: "role";
+  /** Stable role id, e.g. `linter`, `test-runner`. */
+  role: string;
+  /** Preferred tool first; additional names are also accepted. */
+  tools: string[];
+};
+
 export type Persona = {
   name: string;
   url?: string;
+};
+
+/** Kind-scoped preset import: `for cli import antfu/cli`. */
+export type KindScopedImport = {
+  kind: string;
+  importName: string;
+  /** Absolute path resolved at parse time (when available). */
+  resolvedPath?: string;
+  source: RuleSource;
 };
 
 export type FsLintConfig = {
@@ -146,7 +169,12 @@ export type FsLintConfig = {
   rules: Rule[];
   imports?: string[]; // Resolved paths of imported presets
   persona?: Persona;
+  /** Applied only when the workspace matches the kind. */
+  kindImports?: KindScopedImport[];
 };
+
+/** How to act on a finding — derived from knowledge, not authored in DSL. */
+export type Resolution = "auto" | "agent" | "info";
 
 /** Machine-executable, zero-data-loss fixes for `--fix`. */
 export type SafeFix =
@@ -176,6 +204,10 @@ export type IssueMessage =
   | { key: "issue.deps.missing"; params: { name: string } }
   | { key: "issue.deps.forbidden"; params: { name: string } }
   | { key: "issue.replaceDep.replace"; params: { from: string; to: string } }
+  | { key: "issue.role.mismatch"; params: { role: string; expected: string; actual: string } }
+  | { key: "issue.role.missing"; params: { role: string; expected: string } }
+  | { key: "issue.role.deprecated"; params: { tool: string } }
+  | { key: "issue.rotten.dep"; params: { name: string; replacement: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
   | { key: "issue.naming.invalidPrefix"; params: { pattern: string } }
   | { key: "issue.naming.invalidSuffix"; params: { pattern: string } }
@@ -193,6 +225,10 @@ export type Issue = {
   severity: Severity;
   /** Present only when the fix is 100% safe (no overwrite / no data loss). */
   fix?: SafeFix;
+  /** How an agent / CI consumer should treat this finding. */
+  resolution?: Resolution;
+  /** Optional doc link from the migration knowledge base. */
+  see?: string;
 };
 
 export type RuleMetrics = {

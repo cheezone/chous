@@ -9,6 +9,7 @@ import { OptionalRuleValidator } from "./optional";
 import { NamingRuleValidator } from "./naming";
 import { InDirOnlyRuleValidator } from "./inDirOnly";
 import { StackRuleValidator } from "./deps";
+import { RoleRuleValidator } from "./role";
 import type { RuleValidator } from "./types";
 
 /**
@@ -26,6 +27,7 @@ export const validators: RuleValidator[] = [
   new NamingRuleValidator(),
   new InDirOnlyRuleValidator(),
   new StackRuleValidator(),
+  new RoleRuleValidator(),
 ];
 
 /**

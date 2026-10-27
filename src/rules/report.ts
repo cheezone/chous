@@ -192,6 +192,14 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.deps.forbidden(msg.params));
     case "issue.replaceDep.replace":
       return String(LL.issue.replaceDep.replace(msg.params));
+    case "issue.role.mismatch":
+      return String(LL.issue.role.mismatch(msg.params));
+    case "issue.role.missing":
+      return String(LL.issue.role.missing(msg.params));
+    case "issue.role.deprecated":
+      return String(LL.issue.role.deprecated(msg.params));
+    case "issue.rotten.dep":
+      return String(LL.issue.rotten.dep(msg.params));
     case "issue.naming.invalid":
       return String(LL.issue.naming.invalid(msg.params));
     case "issue.naming.invalidPrefix":
