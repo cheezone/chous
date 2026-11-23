@@ -172,9 +172,6 @@ importers:
       '@specfy/stack-analyser':
         specifier: ^1.27.6
         version: 1.27.6
-      compare-versions:
-        specifier: ^6.1.1
-        version: 6.1.1
       ignore:
         specifier: ^7.0.9
         version: 7.0.9
@@ -218,9 +215,6 @@ importers:
       tsx:
         specifier: ^4.23.13
         version: 4.23.13
-      typesafe-i18n:
-        specifier: ^5.27.1
-        version: 5.27.1(typescript@7.0.2)
       typescript:
         specifier: ^7.0.2
         version: 7.0.2
@@ -1126,9 +1120,6 @@ packages:
     peerDependencies:
       '@commitlint/lint': '>=19 <22'
 
-  compare-versions@6.1.1:
-    resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
-
   confbox@0.2.4:
     resolution: {integrity: sha512-ysOGlgTFbN2/Y6Cg3Iye8YKulHw+R2fNXHrgSmXISQdMnomY6eNDprVdW9R5xBguEqI954+S6709UyiO7B+6OQ==}
 
@@ -1731,12 +1722,6 @@ packages:
   tunnel@0.0.6:
     resolution: {integrity: sha512-1h/Lnq9yajKY2PEbBadPXj3VxsDDu844OnaAo52UVmIzIvwwtBPIuNvkjuzBlTWpfJyUbG3ez0KSBibQkj4ojg==}
     engines: {node: '>=0.6.11 <=0.7.0 || >=0.7.3'}
-
-  typesafe-i18n@5.27.1:
-    resolution: {integrity: sha512-749uWo2ZXETT//kWjVYPm8QPYR8xLh8G0wLfoAyCAtAmysX67uCaAyLjAjAWojL6fuJpE5B6yIjwvO9orXzUPg==}
-    hasBin: true
-    peerDependencies:
-      typescript: '>=3.5.1'
 
   typescript@7.0.2:
     resolution: {integrity: sha512-8FYau96o3NKOhbjKi/qNvG/W5jhzxkbdm5sj9AbZ/5T5sWqn3hJgLfGx27sRKZWTvyzCP8dLRBTf5tBTSRVUNA==}
@@ -2522,8 +2507,6 @@ snapshots:
     dependencies:
       '@commitlint/lint': 21.2.2
 
-  compare-versions@6.1.1: {}
-
   confbox@0.2.4: {}
 
   confbox@0.3.1: {}
@@ -3035,10 +3018,6 @@ snapshots:
       fsevents: 2.3.3
 
   tunnel@0.0.6: {}
-
-  typesafe-i18n@5.27.1(typescript@7.0.2):
-    dependencies:
-      typescript: 7.0.2
 
   typescript@7.0.2:
     optionalDependencies:

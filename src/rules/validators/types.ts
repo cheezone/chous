@@ -78,6 +78,6 @@ export function issueFromRule(
 }
 
 /** Fallback source when a synthetic issue has no originating rule. */
-export function syntheticSource(file: string, line = 0): RuleSource {
-  return { file, line };
+export function syntheticSource(taste: string): RuleSource {
+  return { taste };
 }

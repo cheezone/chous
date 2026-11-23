@@ -46,5 +46,8 @@ jobs:
       - name: Build
         run: pnpm run build
 
+      - name: Taste
+        run: node dist/cli.mjs
+
       - name: Test
         run: pnpm run test

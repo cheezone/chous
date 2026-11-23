@@ -1,2 +1,0 @@
-in src:
-  allow *.ts, *.tsx, *.js

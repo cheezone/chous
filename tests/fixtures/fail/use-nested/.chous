@@ -1,3 +1,0 @@
-# Test: Violate naming convention in nested directory
-in components:
-  use kebab-case for files **/*.tsx

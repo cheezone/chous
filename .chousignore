@@ -1,3 +1,0 @@
-# Ignore .chous config files in these directories
-tests/**/.chous
-templates/**/.chous

@@ -1,4 +1,4 @@
-export { ROLE_IDS, ROLE_DSL_NAMES, parseRoleDslName, roleDslName, type RoleId } from "./roles";
+export { ROLE_IDS, roleLabel, type RoleId } from "./roles";
 export {
   defineTool,
   defineKind,

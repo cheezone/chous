@@ -79,11 +79,11 @@ async function loadReplacementMap(): Promise<Map<string, { replacement: string; 
 }
 
 /**
- * Emit warn-level findings for deps listed in e18e module-replacements.
+ * Deps listed in e18e module-replacements are errors: there is a better choice.
  */
 export async function collectRottenDepIssues(
   snapshot: WorkspaceSnapshot,
-  source: RuleSource = syntheticSource(snapshot.manifest.path),
+  source: RuleSource = syntheticSource("rotten"),
 ): Promise<Issue[]> {
   if (!snapshot.manifest.exists || snapshot.manifest.deps.size === 0) return [];
   const map = await loadReplacementMap();
@@ -103,7 +103,7 @@ export async function collectRottenDepIssues(
         params: { name, replacement: hit.replacement },
       },
       category: "forbidden",
-      severity: "warn",
+      severity: "error",
       resolution: "agent",
       ...(hit.docPath ? { see: hit.docPath, reason: hit.docPath } : {}),
     });

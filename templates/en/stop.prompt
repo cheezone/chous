@@ -1,5 +1,0 @@
-The project rules found file structure problems.
-
-1. Fix the issues listed below
-2. Run `chous --verbose` and confirm there are no issues
-3. Do not claim the issues are fixed before that command passes

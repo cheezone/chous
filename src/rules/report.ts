@@ -4,7 +4,7 @@ import type { LintResult, Issue } from "../types";
 import type { IssueMessage } from "../types";
 import { DEFAULT_IGNORE_DIRS } from "../fsutil";
 import type { Colorizer } from "../color";
-import type { TranslationFunctions } from "../i18n/i18n-types";
+import type { TranslationFunctions } from "../i18n";
 import { APP_NAME } from "../constants";
 
 const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
@@ -210,35 +210,27 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       // Merged whitelist message: display "not in whitelist (1, 2)"
       // If global index is provided, use global index; otherwise use local index
       if ((msg.params as any)._displayLabels) {
-        const labels = (msg.params as any)._displayLabels;
-        return String(LL.issue.thoseOnly.forbiddenOnlyAllowed()) + ` (${labels})`;
+        return LL.issue.merged.notInAllowList({ labels: (msg.params as any)._displayLabels });
       }
       const whitelists = msg.params.whitelists;
       if (whitelists.length === 0) {
         return String(LL.issue.thoseOnly.forbiddenOnlyAllowed());
       }
-      const labels = whitelists.map((_, idx) => String(idx + 1)).join("、");
-      return String(LL.issue.thoseOnly.forbiddenOnlyAllowed()) + ` (${labels})`;
+      const labels = whitelists.map((_, idx) => String(idx + 1)).join(LL.report.listSep());
+      return LL.issue.merged.notInAllowList({ labels });
     }
     case "issue.merged.forbiddenBlacklist": {
       // Merged blacklist message: display "hit blacklist (1, 2)"
       // If global index is provided, use global index; otherwise use local index
       if ((msg.params as any)._displayLabels) {
-        const labels = (msg.params as any)._displayLabels;
-        const firstPattern = (msg.params as any)._firstPattern || "";
-        const baseMsg = String(LL.issue.no.forbidden({ name: firstPattern }));
-        return baseMsg.replace(/（.*?）|\(.*?\)/, `（${labels}）`);
+        return LL.issue.merged.inBlockList({ labels: (msg.params as any)._displayLabels });
       }
       const blacklists = msg.params.blacklists;
       if (blacklists.length === 0) {
         return String(LL.issue.no.forbidden({ name: "" }));
       }
-      const labels = blacklists.map((_, idx) => String(idx + 1)).join("、");
-      // Extract "hit blacklist" part from original message, then add index
-      const firstPattern = blacklists[0]!.patterns[0] || "";
-      const baseMsg = String(LL.issue.no.forbidden({ name: firstPattern }));
-      // Remove original parameter part, add index (using parentheses)
-      return baseMsg.replace(/（.*?）|\(.*?\)/, `（${labels}）`);
+      const labels = blacklists.map((_, idx) => String(idx + 1)).join(LL.report.listSep());
+      return LL.issue.merged.inBlockList({ labels });
     }
   }
 }
@@ -812,7 +804,7 @@ export function renderReport(
             .sort((a, b) => a - b);
 
           if (globalIndices.length > 0) {
-            const labels = globalIndices.map(idx => String(idx)).join("、");
+            const labels = globalIndices.map(idx => String(idx)).join(t.report.listSep());
             messageToDisplay = {
               key: "issue.merged.forbiddenOnlyAllowed",
               params: { whitelists: [], _displayLabels: labels }
@@ -831,7 +823,7 @@ export function renderReport(
             .sort((a, b) => a - b);
 
           if (globalIndices.length > 0) {
-            const labels = globalIndices.map(idx => String(idx)).join("、");
+            const labels = globalIndices.map(idx => String(idx)).join(t.report.listSep());
             const firstPattern = blacklists[0]!.patterns[0] || "";
             // Here we need to create a temporary message format
             // Since formatIssueMessage needs to handle this, we need special handling
@@ -918,18 +910,7 @@ export function renderReport(
 
   if (showMeta) {
     lines.push("");
-    // Rules file info - always show
-    lines.push(c.dim(String(t.meta.rulesFile({ path: result.configPath }))));
-    if (result.imports) {
-      for (const imp of result.imports) {
-        lines.push(c.dim(String(t.meta.importedRules({ path: imp }))));
-      }
-    }
-    if (result.persona) {
-      const curated = String(t.meta.curated());
-      const credit = result.persona.url ? `${result.persona.url} · ${curated}` : curated;
-      lines.push(c.dim(String(t.meta.following({ name: result.persona.name, credit }))));
-    }
+    lines.push(c.dim(String(t.meta.taste({ names: result.tastes.join(" · ") }))));
     if (result.workspacePackages && result.workspacePackages.length > 0) {
       lines.push(c.dim(String(t.meta.workspacePackages({ count: result.workspacePackages.length }))));
     }

@@ -1,22 +1,16 @@
-export type WhereDirective =
-  | { type: "config"; implicit?: boolean } // Default: use rule file's directory as root; implicit when no [where:] was written
-  | { type: "cwd" } // Explicit: use process cwd as root
-  | { type: "glob"; patterns: string[] } // Scan multiple workspaces: match marker files/directories
-  | { type: "paths"; paths: string[] }; // Explicitly specify root directories (can write relative paths/multiple)
-
+/** Which built-in taste produced a rule (e.g. `base`, `js`, `nuxt4`). */
 export type RuleSource = {
-  file: string; // .chous 文件的绝对路径
-  line: number; // 定义所在的行号
+  taste: string;
 };
 
 export type Severity = "error" | "warn";
 
-/** Shared metadata on every rule produced by the DSL parser. */
+/** Shared metadata on every rule. */
 export type RuleBase = {
   source: RuleSource;
-  /** Explicit severity from `warn` / `error` prefix; undefined means engine default. */
+  /** Overrides the validator's default severity. */
   severity?: Severity;
-  /** Why this rule exists — from `because "..."` or adjacent comments. */
+  /** Why this rule exists. */
   reason?: string;
   when?: Condition[];
 };
@@ -140,7 +134,7 @@ export type ReplaceDepRule = RuleBase & {
 /**
  * Stack-layer role declaration: which tool(s) occupy a role.
  * First name is the preferred migration target when others are detected.
- * DSL: `linter oxlint` / `test runner vitest, node:test`
+ * e.g. `linter: oxlint`, `test-runner: vitest`
  */
 export type RoleRule = RuleBase & {
   kind: "role";
@@ -150,30 +144,7 @@ export type RoleRule = RuleBase & {
   tools: string[];
 };
 
-export type Persona = {
-  name: string;
-  url?: string;
-};
-
-/** Kind-scoped preset import: `for cli import antfu/cli`. */
-export type KindScopedImport = {
-  kind: string;
-  importName: string;
-  /** Absolute path resolved at parse time (when available). */
-  resolvedPath?: string;
-  source: RuleSource;
-};
-
-export type FsLintConfig = {
-  where: WhereDirective;
-  rules: Rule[];
-  imports?: string[]; // Resolved paths of imported presets
-  persona?: Persona;
-  /** Applied only when the workspace matches the kind. */
-  kindImports?: KindScopedImport[];
-};
-
-/** How to act on a finding — derived from knowledge, not authored in DSL. */
+/** How to act on a finding — derived from knowledge. */
 export type Resolution = "auto" | "agent" | "info";
 
 /** Machine-executable, zero-data-loss fixes for `--fix`. */
@@ -238,18 +209,17 @@ export type RuleMetrics = {
 
 export type LintResult = {
   root: string;
-  configPath: string;
+  /** Tastes applied to this root, broadest first. */
+  tastes: string[];
   issues: Issue[];
   requiredTopLevelNames: string[];
   visibleSet?: Set<string>;
   /** Prefer over readdir/stat when rendering the report tree (avoids Windows stat tax). */
   listDir?: (absDir: string) => Array<{ name: string; absPath: string; isDir: boolean }>;
-  imports?: string[]; // Propagated from config
-  persona?: Persona;
   workspacePackages?: string[]; // Packages discovered via @manypkg/get-packages
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
   ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index
-  rules?: Rule[]; // Rules from config for statistics display
+  rules?: Rule[]; // Applied rules, for statistics display
   fixedCount?: number; // Number of issues auto-fixed when --fix was used
 };

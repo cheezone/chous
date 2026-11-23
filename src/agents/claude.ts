@@ -104,8 +104,6 @@ export async function handleClaudeHook(opts: {
   subcommand: "after-edit" | "stop";
   stdin: string;
   cwd: string;
-  configPath?: string;
-  strict: boolean;
   lang: string;
 }): Promise<string | null> {
   if (!opts.stdin.trim()) return null;
@@ -123,8 +121,6 @@ export async function handleClaudeHook(opts: {
   const editedFile = opts.subcommand === "after-edit" ? hook.tool_input?.file_path : undefined;
   const result = await checkWorkspaces({
     workspaceRoots: roots,
-    configPath: opts.configPath,
-    strict: opts.strict,
     lang: opts.lang,
     editedFile,
   });

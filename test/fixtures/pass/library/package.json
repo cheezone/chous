@@ -1,0 +1,15 @@
+{
+  "name": "library",
+  "private": false,
+  "packageManager": "pnpm@10.0.0",
+  "type": "module",
+  "exports": "./dist/index.mjs",
+  "devDependencies": {
+    "oxlint": "1.0.0",
+    "simple-git-hooks": "2.0.0",
+    "typescript": "5.0.0",
+    "vitest": "3.0.0",
+    "tsdown": "0.15.0",
+    "changelogen": "0.6.0"
+  }
+}

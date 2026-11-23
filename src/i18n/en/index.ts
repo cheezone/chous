@@ -1,5 +1,4 @@
-import type { Translation } from '../i18n-types.js'
-import { APP_NAME, APP_CONFIG_FILE_NAME } from '../../constants'
+import { APP_NAME } from '../../constants'
 
 const en = {
 	app: {
@@ -8,63 +7,43 @@ const en = {
 	},
 	cli: {
 		help: {
+			tagline: 'an opinionated taste linter. No config.',
 			commands: 'Commands:',
-			initCmdDesc: `Create a new ${APP_CONFIG_FILE_NAME} rules file`,
+			lintCmdDesc: 'Lint the current directory',
+			scanCmdDesc: 'Find git repos and show detected kinds and stack roles',
+			knowledgeCmdDesc: 'Dump built-in stack knowledge as JSON',
 			installCursorHookDesc: 'Install Cursor hooks for automatic linting',
 			installClaudeHookDesc: 'Install Claude Code hooks for automatic linting',
-			updateCmdDesc: 'Download remote persona presets',
 			options: 'Options:',
 			langHint: 'Set output language (default: auto)',
-			verboseHint: 'Show full filesystem tree (mode: verbose)',
-			configHint: `Specify rules file (default: ./${APP_CONFIG_FILE_NAME})`,
-			presetHint: 'Try a persona on this directory without writing a .chous file. Repeat to compare',
-			strictHint: 'Enable strict mode for all directory-only rules',
+			verboseHint: 'Show full filesystem tree',
 			fixHint: 'Apply safe automatic fixes',
 			failOnWarningsHint: 'Exit with error if there are warnings',
 			ignoreWarningsHint: 'Report errors only (hide warnings)',
-			statsHint: 'Output rule performance statistics to JSON file',
 			noColorHint: 'Disable colored output',
 			helpHint: 'Show help',
 		},
 		error: {
 			missingLangValue: 'Missing value for --lang (supported: {supported})',
 			unsupportedLang: 'Unsupported language: {code} (supported: {supported})',
-			missingConfigValue: 'Missing value for --config',
-			missingPresetValue: 'Missing value for --preset',
-			presetAndConfig: '--preset and --config cannot be used together',
 			conflictIgnoreAndFailWarnings: '--ignore-warnings and --fail-on-warnings cannot be used together',
-			missingStatsOutputValue: 'Missing value for --stats-output',
 			unknownArg: 'Unknown argument: {arg}',
-			cannotReadRulesFile: 'Cannot read rules file: {path}',
 		},
-		initCmd: {
-			created: 'Created rules file',
-			exists: 'Rules file already exists, skipped: {path}',
-			detectedFramework: 'Detected framework: {name}',
-			detectedPackageManager: 'Detected package manager: {name}',
-			enabledPresets: 'Enabled presets: {names}',
-			usingPreset: 'Trying preset: {name}',
-			nextStep: `Next: run ${APP_NAME}`,
+		install: {
 			cursorHooksInstalled: 'Cursor hooks installed',
 			claudeHooksInstalled: 'Claude Code hooks installed',
-			installCredit: 'chous · https://github.com/cheezone/chous',
-			suggestInit: `💡 Tip: No ${APP_CONFIG_FILE_NAME} config file found. Auto-detected project type and used preset rules. Run \`${APP_NAME} init\` to create a config file for custom rules.`,
-			configHint: '💡 Tip: Please read the `{configPath}` file to understand the specific rules (whitelist, blacklist, etc.), which will help you understand why these files don\'t meet the requirements and how to fix them.',
+			credit: 'chous · https://github.com/cheezone/chous',
 		},
 	},
 	meta: {
-		rulesFile: 'Rules file: {path}',
-		importedRules: 'Imported rules: {path}',
+		taste: 'Taste: {names}',
 		lang: 'Language: English',
 		mode: 'Mode: {mode}',
 		performance: 'Scanned {fileCount} files in {duration}ms',
-		following: 'Following @{name} · {credit}',
-		curated: 'preset curated by cheez.tech',
 		workspacePackages: 'workspace packages: {count}',
 	},
 	agent: {
-		intro: 'The project rules found file and dependency issues.',
-		follow: 'Follow @{name}.',
+		intro: 'chous found problems with files and dependencies.',
 		fix: 'Fix the issues below, then run `chous --verbose` and confirm they are gone. Do not claim they are fixed before that command reports no issues.',
 		reason: 'Why: {reason}',
 		fixHint: 'Safe fix: {fix}',
@@ -72,9 +51,6 @@ const en = {
 		autoSection: 'Safe to run `chous --fix`:',
 		agentSection: 'Needs you (or an agent) to migrate:',
 		infoSection: 'FYI:',
-		updated: 'Updated {count} remote preset(s).',
-		upToDate: 'Remote presets are already cached.',
-		downloadFailed: 'Could not download {name}. Using the cached copy if one exists.',
 	},
 	mode: {
 		concise: 'concise',
@@ -96,6 +72,7 @@ const en = {
 		workspace: 'workspace: {root}',
 		whitelist: 'Whitelist',
 		blacklist: 'Blacklist',
+		listSep: ', ',
 		andMoreItems: 'and {count} more items',
 	},
 	issue: {
@@ -149,23 +126,16 @@ const en = {
 		rotten: {
 			dep: 'dependency {name} is replaceable → {replacement}',
 		},
+		merged: {
+			notInAllowList: 'not in allow list ({labels})',
+			inBlockList: 'hit blacklist ({labels})',
+		},
 		naming: {
 			invalid: 'should be {style}',
 			invalidPrefix: 'prefix should be {pattern}',
 			invalidSuffix: 'suffix should be {pattern}',
 		},
 	},
-	errors: {
-		parser: {
-			invalidWhereDirective: 'invalid where directive',
-			invalidPathDirective: 'invalid path directive',
-			ruleFormatError: '{rule} rule format error: {line}',
-			renameMissingSources: 'rename missing sources: {line}',
-			unknownPreset: 'unknown preset: {name}',
-			remotePresetMissing: 'remote preset is not cached: {name}. Run `chous update`',
-			cannotParseLine: 'cannot parse rule line: {line}',
-		},
-	},
-} satisfies Translation
+} as const
 
 export default en

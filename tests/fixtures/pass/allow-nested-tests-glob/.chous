@@ -1,2 +1,0 @@
-in tests:
-  allow **/*.test.ts, **/*.spec.ts

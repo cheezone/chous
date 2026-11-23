@@ -6,7 +6,7 @@ import {
   defaultResolution,
   detectRoleOccupancy,
   lookupMigration,
-  roleDslName,
+  roleLabel,
   type RoleId,
 } from "../../knowledge";
 import { getKnowledge } from "../../knowledge/registry";
@@ -46,7 +46,7 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
     const manifest = context.snapshot.manifest;
     const knowledge = getKnowledge();
 
-    // Deprecated tools always warn when present
+    // Deprecated tools are always errors
     for (const occ of current) {
       const tool = knowledge.tools.find((t) => t.id === occ.toolId);
       if (tool?.status !== "deprecated") continue;
@@ -54,10 +54,10 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
       context.rawIssues.push({
         ...issueFromRule(rule, {
           path: `${manifest.path}#role:${role}:deprecated:${occ.toolId}`,
-          displayPath: `stack (${roleDslName(role)})`,
+          displayPath: `stack (${roleLabel(role)})`,
           message: { key: "issue.role.deprecated", params: { tool: occ.toolId } },
           category: "forbidden",
-          severity: "warn",
+          severity: "error",
         }),
         resolution: "info",
       });
@@ -75,8 +75,8 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
       context.rawIssues.push({
         ...issueFromRule(rule, {
           path: `${manifest.path}#role:${role}:missing:${preferred}`,
-          displayPath: `stack (${roleDslName(role)})`,
-          message: { key: "issue.role.missing", params: { role: roleDslName(role), expected: preferred } },
+          displayPath: `stack (${roleLabel(role)})`,
+          message: { key: "issue.role.missing", params: { role: roleLabel(role), expected: preferred } },
           category: "missing",
           severity: rule.severity ?? "warn",
         }),
@@ -94,10 +94,10 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
       context.rawIssues.push({
         ...issueFromRule(rule, {
           path: `${manifest.path}#role:${role}:mismatch:${occ.toolId}`,
-          displayPath: `stack (${safeLabel(roleDslName(role))}: ${safeLabel(occ.toolId)}→${safeLabel(preferred)})`,
+          displayPath: `stack (${safeLabel(roleLabel(role))}: ${safeLabel(occ.toolId)}→${safeLabel(preferred)})`,
           message: {
             key: "issue.role.mismatch",
-            params: { role: roleDslName(role), expected: preferred, actual: occ.toolId },
+            params: { role: roleLabel(role), expected: preferred, actual: occ.toolId },
           },
           category: "forbidden",
           severity: rule.severity ?? (resolution === "info" ? "warn" : "error"),

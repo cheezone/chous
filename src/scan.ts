@@ -1,11 +1,9 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
-import { parseFsLintConfig } from "./config/parser";
-import { APP_CONFIG_FILE_NAME } from "./constants";
-import { detectKinds, detectRoleOccupancy, knowledgeToJSON, roleDslName, type RoleId } from "./knowledge";
+import { detectKinds, detectRoleOccupancy, knowledgeToJSON, roleLabel, type RoleId } from "./knowledge";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
-import { getLL } from "./i18n/runtime";
+import { getLL } from "./i18n";
 import { buildWorkspaceSnapshot, type WorkspaceSnapshot } from "./vfs/snapshot";
 import type { Issue, LintResult, Resolution } from "./types";
 
@@ -141,7 +139,7 @@ function occupancyRecord(snapshot: WorkspaceSnapshot): Record<string, string[]> 
   const occ = detectRoleOccupancy(snapshot);
   const out: Record<string, string[]> = {};
   for (const [role, list] of occ) {
-    out[roleDslName(role as RoleId)] = list.map((o) => o.toolId);
+    out[roleLabel(role as RoleId)] = list.map((o) => o.toolId);
   }
   return out;
 }
@@ -156,25 +154,15 @@ async function scanOneRepo(opts: {
   const kinds = detectKinds(snapshot);
   const roles = occupancyRecord(snapshot);
 
-  let issues: ScanRepoResult["issues"] = [];
-  const configPath = resolve(opts.root, APP_CONFIG_FILE_NAME);
-  if (existsSync(configPath)) {
-    const raw = readFileSync(configPath, "utf8");
-    const config = parseFsLintConfig(raw, configPath);
-    const result: LintResult = await lintWorkspace({
-      root: opts.root,
-      config,
-      configPath,
-    });
-    issues = result.issues.map((i: Issue) => ({
-      displayPath: i.displayPath,
-      message: formatIssueMessage(LL, i.message),
-      severity: i.severity,
-      resolution: i.resolution,
-      reason: i.reason,
-      see: i.see,
-    }));
-  }
+  const result: LintResult = await lintWorkspace({ root: opts.root });
+  const issues: ScanRepoResult["issues"] = result.issues.map((i: Issue) => ({
+    displayPath: i.displayPath,
+    message: formatIssueMessage(LL, i.message),
+    severity: i.severity,
+    resolution: i.resolution,
+    reason: i.reason,
+    see: i.see,
+  }));
 
   const components = opts.withSpecfy ? await detectSpecfyComponents(snapshot) : undefined;
 

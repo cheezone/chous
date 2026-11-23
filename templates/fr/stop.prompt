@@ -1,5 +1,0 @@
-Les règles du projet ont trouvé des problèmes de structure de fichiers.
-
-1. Corrige les problèmes listés ci-dessous
-2. Lance `chous --verbose` et confirme qu'il ne reste aucun problème
-3. Ne dis pas que c'est réglé avant que cette commande ne le confirme

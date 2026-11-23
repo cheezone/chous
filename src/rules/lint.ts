@@ -1,15 +1,15 @@
 import { relative, sep } from "node:path";
-import type { FsLintConfig, Issue, LintResult, MoveRule, Rule } from "../types";
+import type { Issue, LintResult, MoveRule, Rule } from "../types";
 import { toDisplayPath } from "../fsutil";
 import { buildWorkspaceSnapshot } from "../vfs/snapshot";
-import { compileConfig } from "../config/compiler";
+import { resolveTaste } from "../taste";
+import { compileRules } from "./compile";
 import {
   findValidator,
   processInDirOnlyGroup,
   RuleStatisticsCollector,
   type RuleValidatorContext,
 } from "./validators";
-import { applyKindImports } from "./apply-kind-imports";
 import { collectRottenDepIssues } from "./validators/rotten";
 
 function hasRootLevelOnlyRules(rules: Rule[]): boolean {
@@ -48,29 +48,26 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
 }
 
 /**
- * Lint a workspace: snapshot → compile → validate → dedup.
+ * Lint a project root: taste → snapshot → compile → validate → dedup.
  */
 export async function lintWorkspace(opts: {
   root: string;
-  config: FsLintConfig;
-  configPath: string;
   strict?: boolean;
   relevantDirs?: Set<string>;
 }): Promise<LintResult> {
   const startTime = performance.now();
-  const { root, config, configPath, strict: forceStrict, relevantDirs } = opts;
+  const { root, strict: forceStrict, relevantDirs } = opts;
   const rawIssues: Issue[] = [];
+  const taste = resolveTaste(root);
 
-  const rootOnly = !relevantDirs && hasRootLevelOnlyRules(config.rules);
+  const rootOnly = !relevantDirs && hasRootLevelOnlyRules(taste.rules);
   const snapshot = await buildWorkspaceSnapshot({
     root,
     rootOnly,
     relevantDirs,
   });
 
-  const effectiveConfig = applyKindImports(config, snapshot);
-
-  const compiled = compileConfig(effectiveConfig, snapshot.workspace, { forceStrict, root });
+  const compiled = compileRules(taste.rules, snapshot.workspace, { forceStrict });
 
   // Track files claimed by move rules so strict whitelist skips them
   const moveRules = compiled.rules.filter((r): r is MoveRule => r.kind === "move");
@@ -161,14 +158,12 @@ export async function lintWorkspace(opts: {
 
   return {
     root,
-    configPath,
+    tastes: taste.ids,
     issues: finalIssues,
     requiredTopLevelNames,
     visibleSet: snapshot.visibleAbs,
     listDir: (absDir) =>
       snapshot.listDir(absDir).map((e) => ({ name: e.name, absPath: e.absPath, isDir: e.isDir })),
-    imports: effectiveConfig.imports,
-    persona: effectiveConfig.persona,
     ...(compiled.workspacePackages.length > 0 ? { workspacePackages: compiled.workspacePackages } : {}),
     fileCount: snapshot.fileCount,
     duration: Math.round(performance.now() - startTime),

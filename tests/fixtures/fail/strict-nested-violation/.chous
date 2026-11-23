@@ -1,3 +1,0 @@
-in app:
-  allow *.ts
-  strict files

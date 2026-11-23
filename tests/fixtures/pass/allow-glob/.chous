@@ -1,3 +1,0 @@
-# Test: Glob patterns in allow
-in tests:
-  allow **/*.test.ts, **/*.spec.ts

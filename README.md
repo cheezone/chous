@@ -27,50 +27,58 @@
 
 _/tʃoʊs/_
 
-Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous checks the repository against a **persona** you choose — layout, stack, naming — and tells the agent what to change.
+Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous checks the repository against one person's taste — layout, stack, naming, dependencies — and tells the agent what to change.
 
-Stop AI slop. Follow a real person.
+There is no config, no preset and no plugin. The taste is the tool, like `gofmt`.
 
 \* *chous* comes from Chinese「抽丝」(chōu sī): to draw out silk threads, to untangle.
-
-### Input
-
-```
-tests/
-.prettierrc
-jest.config.ts
-```
-
-### Output
-
-```
-✖ tests/         → should be test/
-✖ .prettierrc    → not allowed
-✖ jest.config.ts → replace jest with vitest
-```
 
 ```bash
 npx chous
 ```
 
-### Stack roles
-
-Presets declare **roles**, not attitudes toward tools:
+### Output
 
 ```
-package manager pnpm
-runtime         bun
-linter          oxlint
-test runner     vitest
-bundler         tsdown
+.
+├── ✖ tests/                                    → should be renamed to test/
+├── ✖ eslint.config.js                          → hit blacklist (1)
+├── ✖ jest.config.ts                            → hit blacklist (1)
+├── ✖ notes.txt                                 → not in allow list (1)
+├── ✖ package.json (moment)                     → dependency moment is replaceable → day.js
+├── ✖ package.json (pnpm)                       → package manager should be pnpm (found yarn)
+├── ✖ stack (git hooks: husky→simple-git-hooks) → git hooks should be simple-git-hooks (found husky)
+├── ✖ stack (linter: eslint→oxlint)             → linter should be oxlint (found eslint)
+├── ✖ stack (test runner: jest→vitest)          → test runner should be vitest (found jest)
+└── ✖ yarn.lock                                 → not in allow list (1)
+
+Taste: base · js
 ```
 
-Chous detects what occupies each role, auto-allows the chosen tool's config files, and flags siblings (e.g. `.prettierrc` when the formatter role is `@antfu/eslint-config`). Migration difficulty comes from the built-in knowledge base — authors don't write `because` / `see` for that.
+### The taste
+
+Chous looks at the project and stacks the tastes that apply: `base` always, then `js` / `go` / `python`, then `nextjs` / `nuxt3` / `nuxt4`. They live in [`src/taste/`](src/taste).
+
+- **Root is a whitelist.** Anything at the root that no taste allows is an error.
+- **One name per concept.** `test/`, not `tests/`, `__tests__/` or `spec/`. `scripts/`, not `script/`.
+- **One tool per role.** pnpm, TypeScript, oxlint, Vitest, simple-git-hooks. Published packages also get tsdown and changelogen. Anything else in the same role is an error, with migration notes from the built-in knowledge base.
+- **No garbage dependencies.** Everything in [e18e module-replacements](https://github.com/e18e/module-replacements), plus dead packages it doesn't cover (`node-sass`, `tslint`, `ts-node`, `nodemon`, `gulp`, …).
+- **Framework layouts.** Next.js App Router and Nuxt 3 / 4 directory and naming conventions.
+
+Disagree? Fork it. That's the point.
+
+### Commands
 
 ```bash
+npx chous                 # lint the current directory
+npx chous --fix           # apply safe fixes (renames, package.json edits)
+npx chous claude install  # run chous in Claude Code hooks
+npx chous cursor install  # run chous in Cursor hooks
 npx chous scan .          # find git repos, detect kinds / roles
 npx chous knowledge       # dump built-in tool / kind / migration JSON
 ```
+
+Output is in English or Chinese (`-l en` / `-l zh`; default follows the system).
 
 ## License
 

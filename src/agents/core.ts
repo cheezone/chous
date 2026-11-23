@@ -1,13 +1,8 @@
-import { existsSync, readFileSync } from "node:fs";
-import { dirname, isAbsolute, relative, resolve, sep } from "node:path";
-import { parseFsLintConfig } from "../config/parser";
-import { prefetchImports } from "../config/prefetch";
-import { resolveWorkspaceRoots } from "../config/where";
-import { APP_CONFIG_FILE_NAME } from "../constants";
-import { getLL } from "../i18n/runtime";
+import { isAbsolute, relative, resolve, sep } from "node:path";
+import { getLL } from "../i18n";
 import { lintWorkspace } from "../rules/lint";
 import { formatIssueMessage } from "../rules/report";
-import type { Persona, Resolution } from "../types";
+import type { Resolution, SafeFix } from "../types";
 
 export type AgentIssue = {
   root: string;
@@ -23,7 +18,6 @@ export type AgentIssue = {
 export type AgentCheckResult = {
   issues: AgentIssue[];
   summary: string;
-  persona?: Persona;
 };
 
 const SUMMARY_ISSUE_LIMIT = 40;
@@ -59,78 +53,43 @@ function relevantDirsFor(filePath: string, workspaceRoots: string[]): Set<string
 
 export async function checkWorkspaces(opts: {
   workspaceRoots: string[];
-  configPath?: string;
-  strict: boolean;
   lang: string;
   editedFile?: string;
 }): Promise<AgentCheckResult> {
   const { LL } = getLL(opts.lang);
   const issues: AgentIssue[] = [];
-  let persona: Persona | undefined;
   const relevantDirs = opts.editedFile ? relevantDirsFor(opts.editedFile, opts.workspaceRoots) : undefined;
 
   for (const root of opts.workspaceRoots) {
-    const configPath = resolve(root, opts.configPath ?? APP_CONFIG_FILE_NAME);
-    if (!existsSync(configPath)) continue;
-
-    let raw: string;
-    try {
-      raw = readFileSync(configPath, "utf8");
-    } catch {
-      continue;
-    }
-
-    await prefetchImports(configPath);
-    const config = parseFsLintConfig(raw, configPath);
-    if (!persona && config.persona) persona = config.persona;
-    const roots = await resolveWorkspaceRoots({ cwd: root, configDir: dirname(configPath), where: config.where });
-
-    for (const workspaceRoot of roots) {
-      let rootRelevantDirs: Set<string> | undefined;
-      if (relevantDirs) {
-        rootRelevantDirs = new Set<string>();
-        for (const dir of relevantDirs) {
-          const dirAbs = resolve(root, dir);
-          const rootRel = relative(workspaceRoot, dirAbs);
-          if (!rootRel.startsWith("..") && !isAbsolute(rootRel)) {
-            rootRelevantDirs.add(rootRel === "" ? "." : rootRel.split(sep).join("/"));
-          }
-        }
-        rootRelevantDirs.add(".");
-      }
-
-      const result = await lintWorkspace({
-        root: workspaceRoot,
-        config,
-        configPath,
-        strict: opts.strict,
-        relevantDirs: rootRelevantDirs,
+    const result = await lintWorkspace({ root, relevantDirs });
+    for (const issue of result.issues) {
+      issues.push({
+        root,
+        displayPath: issue.displayPath,
+        message: formatIssueMessage(LL, issue.message),
+        severity: issue.severity,
+        reason: issue.reason,
+        fixSummary: issue.fix ? describeFix(issue.fix) : undefined,
+        resolution: issue.resolution ?? (issue.fix ? "auto" : "agent"),
+        see: issue.see,
       });
-      if (!persona && result.persona) persona = result.persona;
-      for (const issue of result.issues) {
-        let fixSummary: string | undefined;
-        if (issue.fix) {
-          const f = issue.fix;
-          if (f.type === "rename") fixSummary = `rename ${f.fromPath} → ${f.toPath}`;
-          else if (f.type === "deleteEmptyDir") fixSummary = `delete empty dir ${f.path}`;
-          else if (f.type === "pkgSetManager") fixSummary = `set packageManager to ${f.manager}`;
-          else if (f.type === "pkgReplaceDep") fixSummary = `replace dep ${f.from} with ${f.to}`;
-        }
-        issues.push({
-          root: workspaceRoot,
-          displayPath: issue.displayPath,
-          message: formatIssueMessage(LL, issue.message),
-          severity: issue.severity,
-          reason: issue.reason,
-          fixSummary,
-          resolution: issue.resolution ?? (issue.fix ? "auto" : "agent"),
-          see: issue.see,
-        });
-      }
     }
   }
 
-  return { issues, summary: formatAgentSummary(opts.lang, issues, persona), persona };
+  return { issues, summary: formatAgentSummary(opts.lang, issues) };
+}
+
+function describeFix(fix: SafeFix): string {
+  switch (fix.type) {
+    case "rename":
+      return `rename ${fix.fromPath} → ${fix.toPath}`;
+    case "deleteEmptyDir":
+      return `delete empty dir ${fix.path}`;
+    case "pkgSetManager":
+      return `set packageManager to ${fix.manager}`;
+    case "pkgReplaceDep":
+      return `replace dep ${fix.from} with ${fix.to}`;
+  }
 }
 
 function formatIssueBlock(
@@ -148,11 +107,9 @@ function formatIssueBlock(
   return lines;
 }
 
-export function formatAgentSummary(lang: string, issues: AgentIssue[], persona?: Persona): string {
+export function formatAgentSummary(lang: string, issues: AgentIssue[]): string {
   const { LL } = getLL(lang);
-  const lines = [String(LL.agent.intro())];
-  if (persona) lines.push(String(LL.agent.follow({ name: persona.name })));
-  lines.push("");
+  const lines = [String(LL.agent.intro()), ""];
 
   const limited = issues.slice(0, SUMMARY_ISSUE_LIMIT);
   const auto = limited.filter((i) => i.resolution === "auto");

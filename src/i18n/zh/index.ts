@@ -1,5 +1,5 @@
-﻿import type { Translation } from '../i18n-types.js'
-import { APP_NAME, APP_CONFIG_FILE_NAME } from '../../constants'
+import type { Translation } from '../types'
+import { APP_NAME } from '../../constants'
 
 const zh = {
 	app: {
@@ -8,63 +8,43 @@ const zh = {
 	},
 	cli: {
 		help: {
+			tagline: '有主见的品味检查器，没有配置。',
 			commands: '命令：',
-			initCmdDesc: `创建新的 ${APP_CONFIG_FILE_NAME} 规则文件`,
-			installCursorHookDesc: '安装 Cursor hooks 以自动进行 lint 检查',
-			installClaudeHookDesc: '安装 Claude Code hooks 以自动进行 lint 检查',
-			updateCmdDesc: '下载远程人设预设',
+			lintCmdDesc: '检查当前目录',
+			scanCmdDesc: '查找 git 仓库，显示识别到的项目类型和技术栈角色',
+			knowledgeCmdDesc: '以 JSON 导出内置技术栈知识',
+			installCursorHookDesc: '安装 Cursor hooks，自动检查',
+			installClaudeHookDesc: '安装 Claude Code hooks，自动检查',
 			options: '选项：',
 			langHint: '设置输出语言（默认：自动）',
-			verboseHint: '显示更完整的文件结构（信息模式：详细）',
-			configHint: `指定规则文件（默认：当前目录的 ${APP_CONFIG_FILE_NAME}）`,
-			presetHint: '用人设检查当前目录，不写入 .chous。可重复指定来对比',
-			strictHint: '为所有目录规则启用严格模式',
+			verboseHint: '显示完整的文件结构',
 			fixHint: '应用安全的自动修复',
 			failOnWarningsHint: '存在警告时以错误码退出',
 			ignoreWarningsHint: '仅报告错误（隐藏警告）',
-			statsHint: '将规则性能统计输出到 JSON 文件',
 			noColorHint: '禁用彩色输出',
 			helpHint: '显示帮助',
 		},
 		error: {
 			missingLangValue: '缺少 --lang 参数值（仅支持：{supported}）',
 			unsupportedLang: '不支持的语言：{code}（仅支持：{supported}）',
-			missingConfigValue: '缺少 --config 参数值',
-			missingPresetValue: '缺少 --preset 参数值',
-			presetAndConfig: '--preset 和 --config 不能同时使用',
 			conflictIgnoreAndFailWarnings: '--ignore-warnings 与 --fail-on-warnings 不能同时使用',
-			missingStatsOutputValue: '缺少 --stats-output 参数值',
 			unknownArg: '未知参数：{arg}',
-			cannotReadRulesFile: '无法读取规则文件：{path}',
 		},
-		initCmd: {
-			created: '已创建规则文件',
-			exists: '规则文件已存在，跳过： {path}',
-			detectedFramework: '检测到框架： {name}',
-			detectedPackageManager: '检测到包管理器： {name}',
-			enabledPresets: '已启用预设： {names}',
-			usingPreset: '正在试用预设：{name}',
-			nextStep: `下一步： 运行 ${APP_NAME}`,
+		install: {
 			cursorHooksInstalled: '已安装 Cursor hooks',
 			claudeHooksInstalled: '已安装 Claude Code hooks',
-			installCredit: 'chous · https://github.com/cheezone/chous',
-			suggestInit: `💡 提示：未找到 ${APP_CONFIG_FILE_NAME} 配置文件，已自动检测项目类型并使用预设规则。运行 \`${APP_NAME} init\` 创建配置文件以自定义规则。`,
-			configHint: '💡 提示：请读取 `{configPath}` 文件来了解具体的规则（白名单、黑名单等），这将帮助你理解为什么这些文件不符合要求以及如何修复。',
+			credit: 'chous · https://github.com/cheezone/chous',
 		},
 	},
 	meta: {
-		rulesFile: '规则文件: {path}',
-		importedRules: '引用规则: {path}',
+		taste: '品味：{names}',
 		lang: '显示语言：简体中文',
 		mode: '信息模式：{mode}',
 		performance: '在 {duration}ms 内遍历了 {fileCount} 个文件',
-		following: '跟随 @{name} · {credit}',
-		curated: '预设由 cheez.tech 整理',
 		workspacePackages: '工作区包：{count}',
 	},
 	agent: {
-		intro: '项目规则发现了文件和依赖问题。',
-		follow: '跟随 @{name}。',
+		intro: 'chous 发现了文件和依赖问题。',
 		fix: '先处理下面的问题，再运行 `chous --verbose`，确认已经没有问题。在那条命令报告没有问题之前，不要说已经修好了。',
 		reason: '原因：{reason}',
 		fixHint: '安全修复：{fix}',
@@ -72,9 +52,6 @@ const zh = {
 		autoSection: '可直接运行 `chous --fix`：',
 		agentSection: '需要你（或 AI）迁移：',
 		infoSection: '仅提示：',
-		updated: '已更新 {count} 个远程预设。',
-		upToDate: '远程预设已在本地缓存中。',
-		downloadFailed: '无法下载 {name}。如果本地已有缓存，会继续使用缓存。',
 	},
 	mode: {
 		concise: '简洁',
@@ -96,6 +73,7 @@ const zh = {
 		workspace: '工作区：{root}',
 		whitelist: '白名单',
 		blacklist: '黑名单',
+		listSep: '、',
 		andMoreItems: '等 {count} 项',
 	},
 	issue: {
@@ -149,21 +127,14 @@ const zh = {
 		rotten: {
 			dep: '依赖 {name} 可替换 → {replacement}',
 		},
+		merged: {
+			notInAllowList: '不在白名单（{labels}）',
+			inBlockList: '命中黑名单（{labels}）',
+		},
 		naming: {
 			invalid: '命名规范错误（应为 {style}）',
 			invalidPrefix: '命名规范错误（前缀应为 {pattern}）',
 			invalidSuffix: '命名规范错误（后缀应为 {pattern}）',
-		},
-	},
-	errors: {
-		parser: {
-			invalidWhereDirective: 'where 指令无效',
-			invalidPathDirective: 'path 指令无效',
-			ruleFormatError: '{rule} 规则格式错误：{line}',
-			renameMissingSources: 'rename 规则缺少来源：{line}',
-			unknownPreset: '未知预设：{name}',
-			remotePresetMissing: '远程预设尚未缓存：{name}。请运行 `chous update`',
-			cannotParseLine: '无法解析规则行：{line}',
 		},
 	},
 } satisfies Translation

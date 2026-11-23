@@ -3,7 +3,6 @@ import { existsSync } from "node:fs";
 import { basename, dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
-import { APP_IGNORE_FILE_NAME } from "./constants";
 
 export const DEFAULT_IGNORE_DIRS = new Set([
   "node_modules",
@@ -151,30 +150,6 @@ export async function listTopLevel(root: string, opts?: { gitignore?: boolean })
     out.push({ name: basename(abs), abs, isDir: s.isDirectory() });
   }
   return out;
-}
-
-/**
- * Load .chousignore patterns from project root
- */
-export async function loadChousIgnorePatterns(root: string): Promise<string[]> {
-  const patterns: string[] = [];
-  try {
-    const chousignorePath = resolve(root, APP_IGNORE_FILE_NAME);
-    if (!existsSync(chousignorePath)) return patterns;
-
-    const content = await readFile(chousignorePath, "utf-8");
-    const lines = content.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith("#"));
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (trimmed) {
-        patterns.push(trimmed);
-      }
-    }
-  } catch {
-    // Ignore errors (e.g., file doesn't exist, permission issues)
-  }
-  return patterns;
 }
 
 export async function isPathIgnored(absPath: string, root: string): Promise<boolean> {
