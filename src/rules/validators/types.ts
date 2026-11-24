@@ -1,4 +1,5 @@
 import type { Issue, Rule, InDirOnlyRule, Severity, SafeFix, IssueMessage, RuleSource } from "../../types";
+import type { Text } from "../../i18n/text";
 import type { WorkspaceSnapshot } from "../../vfs/snapshot";
 import type { RuleStatisticsCollector } from "./base";
 /**
@@ -53,7 +54,7 @@ export function issueFromRule(
     severity?: Severity;
     fix?: SafeFix;
     /** `false` = omit reason even if the rule has one (allow-list / deny-list). */
-    reason?: string | false;
+    reason?: Text | false;
   },
 ): Issue {
   const reason =

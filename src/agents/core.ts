@@ -68,7 +68,7 @@ export async function checkWorkspaces(opts: {
         displayPath: issue.displayPath,
         message: formatIssueMessage(LL, issue.message),
         severity: issue.severity,
-        reason: issue.reason,
+        reason: issue.reason?.[getLL(opts.lang).locale],
         fixSummary: issue.fix ? describeFix(issue.fix) : undefined,
         resolution: issue.resolution ?? (issue.fix ? "auto" : "agent"),
         see: issue.see,

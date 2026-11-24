@@ -149,7 +149,7 @@ async function scanOneRepo(opts: {
   lang: string;
   withSpecfy: boolean;
 }): Promise<ScanRepoResult> {
-  const { LL } = getLL(opts.lang);
+  const { LL, locale } = getLL(opts.lang);
   const snapshot = await buildWorkspaceSnapshot({ root: opts.root });
   const kinds = detectKinds(snapshot);
   const roles = occupancyRecord(snapshot);
@@ -160,7 +160,7 @@ async function scanOneRepo(opts: {
     message: formatIssueMessage(LL, i.message),
     severity: i.severity,
     resolution: i.resolution,
-    reason: i.reason,
+    reason: i.reason?.[locale],
     see: i.see,
   }));
 

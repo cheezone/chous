@@ -41,7 +41,7 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
       if (value === undefined) return { hitCount: 1 };
       context.rawIssues.push(issueFromRule(rule, {
         ...base,
-        message: { key: "issue.manifest.remove", params: { field: rule.field, reason: rule.reason ?? "" } },
+        message: { key: "issue.manifest.remove", params: { field: rule.field, reason: rule.reason ?? { en: "", zh: "" } } },
       }));
       return { hitCount: 1 };
     }

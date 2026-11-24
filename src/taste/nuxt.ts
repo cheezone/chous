@@ -86,7 +86,7 @@ export function nuxt4() {
     "tsconfig.json", "mcp", "db", "database", "services",
   ]);
   t.move("server/emails", "server/assets/emails", {
-    reason: "@vue-email/nuxt reads emails from server/assets/emails",
+    reason: { en: "@vue-email/nuxt reads emails from server/assets/emails", zh: "@vue-email/nuxt 从 server/assets/emails 读取邮件模板" },
   });
   t.naming(`server/types/**/*.${SCRIPT}`, ["kebab-case"]);
   t.naming(`server/mcp/**/*.${SCRIPT}`, ["kebab-case"]);

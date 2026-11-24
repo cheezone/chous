@@ -1,3 +1,5 @@
+import type { Text } from "./i18n/text";
+
 /** Which built-in taste produced a rule (e.g. `base`, `js`, `nuxt4`). */
 export type RuleSource = {
   taste: string;
@@ -10,8 +12,8 @@ export type RuleBase = {
   source: RuleSource;
   /** Overrides the validator's default severity. */
   severity?: Severity;
-  /** Why this rule exists. */
-  reason?: string;
+  /** Why this rule exists, in every language. */
+  reason?: Text;
   when?: Condition[];
 };
 
@@ -190,7 +192,7 @@ export type IssueMessage =
   | { key: "issue.inDirOnly.dirMustExist"; params: { only: string | string[] } }
   | { key: "issue.inDirOnly.forbiddenOnlyAllowed"; params: { dir: string; only: string | string[] } }
   | { key: "issue.no.forbidden"; params: { name: string } }
-  | { key: "issue.no.because"; params: { reason: string } }
+  | { key: "issue.no.because"; params: { reason: Text } }
   | { key: "issue.has.mustExist"; params: { name: string } }
   | { key: "issue.packageManager.wrong"; params: { expected: string; actual: string } }
   | { key: "issue.packageManager.missing"; params: { expected: string } }
@@ -202,7 +204,7 @@ export type IssueMessage =
   | { key: "issue.role.deprecated"; params: { tool: string } }
   | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
   | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
-  | { key: "issue.manifest.remove"; params: { field: string; reason: string } }
+  | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }
   | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
   | { key: "issue.workspace.protocol"; params: { name: string; spec: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
@@ -214,7 +216,7 @@ export type IssueMessage =
 export type Issue = {
   ruleKind: Rule["kind"];
   ruleSource: RuleSource;
-  reason?: string;
+  reason?: Text;
   path: string; // absolute
   displayPath: string; // relative to root (posix-ish for display)
   message: IssueMessage;

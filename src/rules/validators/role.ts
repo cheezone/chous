@@ -10,6 +10,7 @@ import {
   type RoleId,
 } from "../../knowledge";
 import { getKnowledge } from "../../knowledge/registry";
+import { joinText } from "../../i18n/text";
 
 function safeLabel(label: string): string {
   return label.replaceAll("/", "∕");
@@ -91,7 +92,7 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
       hitCount++;
       const migration = lookupMigration(role, occ.toolId, preferred);
       const resolution = defaultResolution(migration);
-      const reasonParts = [rule.reason, migration?.notes].filter(Boolean);
+      const reason = joinText([rule.reason, migration?.notes]);
       context.rawIssues.push({
         ...issueFromRule(rule, {
           path: `${manifest.path}#role:${role}:mismatch:${occ.toolId}`,
@@ -102,7 +103,7 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
           },
           category: "forbidden",
           severity: rule.severity ?? (resolution === "info" ? "warn" : "error"),
-          ...(reasonParts.length ? { reason: reasonParts.join("\n") } : {}),
+          ...(reason ? { reason } : {}),
         }),
         resolution,
         ...(migration?.see ? { see: migration.see } : {}),

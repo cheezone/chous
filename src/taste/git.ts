@@ -54,7 +54,7 @@ export function git(host: GitHost | undefined) {
   const t = taste("git");
   t.must([".gitignore"]);
   const foreign = host === "gitlab" ? FOREIGN_CI : [...FOREIGN_CI, ".gitlab-ci.yml"];
-  t.no(foreign, { reason: "one CI: GitHub Actions or CNB" });
+  t.no(foreign, { reason: { en: "one CI: GitHub Actions or CNB", zh: "只用一个 CI：GitHub Actions 或 CNB" } });
   if (host === "gitlab") t.allow([".gitlab-ci.yml", ".gitlab"]);
   return t.rules;
 }
@@ -70,9 +70,9 @@ export function github() {
     "dependabot.yml", "release.yml", "labeler.yml", "labels.yml", "FUNDING.yml", "CODEOWNERS",
     "README.md", "SECURITY.md", "CONTRIBUTING.md", "CODE_OF_CONDUCT.md", "SUPPORT.md",
     "copilot-instructions.md", "instructions", "prompts",
-  ], { strict: true, reason: "GitHub only reads these from .github/" });
+  ], { strict: true, reason: { en: "GitHub only reads these from .github/", zh: "GitHub 只认 .github/ 里的这些文件" } });
   // One extension, one naming style.
-  t.dir(".github/workflows", ["*.yml"], { strict: true, reason: "Workflows end in .yml" });
+  t.dir(".github/workflows", ["*.yml"], { strict: true, reason: { en: "Workflows end in .yml", zh: "workflow 文件用 .yml 结尾" } });
   t.naming(".github/workflows/*.yml", ["kebab-case"]);
   return t.rules;
 }
@@ -81,6 +81,6 @@ export function github() {
 export function cnb() {
   const t = taste("cnb");
   t.allow([".cnb.yml", ".cnb"]);
-  t.no([".cnb.yaml"], { reason: "CNB pipelines live in .cnb.yml" });
+  t.no([".cnb.yaml"], { reason: { en: "CNB pipelines live in .cnb.yml", zh: "CNB 流水线写在 .cnb.yml" } });
   return t.rules;
 }

@@ -38,7 +38,7 @@ export function nextjs() {
     "license.md",
   ]);
 
-  t.dir("app", APP_FILES, { strict: true, fileType: "files", reason: "Only route files live directly in app/" });
+  t.dir("app", APP_FILES, { strict: true, fileType: "files", reason: { en: "Only route files live directly in app/", zh: "app/ 下只直接放路由文件" } });
   t.naming(`app/**/{layout,page,loading,not-found,error,global-error,route,template,default,forbidden,unauthorized}.${PAGE}`, ["kebab-case"]);
   t.naming(`app/**/{favicon,icon,apple-icon,opengraph-image,twitter-image}.${ICON}`, ["kebab-case"]);
   t.naming(`app/**/{sitemap,robots,manifest}.${META}`, ["kebab-case"]);

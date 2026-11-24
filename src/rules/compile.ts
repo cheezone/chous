@@ -92,7 +92,7 @@ export function compileRules(
       kind: "no",
       names: fileEffects.forbid,
       source: syntheticSource,
-      reason: "config for a tool this taste does not use",
+      reason: { en: "config for a tool this taste does not use", zh: "这套品味不用的工具的配置" },
     });
   }
 

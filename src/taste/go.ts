@@ -23,7 +23,7 @@ export function go() {
   t.allow(["*.go"]);
 
   for (const dir of ["cmd", "pkg", "internal", "internal/app", "internal/pkg", "web", "build", "tools", "examples"]) {
-    t.naming(`${dir}/*`, ["flatcase", "snake_case"], { dirs: true, reason: "Go package directories" });
+    t.naming(`${dir}/*`, ["flatcase", "snake_case"], { dirs: true, reason: { en: "Go package directories", zh: "Go 包目录" } });
   }
 
   return t.rules;

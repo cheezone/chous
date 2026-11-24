@@ -6,5 +6,5 @@ export default defineMigration({
   to: "pnpm",
   resolution: "auto",
   see: "https://pnpm.io/installation",
-  notes: "Safe to set packageManager field and remove package-lock.json after reinstalling with pnpm.",
+  notes: { en: "Safe to set packageManager field and remove package-lock.json after reinstalling with pnpm.", zh: "用 pnpm 重新安装后，可以放心设置 packageManager 字段并删除 package-lock.json。" },
 });

@@ -63,26 +63,26 @@ export function base() {
   t.dir(".", [], { strict: true, dotfiles: true });
   t.allow([".gitignore", ".gitattributes", ".gitmodules", ".mailmap", ".git-blame-ignore-revs"]);
   t.allow([".editorconfig", ".vscode", ".devcontainer", ".dockerignore", ".env.example"]);
-  t.allow([".claude", ".cursor", ".mcp.json"], { reason: "Coding agent settings" });
+  t.allow([".claude", ".cursor", ".mcp.json"], { reason: { en: "Coding agent settings", zh: "AI 编程助手的配置" } });
 
   t.allow([...LICENSES, "CODEOWNERS"]);
-  t.allow([`*.config.${CONFIG_EXT}`, `*.config.*.${CONFIG_EXT}`], { reason: "Tool configs" });
+  t.allow([`*.config.${CONFIG_EXT}`, `*.config.*.${CONFIG_EXT}`], { reason: { en: "Tool configs", zh: "工具配置文件" } });
   t.allow(["docs", "examples", "docker", "charts"]);
   t.allow(DOCS);
-  t.allow(DEPLOY, { reason: "Hosting platforms read these from the repo root" });
+  t.allow(DEPLOY, { reason: { en: "Hosting platforms read these from the repo root", zh: "托管平台从仓库根目录读取这些文件" } });
 
   t.only("./*.md", [...DOCS, ...LICENSES], {
-    reason: "Root Markdown is for project docs only; put the rest in docs/",
+    reason: { en: "Root Markdown is for project docs only; put the rest in docs/", zh: "根目录的 Markdown 只放项目文档，其余放进 docs/" },
   });
 
-  t.no([".chous", ".chousignore"], { reason: "chous has no config, delete it" });
+  t.no([".chous", ".chousignore"], { reason: { en: "chous has no config, delete it", zh: "chous 没有配置，删掉它" } });
 
   // Anything still visible here is not gitignored, so it would be committed.
-  t.no(["**/.DS_Store", "**/Thumbs.db", "**/desktop.ini"], { reason: "OS junk, delete it and gitignore it" });
+  t.no(["**/.DS_Store", "**/Thumbs.db", "**/desktop.ini"], { reason: { en: "OS junk, delete it and gitignore it", zh: "系统垃圾文件，删掉并加进 .gitignore" } });
   t.no(["**/.env", "**/.env.local", "**/.env.*.local"], {
-    reason: "secrets, gitignore it and commit .env.example instead",
+    reason: { en: "secrets, gitignore it and commit .env.example instead", zh: "密钥文件，加进 .gitignore，改为提交 .env.example" },
   });
-  t.no(["**/*.log"], { reason: "logs, gitignore them" });
+  t.no(["**/*.log"], { reason: { en: "logs, gitignore them", zh: "日志文件，加进 .gitignore" } });
 
   return t.rules;
 }

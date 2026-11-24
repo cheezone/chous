@@ -27,6 +27,14 @@ describe("cli", () => {
     expect(r.stdout).toContain("品味：base · js");
   });
 
+  it("explains why in the output language", () => {
+    const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
+    const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
+    const en = runCli(["-l", "en", "-v"], garbage).stdout;
+    expect(zh).toContain("依赖 uuid 已过时 → crypto.randomUUID() （Node 19+ 和浏览器都内置。）");
+    expect(en).toContain("dependency uuid is obsolete → crypto.randomUUID() (Built into Node 19+ and browsers.)");
+  });
+
   it("only ships English and Chinese", () => {
     const r = runCli(["-l", "ja"]);
     expect(r.code).toBe(2);

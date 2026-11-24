@@ -9,6 +9,7 @@
 - 规则语义：`allow` 只扩大白名单，**不会**撤销 `no`；带 `reason` 的 `no` 会直接显示原因，并压过同一路径上泛泛的「不在白名单」。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 只有 `en` 和 `zh`（`src/i18n/`）。参数类型由 `en` 字符串推导，改文案时两份一起改；不要再引入 typesafe-i18n（它不支持 TS 7）。
+- 品味里的原因（`reason`、`why`、迁移 `notes`）一律写成 `Text`：`{ en, zh }`，少一种语言就是类型错误。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。
 - Node 要求：`engines.node >= 22`；CI 矩阵测试 node 22 与 24。
 - 构建：tsdown（基于 rolldown）；测试：vitest。

@@ -5,5 +5,5 @@ export default defineMigration({
   from: "prettier",
   to: "@antfu/eslint-config",
   resolution: "agent",
-  notes: "Remove Prettier; formatting is covered by @antfu/eslint-config (eslint --fix).",
+  notes: { en: "Remove Prettier; formatting is covered by @antfu/eslint-config (eslint --fix).", zh: "删除 Prettier；格式化由 @antfu/eslint-config（eslint --fix）负责。" },
 });

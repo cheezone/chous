@@ -1,4 +1,5 @@
 import type { RoleId } from "./roles";
+import type { Text } from "../i18n/text";
 
 /** How an agent / CI should treat a finding. */
 export type Resolution = "auto" | "agent" | "info";
@@ -42,7 +43,7 @@ export type MigrationDef = {
   resolution: Resolution;
   see?: string;
   /** Pitfall notes for agents. */
-  notes?: string;
+  notes?: Text;
 };
 
 export function defineTool(def: ToolDef): ToolDef {

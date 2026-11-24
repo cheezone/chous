@@ -5,6 +5,7 @@ import type {
   Rule,
   RuleBase,
 } from "../types";
+import type { Text } from "../i18n/text";
 
 type Extra = Pick<RuleBase, "reason" | "severity">;
 
@@ -104,7 +105,7 @@ export function taste(id: string) {
     },
 
     /** A package.json field must not exist. */
-    noField(field: string, why: string) {
+    noField(field: string, why: Text) {
       push({ kind: "manifest", field, absent: true, reason: why });
     },
 
@@ -118,7 +119,7 @@ export function taste(id: string) {
     },
 
     /** Ban deps that have a better replacement. */
-    obsolete(names: string[], use: string, why: string) {
+    obsolete(names: string[], use: string, why: Text) {
       push({ kind: "deps", mode: "no", names, use, reason: why });
     },
 
