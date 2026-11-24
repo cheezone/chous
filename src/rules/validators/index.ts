@@ -8,6 +8,7 @@ import { InDirOnlyRuleValidator } from "./inDirOnly";
 import { DepsRuleValidator } from "./deps";
 import { ExclusiveRuleValidator, OneToolPerRoleValidator } from "./stack";
 import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
+import { LifecycleRuleValidator } from "./lifecycle";
 import type { RuleValidator } from "./types";
 
 /**
@@ -26,6 +27,7 @@ export const validators: RuleValidator[] = [
   new ExclusiveRuleValidator(),
   new ManifestRuleValidator(),
   new WorkspaceRuleValidator(),
+  new LifecycleRuleValidator(),
 ];
 
 /**

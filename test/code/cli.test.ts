@@ -31,8 +31,8 @@ describe("cli", () => {
     const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
     const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
     const en = runCli(["-l", "en", "-v"], garbage).stdout;
-    expect(zh).toContain("依赖 node-fetch 已过时 → fetch （fetch 在 Node 18+ 和所有浏览器里都是全局的。）");
-    expect(en).toContain("dependency node-fetch is obsolete → fetch (fetch is global in Node 18+ and every browser.)");
+    expect(zh).toContain("依赖 node-fetch 平台已经自带 → fetch （fetch 在 Node 18+ 和所有浏览器里都是全局的。）");
+    expect(en).toContain("dependency node-fetch is built in now → fetch (fetch is global in Node 18+ and every browser.)");
   });
 
   it("only ships English and Chinese", () => {

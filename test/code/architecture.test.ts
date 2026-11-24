@@ -6,6 +6,8 @@ import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
 import { execFileSync } from "node:child_process";
 import { DEPRECATED, NATIVE, SABOTAGED } from "../../src/taste/deps";
+import { EOL, eolDate, lifecycleStatus } from "../../src/taste/eol";
+import { pinnedVersion } from "../../src/rules/validators/lifecycle";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
 import { applySafeFixes } from "../../src/rules/autofix";
@@ -81,6 +83,49 @@ describe("git", () => {
   it("requires a .gitignore", async () => {
     const result = await lintWorkspace({ root: repo({ "README.md": "" }) });
     expect(result.issues.map((i) => `${i.displayPath} ${i.message.key}`)).toContain(".gitignore issue.has.mustExist");
+  });
+});
+
+describe("end of life", () => {
+  it("reads the version a project actually runs on", () => {
+    expect(pinnedVersion("v16.20.0")).toBe("16.20");
+    expect(pinnedVersion("^20")).toBe("20");
+    expect(pinnedVersion("18.x")).toBe("18");
+    expect(pinnedVersion("3.8.18")).toBe("3.8");
+    expect(pinnedVersion(">=18")).toBeUndefined();
+    expect(pinnedVersion("lts/*")).toBeUndefined();
+  });
+
+  it("dates every version it knows, and bounds older ones", () => {
+    expect(eolDate("node", "18")).toBe("2025-04-30");
+    expect(eolDate("node", "8")).toBe("2021-04-30");
+    expect(eolDate("node", "22")).toBeUndefined();
+    expect(eolDate("python", "3.6")).toBe("2023-06-27");
+    expect(eolDate("python", "3.10")).toBeUndefined();
+    expect(eolDate("nuxt", "3")).toBe("2026-07-31");
+  });
+
+  it("turns from expired into rotten after two years, with no change to chous", () => {
+    expect(lifecycleStatus("2026-07-31", "2026-07-30")).toBe("supported");
+    expect(lifecycleStatus("2026-07-31", "2026-07-31")).toBe("expired");
+    expect(lifecycleStatus("2026-07-31", "2028-07-30")).toBe("expired");
+    expect(lifecycleStatus("2026-07-31", "2028-07-31")).toBe("rotten");
+  });
+
+  it("only lists dates that have already passed", () => {
+    const today = new Date().toISOString().slice(0, 10);
+    for (const product of Object.values(EOL)) {
+      for (const { date } of product.versions) expect(date <= today).toBe(true);
+    }
+  });
+
+  it("warns on a framework that just expired", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-eol-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", dependencies: { nuxt: "^3.12.0" } }), "utf8");
+    const issues = (await lintWorkspace({ root: dir, today: "2026-11-24" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(issues.map((i) => [i.message.key, i.severity])).toEqual([["issue.lifecycle.expired", "warn"]]);
+    const later = (await lintWorkspace({ root: dir, today: "2028-08-01" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(later.map((i) => [i.message.key, i.severity])).toEqual([["issue.lifecycle.rotten", "error"]]);
   });
 });
 

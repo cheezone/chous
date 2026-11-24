@@ -172,6 +172,12 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.has.mustExist(msg.params));
     case "issue.deps.forbidden":
       return String(LL.issue.deps.forbidden(msg.params));
+    case "issue.lifecycle.expired":
+      return LL.issue.lifecycle.expired(msg.params);
+    case "issue.lifecycle.rotten":
+      return LL.issue.lifecycle.rotten(msg.params);
+    case "issue.deps.native":
+      return LL.issue.deps.native(msg.params);
     case "issue.exclusive.conflict":
       return LL.issue.exclusive.conflict(msg.params);
     case "issue.stack.conflict":

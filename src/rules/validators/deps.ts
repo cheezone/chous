@@ -31,11 +31,13 @@ export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
         context.rawIssues.push(issueFromRule(rule, {
           path: `${manifest.path}#forbidden:${name}`,
           displayPath: `package.json (${safeLabel(name)})`,
-          message: rule.use
-            ? { key: "issue.deps.obsolete", params: { name, use: rule.use } }
-            : { key: "issue.deps.forbidden", params: { name } },
+          message: !rule.use
+            ? { key: "issue.deps.forbidden", params: { name } }
+            : rule.native
+              ? { key: "issue.deps.native", params: { name, use: rule.use } }
+              : { key: "issue.deps.obsolete", params: { name, use: rule.use } },
           category: "forbidden",
-          severity: "error",
+          severity: rule.native ? "warn" : "error",
         }));
       }
     }

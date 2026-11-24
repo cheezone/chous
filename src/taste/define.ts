@@ -115,9 +115,14 @@ export function taste(id: string) {
       push({ kind: "workspace" });
     },
 
-    /** Ban deps that have a better replacement. */
-    obsolete(names: string[], use: string, why: Text) {
-      push({ kind: "deps", mode: "no", names, use, reason: why });
+    /** Rotten deps (an error), or with `native` redundant ones the platform now ships (a warning). */
+    obsolete(names: string[], use: string, why: Text, opts?: { native?: boolean }) {
+      push({ kind: "deps", mode: "no", names, use, reason: why, ...opts });
+    },
+
+    /** Runtimes and frameworks past their published end of life. */
+    lifecycle() {
+      push({ kind: "lifecycle" });
     },
   };
 }

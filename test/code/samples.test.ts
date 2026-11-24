@@ -38,7 +38,7 @@ describe("real-world samples", () => {
     expect(r.code).toBe(1);
     expect(r.stdout).toContain("Taste: base · github · js · nextjs");
     expect(r.stdout).toContain('add "type"');
-    expect(r.stdout).toContain("dependency dotenv is obsolete → process.loadEnvFile()");
+    expect(r.stdout).toContain("dependency dotenv is built in now → process.loadEnvFile()");
   });
 
   it("pythondotorg is flagged for root clutter", () => {

@@ -37,6 +37,7 @@ export type Rule =
   | DepsRule
   | StackRule
   | ExclusiveRule
+  | LifecycleRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -97,6 +98,8 @@ export type DepsRule = RuleBase & {
   names: string[]; // package names, or a scope wildcard such as @scope/*
   /** For banned deps: what to use instead. */
   use?: string;
+  /** The platform ships an equivalent: redundant, not rotten (a warning). */
+  native?: boolean;
 };
 
 /** A package.json field must equal a value, or must not exist. */
@@ -107,6 +110,11 @@ export type ManifestRule = RuleBase & {
   absent?: boolean;
   /** The field must be present, whatever its value. */
   present?: boolean;
+};
+
+/** Runtimes and frameworks past their published end of life (see `taste/eol.ts`). */
+export type LifecycleRule = RuleBase & {
+  kind: "lifecycle";
 };
 
 /** At most one of these root-level names may exist: one name per concept. */
@@ -152,6 +160,9 @@ export type IssueMessage =
   | { key: "issue.deps.forbidden"; params: { name: string } }
   | { key: "issue.stack.conflict"; params: { role: Text; tools: string } }
   | { key: "issue.exclusive.conflict"; params: { names: string } }
+  | { key: "issue.lifecycle.expired"; params: { name: string; date: string; use: Text } }
+  | { key: "issue.lifecycle.rotten"; params: { name: string; date: string; use: Text } }
+  | { key: "issue.deps.native"; params: { name: string; use: string } }
   | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
   | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
   | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }

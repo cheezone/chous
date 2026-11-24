@@ -69,7 +69,15 @@ Chous 只嗅臭味，不追时髦。臭味是指今天是错的、三年后仍�
 | `go` · `python` | 有 `go.mod`；有 `pyproject.toml` 等 |
 | `nextjs` · `nuxt3` · `nuxt4` | 有对应框架的配置文件 |
 
-- **腐烂的依赖。** 清单手工维护在 [`src/taste/deps.ts`](src/taste/deps.ts)。每一条都要满足一个可以查证的事实：平台已经自带等价能力（`node-fetch` → `fetch`、`rimraf` → `fs.rm`、`left-pad` → `padStart` 等）；作者自己宣布废弃（`request`、`moment`、`node-sass`、`tslint`、Create React App 等）；或者被作者故意破坏（`colors`、`faker`）。"老"或者"有更新的"都不算腐烂。
+- **只凭事实判断腐烂。** 只看作者或平台自己说过的话，而且必须是已经发生的事。年龄、速度、实现语言、流行度都不算，没人说话（沉默）也不算：
+
+  | 状态 | 事实 | 例子 | 级别 |
+  | --- | --- | --- | --- |
+  | 鸡肋 | 平台已经自带等价能力 | `node-fetch` → `fetch`、`rimraf` → `fs.rm` | 警告 |
+  | 过期 | 官方公布的停止维护日期已过 | Node 20、Nuxt 3 | 警告 |
+  | 腐烂 | 停止维护超过两年；作者宣布废弃；作者故意破坏 | Node 16、Python 2.7、Vue 2、`request`、`tslint`、`colors` | 错误 |
+
+  停止维护日期写在 [`src/taste/eol.ts`](src/taste/eol.ts)，只收已经过去的日期。版本取自项目实际运行的：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile 的 `FROM`、锁定版本的 `engines.node`、`vue` / `nuxt` 依赖。满两年后，"过期"会自己变成"腐烂"，chous 不需要为此更新。
 - **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
 - **泄露和垃圾。** 没被 gitignore 的 `.env`、`.dev.vars`、`.DS_Store`、`*.log`；git 仓库没有 `.gitignore`。
 - **干净的根目录。** 根目录的文件是白名单：文档、许可证、配置文件（任意 JSON / TOML / YAML、`*.config.*`）和常见目录。随手丢的笔记和脚本报错。点文件不管。

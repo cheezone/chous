@@ -14,6 +14,8 @@ export interface RuleValidatorContext {
   filesMatchedByMoveRules?: Set<string>;
   config: { rules: Rule[] };
   matchedGlobFiles?: Set<string>;
+  /** YYYY-MM-DD; defaults to the real date. Lets tests pin "now". */
+  today?: string;
 }
 
 /**

@@ -119,6 +119,11 @@ const en = {
 		deps: {
 			forbidden: 'dependency {name} is not allowed',
 			obsolete: 'dependency {name} is obsolete → {use}',
+			native: 'dependency {name} is built in now → {use}',
+		},
+		lifecycle: {
+			expired: '{name} reached end of life on {date}, no more security fixes → {use}',
+			rotten: '{name} reached end of life on {date}, more than two years ago → {use}',
 		},
 		exclusive: {
 			conflict: '{names} at once, they mean the same thing, keep one',

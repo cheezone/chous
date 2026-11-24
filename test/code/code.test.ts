@@ -36,7 +36,11 @@ const EXPECTED: Record<string, string[]> = {
   garbage: [
     "dependency moment is obsolete → dayjs",
     "dependency node-sass is obsolete → sass",
-    "dependency node-fetch is obsolete → fetch",
+  ],
+  eol: [
+    ".nvmrc (Node 16) → Node 16 reached end of life on 2023-09-11",
+    "Dockerfile (Python 2.7) → Python 2.7 reached end of life on 2020-01-01",
+    "package.json (Vue 2) → Vue 2 reached end of life on 2023-12-31",
   ],
   github: ["Release.yaml → not in allow list"],
   go: ["MyApp → should be snake_case"],

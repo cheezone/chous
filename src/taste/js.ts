@@ -49,7 +49,8 @@ export function js(project: JsProject = {}) {
     t.noField("packageManager", { en: "set it once, in the workspace root", zh: "只在工作区根目录设置一次" });
   }
 
-  for (const dep of [...NATIVE, ...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, dep.why);
+  for (const dep of NATIVE) t.obsolete(dep.names, dep.use, dep.why, { native: true });
+  for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, dep.why);
   t.no([".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json"], {
     reason: { en: "leftover config of a dead tool", zh: "已死工具的残留配置" },
   });

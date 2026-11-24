@@ -120,6 +120,11 @@ const zh = {
 		deps: {
 			forbidden: '不允许依赖 {name}',
 			obsolete: '依赖 {name} 已过时 → {use}',
+			native: '依赖 {name} 平台已经自带 → {use}',
+		},
+		lifecycle: {
+			expired: '{name} 已于 {date} 停止维护，不再有安全修复 → {use}',
+			rotten: '{name} 已于 {date} 停止维护，超过两年了 → {use}',
 		},
 		exclusive: {
 			conflict: '同时有 {names}，它们是同一个意思，只留一个',

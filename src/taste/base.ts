@@ -45,6 +45,8 @@ export function base() {
     reason: { en: "Root Markdown is for project docs only; put the rest in docs/", zh: "根目录的 Markdown 只放项目文档，其余放进 docs/" },
   });
 
+  t.lifecycle();
+
   t.no([".chous", ".chousignore"], { reason: { en: "chous has no config, delete it", zh: "chous 没有配置，删掉它" } });
 
   // Anything still visible here is not gitignored, so it would be committed.

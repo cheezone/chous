@@ -1,12 +1,16 @@
 /**
- * Rotten dependencies. Every entry is an error, so every entry must meet one of
+ * Dependencies with something wrong about them. Every entry must meet one of
  * these checkable facts — facts that stay true once they are true:
  *
- * 1. NATIVE: the platform ships an equivalent (Node >= 22, evergreen browsers).
- * 2. DEPRECATED: the authors deprecated or abandoned it in favour of something else.
- * 3. SABOTAGED: its author broke it on purpose.
+ * 1. NATIVE (redundant, a warning): the platform ships an equivalent
+ *    (Node >= 22, evergreen browsers). It still works; it is just one more
+ *    package to trust.
+ * 2. DEPRECATED (rotten, an error): its own authors deprecated or abandoned it.
+ * 3. SABOTAGED (rotten, an error): its author broke it on purpose.
  *
- * "Old", "slow" or "there is something newer" are not rot. Those change; facts do not.
+ * "Old", "slow", "written in the wrong language" or "there is something newer"
+ * are not rot. Those change; facts do not. Silence is not evidence either: an
+ * unmaintained project nobody declared dead is left alone.
  */
 import type { Text } from "../i18n/text";
 

@@ -31,6 +31,7 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
       rule.kind === "deps" ||
       rule.kind === "stack" ||
       rule.kind === "exclusive" ||
+      rule.kind === "lifecycle" ||
       rule.kind === "manifest" ||
       rule.kind === "workspace"
     ) {
@@ -53,7 +54,7 @@ type RootCheck = {
 };
 
 /** Validate one root (the repo, or one workspace package) against its rules. */
-async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapshot): Promise<RootCheck> {
+async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapshot, today?: string): Promise<RootCheck> {
   const rawIssues: Issue[] = [];
   const compiled = compileRules(rules, snapshot.workspace);
 
@@ -77,6 +78,7 @@ async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapsho
     filesMatchedByMoveRules,
     config: { rules: compiled.rules },
     matchedGlobFiles: new Set<string>(),
+    today,
   };
 
   // 1. Directory whitelists, one pass per directory.
@@ -113,22 +115,24 @@ async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapsho
 export async function lintWorkspace(opts: {
   root: string;
   relevantDirs?: Set<string>;
+  /** YYYY-MM-DD; defaults to today. End-of-life checks compare against it. */
+  today?: string;
 }): Promise<LintResult> {
   const startTime = performance.now();
-  const { root, relevantDirs } = opts;
+  const { root, relevantDirs, today } = opts;
   const probe = resolveTaste(root);
   const rootOnly = !relevantDirs && !looksLikeMonorepo(root) && hasRootLevelOnlyRules(probe.rules);
   const snapshot = await buildWorkspaceSnapshot({ root, rootOnly, relevantDirs });
   // A pnpm-workspace.yaml may only hold settings; packages make it a monorepo.
   const taste = snapshot.workspace.packages.length > 0 ? resolveTaste(root, { monorepo: true }) : probe;
-  const main = await checkRoot(root, taste.rules, snapshot);
+  const main = await checkRoot(root, taste.rules, snapshot, today);
 
   const issues = [...main.issues];
   const seen = new Set(issues.map(issueKey));
   for (const pkg of snapshot.workspace.packages) {
     const pkgRoot = resolve(root, pkg);
     const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true, runtime: taste.runtime });
-    const pkgCheck = await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg));
+    const pkgCheck = await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg), today);
     for (const issue of pkgCheck.issues) {
       const key = issueKey(issue);
       if (seen.has(key)) continue;

@@ -69,7 +69,15 @@ The tastes live in [`src/taste/`](src/taste) and stack up by what the project lo
 | `go` · `python` | `go.mod`; `pyproject.toml` and friends |
 | `nextjs` · `nuxt3` · `nuxt4` | the framework's config file |
 
-- **Rotten dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts). Every entry meets a checkable fact: the platform ships an equivalent (`node-fetch` → `fetch`, `rimraf` → `fs.rm`, `left-pad` → `padStart`, …), its authors deprecated it (`request`, `moment`, `node-sass`, `tslint`, Create React App, …), or its author sabotaged it (`colors`, `faker`). "Old" or "there is something newer" is not rot.
+- **Rot, by facts only.** Something is judged only on what its own authors or platform have said and what has already happened — never on age, speed, implementation language or popularity, and never on silence:
+
+  | State | Fact | Examples | Level |
+  | --- | --- | --- | --- |
+  | Redundant | The platform ships an equivalent | `node-fetch` → `fetch`, `rimraf` → `fs.rm` | warning |
+  | Expired | Its published end-of-life date has passed | Node 20, Nuxt 3 | warning |
+  | Rotten | End of life over two years ago; deprecated by its authors; sabotaged | Node 16, Python 2.7, Vue 2, `request`, `tslint`, `colors` | error |
+
+  End-of-life dates live in [`src/taste/eol.ts`](src/taste/eol.ts) and only ever list dates that have passed. Versions come from what the project runs on — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, a pinned `engines.node`, the `vue` / `nuxt` dependency. Expired turns into rotten on its own when two years are up; chous needs no update for that.
 - **Tools that fight.** Two package managers, two formatters, two git-hook managers or two release tools at once. Which one you keep is up to you.
 - **Leaks and junk.** `.env`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored; a git repo without `.gitignore`.
 - **A tidy root.** Root files are a whitelist: docs, licenses, config files (any JSON / TOML / YAML, `*.config.*`) and the usual folders. Stray notes and scripts are errors. Dotfiles are left alone.
