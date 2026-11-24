@@ -4,6 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
+import { DEAD, NATIVE } from "../../src/taste/deps";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
 import { applySafeFixes } from "../../src/rules/autofix";
@@ -62,6 +63,20 @@ describe("VFS snapshot", () => {
     expect(snap.exists("README.md")).toBe(true);
     expect(snap.isDirectory("docs")).toBe(true);
     expect(snap.listDir("docs").map((e) => e.name)).toEqual(["guide.md"]);
+  });
+});
+
+describe("obsolete dependency list", () => {
+  it("names each package once", () => {
+    const names = [...NATIVE, ...DEAD].flatMap((d) => d.names);
+    expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
+  });
+
+  it("does not ban a tool the taste requires", () => {
+    const names = new Set([...NATIVE, ...DEAD].flatMap((d) => d.names));
+    for (const tool of ["pnpm", "typescript", "oxlint", "vitest", "simple-git-hooks", "tsdown", "changelogen"]) {
+      expect(names.has(tool)).toBe(false);
+    }
   });
 });
 

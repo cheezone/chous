@@ -114,6 +114,7 @@ const en = {
 		deps: {
 			missing: 'missing dependency {name}',
 			forbidden: 'dependency {name} is not allowed',
+			obsolete: 'dependency {name} is obsolete → {use}',
 		},
 		replaceDep: {
 			replace: 'replace dependency {from} with {to}',
@@ -122,9 +123,6 @@ const en = {
 			mismatch: '{role} should be {expected} (found {actual})',
 			missing: '{role} should be {expected}',
 			deprecated: '{tool} is deprecated',
-		},
-		rotten: {
-			dep: 'dependency {name} is replaceable → {replacement}',
 		},
 		merged: {
 			notInAllowList: 'not in allow list ({labels})',

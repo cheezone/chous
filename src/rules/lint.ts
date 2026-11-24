@@ -10,7 +10,6 @@ import {
   RuleStatisticsCollector,
   type RuleValidatorContext,
 } from "./validators";
-import { collectRottenDepIssues } from "./validators/rotten";
 
 function hasRootLevelOnlyRules(rules: Rule[]): boolean {
   return rules.every((rule) => {
@@ -136,11 +135,7 @@ export async function lintWorkspace(opts: {
     }
   }
 
-  // 3. Built-in rotten dep knowledge (e18e module-replacements)
-  const rotten = await collectRottenDepIssues(snapshot);
-  rawIssues.push(...rotten);
-
-  // 4. Dedup + gitignore filter
+  // 3. Dedup + gitignore filter
   const finalIssues: Issue[] = [];
   const seen = new Set<string>();
   for (const i of rawIssues) {

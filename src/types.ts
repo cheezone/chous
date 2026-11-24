@@ -123,6 +123,8 @@ export type DepsRule = RuleBase & {
   kind: "deps";
   mode: "must" | "no";
   names: string[]; // package names, or a scope wildcard such as @scope/*
+  /** For banned deps: what to use instead. */
+  use?: string;
 };
 
 export type ReplaceDepRule = RuleBase & {
@@ -178,7 +180,7 @@ export type IssueMessage =
   | { key: "issue.role.mismatch"; params: { role: string; expected: string; actual: string } }
   | { key: "issue.role.missing"; params: { role: string; expected: string } }
   | { key: "issue.role.deprecated"; params: { tool: string } }
-  | { key: "issue.rotten.dep"; params: { name: string; replacement: string } }
+  | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
   | { key: "issue.naming.invalidPrefix"; params: { pattern: string } }
   | { key: "issue.naming.invalidSuffix"; params: { pattern: string } }

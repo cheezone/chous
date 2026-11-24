@@ -1,28 +1,10 @@
 import { taste } from "./define";
+import { DEAD, NATIVE } from "./deps";
 
 export type JsProject = {
   /** Publishes something (`bin` / `exports` / `main`) rather than being an app. */
   library: boolean;
 };
-
-/**
- * Dead or superseded packages that e18e module-replacements does not cover.
- * (`collectRottenDepIssues` handles the rest.)
- */
-const GARBAGE: Array<[names: string[], reason: string]> = [
-  [["node-sass"], "Deprecated. Use sass."],
-  [["request-promise", "request-promise-native"], "request is dead. Use fetch."],
-  [["tslint"], "Deprecated since 2019. Use oxlint."],
-  [["babel-polyfill", "@babel/polyfill"], "Deprecated. Target a modern runtime instead."],
-  [["bower"], "Dead package manager. Use pnpm."],
-  [["gulp", "grunt"], "Task runners are obsolete. Use package.json scripts."],
-  [["karma"], "Deprecated. Use Vitest browser mode."],
-  [["istanbul", "nyc"], "Use vitest --coverage."],
-  [["ts-node"], "Node runs TypeScript natively now. Use node or tsx."],
-  [["nodemon"], "Use node --watch."],
-  [["enzyme"], "Unmaintained. Use @testing-library."],
-  [["react-scripts"], "Create React App is dead. Use Vite."],
-];
 
 /** JavaScript / TypeScript projects (package.json, tsconfig.json or jsconfig.json). */
 export function js(project: JsProject) {
@@ -54,7 +36,7 @@ export function js(project: JsProject) {
     t.role("release", ["changelogen"]);
   }
 
-  for (const [names, reason] of GARBAGE) t.banDeps(names, { reason });
+  for (const dep of [...NATIVE, ...DEAD]) t.obsolete(dep.names, dep.use, dep.why);
   t.no([".travis.yml", ".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json", "Gruntfile.js", "gulpfile.js"], {
     reason: "Leftovers from dead tools",
   });

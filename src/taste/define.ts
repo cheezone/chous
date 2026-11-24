@@ -102,6 +102,11 @@ export function taste(id: string) {
       push({ kind: "deps", mode: "no", names, ...extra });
     },
 
+    /** Ban deps that have a better replacement. */
+    obsolete(names: string[], use: string, why: string) {
+      push({ kind: "deps", mode: "no", names, use, reason: why });
+    },
+
     replaceDep(from: string, to: string, extra?: Extra) {
       push({ kind: "replaceDep", from, to, ...extra });
     },

@@ -91,7 +91,9 @@ export class StackRuleValidator extends BaseRuleValidator<StackRule> {
           context.rawIssues.push(issueFromRule(rule, {
             path: `${manifest.path}#forbidden:${name}`,
             displayPath: `package.json (${safeLabel(name)})`,
-            message: { key: "issue.deps.forbidden", params: { name } },
+            message: rule.use
+              ? { key: "issue.deps.obsolete", params: { name, use: rule.use } }
+              : { key: "issue.deps.forbidden", params: { name } },
             category: "forbidden",
             severity: "error",
           }));

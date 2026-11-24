@@ -115,6 +115,7 @@ const zh = {
 		deps: {
 			missing: '缺少依赖 {name}',
 			forbidden: '不允许依赖 {name}',
+			obsolete: '依赖 {name} 已过时 → {use}',
 		},
 		replaceDep: {
 			replace: '把依赖 {from} 换成 {to}',
@@ -123,9 +124,6 @@ const zh = {
 			mismatch: '{role} 应为 {expected}（当前是 {actual}）',
 			missing: '{role} 应为 {expected}',
 			deprecated: '{tool} 已过时',
-		},
-		rotten: {
-			dep: '依赖 {name} 可替换 → {replacement}',
 		},
 		merged: {
 			notInAllowList: '不在白名单（{labels}）',

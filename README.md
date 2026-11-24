@@ -45,7 +45,7 @@ npx chous
 ├── ✖ eslint.config.js                          → hit blacklist (1)
 ├── ✖ jest.config.ts                            → hit blacklist (1)
 ├── ✖ notes.txt                                 → not in allow list (1)
-├── ✖ package.json (moment)                     → dependency moment is replaceable → day.js
+├── ✖ package.json (moment)                     → dependency moment is obsolete → dayjs / date-fns / Temporal
 ├── ✖ package.json (pnpm)                       → package manager should be pnpm (found yarn)
 ├── ✖ stack (git hooks: husky→simple-git-hooks) → git hooks should be simple-git-hooks (found husky)
 ├── ✖ stack (linter: eslint→oxlint)             → linter should be oxlint (found eslint)
@@ -62,7 +62,7 @@ Chous looks at the project and stacks the tastes that apply: `base` always, then
 - **Root is a whitelist.** Anything at the root that no taste allows is an error.
 - **One name per concept.** `test/`, not `tests/`, `__tests__/` or `spec/`. `scripts/`, not `script/`.
 - **One tool per role.** pnpm, TypeScript, oxlint, Vitest, simple-git-hooks. Published packages also get tsdown and changelogen. Anything else in the same role is an error, with migration notes from the built-in knowledge base.
-- **No garbage dependencies.** Everything in [e18e module-replacements](https://github.com/e18e/module-replacements), plus dead packages it doesn't cover (`node-sass`, `tslint`, `ts-node`, `nodemon`, `gulp`, …).
+- **No obsolete dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts): packages the platform already replaced (`uuid` → `crypto.randomUUID()`, `node-fetch` → `fetch`, `chalk` → `util.styleText`, `rimraf` → `fs.rm`, …) and dead ones (`moment`, `request`, `node-sass`, `tslint`, `ts-node`, …). Each error says what to use instead.
 - **Framework layouts.** Next.js App Router and Nuxt 3 / 4 directory and naming conventions.
 
 Disagree? Fork it. That's the point.

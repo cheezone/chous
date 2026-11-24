@@ -26,7 +26,11 @@ function fixtures(kind: "pass" | "fail"): string[] {
 /** What each failing fixture must report — failing for the wrong reason is a bug. */
 const EXPECTED: Record<string, string[]> = {
   basic: ["forbidden.md"],
-  garbage: ["dependency moment is replaceable", "dependency node-sass is not allowed"],
+  garbage: [
+    "dependency moment is obsolete → dayjs",
+    "dependency node-sass is obsolete → sass",
+    "dependency uuid is obsolete → crypto.randomUUID()",
+  ],
   go: ["MyApp/ → should be snake_case"],
   js: ["tests/ → should be renamed to test/"],
   library: ["package manager should be pnpm (found npm)", "linter should be oxlint (found eslint)"],

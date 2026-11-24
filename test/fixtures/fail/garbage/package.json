@@ -4,7 +4,9 @@
   "packageManager": "pnpm@10.0.0",
   "dependencies": {
     "moment": "2.30.0",
-    "node-sass": "9.0.0"
+    "node-sass": "9.0.0",
+    "uuid": "9.0.0",
+    "express": "4.0.0"
   },
   "devDependencies": {
     "oxlint": "1.0.0",

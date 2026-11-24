@@ -175,9 +175,6 @@ importers:
       ignore:
         specifier: ^7.0.9
         version: 7.0.9
-      module-replacements:
-        specifier: ^3.4.0
-        version: 3.4.0
       picomatch:
         specifier: ^4.0.7
         version: 4.0.7
@@ -1462,9 +1459,6 @@ packages:
   mimic-function@5.0.1:
     resolution: {integrity: sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==}
     engines: {node: '>=18'}
-
-  module-replacements@3.4.0:
-    resolution: {integrity: sha512-NKBNFM/uAUvSs+LOYfSly4EwrC9bgMoFuEnqNNjcDb910W+5IgS2KMB2ERLm5YZZm7R187jx1dMA9pOPvqbSbw==}
 
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
@@ -2773,8 +2767,6 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.6.0
 
   mimic-function@5.0.1: {}
-
-  module-replacements@3.4.0: {}
 
   mri@1.2.0: {}
 
