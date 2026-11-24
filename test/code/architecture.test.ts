@@ -5,7 +5,7 @@ import { tmpdir } from "node:os";
 import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
 import { execFileSync } from "node:child_process";
-import { DEAD, NATIVE } from "../../src/taste/deps";
+import { DEPRECATED, NATIVE, SABOTAGED } from "../../src/taste/deps";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
 import { applySafeFixes } from "../../src/rules/autofix";
@@ -86,7 +86,7 @@ describe("git", () => {
 
 describe("obsolete dependency list", () => {
   it("names each package once", () => {
-    const names = [...NATIVE, ...DEAD].flatMap((d) => d.names);
+    const names = [...NATIVE, ...DEPRECATED, ...SABOTAGED].flatMap((d) => d.names);
     expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
   });
 
@@ -107,14 +107,6 @@ describe("rule compiler", () => {
     expect(rootGroup.some((r) => r.mode === "strict")).toBe(true);
   });
 
-  it("lets renamed directories through the whitelist", () => {
-    const source = { taste: "test" };
-    const compiled = compileRules(
-      [{ kind: "renameDir", fromNames: ["tests"], toName: "test", source }],
-      { packages: [], tool: "root" },
-    );
-    expect(compiled.inDirGroups.get(".")!.some((r) => r.only.includes("tests"))).toBe(true);
-  });
 });
 
 describe("safe autofix", () => {
@@ -143,15 +135,19 @@ describe("safe autofix", () => {
 });
 
 describe("lint pipeline integration", () => {
-  it("emits a rename fix with its taste for tests/", async () => {
+  it("lets one test directory be, whatever its name, but not two", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-lint-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module" }), "utf8");
     mkdirSync(join(dir, "tests"));
     writeFileSync(join(dir, "tests", "a.test.ts"), "", "utf8");
-    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", packageManager: "pnpm@10.0.0" }), "utf8");
+    expect((await lintWorkspace({ root: dir })).issues).toEqual([]);
+
+    mkdirSync(join(dir, "test"));
+    writeFileSync(join(dir, "test", "b.test.ts"), "", "utf8");
     const result = await lintWorkspace({ root: dir });
-    const rename = result.issues.find((i) => i.ruleKind === "renameDir");
-    expect(rename?.ruleSource.taste).toBe("js");
-    expect(rename?.fix).toEqual({ type: "rename", fromPath: join(dir, "tests"), toPath: join(dir, "test") });
-    expect(result.tastes).toEqual(["base", "js"]);
+    expect(result.issues.map((i) => i.message)).toEqual([
+      { key: "issue.exclusive.conflict", params: { names: "test/ + tests/" } },
+    ]);
+    expect(result.issues[0]?.ruleSource.taste).toBe("js");
   });
 });

@@ -1,15 +1,12 @@
 import { MoveRuleValidator } from "./move";
 import { ThoseOnlyRuleValidator } from "./thoseOnly";
-import { RenameDirRuleValidator } from "./renameDir";
-import { RenameGlobRuleValidator } from "./renameGlob";
 import { NoFilesRuleValidator } from "./no";
 import { HasFileRuleValidator } from "./has";
 import { AllowRuleValidator } from "./allow";
-import { OptionalRuleValidator } from "./optional";
 import { NamingRuleValidator } from "./naming";
 import { InDirOnlyRuleValidator } from "./inDirOnly";
 import { DepsRuleValidator } from "./deps";
-import { OneToolPerRoleValidator } from "./stack";
+import { ExclusiveRuleValidator, OneToolPerRoleValidator } from "./stack";
 import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import type { RuleValidator } from "./types";
 
@@ -19,16 +16,14 @@ import type { RuleValidator } from "./types";
 export const validators: RuleValidator[] = [
   new MoveRuleValidator(),
   new ThoseOnlyRuleValidator(),
-  new RenameDirRuleValidator(),
-  new RenameGlobRuleValidator(),
   new NoFilesRuleValidator(),
   new HasFileRuleValidator(),
   new AllowRuleValidator(),
-  new OptionalRuleValidator(),
   new NamingRuleValidator(),
   new InDirOnlyRuleValidator(),
   new DepsRuleValidator(),
   new OneToolPerRoleValidator(),
+  new ExclusiveRuleValidator(),
   new ManifestRuleValidator(),
   new WorkspaceRuleValidator(),
 ];
@@ -42,4 +37,4 @@ export function findValidator(rule: any): RuleValidator | undefined {
 
 export type { RuleValidator, RuleValidatorContext } from "./types";
 export { processInDirOnlyGroup } from "./inDirOnly";
-export { BaseRuleValidator, RuleStatisticsCollector, type RuleMetrics } from "./base";
+export { BaseRuleValidator } from "./base";

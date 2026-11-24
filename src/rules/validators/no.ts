@@ -37,8 +37,6 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
         const abs = resolve(root, match);
         if (!snapshot.exists(abs)) continue;
 
-        const shouldApply = await this.shouldApplyToTarget(rule, abs, context);
-        if (!shouldApply) continue;
 
         hitCount++;
         rawIssues.push(issueFromRule(rule, {

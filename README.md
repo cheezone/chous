@@ -41,17 +41,16 @@ npx chous
 
 ```
 .
-├── ✖ tests/                    → should be renamed to test/
-├── ✖ .DS_Store                 → not allowed: OS junk, delete it and gitignore it
-├── ✖ .env                      → not allowed: secrets, gitignore it and commit .env.example instead
-├── ✖ notes.txt                 → not in allow list (1)
-├── ✖ package.json (moment)     → dependency moment is obsolete → dayjs / date-fns / Temporal
-├── ✖ package.json (node-fetch) → dependency node-fetch is obsolete → fetch
-├── ✖ package.json (request)    → dependency request is obsolete → fetch
-├── ✖ package.json (tslint)     → dependency tslint is obsolete → ESLint / oxlint
-├── ✖ stack (git hooks)         → git hooks: husky + simple-git-hooks at once, they fight over the same job, keep one
-├── ✖ stack (package manager)   → package manager: npm + yarn at once, they fight over the same job, keep one
-└── ✖ tslint.json               → not allowed: leftover config of a dead tool
+├── ✖ .DS_Store                      → not allowed: OS junk, delete it and gitignore it
+├── ✖ .env                           → not allowed: secrets, gitignore it and commit .env.example instead
+├── ✖ notes.txt                      → not in allow list (1)
+├── ✖ package.json (git-hooks)       → git hooks: husky + simple-git-hooks at once, they fight over the same job, keep one
+├── ✖ package.json (moment)          → dependency moment is obsolete → dayjs / date-fns / Temporal
+├── ✖ package.json (node-fetch)      → dependency node-fetch is obsolete → fetch
+├── ✖ package.json (package-manager) → package manager: npm + yarn at once, they fight over the same job, keep one
+├── ✖ package.json (request)         → dependency request is obsolete → fetch
+├── ✖ package.json (tslint)          → dependency tslint is obsolete → ESLint / oxlint
+└── ✖ tslint.json                    → not allowed: leftover config of a dead tool
 
 Taste: base · git · js
 ```
@@ -70,12 +69,12 @@ The tastes live in [`src/taste/`](src/taste) and stack up by what the project lo
 | `go` · `python` | `go.mod`; `pyproject.toml` and friends |
 | `nextjs` · `nuxt3` · `nuxt4` | the framework's config file |
 
-- **Rotten dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts): packages the platform replaced exactly (`node-fetch` → `fetch`, `rimraf` → `fs.rm`, `left-pad` → `padStart`, …) and dead ones (`request`, `moment`, `node-sass`, `tslint`, `colors`, …). Each error says what to use instead.
+- **Rotten dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts). Every entry meets a checkable fact: the platform ships an equivalent (`node-fetch` → `fetch`, `rimraf` → `fs.rm`, `left-pad` → `padStart`, …), its authors deprecated it (`request`, `moment`, `node-sass`, `tslint`, Create React App, …), or its author sabotaged it (`colors`, `faker`). "Old" or "there is something newer" is not rot.
 - **Tools that fight.** Two package managers, two formatters, two git-hook managers or two release tools at once. Which one you keep is up to you.
 - **Leaks and junk.** `.env`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored; a git repo without `.gitignore`.
 - **A tidy root.** Root files are a whitelist: docs, licenses, config files (any JSON / TOML / YAML, `*.config.*`) and the usual folders. Stray notes and scripts are errors. Dotfiles are left alone.
-- **One name per concept.** `test/`, not `tests/`, `__tests__/` or `spec/`. `scripts/`, not `script/`. Workflows are kebab-case `.yml`.
-- **ESM only.** `"type": "module"` in every package.json.
+- **One name per concept.** `test/` or `tests/` or `spec/` — pick one, not two. Same for `scripts/` and `script/`. Workflows are kebab-case `.yml`.
+- **A declared module type.** Every package.json says `"type": "module"` or `"commonjs"`, as Node's docs recommend.
 - **Monorepos.** Every workspace package is linted as its own project with its own taste. The root is private and holds tooling only; one lockfile; one version per dependency; internal deps use `workspace:*`.
 - **Framework layouts.** Next.js App Router and Nuxt 3 / 4 directory and naming conventions.
 

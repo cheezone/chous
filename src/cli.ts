@@ -113,7 +113,7 @@ function printHelp(LL: TranslationFunctions): void {
   console.log(`${APP_NAME} ${VERSION} — ${String(h.tagline())}
 
 ${String(h.commands())}
-  (none)               ${String(h.lintCmdDesc())}
+  ${String(h.noCommand()).padEnd(20)} ${String(h.lintCmdDesc())}
   scan [dir]           ${String(h.scanCmdDesc())}
   knowledge            ${String(h.knowledgeCmdDesc())}
   cursor install       ${String(h.installCursorHookDesc())}
@@ -315,7 +315,8 @@ async function main() {
       withKnowledge: Boolean(opts.json && opts.verbose),
       withSpecfy: true,
     });
-    console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result));
+    const { LL: scanLL, locale } = getLL(lang);
+    console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, scanLL, locale));
     process.exitCode = result.repos.some((r) => r.issues.some((i) => i.severity === "error")) ? 1 : 0;
     return;
   }

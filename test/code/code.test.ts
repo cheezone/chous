@@ -40,7 +40,7 @@ const EXPECTED: Record<string, string[]> = {
   ],
   github: ["Release.yaml → not in allow list"],
   go: ["MyApp → should be snake_case"],
-  js: ["tests → should be renamed to test/", '"type" should be "module"'],
+  js: ["test/ + tests/ at once, they mean the same thing", 'add "type": "module" or "commonjs"'],
   monorepo: [
     'remove "dependencies": the workspace root holds tooling only',
     "vue has several versions (^3.4.0 in apps/web; ^3.5.0 in packages/ui)",

@@ -7,7 +7,6 @@ import { compileRules } from "./compile";
 import {
   findValidator,
   processInDirOnlyGroup,
-  RuleStatisticsCollector,
   type RuleValidatorContext,
 } from "./validators";
 
@@ -31,6 +30,7 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
     if (
       rule.kind === "deps" ||
       rule.kind === "stack" ||
+      rule.kind === "exclusive" ||
       rule.kind === "manifest" ||
       rule.kind === "workspace"
     ) {
@@ -50,7 +50,6 @@ type RootCheck = {
   issues: Issue[];
   compiled: ReturnType<typeof compileRules>;
   matchedGlobFiles: Set<string>;
-  statistics: RuleStatisticsCollector;
 };
 
 /** Validate one root (the repo, or one workspace package) against its rules. */
@@ -69,59 +68,25 @@ async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapsho
     }
   }
 
-  const rootAllowedSet = new Set<string>();
-  const matchedGlobFiles = new Set<string>();
-  const statisticsCollector = new RuleStatisticsCollector();
-  const processedThoseOnlyPatterns = new Map<string, number>();
-
-  const cachedGlobScan = async (
-    pattern: string | string[],
-    cwd: string,
-    _root: string,
-    opts?: { onlyFiles?: boolean },
-  ): Promise<string[]> => {
-    return snapshot.match(pattern, { cwd, onlyFiles: opts?.onlyFiles ?? true });
-  };
-
   const validatorContext: RuleValidatorContext = {
     root,
     snapshot,
-    cachedGlobScan,
-    ig: snapshot.ig,
     rawIssues,
-    statisticsCollector,
     inDirGroups: compiled.inDirGroups,
-    rootAllowedSet,
+    rootAllowedSet: new Set<string>(),
     filesMatchedByMoveRules,
     config: { rules: compiled.rules },
-    processedThoseOnlyPatterns,
-    matchedGlobFiles,
+    matchedGlobFiles: new Set<string>(),
   };
 
-  // 1. Directory whitelist groups (single path — no duplicated loop)
-  for (const [dir, group] of compiled.inDirGroups.entries()) {
-    const firstRuleIndex = compiled.rules.findIndex((r) => r.kind === "inDirOnly" && r.dir === dir);
-    const start = performance.now();
-    const result = await processInDirOnlyGroup(dir, group, validatorContext, filesMatchedByMoveRules);
-    const duration = Math.round(performance.now() - start);
-    if (firstRuleIndex >= 0) {
-      for (let i = 0; i < compiled.rules.length; i++) {
-        const r = compiled.rules[i]!;
-        if (r.kind === "inDirOnly" && r.dir === dir) {
-          statisticsCollector.record(i, { duration, hitCount: result.hitCount });
-        }
-      }
-    }
+  // 1. Directory whitelists, one pass per directory.
+  for (const [dir, group] of compiled.inDirGroups) {
+    await processInDirOnlyGroup(dir, group, validatorContext, filesMatchedByMoveRules);
   }
 
-  // 2. All other rules via validators
-  for (let ruleIndex = 0; ruleIndex < compiled.rules.length; ruleIndex++) {
-    const rule = compiled.rules[ruleIndex]!;
-    if (rule.kind === "inDirOnly") continue;
-    const validator = findValidator(rule);
-    if (validator) {
-      await validator.validate(rule, validatorContext, ruleIndex);
-    }
+  // 2. Everything else.
+  for (const rule of compiled.rules) {
+    if (rule.kind !== "inDirOnly") await findValidator(rule)?.validate(rule, validatorContext);
   }
 
   // 3. Dedup + gitignore filter. A ban that says why beats the generic whitelist miss.
@@ -138,7 +103,7 @@ async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapsho
     finalIssues.push(i);
   }
 
-  return { issues: finalIssues, compiled, matchedGlobFiles, statistics: statisticsCollector };
+  return { issues: finalIssues, compiled, matchedGlobFiles: validatorContext.matchedGlobFiles! };
 }
 
 /**
@@ -187,8 +152,6 @@ export async function lintWorkspace(opts: {
     ...(snapshot.workspace.packages.length > 0 ? { workspacePackages: snapshot.workspace.packages } : {}),
     fileCount: snapshot.fileCount,
     duration: Math.round(performance.now() - startTime),
-    ruleMetrics: main.statistics.getAllMetrics(),
-    rules: main.compiled.rules,
   };
 }
 

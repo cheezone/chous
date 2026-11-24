@@ -8,6 +8,7 @@ const en = {
 	cli: {
 		help: {
 			tagline: 'an opinionated taste linter. No config.',
+			noCommand: '(no command)',
 			commands: 'Commands:',
 			lintCmdDesc: 'Lint the current directory',
 			scanCmdDesc: 'Find git repos and show detected kinds and stack roles',
@@ -34,6 +35,13 @@ const en = {
 			claudeHooksInstalled: 'Claude Code hooks installed',
 			credit: 'chous · https://github.com/cheezone/chous',
 		},
+	},
+	scan: {
+		kinds: 'kinds',
+		roles: 'roles',
+		component: 'component {name}',
+		issues: 'issues ({count})',
+		none: '(none)',
 	},
 	meta: {
 		taste: 'Taste: {names}',
@@ -112,12 +120,16 @@ const en = {
 			forbidden: 'dependency {name} is not allowed',
 			obsolete: 'dependency {name} is obsolete → {use}',
 		},
+		exclusive: {
+			conflict: '{names} at once, they mean the same thing, keep one',
+		},
 		stack: {
 			conflict: '{role}: {tools} at once, they fight over the same job, keep one',
 		},
 		manifest: {
 			expected: '"{field}" should be {expected}',
 			remove: 'remove "{field}": {reason}',
+			missing: 'add "{field}": {reason}',
 		},
 		workspace: {
 			drift: '{name} has several versions ({versions}), pick one or use a pnpm catalog',

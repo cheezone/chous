@@ -142,18 +142,6 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       }
       return String(LL.issue.thoseOnly.forbiddenOnlyAllowed());
     }
-    case "issue.renameDir.shouldRenameTo":
-      return String(LL.issue.renameDir.shouldRenameTo(msg.params));
-    case "issue.renameDir.shouldMigrateTo":
-      return String(LL.issue.renameDir.shouldMigrateTo(msg.params));
-    case "issue.renameDir.removeEmptyDir":
-      return String(LL.issue.renameDir.removeEmptyDir(msg.params));
-    case "issue.renameGlob.shouldRenameTo":
-      return String(LL.issue.renameGlob.shouldRenameTo(msg.params));
-    case "issue.renameGlob.targetExistsManual":
-      return String(LL.issue.renameGlob.targetExistsManual(msg.params));
-    case "issue.renameGlob.cannotInferTarget":
-      return String(LL.issue.renameGlob.cannotInferTarget());
     case "issue.inDirOnly.dirMustExist": {
       const only = msg.params.only;
       // If the allow list is too long, truncate it for display
@@ -184,10 +172,14 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.has.mustExist(msg.params));
     case "issue.deps.forbidden":
       return String(LL.issue.deps.forbidden(msg.params));
+    case "issue.exclusive.conflict":
+      return LL.issue.exclusive.conflict(msg.params);
     case "issue.stack.conflict":
       return LL.issue.stack.conflict(msg.params);
     case "issue.manifest.expected":
       return LL.issue.manifest.expected(msg.params);
+    case "issue.manifest.missing":
+      return LL.issue.manifest.missing(msg.params);
     case "issue.manifest.remove":
       return LL.issue.manifest.remove(msg.params);
     case "issue.workspace.drift":
@@ -252,17 +244,6 @@ function buildIssueMap(result: LintResult): Map<string, IssueMeta> {
     issuesByFile.get(i.displayPath)!.push(i);
   }
 
-  // Debug: Output files with multiple issues (for tracking merge issues)
-  if (process.env.DEBUG_FILE) {
-    for (const [displayPath, issues] of issuesByFile.entries()) {
-      if (issues.length > 1) {
-        console.error(`[DEBUG] [buildIssueMap] File "${displayPath}" has ${issues.length} issues:`);
-        for (const issue of issues) {
-          console.error(`[DEBUG]   - ${issue.ruleKind}: ${issue.message.key}`, 'params' in issue.message ? issue.message.params : undefined);
-        }
-      }
-    }
-  }
 
   // Merge multiple whitelist and blacklist issues for the same file
   for (const [displayPath, issues] of issuesByFile.entries()) {
@@ -617,7 +598,6 @@ export function renderReport(
     showHeader?: boolean;
     showMeta?: boolean;
     rootLabel?: string;
-    initMessages?: string[]; // Messages to show after header (e.g., "Created rules file", "Cursor hooks installed")
     version?: string; // Version string
   },
 ): string {
@@ -635,13 +615,6 @@ export function renderReport(
     lines.push(`${c.bold(APP_NAME)}${version} ${c.dim(authorInfo)}`);
     lines.push("");
 
-    // Show init messages after header if provided
-    if (opts.initMessages && opts.initMessages.length > 0) {
-      for (const msg of opts.initMessages) {
-        lines.push(msg);
-      }
-      lines.push("");
-    }
   }
 
   const issueMap = buildIssueMap(result);
@@ -685,17 +658,6 @@ export function renderReport(
         issuesByFile.get(issue.displayPath)!.push(issue);
       }
 
-      // Debug: Count how many issues each file has
-      if (process.env.DEBUG_FILE) {
-        for (const [displayPath, fileIssues] of issuesByFile.entries()) {
-          if (fileIssues.length > 1) {
-            console.error(`[DEBUG] [verbose output] File "${displayPath}" has ${fileIssues.length} issues:`);
-            for (const issue of fileIssues) {
-              console.error(`[DEBUG]   - ${issue.ruleKind}: ${issue.message.key}`, 'params' in issue.message ? issue.message.params : undefined);
-            }
-          }
-        }
-      }
 
       // First collect all whitelists and blacklists, build label to global index mapping
       const mergedWhitelistIssues: Array<{ displayPath: string; meta: IssueMeta; whitelists: Array<{ label: string; only: string[] }> }> = [];

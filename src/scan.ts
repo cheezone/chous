@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { detectKinds, detectRoleOccupancy, knowledgeToJSON, roleLabel, type RoleId } from "./knowledge";
+import type { TranslationFunctions } from "./i18n";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
 import { getLL } from "./i18n";
@@ -139,7 +140,7 @@ function occupancyRecord(snapshot: WorkspaceSnapshot): Record<string, string[]> 
   const occ = detectRoleOccupancy(snapshot);
   const out: Record<string, string[]> = {};
   for (const [role, list] of occ) {
-    out[roleLabel(role as RoleId)] = list.map((o) => o.toolId);
+    out[role] = list.map((o) => o.toolId);
   }
   return out;
 }
@@ -204,33 +205,27 @@ export async function scanDirectory(opts: {
   };
 }
 
-export function formatScanText(result: ScanResult): string {
+export function formatScanText(result: ScanResult, LL: TranslationFunctions, locale: "en" | "zh"): string {
+  const t = LL.scan;
+  const none = t.none();
   const lines: string[] = [];
   for (const repo of result.repos) {
     lines.push(`# ${repo.root}`);
-    lines.push(`  kinds: ${repo.kinds.join(", ") || "(none)"}`);
+    lines.push(`  ${t.kinds()}: ${repo.kinds.join(", ") || none}`);
     const roleLines = Object.entries(repo.roles)
-      .map(([role, tools]) => `${role}=${tools.join("|")}`)
+      .map(([role, tools]) => `${roleLabel(role as RoleId)[locale]}=${tools.join("|")}`)
       .join(", ");
-    lines.push(`  roles: ${roleLines || "(none)"}`);
-    if (repo.components?.length) {
-      for (const c of repo.components.slice(0, 20)) {
-        lines.push(`  component ${c.name}: ${c.techs.join(", ") || "—"}`);
-      }
+    lines.push(`  ${t.roles()}: ${roleLines || none}`);
+    for (const c of repo.components?.slice(0, 20) ?? []) {
+      lines.push(`  ${t.component({ name: c.name })}: ${c.techs.join(", ") || none}`);
     }
-    if (repo.issues.length) {
-      lines.push(`  issues (${repo.issues.length}):`);
-      for (const i of repo.issues.slice(0, 30)) {
-        const res = i.resolution ? `[${i.resolution}] ` : "";
-        lines.push(`    - ${res}${i.displayPath}: ${i.message}`);
-      }
-    } else {
-      lines.push("  issues: none");
+    lines.push(`  ${t.issues({ count: repo.issues.length })}${repo.issues.length ? ":" : ""}`);
+    for (const i of repo.issues.slice(0, 30)) {
+      const res = i.resolution ? `[${i.resolution}] ` : "";
+      lines.push(`    - ${res}${i.displayPath}: ${i.message}`);
     }
     lines.push("");
   }
   return lines.join("\n");
 }
 
-// silence unused dirname import warning for some bundlers
-void dirname;

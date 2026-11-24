@@ -1,8 +1,12 @@
 /**
- * chous's own dependency taste. Every entry is an error.
+ * Rotten dependencies. Every entry is an error, so every entry must meet one of
+ * these checkable facts — facts that stay true once they are true:
  *
- * Kept by hand on purpose: no upstream list decides what counts as garbage here.
- * Node >= 22 and evergreen browsers are the baseline.
+ * 1. NATIVE: the platform ships an equivalent (Node >= 22, evergreen browsers).
+ * 2. DEPRECATED: the authors deprecated or abandoned it in favour of something else.
+ * 3. SABOTAGED: its author broke it on purpose.
+ *
+ * "Old", "slow" or "there is something newer" are not rot. Those change; facts do not.
  */
 import type { Text } from "../i18n/text";
 
@@ -13,7 +17,7 @@ export type ObsoleteDep = {
   why: Text;
 };
 
-/** Replaced by the platform. Nothing to install. */
+/** 1. The platform ships an equivalent. Nothing to install. */
 export const NATIVE: ObsoleteDep[] = [
   // Network
   { names: ["node-fetch", "cross-fetch", "isomorphic-fetch", "whatwg-fetch", "xmlhttprequest"], use: "fetch", why: { en: "fetch is global in Node 18+ and every browser.", zh: "fetch 在 Node 18+ 和所有浏览器里都是全局的。" } },
@@ -40,7 +44,6 @@ export const NATIVE: ObsoleteDep[] = [
 
   // CLI
   { names: ["strip-ansi"], use: "util.stripVTControlCharacters", why: { en: "Built into node:util.", zh: "node:util 内置。" } },
-  { names: ["minimist", "arg"], use: "util.parseArgs", why: { en: "Built into Node 18.3+.", zh: "Node 18.3+ 内置。" } },
 
   // Language
   { names: ["bluebird", "q", "es6-promise", "promise-polyfill"], use: "Promise", why: { en: "Native promises are faster and everywhere.", zh: "原生 Promise 更快，而且到处都有。" } },
@@ -54,22 +57,23 @@ export const NATIVE: ObsoleteDep[] = [
   { names: ["string.prototype.replaceall", "string.prototype.matchall", "string.prototype.trimstart", "string.prototype.trimend", "string.prototype.at"], use: "String.prototype methods", why: { en: "ES2019+.", zh: "ES2019 起内置。" } },
   { names: ["globalthis", "global"], use: "globalThis", why: { en: "ES2020.", zh: "ES2020 起内置。" } },
   { names: ["es6-symbol", "es6-map", "es6-set", "es6-weak-map"], use: "Symbol / Map / Set / WeakMap", why: { en: "ES2015.", zh: "ES2015 起内置。" } },
-  { names: ["clone-deep", "lodash.clonedeep"], use: "structuredClone", why: { en: "Global since Node 17.", zh: "Node 17 起全局可用。" } },
-  { names: ["is-number", "is-odd", "is-even"], use: "typeof / %", why: { en: "One expression.", zh: "一个表达式就够了。" } },
 ];
 
 /** Dead or superseded. Use the named replacement. */
-export const DEAD: ObsoleteDep[] = [
+/** 2. Deprecated or abandoned by its own authors. */
+export const DEPRECATED: ObsoleteDep[] = [
   { names: ["request", "request-promise", "request-promise-native"], use: "fetch", why: { en: "request is deprecated since 2020.", zh: "request 2020 年起已废弃。" } },
-  { names: ["colors"], use: "util.styleText", why: { en: "Sabotaged by its author in 2022, never fixed.", zh: "2022 年被作者故意破坏，至今没修。" } },
-  { names: ["moment"], use: "dayjs / date-fns / Temporal", why: { en: "moment is in maintenance mode and not tree-shakable.", zh: "moment 已进入维护模式，且无法 tree-shake。" } },
+  { names: ["moment"], use: "dayjs / date-fns / Temporal", why: { en: "Its maintainers call it a legacy project and discourage new use.", zh: "维护者称其为遗留项目，不建议新项目使用。" } },
   { names: ["node-sass"], use: "sass", why: { en: "Deprecated, LibSass is dead.", zh: "已废弃，LibSass 已停止维护。" } },
   { names: ["tslint"], use: "ESLint / oxlint", why: { en: "Deprecated since 2019.", zh: "2019 年起已废弃。" } },
   { names: ["babel-polyfill", "@babel/polyfill"], use: "a modern runtime target", why: { en: "Deprecated.", zh: "已废弃。" } },
   { names: ["bower"], use: "npm / pnpm", why: { en: "Dead package manager.", zh: "已经死掉的包管理器。" } },
   { names: ["karma"], use: "a browser-mode test runner (Vitest, Playwright)", why: { en: "Deprecated.", zh: "已废弃。" } },
-  { names: ["ts-node"], use: "node (type stripping) or tsx", why: { en: "Node runs TypeScript natively.", zh: "Node 能直接运行 TypeScript。" } },
-  { names: ["nodemon"], use: "node --watch", why: { en: "Built into Node 18.11+.", zh: "Node 18.11+ 内置。" } },
-  { names: ["enzyme"], use: "@testing-library", why: { en: "Unmaintained, no React 18 support.", zh: "无人维护，不支持 React 18。" } },
-  { names: ["react-scripts"], use: "Vite", why: { en: "Create React App is deprecated.", zh: "Create React App 已废弃。" } },
+  { names: ["react-scripts"], use: "a framework, or Vite / Parcel / Rsbuild", why: { en: "Create React App was deprecated in 2025.", zh: "Create React App 已于 2025 年废弃。" } },
+];
+
+/** 3. Broken on purpose by its own author. */
+export const SABOTAGED: ObsoleteDep[] = [
+  { names: ["colors"], use: "util.styleText", why: { en: "Sabotaged by its author in 2022, never fixed.", zh: "2022 年被作者故意破坏，至今没修。" } },
+  { names: ["faker"], use: "@faker-js/faker", why: { en: "Wiped by its author in 2022; the community fork lives on.", zh: "2022 年被作者清空，社区分支接手维护。" } },
 ];

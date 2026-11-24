@@ -1,4 +1,4 @@
-import type { Rule, StackRule } from "../../types";
+import type { ExclusiveRule, Rule, StackRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
@@ -25,12 +25,34 @@ export class OneToolPerRoleValidator extends BaseRuleValidator<StackRule> {
       if (tools.length < 2) continue;
       context.rawIssues.push(issueFromRule(rule, {
         path: `${manifest.path}#stack:${role}`,
-        displayPath: `stack (${roleLabel(role)})`,
+        displayPath: `package.json (${role})`,
         message: { key: "issue.stack.conflict", params: { role: roleLabel(role), tools: tools.join(" + ") } },
         category: "forbidden",
         severity: "error",
       }));
     }
     return { hitCount };
+  }
+}
+
+/** One name per concept: at most one of `names` may exist at the root. */
+export class ExclusiveRuleValidator extends BaseRuleValidator<ExclusiveRule> {
+  canHandle(rule: Rule): rule is ExclusiveRule {
+    return rule.kind === "exclusive";
+  }
+
+  protected async validateInternal(rule: ExclusiveRule, context: RuleValidatorContext) {
+    const present = rule.names.filter((name) => context.snapshot.exists(name));
+    if (present.length > 1) {
+      const names = present.map((name) => (context.snapshot.isDirectory(name) ? `${name}/` : name)).join(" + ");
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${context.root}#exclusive:${present.join("+")}`,
+        displayPath: names,
+        message: { key: "issue.exclusive.conflict", params: { names } },
+        category: "forbidden",
+        severity: "error",
+      }));
+    }
+    return { hitCount: present.length };
   }
 }

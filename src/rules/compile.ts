@@ -60,11 +60,6 @@ export function compileRules(
   }
 
   const syntheticRules: Rule[] = [];
-  // Directories a rename rule targets get the rename message, not a whitelist error.
-  const renamed = input.flatMap((r) => (r.kind === "renameDir" ? r.fromNames : []));
-  if (renamed.length > 0) {
-    syntheticRules.push({ kind: "allow", names: renamed, source: { taste: "rename" } });
-  }
 
   const rulesWithToolFiles: Rule[] = [...input, ...syntheticRules];
 
@@ -82,7 +77,6 @@ export function compileRules(
         source: allowRule.source,
         severity: allowRule.severity,
         reason: allowRule.reason,
-        when: allowRule.when,
       });
     }
     inDirGroups.set(".", rootGroup);
@@ -135,9 +129,6 @@ export function compileRules(
       for (const name of r.names) {
         if (!isGlobPattern(name)) required.add(pickTopLevelName(name));
       }
-    }
-    if (r.kind === "optional") {
-      for (const name of r.names) optional.add(pickTopLevelName(name));
     }
   }
   for (const opt of optional) required.delete(opt);

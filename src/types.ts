@@ -14,15 +14,7 @@ export type RuleBase = {
   severity?: Severity;
   /** Why this rule exists, in every language. */
   reason?: Text;
-  when?: Condition[];
 };
-
-export type Condition =
-  | { type: "isEmpty" } // 是否为空目录
-  | { type: "fileSize"; op: ">" | "<"; value: string } // 大小 (如 "1MB")
-  | { type: "contains"; pattern: string } // 包含
-  | { type: "parentMatches"; style: NamingStyle } // 父目录匹配
-  | { type: "exists"; pattern: string }; // 模式存在
 
 export type NamingStyle =
   | "PascalCase"
@@ -37,16 +29,14 @@ export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
 export type Rule =
   | MoveRule
   | ThoseOnlyRule
-  | RenameDirRule
-  | RenameGlobRule
   | InDirOnlyRule
   | NamingRule
   | NoFilesRule
   | HasFileRule
   | AllowRule
-  | OptionalRule
   | DepsRule
   | StackRule
+  | ExclusiveRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -60,18 +50,6 @@ export type ThoseOnlyRule = RuleBase & {
   kind: "thoseOnly";
   pattern: string; // glob (root-level)
   only: string[]; // globs (root-level)
-};
-
-export type RenameDirRule = RuleBase & {
-  kind: "renameDir";
-  fromNames: string[]; // directory names (root-level)
-  toName: string; // directory name (root-level)
-};
-
-export type RenameGlobRule = RuleBase & {
-  kind: "renameGlob";
-  from: string; // glob (root-relative, may include **)
-  to: string; // glob-like target pattern (best-effort support)
 };
 
 export type InDirOnlyRule = RuleBase & {
@@ -113,11 +91,6 @@ export type HasFileRule = RuleBase & {
   names: string[]; // file names (root-level)
 };
 
-export type OptionalRule = RuleBase & {
-  kind: "optional";
-  names: string[]; // file names (root-level) - makes has rules optional
-};
-
 export type DepsRule = RuleBase & {
   kind: "deps";
   mode: "no";
@@ -132,6 +105,14 @@ export type ManifestRule = RuleBase & {
   field: string;
   equals?: string | boolean;
   absent?: boolean;
+  /** The field must be present, whatever its value. */
+  present?: boolean;
+};
+
+/** At most one of these root-level names may exist: one name per concept. */
+export type ExclusiveRule = RuleBase & {
+  kind: "exclusive";
+  names: string[];
 };
 
 /** Monorepo root: one version per dependency, `workspace:` for internal packages. */
@@ -155,8 +136,7 @@ export type Resolution = "auto" | "agent" | "info";
 
 /** Machine-executable, zero-data-loss fixes for `--fix`. */
 export type SafeFix =
-  | { type: "rename"; fromPath: string; toPath: string }
-  | { type: "deleteEmptyDir"; path: string };
+  | { type: "rename"; fromPath: string; toPath: string };
 
 export type IssueMessage =
   | { key: "issue.move.shouldMoveToDir"; params: { dir: string } }
@@ -164,22 +144,18 @@ export type IssueMessage =
   | { key: "issue.move.destMustBeDir"; params: { from: string; toDir: string } }
   | { key: "issue.move.unsafeManual"; params: { dir: string } }
   | { key: "issue.thoseOnly.forbiddenOnlyAllowed"; params: { only: string | string[]; pattern?: string } }
-  | { key: "issue.renameDir.shouldRenameTo"; params: { to: string } }
-  | { key: "issue.renameDir.shouldMigrateTo"; params: { to: string } }
-  | { key: "issue.renameDir.removeEmptyDir"; params: { dir: string; to: string } }
-  | { key: "issue.renameGlob.shouldRenameTo"; params: { to: string } }
-  | { key: "issue.renameGlob.targetExistsManual"; params: { to: string } }
-  | { key: "issue.renameGlob.cannotInferTarget" }
   | { key: "issue.inDirOnly.dirMustExist"; params: { only: string | string[] } }
   | { key: "issue.inDirOnly.forbiddenOnlyAllowed"; params: { dir: string; only: string | string[] } }
   | { key: "issue.no.forbidden"; params: { name: string } }
   | { key: "issue.no.because"; params: { reason: Text } }
   | { key: "issue.has.mustExist"; params: { name: string } }
   | { key: "issue.deps.forbidden"; params: { name: string } }
-  | { key: "issue.stack.conflict"; params: { role: string; tools: string } }
+  | { key: "issue.stack.conflict"; params: { role: Text; tools: string } }
+  | { key: "issue.exclusive.conflict"; params: { names: string } }
   | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
   | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
   | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }
+  | { key: "issue.manifest.missing"; params: { field: string; reason: Text } }
   | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
   | { key: "issue.workspace.protocol"; params: { name: string; spec: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
@@ -205,11 +181,6 @@ export type Issue = {
   see?: string;
 };
 
-export type RuleMetrics = {
-  duration: number; // Duration in milliseconds
-  hitCount: number; // Number of files/directories matched by this rule
-};
-
 export type LintResult = {
   root: string;
   /** Tastes applied to this root, broadest first. */
@@ -222,7 +193,5 @@ export type LintResult = {
   workspacePackages?: string[]; // Packages discovered via @manypkg/get-packages
   fileCount?: number; // Number of files scanned
   duration?: number; // Duration in milliseconds
-  ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index
-  rules?: Rule[]; // Applied rules, for statistics display
   fixedCount?: number; // Number of issues auto-fixed when --fix was used
 };

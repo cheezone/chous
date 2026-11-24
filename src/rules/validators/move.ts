@@ -35,8 +35,6 @@ export class MoveRuleValidator extends BaseRuleValidator<MoveRule> {
     let hitCount = 0;
 
     for (const abs of matches) {
-      const shouldApply = await this.shouldApplyToTarget(rule, abs, context);
-      if (!shouldApply) continue;
 
       const base = basename(abs);
       const target = resolve(root, rule.toDir, base);

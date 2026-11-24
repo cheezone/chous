@@ -85,8 +85,9 @@ export function taste(id: string) {
       push({ kind: "move", from, toDir, ...extra });
     },
 
-    rename(fromNames: string[], toName: string, extra?: Extra) {
-      push({ kind: "renameDir", fromNames, toName, ...extra });
+    /** At most one of these root-level names may exist. */
+    oneOf(names: string[]) {
+      push({ kind: "exclusive", names });
     },
 
     /** In these roles, a second tool is a bug. */
@@ -97,6 +98,11 @@ export function taste(id: string) {
     /** A package.json field must equal `value`. */
     field(field: string, value: string | boolean, extra?: Extra) {
       push({ kind: "manifest", field, equals: value, ...extra });
+    },
+
+    /** A package.json field must be present, whatever its value. */
+    requireField(field: string, why: Text) {
+      push({ kind: "manifest", field, present: true, reason: why });
     },
 
     /** A package.json field must not exist. */

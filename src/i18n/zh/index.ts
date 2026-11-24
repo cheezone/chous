@@ -9,6 +9,7 @@ const zh = {
 	cli: {
 		help: {
 			tagline: '有主见的品味检查器，没有配置。',
+			noCommand: '（不带命令）',
 			commands: '命令：',
 			lintCmdDesc: '检查当前目录',
 			scanCmdDesc: '查找 git 仓库，显示识别到的项目类型和技术栈角色',
@@ -35,6 +36,13 @@ const zh = {
 			claudeHooksInstalled: '已安装 Claude Code hooks',
 			credit: 'chous · https://github.com/cheezone/chous',
 		},
+	},
+	scan: {
+		kinds: '项目类型',
+		roles: '技术栈',
+		component: '组件 {name}',
+		issues: '问题（{count}）',
+		none: '（无）',
 	},
 	meta: {
 		taste: '品味：{names}',
@@ -113,12 +121,16 @@ const zh = {
 			forbidden: '不允许依赖 {name}',
 			obsolete: '依赖 {name} 已过时 → {use}',
 		},
+		exclusive: {
+			conflict: '同时有 {names}，它们是同一个意思，只留一个',
+		},
 		stack: {
-			conflict: '{role} 同时用了 {tools}，它们会互相打架，只留一个',
+			conflict: '{role}同时用了 {tools}，它们会互相打架，只留一个',
 		},
 		manifest: {
 			expected: '"{field}" 应为 {expected}',
 			remove: '删除 "{field}"：{reason}',
+			missing: '加上 "{field}"：{reason}',
 		},
 		workspace: {
 			drift: '{name} 有多个版本（{versions}），统一成一个，或改用 pnpm catalog',

@@ -41,17 +41,16 @@ npx chous
 
 ```
 .
-├── ✖ tests/                    → 应重命名为 test/
-├── ✖ .DS_Store                 → 不允许：系统垃圾文件，删掉并加进 .gitignore
-├── ✖ .env                      → 不允许：密钥文件，加进 .gitignore，改为提交 .env.example
-├── ✖ notes.txt                 → 不在白名单（1）
-├── ✖ package.json (moment)     → 依赖 moment 已过时 → dayjs / date-fns / Temporal
-├── ✖ package.json (node-fetch) → 依赖 node-fetch 已过时 → fetch
-├── ✖ package.json (request)    → 依赖 request 已过时 → fetch
-├── ✖ package.json (tslint)     → 依赖 tslint 已过时 → ESLint / oxlint
-├── ✖ stack (git hooks)         → git hooks 同时用了 husky + simple-git-hooks，它们会互相打架，只留一个
-├── ✖ stack (package manager)   → package manager 同时用了 npm + yarn，它们会互相打架，只留一个
-└── ✖ tslint.json               → 不允许：已死工具的残留配置
+├── ✖ .DS_Store                      → 不允许：系统垃圾文件，删掉并加进 .gitignore
+├── ✖ .env                           → 不允许：密钥文件，加进 .gitignore，改为提交 .env.example
+├── ✖ notes.txt                      → 不在白名单（1）
+├── ✖ package.json (git-hooks)       → Git 钩子同时用了 husky + simple-git-hooks，它们会互相打架，只留一个
+├── ✖ package.json (moment)          → 依赖 moment 已过时 → dayjs / date-fns / Temporal
+├── ✖ package.json (node-fetch)      → 依赖 node-fetch 已过时 → fetch
+├── ✖ package.json (package-manager) → 包管理器同时用了 npm + yarn，它们会互相打架，只留一个
+├── ✖ package.json (request)         → 依赖 request 已过时 → fetch
+├── ✖ package.json (tslint)          → 依赖 tslint 已过时 → ESLint / oxlint
+└── ✖ tslint.json                    → 不允许：已死工具的残留配置
 
 品味：base · git · js
 ```
@@ -70,12 +69,12 @@ Chous 只嗅臭味，不追时髦。臭味是指今天是错的、三年后仍�
 | `go` · `python` | 有 `go.mod`；有 `pyproject.toml` 等 |
 | `nextjs` · `nuxt3` · `nuxt4` | 有对应框架的配置文件 |
 
-- **腐烂的依赖。** 清单手工维护在 [`src/taste/deps.ts`](src/taste/deps.ts)：平台已经原样自带的（`node-fetch` → `fetch`、`rimraf` → `fs.rm`、`left-pad` → `padStart` 等），以及已经死掉的（`request`、`moment`、`node-sass`、`tslint`、`colors` 等）。每条报错都会说明该换成什么。
+- **腐烂的依赖。** 清单手工维护在 [`src/taste/deps.ts`](src/taste/deps.ts)。每一条都要满足一个可以查证的事实：平台已经自带等价能力（`node-fetch` → `fetch`、`rimraf` → `fs.rm`、`left-pad` → `padStart` 等）；作者自己宣布废弃（`request`、`moment`、`node-sass`、`tslint`、Create React App 等）；或者被作者故意破坏（`colors`、`faker`）。"老"或者"有更新的"都不算腐烂。
 - **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
 - **泄露和垃圾。** 没被 gitignore 的 `.env`、`.dev.vars`、`.DS_Store`、`*.log`；git 仓库没有 `.gitignore`。
 - **干净的根目录。** 根目录的文件是白名单：文档、许可证、配置文件（任意 JSON / TOML / YAML、`*.config.*`）和常见目录。随手丢的笔记和脚本报错。点文件不管。
-- **一个概念一个名字。** 用 `test/`，不用 `tests/`、`__tests__/`、`spec/`；用 `scripts/`，不用 `script/`；workflow 用 kebab-case 的 `.yml`。
-- **只用 ESM。** 每个 package.json 都要 `"type": "module"`。
+- **一个概念一个名字。** `test/`、`tests/`、`spec/` 选一个，不要同时有两个；`scripts/` 和 `script/` 也一样。workflow 用 kebab-case 的 `.yml`。
+- **声明模块类型。** 每个 package.json 都要写 `"type": "module"` 或 `"commonjs"`，这是 Node 官方文档的建议。
 - **Monorepo。** 每个工作区包都当成独立项目、按它自己的品味检查。根目录必须 private、只放工具；只能有一个 lockfile；同一个依赖只能有一个版本；内部依赖用 `workspace:*`。
 - **框架目录。** Next.js App Router、Nuxt 3 / 4 的目录和命名约定。
 

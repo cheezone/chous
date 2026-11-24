@@ -1,7 +1,6 @@
 import type { Issue, Rule, InDirOnlyRule, Severity, SafeFix, IssueMessage, RuleSource } from "../../types";
 import type { Text } from "../../i18n/text";
 import type { WorkspaceSnapshot } from "../../vfs/snapshot";
-import type { RuleStatisticsCollector } from "./base";
 /**
  * Shared context for all rule validators.
  * Validators read the workspace exclusively through `snapshot` — no extra disk I/O.
@@ -9,25 +8,11 @@ import type { RuleStatisticsCollector } from "./base";
 export interface RuleValidatorContext {
   root: string;
   snapshot: WorkspaceSnapshot;
-  /**
-   * Backward-compatible glob helper backed by the in-memory snapshot.
-   * Returns absolute paths.
-   */
-  cachedGlobScan: (
-    pattern: string | string[],
-    cwd: string,
-    root: string,
-    opts?: { onlyFiles?: boolean; ig?: unknown }
-  ) => Promise<string[]>;
-  ig: WorkspaceSnapshot["ig"];
   rawIssues: Issue[];
-  debugLogMsg?: (msg: string, ...args: any[]) => void;
-  statisticsCollector?: RuleStatisticsCollector;
   inDirGroups?: Map<string, InDirOnlyRule[]>;
   rootAllowedSet?: Set<string>;
   filesMatchedByMoveRules?: Set<string>;
   config: { rules: Rule[] };
-  processedThoseOnlyPatterns?: Map<string, number>;
   matchedGlobFiles?: Set<string>;
 }
 
@@ -36,7 +21,7 @@ export interface RuleValidatorContext {
  */
 export interface RuleValidator<R extends Rule = Rule> {
   canHandle(rule: Rule): rule is R;
-  validate(rule: R, context: RuleValidatorContext, ruleIndex: number): Promise<void>;
+  validate(rule: R, context: RuleValidatorContext): Promise<void>;
 }
 
 /** Build an Issue inheriting rule source / optional severity override.

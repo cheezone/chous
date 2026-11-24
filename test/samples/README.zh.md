@@ -6,5 +6,5 @@
 | --- | --- | --- |
 | `project-layout` | golang-standards/project-layout | 通过 |
 | `nuxt.com` | nuxt/nuxt.com | 通过 |
-| `ai-chatbot` | vercel/ai-chatbot | `tests/` 应改为 `test/`，`dotenv` 应换成原生 API |
+| `ai-chatbot` | vercel/ai-chatbot | 声明 `"type"`；`dotenv` 应换成原生 API |
 | `pythondotorg` | python/pythondotorg | 根目录太乱 |

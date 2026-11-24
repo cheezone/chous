@@ -143,9 +143,6 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
             if (r.fileType === "files" && entry.isDir) continue;
             if (r.fileType === "dirs" && !entry.isDir) continue;
             
-            // Check when conditions first
-            const shouldApply = await this.shouldApplyToTarget(r, entry.abs, context);
-            if (!shouldApply) continue; // Skip this rule if when conditions not met
             
             // Check if-contains condition (for dirs)
             // This applies to directory naming rules: only apply if the directory contains the specified file
@@ -187,9 +184,6 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
               if (r.fileType === "files" && entry.isDir) continue;
               if (r.fileType === "dirs" && !entry.isDir) continue;
               
-              // Check when conditions
-              const shouldApply = await this.shouldApplyToTarget(r, entry.abs, context);
-              if (!shouldApply) continue; // Skip this rule if when conditions not met
               
               // Skip if this rule has this name in its except list
               if (r.except?.includes(entry.name)) {
@@ -328,9 +322,6 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
           if (r.fileType === "files" && isDir) continue;
           if (r.fileType === "dirs" && !isDir) continue;
           
-          // Check when conditions first
-          const shouldApply = await this.shouldApplyToTarget(r, abs, context);
-          if (!shouldApply) continue; // Skip this rule if when conditions not met
           
           // Check if-contains condition (for dirs)
           if (r.ifContains && isDir) {
@@ -369,9 +360,6 @@ export class NamingRuleValidator extends BaseRuleValidator<NamingRule> {
             if (r.fileType === "files" && isDir) continue;
             if (r.fileType === "dirs" && !isDir) continue;
             
-            // Check when conditions
-            const shouldApply = await this.shouldApplyToTarget(r, abs, context);
-            if (!shouldApply) continue; // Skip this rule if when conditions not met
             
             // Skip if this rule has this name in its except list
             if (r.except?.includes(base)) {

@@ -46,6 +46,16 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
       return { hitCount: 1 };
     }
 
+    if (rule.present) {
+      if (value !== undefined) return { hitCount: 1 };
+      context.rawIssues.push(issueFromRule(rule, {
+        ...base,
+        category: "missing",
+        message: { key: "issue.manifest.missing", params: { field: rule.field, reason: rule.reason ?? { en: "", zh: "" } } },
+      }));
+      return { hitCount: 1 };
+    }
+
     if (value === rule.equals) return { hitCount: 1 };
     context.rawIssues.push(issueFromRule(rule, {
       ...base,

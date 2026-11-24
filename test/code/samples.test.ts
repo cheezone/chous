@@ -33,11 +33,11 @@ describe("real-world samples", () => {
     expect(r.stdout).toContain("Taste: base · github · js · nuxt4");
   });
 
-  it("ai-chatbot is told to rename tests/ and drop dotenv", () => {
+  it("ai-chatbot is told to declare its module type and drop dotenv", () => {
     const r = runCli(resolve(SAMPLES, "ai-chatbot"));
     expect(r.code).toBe(1);
     expect(r.stdout).toContain("Taste: base · github · js · nextjs");
-    expect(r.stdout).toContain("tests → should be renamed to test/");
+    expect(r.stdout).toContain('add "type"');
     expect(r.stdout).toContain("dependency dotenv is obsolete → process.loadEnvFile()");
   });
 

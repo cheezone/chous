@@ -1,5 +1,5 @@
 import { taste } from "./define";
-import { DEAD, NATIVE } from "./deps";
+import { DEPRECATED, NATIVE, SABOTAGED } from "./deps";
 
 export type Runtime = "node" | "bun";
 
@@ -31,12 +31,16 @@ export function js(project: JsProject = {}) {
   t.allow(["packages", "apps", "libs", "tools"]);
   t.allow(["*.d.ts"], { reason: { en: "Root-level ambient type declarations", zh: "根目录的全局类型声明" } });
 
-  // ESM only.
-  t.field("type", "module");
+  // Node's own docs: always declare it, even for CommonJS packages.
+  t.requireField("type", {
+    en: '"module" or "commonjs", Node recommends declaring it explicitly',
+    zh: '"module" 或 "commonjs"，Node 官方建议显式声明',
+  });
 
-  // One name per concept.
-  t.rename(["tests", "__tests__", "spec", "specs"], "test");
-  t.rename(["script"], "scripts");
+  // One name per concept. Which name is up to you; two of them is a mess.
+  t.allow(["tests", "__tests__", "spec", "specs", "script"]);
+  t.oneOf(["test", "tests", "__tests__", "spec", "specs"]);
+  t.oneOf(["scripts", "script"]);
 
   t.oneToolPer(FIGHTING_ROLES);
 
@@ -45,7 +49,7 @@ export function js(project: JsProject = {}) {
     t.noField("packageManager", { en: "set it once, in the workspace root", zh: "只在工作区根目录设置一次" });
   }
 
-  for (const dep of [...NATIVE, ...DEAD]) t.obsolete(dep.names, dep.use, dep.why);
+  for (const dep of [...NATIVE, ...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, dep.why);
   t.no([".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json"], {
     reason: { en: "leftover config of a dead tool", zh: "已死工具的残留配置" },
   });

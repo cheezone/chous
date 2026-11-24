@@ -83,8 +83,6 @@ function describeFix(fix: SafeFix): string {
   switch (fix.type) {
     case "rename":
       return `rename ${fix.fromPath} → ${fix.toPath}`;
-    case "deleteEmptyDir":
-      return `delete empty dir ${fix.path}`;
   }
 }
 

@@ -1,4 +1,4 @@
-import { mkdir, rename, rm } from "node:fs/promises";
+import { mkdir, rename } from "node:fs/promises";
 import { dirname, resolve } from "node:path";
 import { existsSync } from "node:fs";
 import type { Issue, SafeFix } from "../types";
@@ -17,22 +17,10 @@ async function applyRename(fix: Extract<SafeFix, { type: "rename" }>): Promise<b
   return true;
 }
 
-async function applyDeleteEmptyDir(fix: Extract<SafeFix, { type: "deleteEmptyDir" }>): Promise<boolean> {
-  if (!existsSync(fix.path)) return false;
-  try {
-    await rm(fix.path, { recursive: false });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function tryApplyFix(fix: SafeFix): Promise<boolean> {
   switch (fix.type) {
     case "rename":
       return applyRename(fix);
-    case "deleteEmptyDir":
-      return applyDeleteEmptyDir(fix);
   }
 }
 

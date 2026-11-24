@@ -1,10 +1,9 @@
-import { basename, resolve } from "node:path";
+import { resolve } from "node:path";
 import type { InDirOnlyRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
-import { evaluateWhenConditions } from "./conditions";
 
 export class InDirOnlyRuleValidator extends BaseRuleValidator<InDirOnlyRule> {
   canHandle(rule: any): rule is InDirOnlyRule {
@@ -30,8 +29,7 @@ export async function processInDirOnlyGroup(
   context: RuleValidatorContext,
   filesMatchedByMoveRules: Set<string>
 ): Promise<{ hitCount: number }> {
-  const { root, snapshot, rawIssues, debugLogMsg, rootAllowedSet } = context;
-  const DEBUG_FILE = process.env.DEBUG_FILE;
+  const { root, snapshot, rawIssues, rootAllowedSet } = context;
 
   const dirAbs = resolve(root, dir);
   const isRecursive = group.some((r) => r.only.some((p) => p.includes("**")));
@@ -84,26 +82,10 @@ export async function processInDirOnlyGroup(
       });
 
       const allowedPaths = snapshot.match(cleanedPatterns, { cwd: dirAbs, onlyFiles: false });
-      debugLogMsg?.("Scan allowed patterns", {
-        dir,
-        fileType,
-        originalPattern: rule.only,
-        cleanedPattern: cleanedPatterns,
-        mode: rule.mode,
-        found: allowedPaths.length,
-      });
 
       for (const p of allowedPaths) {
         const relPath = toDisplayPath(p, dirAbs);
         allowedSet.add(relPath);
-        if (DEBUG_FILE && basename(p) === DEBUG_FILE) {
-          debugLogMsg?.("✓ [Track] File added to whitelist", {
-            file: DEBUG_FILE,
-            pattern: rule.only,
-            relativePath: relPath,
-            absolutePath: p,
-          });
-        }
       }
     }
     mergedAllowedRelByFileType.set(fileType, allowedSet);
@@ -130,17 +112,6 @@ export async function processInDirOnlyGroup(
       const abs = resolve(dirAbs, rel);
       const isDir = snapshot.isDirectory(abs);
 
-      let shouldCheckThisPath = true;
-      for (const rule of group) {
-        if (rule.when && rule.when.length > 0) {
-          const shouldApply = await evaluateWhenConditions(rule.when, abs, context);
-          if (!shouldApply) {
-            shouldCheckThisPath = false;
-            break;
-          }
-        }
-      }
-      if (!shouldCheckThisPath) continue;
 
       if (!isDir && filesMatchedByMoveRules.has(abs)) continue;
 
