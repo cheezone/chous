@@ -2,7 +2,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Rule } from "../types";
 import { base } from "./base";
-import { cnb, detectGitHost, git, github, isGitRoot } from "./git";
+import { git, github, isGitRoot } from "./git";
 import { go } from "./go";
 import { bun, cloudflare, js, monorepo, type Runtime } from "./js";
 import { nextjs } from "./nextjs";
@@ -73,11 +73,6 @@ function detectRuntime(root: string): Runtime {
   return "@types/bun" in dev || "bun-types" in dev ? "bun" : "node";
 }
 
-function isLibrary(root: string): boolean {
-  const pkg = readJson(resolve(root, "package.json"));
-  return Boolean(pkg && !pkg.private && (pkg.bin || pkg.exports || pkg.main));
-}
-
 /**
  * Pick the tastes for a project root. There is no config: the project's
  * shape decides which opinions apply.
@@ -87,15 +82,12 @@ export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
   const runtime = opts.runtime ?? detectRuntime(root);
   const tastes: Array<[string, Rule[]]> = [["base", base()]];
 
-  const host = detectGitHost(root);
-  if (isGitRoot(root)) tastes.push(["git", git(host)]);
-  if (host === "github" || anyExists(root, [".github"])) tastes.push(["github", github()]);
-  if (host === "cnb" || anyExists(root, [".cnb.yml", ".cnb.yaml", ".cnb"])) tastes.push(["cnb", cnb()]);
+  if (isGitRoot(root)) tastes.push(["git", git()]);
+  if (anyExists(root, [".github/workflows"])) tastes.push(["github", github()]);
 
   if (framework || anyExists(root, ["package.json", "tsconfig.json", "jsconfig.json"])) {
-    const library = !framework && isLibrary(root);
-    tastes.push(["js", js({ library, runtime, workspacePackage: opts.workspacePackage })]);
-    if (opts.monorepo) tastes.push(["monorepo", monorepo(runtime)]);
+    tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);
+    if (opts.monorepo) tastes.push(["monorepo", monorepo(anyExists(root, ["pnpm-workspace.yaml", "pnpm-lock.yaml"]))]);
     if (runtime === "bun") tastes.push(["bun", bun()]);
   }
   if (anyExists(root, ["wrangler.jsonc", "wrangler.json", "wrangler.toml"])) tastes.push(["cloudflare", cloudflare()]);

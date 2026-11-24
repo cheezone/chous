@@ -4,9 +4,12 @@
 
 ## 项目概览
 - 仓库：`chous`，一个**没有配置**的品味检查 CLI（taste linter），像 `gofmt`：品味就是工具本身。
-- 品味规则全部写在 `src/taste/*.ts`（`base` / `git`（含 github、cnb）/ `js`（含 monorepo、bun、cloudflare）/ `deps` / `go` / `python` / `nextjs` / `nuxt`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
+- 品味规则全部写在 `src/taste/*.ts`（`base` / `git`（含 github）/ `js`（含 monorepo、bun、cloudflare）/ `deps` / `go` / `python` / `nextjs` / `nuxt`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
+- **只嗅臭味，不追时髦。** 加规则前先问：三年后它报出来的错还对吗？只收录腐烂的东西（死掉的包、平台已原样自带的轮子、互相打架的工具、泄露、杂乱）。**不要**规定用哪个工具（「linter 必须是 oxlint」这种），也不要收录需要跟着外部生态频繁更新的名单。
+- 依赖清单 `src/taste/deps.ts` 只收两类：平台**完全等价**替代的（`NATIVE`）和确实已死的（`DEAD`）；替代建议不点名某个时髦工具。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
-- 规则语义：`allow` 只扩大白名单，**不会**撤销 `no`；带 `reason` 的 `no` 会直接显示原因，并压过同一路径上泛泛的「不在白名单」。
+- 规则语义：`allow` 只扩大白名单，**不会**撤销 `no`；带 `reason` 的 `no` 会直接显示原因，并压过同一路径上泛泛的「不在白名单」。根目录白名单不管点文件。
+- 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 只有 `en` 和 `zh`（`src/i18n/`）。参数类型由 `en` 字符串推导，改文案时两份一起改；不要再引入 typesafe-i18n（它不支持 TS 7）。
 - 品味里的原因（`reason`、`why`、迁移 `notes`）一律写成 `Text`：`{ en, zh }`，少一种语言就是类型错误。

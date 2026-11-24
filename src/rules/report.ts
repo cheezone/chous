@@ -182,22 +182,10 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.no.forbidden(msg.params));
     case "issue.has.mustExist":
       return String(LL.issue.has.mustExist(msg.params));
-    case "issue.packageManager.wrong":
-      return String(LL.issue.packageManager.wrong(msg.params));
-    case "issue.packageManager.missing":
-      return String(LL.issue.packageManager.missing(msg.params));
-    case "issue.deps.missing":
-      return String(LL.issue.deps.missing(msg.params));
     case "issue.deps.forbidden":
       return String(LL.issue.deps.forbidden(msg.params));
-    case "issue.replaceDep.replace":
-      return String(LL.issue.replaceDep.replace(msg.params));
-    case "issue.role.mismatch":
-      return String(LL.issue.role.mismatch(msg.params));
-    case "issue.role.missing":
-      return String(LL.issue.role.missing(msg.params));
-    case "issue.role.deprecated":
-      return String(LL.issue.role.deprecated(msg.params));
+    case "issue.stack.conflict":
+      return LL.issue.stack.conflict(msg.params);
     case "issue.manifest.expected":
       return LL.issue.manifest.expected(msg.params);
     case "issue.manifest.remove":

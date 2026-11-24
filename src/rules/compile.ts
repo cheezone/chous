@@ -2,13 +2,11 @@ import type {
   AllowRule,
   HasFileRule,
   InDirOnlyRule,
-  RoleRule,
   Rule,
   RuleSource,
 } from "../types";
 import { pickTopLevelName } from "../fsutil";
 import type { WorkspaceInfo } from "../vfs/snapshot";
-import { toolFileEffects, type RoleId } from "../knowledge";
 
 export type DirectoryWhitelistGroup = {
   dir: string;
@@ -61,39 +59,11 @@ export function compileRules(
     inDirGroups.set(r.dir, list);
   }
 
-  // Stack → structure bridge: declared tools auto-allow their files; siblings auto-forbid.
-  const roleRules = input.filter((r): r is RoleRule => r.kind === "role");
-  const declaredByRole = new Map<RoleId, string[]>();
-  for (const r of roleRules) {
-    const role = r.role as RoleId;
-    const existing = declaredByRole.get(role) ?? [];
-    for (const t of r.tools) {
-      if (!existing.includes(t)) existing.push(t);
-    }
-    declaredByRole.set(role, existing);
-  }
-  const fileEffects = toolFileEffects(declaredByRole);
-  const syntheticSource: RuleSource = roleRules[0]?.source ?? { taste: "stack" };
   const syntheticRules: Rule[] = [];
-  if (fileEffects.allow.length > 0) {
-    syntheticRules.push({
-      kind: "allow",
-      names: fileEffects.allow,
-      source: syntheticSource,
-    });
-  }
   // Directories a rename rule targets get the rename message, not a whitelist error.
   const renamed = input.flatMap((r) => (r.kind === "renameDir" ? r.fromNames : []));
   if (renamed.length > 0) {
     syntheticRules.push({ kind: "allow", names: renamed, source: { taste: "rename" } });
-  }
-  if (fileEffects.forbid.length > 0) {
-    syntheticRules.push({
-      kind: "no",
-      names: fileEffects.forbid,
-      source: syntheticSource,
-      reason: { en: "config for a tool this taste does not use", zh: "这套品味不用的工具的配置" },
-    });
   }
 
   const rulesWithToolFiles: Rule[] = [...input, ...syntheticRules];

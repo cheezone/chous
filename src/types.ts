@@ -45,10 +45,8 @@ export type Rule =
   | HasFileRule
   | AllowRule
   | OptionalRule
-  | PackageManagerRule
   | DepsRule
-  | ReplaceDepRule
-  | RoleRule
+  | StackRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -120,23 +118,12 @@ export type OptionalRule = RuleBase & {
   names: string[]; // file names (root-level) - makes has rules optional
 };
 
-export type PackageManagerRule = RuleBase & {
-  kind: "packageManager";
-  manager: PackageManagerName;
-};
-
 export type DepsRule = RuleBase & {
   kind: "deps";
-  mode: "must" | "no";
+  mode: "no";
   names: string[]; // package names, or a scope wildcard such as @scope/*
   /** For banned deps: what to use instead. */
   use?: string;
-};
-
-export type ReplaceDepRule = RuleBase & {
-  kind: "replaceDep";
-  from: string;
-  to: string;
 };
 
 /** A package.json field must equal a value, or must not exist. */
@@ -153,18 +140,14 @@ export type WorkspaceRule = RuleBase & {
 };
 
 /**
- * Stack-layer role declaration: which tool(s) occupy a role.
- * First name is the preferred migration target when others are detected.
- * e.g. `linter: oxlint`, `test-runner: vitest`
+ * Tools that fight over the same job must not coexist: two package managers
+ * resolve different trees, two formatters rewrite each other, two git-hook
+ * managers overwrite the same hooks.
  */
-export type RoleRule = RuleBase & {
-  kind: "role";
-  /** Stable role id, e.g. `linter`, `test-runner`. */
-  role: string;
-  /** Preferred tool first; additional names are also accepted. */
-  tools: string[];
-  /** Do not report when nothing occupies the role (e.g. inside a workspace package). */
-  optional?: boolean;
+export type StackRule = RuleBase & {
+  kind: "stack";
+  /** Roles where a second tool is always a bug, e.g. `package-manager`. */
+  roles: string[];
 };
 
 /** How to act on a finding — derived from knowledge. */
@@ -173,9 +156,7 @@ export type Resolution = "auto" | "agent" | "info";
 /** Machine-executable, zero-data-loss fixes for `--fix`. */
 export type SafeFix =
   | { type: "rename"; fromPath: string; toPath: string }
-  | { type: "deleteEmptyDir"; path: string }
-  | { type: "pkgSetManager"; pkgJsonPath: string; manager: string }
-  | { type: "pkgReplaceDep"; pkgJsonPath: string; from: string; to: string };
+  | { type: "deleteEmptyDir"; path: string };
 
 export type IssueMessage =
   | { key: "issue.move.shouldMoveToDir"; params: { dir: string } }
@@ -194,14 +175,8 @@ export type IssueMessage =
   | { key: "issue.no.forbidden"; params: { name: string } }
   | { key: "issue.no.because"; params: { reason: Text } }
   | { key: "issue.has.mustExist"; params: { name: string } }
-  | { key: "issue.packageManager.wrong"; params: { expected: string; actual: string } }
-  | { key: "issue.packageManager.missing"; params: { expected: string } }
-  | { key: "issue.deps.missing"; params: { name: string } }
   | { key: "issue.deps.forbidden"; params: { name: string } }
-  | { key: "issue.replaceDep.replace"; params: { from: string; to: string } }
-  | { key: "issue.role.mismatch"; params: { role: string; expected: string; actual: string } }
-  | { key: "issue.role.missing"; params: { role: string; expected: string } }
-  | { key: "issue.role.deprecated"; params: { tool: string } }
+  | { key: "issue.stack.conflict"; params: { role: string; tools: string } }
   | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
   | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
   | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }

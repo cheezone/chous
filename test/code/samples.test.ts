@@ -26,11 +26,11 @@ describe("real-world samples", () => {
     expect(r.code).toBe(0);
   });
 
-  it("nuxt.com is told to move from ESLint to oxlint", () => {
+  it("nuxt.com has nothing rotten", () => {
     const r = runCli(resolve(SAMPLES, "nuxt.com"));
-    expect(r.code).toBe(1);
+    if (r.code !== 0) console.log(r.stdout, r.stderr);
+    expect(r.code).toBe(0);
     expect(r.stdout).toContain("Taste: base · github · js · nuxt4");
-    expect(r.stdout).toContain("linter should be oxlint (found eslint)");
   });
 
   it("ai-chatbot is told to rename tests/ and drop dotenv", () => {

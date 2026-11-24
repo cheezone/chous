@@ -5,7 +5,7 @@ import { join, resolve } from "node:path";
 
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
-const FAIL = resolve(PROJECT_ROOT, "test/fixtures/fail/library");
+const FAIL = resolve(PROJECT_ROOT, "test/fixtures/fail/stack");
 
 function runCli(args: string[], cwd: string, stdin?: string) {
   const proc = spawnSync(process.execPath, ["--import", "tsx", CLI_PATH, ...args], {
@@ -28,7 +28,7 @@ describe("claude hooks", () => {
     expect(r.code).toBe(0);
     const payload = JSON.parse(r.stdout);
     expect(payload.decision).toBe("block");
-    expect(payload.reason).toContain("oxlint");
+    expect(payload.reason).toContain("husky + simple-git-hooks");
     expect(payload.reason).not.toContain("Thanks Cheez");
   });
 
@@ -47,7 +47,7 @@ describe("claude hooks", () => {
     const r = runCli(["claude", "after-edit", "--no-color", "-l", "en"], FAIL, input);
     const payload = JSON.parse(r.stdout);
     expect(payload.hookSpecificOutput.hookEventName).toBe("PostToolUse");
-    expect(payload.hookSpecificOutput.additionalContext).toContain("oxlint");
+    expect(payload.hookSpecificOutput.additionalContext).toContain("husky + simple-git-hooks");
   });
 
   it("merges into an existing settings file and stays idempotent", () => {

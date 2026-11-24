@@ -1,7 +1,6 @@
 import type {
   InDirOnlyRule,
   NamingStyle,
-  PackageManagerName,
   Rule,
   RuleBase,
 } from "../types";
@@ -90,13 +89,9 @@ export function taste(id: string) {
       push({ kind: "renameDir", fromNames, toName, ...extra });
     },
 
-    packageManager(manager: PackageManagerName) {
-      push({ kind: "packageManager", manager });
-    },
-
-    /** Declare which tool owns a stack role. The first tool is the migration target. */
-    role(role: string, tools: string[], extra?: Extra & { optional?: boolean }) {
-      push({ kind: "role", role, tools, ...extra });
+    /** In these roles, a second tool is a bug. */
+    oneToolPer(roles: string[]) {
+      push({ kind: "stack", roles });
     },
 
     /** A package.json field must equal `value`. */
@@ -114,17 +109,9 @@ export function taste(id: string) {
       push({ kind: "workspace" });
     },
 
-    banDeps(names: string[], extra?: Extra) {
-      push({ kind: "deps", mode: "no", names, ...extra });
-    },
-
     /** Ban deps that have a better replacement. */
     obsolete(names: string[], use: string, why: Text) {
       push({ kind: "deps", mode: "no", names, use, reason: why });
-    },
-
-    replaceDep(from: string, to: string, extra?: Extra) {
-      push({ kind: "replaceDep", from, to, ...extra });
     },
   };
 }

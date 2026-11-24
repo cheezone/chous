@@ -2,11 +2,8 @@ export { ROLE_IDS, roleLabel, type RoleId } from "./roles";
 export {
   defineTool,
   defineKind,
-  defineMigration,
   type ToolDef,
   type KindDef,
-  type MigrationDef,
-  type Resolution,
   type Signal,
   type ToolStatus,
   type RolePresence,
@@ -15,9 +12,6 @@ export { knowledge, getKnowledge, knowledgeToJSON, type KnowledgeBundle } from "
 export {
   detectRoleOccupancy,
   detectKinds,
-  lookupMigration,
-  defaultResolution,
-  toolFileEffects,
   evalSignals,
   type Occupancy,
   type RoleOccupancy,

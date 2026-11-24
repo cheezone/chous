@@ -1,8 +1,4 @@
 import type { RoleId } from "./roles";
-import type { Text } from "../i18n/text";
-
-/** How an agent / CI should treat a finding. */
-export type Resolution = "auto" | "agent" | "info";
 
 export type ToolStatus = "active" | "deprecated" | "beta";
 
@@ -36,16 +32,6 @@ export type KindDef = {
   signals: Signal[];
 };
 
-export type MigrationDef = {
-  role: RoleId;
-  from: string;
-  to: string;
-  resolution: Resolution;
-  see?: string;
-  /** Pitfall notes for agents. */
-  notes?: Text;
-};
-
 export function defineTool(def: ToolDef): ToolDef {
   return def;
 }
@@ -54,6 +40,3 @@ export function defineKind(def: KindDef): KindDef {
   return def;
 }
 
-export function defineMigration(def: MigrationDef): MigrationDef {
-  return def;
-}

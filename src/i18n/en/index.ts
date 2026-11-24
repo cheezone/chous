@@ -108,22 +108,12 @@ const en = {
 		has: {
 			mustExist: 'file not found (required: {name})',
 		},
-		packageManager: {
-			wrong: 'package manager should be {expected} (found {actual})',
-			missing: 'package manager should be {expected}',
-		},
 		deps: {
-			missing: 'missing dependency {name}',
 			forbidden: 'dependency {name} is not allowed',
 			obsolete: 'dependency {name} is obsolete → {use}',
 		},
-		replaceDep: {
-			replace: 'replace dependency {from} with {to}',
-		},
-		role: {
-			mismatch: '{role} should be {expected} (found {actual})',
-			missing: '{role} should be {expected}',
-			deprecated: '{tool} is deprecated',
+		stack: {
+			conflict: '{role}: {tools} at once, they fight over the same job, keep one',
 		},
 		manifest: {
 			expected: '"{field}" should be {expected}',

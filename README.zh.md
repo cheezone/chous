@@ -27,7 +27,7 @@
 
 _/tʃoʊs/_
 
-Chous 是一个有主见的品味检查器。AI 编辑器会自己发明目录、格式化工具和测试框架，项目从没要求过这些。Chous 按一个人的品味检查仓库：目录、技术栈、命名、依赖，然后告诉 AI 该改成什么。
+Chous 是一个有主见的品味检查器。AI 编辑器会自己发明目录、格式化工具和测试框架，项目从没要求过这些。Chous 嗅仓库里的臭味：腐烂的依赖、互相打架的工具、要泄露的密钥、乱糟糟的根目录，然后告诉 AI 该改成什么。
 
 没有配置，没有预设，也没有插件。品味就是工具本身，像 `gofmt` 一样。
 
@@ -41,47 +41,42 @@ npx chous
 
 ```
 .
-├── ✖ tests/                                    → 应重命名为 test/
-├── ✖ .DS_Store                                 → 不允许：OS junk, delete it and gitignore it
-├── ✖ .prettierrc                               → 不在白名单（1）
-├── ✖ eslint.config.js                          → 不允许：config for a tool this taste does not use
-├── ✖ jest.config.ts                            → 不允许：config for a tool this taste does not use
-├── ✖ notes.txt                                 → 不在白名单（1）
-├── ✖ package.json (moment)                     → 依赖 moment 已过时 → dayjs / date-fns / Temporal
-├── ✖ package.json (pnpm)                       → 包管理器应为 pnpm（当前是 yarn）
-├── ✖ package.json (type)                       → "type" 应为 "module"
-├── ✖ package.json (uuid)                       → 依赖 uuid 已过时 → crypto.randomUUID()
-├── ✖ stack (git hooks: husky→simple-git-hooks) → git hooks 应为 simple-git-hooks（当前是 husky）
-├── ✖ stack (linter: eslint→oxlint)             → linter 应为 oxlint（当前是 eslint）
-├── ✖ stack (test runner: jest→vitest)          → test runner 应为 vitest（当前是 jest）
-└── ✖ yarn.lock                                 → 不允许：config for a tool this taste does not use
+├── ✖ tests/                    → 应重命名为 test/
+├── ✖ .DS_Store                 → 不允许：系统垃圾文件，删掉并加进 .gitignore
+├── ✖ .env                      → 不允许：密钥文件，加进 .gitignore，改为提交 .env.example
+├── ✖ notes.txt                 → 不在白名单（1）
+├── ✖ package.json (moment)     → 依赖 moment 已过时 → dayjs / date-fns / Temporal
+├── ✖ package.json (node-fetch) → 依赖 node-fetch 已过时 → fetch
+├── ✖ package.json (request)    → 依赖 request 已过时 → fetch
+├── ✖ package.json (tslint)     → 依赖 tslint 已过时 → ESLint / oxlint
+├── ✖ stack (git hooks)         → git hooks 同时用了 husky + simple-git-hooks，它们会互相打架，只留一个
+├── ✖ stack (package manager)   → package manager 同时用了 npm + yarn，它们会互相打架，只留一个
+└── ✖ tslint.json               → 不允许：已死工具的残留配置
 
-品味：base · git · github · js
+品味：base · git · js
 ```
 
 ### 品味
 
-Chous 看项目长什么样，叠加适用的品味。规则都在 [`src/taste/`](src/taste)：
+Chous 只嗅臭味，不追时髦。臭味是指今天是错的、三年后仍然是错的东西：已经死掉的包、平台已经自带的轮子、两个工具抢同一份活、马上要被提交的密钥。Chous 从不规定你用哪个 linter、哪个打包工具：今天新鲜的工具，明天就可能不新鲜了。
+
+规则都在 [`src/taste/`](src/taste)，按项目长什么样叠加：
 
 | 品味 | 什么时候生效 |
 | --- | --- |
 | `base` | 总是 |
-| `git` · `github` · `cnb` | git 仓库；托管平台看 `origin` 远程地址、`.github/` 或 `.cnb.yml` |
-| `js` · `monorepo` · `bun` | 有 `package.json`；有工作区包；运行时是 Bun |
-| `cloudflare` | 有 `wrangler` 配置 |
+| `git` · `github` | git 仓库；有 `.github/workflows` |
+| `js` · `monorepo` · `bun` · `cloudflare` | 有 `package.json`；有工作区包；用 Bun；有 `wrangler` 配置 |
 | `go` · `python` | 有 `go.mod`；有 `pyproject.toml` 等 |
 | `nextjs` · `nuxt3` · `nuxt4` | 有对应框架的配置文件 |
 
-- **根目录是白名单，点文件也算。** 根目录里任何没被允许的东西都报错，`.prettierrc`、`.idea` 也一样。
-- **Git 卫生。** 必须有 `.gitignore`；不会被提交的 `.DS_Store`、`.env`、`*.log` 都不许出现；只用一个 CI：GitHub Actions 或 CNB（`.cnb.yml`），不要 Travis、CircleCI、Jenkins。
-- **GitHub。** `.github/` 里只放 GitHub 认的东西；workflow 文件用 kebab-case 的 `.yml`。
-- **一个概念一个名字。** 用 `test/`，不用 `tests/`、`__tests__/`、`spec/`；用 `scripts/`，不用 `script/`。
-- **一个角色一个工具。** pnpm、TypeScript、oxlint、Vitest、simple-git-hooks。要发包的项目还要用 tsdown 和 changelogen。同一角色出现别的工具就报错，并附上内置知识库里的迁移说明。
-- **不要过时依赖。** 清单手工维护在 [`src/taste/deps.ts`](src/taste/deps.ts)：平台已经自带替代的包（`uuid` → `crypto.randomUUID()`、`node-fetch` → `fetch`、`chalk` → `util.styleText`、`rimraf` → `fs.rm` 等），以及已经死掉的包（`moment`、`request`、`node-sass`、`tslint`、`ts-node` 等）。每条报错都会说明该换成什么。
+- **腐烂的依赖。** 清单手工维护在 [`src/taste/deps.ts`](src/taste/deps.ts)：平台已经原样自带的（`node-fetch` → `fetch`、`rimraf` → `fs.rm`、`left-pad` → `padStart` 等），以及已经死掉的（`request`、`moment`、`node-sass`、`tslint`、`colors` 等）。每条报错都会说明该换成什么。
+- **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
+- **泄露和垃圾。** 没被 gitignore 的 `.env`、`.dev.vars`、`.DS_Store`、`*.log`；git 仓库没有 `.gitignore`。
+- **干净的根目录。** 根目录的文件是白名单：文档、许可证、配置文件（任意 JSON / TOML / YAML、`*.config.*`）和常见目录。随手丢的笔记和脚本报错。点文件不管。
+- **一个概念一个名字。** 用 `test/`，不用 `tests/`、`__tests__/`、`spec/`；用 `scripts/`，不用 `script/`；workflow 用 kebab-case 的 `.yml`。
 - **只用 ESM。** 每个 package.json 都要 `"type": "module"`。
-- **Monorepo。** 每个工作区包都当成独立项目、按它自己的品味检查，比如 `apps/web` 里的 Nuxt 应用会套用 Nuxt 的目录规则。根目录必须 private、只放工具；只能有一个 lockfile；同一个依赖只能有一个版本（或用 pnpm catalog）；内部依赖用 `workspace:*`。
-- **Bun。** Bun 项目用 Bun 管包（`bun.lock`，不要 `bun.lockb`）、用 `@types/bun`、`bun:sqlite`，不需要 `tsx`。
-- **Cloudflare。** 用 `wrangler.jsonc`；用 `wrangler types` 代替 `@cloudflare/workers-types`；`.dev.vars` 永远不提交。
+- **Monorepo。** 每个工作区包都当成独立项目、按它自己的品味检查。根目录必须 private、只放工具；只能有一个 lockfile；同一个依赖只能有一个版本；内部依赖用 `workspace:*`。
 - **框架目录。** Next.js App Router、Nuxt 3 / 4 的目录和命名约定。
 
 不同意？fork 一份。本来就该这样。

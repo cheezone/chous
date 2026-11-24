@@ -8,8 +8,8 @@ import { AllowRuleValidator } from "./allow";
 import { OptionalRuleValidator } from "./optional";
 import { NamingRuleValidator } from "./naming";
 import { InDirOnlyRuleValidator } from "./inDirOnly";
-import { StackRuleValidator } from "./deps";
-import { RoleRuleValidator } from "./role";
+import { DepsRuleValidator } from "./deps";
+import { OneToolPerRoleValidator } from "./stack";
 import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import type { RuleValidator } from "./types";
 
@@ -27,8 +27,8 @@ export const validators: RuleValidator[] = [
   new OptionalRuleValidator(),
   new NamingRuleValidator(),
   new InDirOnlyRuleValidator(),
-  new StackRuleValidator(),
-  new RoleRuleValidator(),
+  new DepsRuleValidator(),
+  new OneToolPerRoleValidator(),
   new ManifestRuleValidator(),
   new WorkspaceRuleValidator(),
 ];

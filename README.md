@@ -27,7 +27,7 @@
 
 _/tʃoʊs/_
 
-Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous checks the repository against one person's taste — layout, stack, naming, dependencies — and tells the agent what to change.
+Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous sniffs a repository for smells — rotten dependencies, tools that fight, leaked secrets, a cluttered root — and tells the agent what to change.
 
 There is no config, no preset and no plugin. The taste is the tool, like `gofmt`.
 
@@ -41,47 +41,42 @@ npx chous
 
 ```
 .
-├── ✖ tests/                                    → should be renamed to test/
-├── ✖ .DS_Store                                 → not allowed: OS junk, delete it and gitignore it
-├── ✖ .prettierrc                               → not in allow list (1)
-├── ✖ eslint.config.js                          → not allowed: config for a tool this taste does not use
-├── ✖ jest.config.ts                            → not allowed: config for a tool this taste does not use
-├── ✖ notes.txt                                 → not in allow list (1)
-├── ✖ package.json (moment)                     → dependency moment is obsolete → dayjs / date-fns / Temporal
-├── ✖ package.json (pnpm)                       → package manager should be pnpm (found yarn)
-├── ✖ package.json (type)                       → "type" should be "module"
-├── ✖ package.json (uuid)                       → dependency uuid is obsolete → crypto.randomUUID()
-├── ✖ stack (git hooks: husky→simple-git-hooks) → git hooks should be simple-git-hooks (found husky)
-├── ✖ stack (linter: eslint→oxlint)             → linter should be oxlint (found eslint)
-├── ✖ stack (test runner: jest→vitest)          → test runner should be vitest (found jest)
-└── ✖ yarn.lock                                 → not allowed: config for a tool this taste does not use
+├── ✖ tests/                    → should be renamed to test/
+├── ✖ .DS_Store                 → not allowed: OS junk, delete it and gitignore it
+├── ✖ .env                      → not allowed: secrets, gitignore it and commit .env.example instead
+├── ✖ notes.txt                 → not in allow list (1)
+├── ✖ package.json (moment)     → dependency moment is obsolete → dayjs / date-fns / Temporal
+├── ✖ package.json (node-fetch) → dependency node-fetch is obsolete → fetch
+├── ✖ package.json (request)    → dependency request is obsolete → fetch
+├── ✖ package.json (tslint)     → dependency tslint is obsolete → ESLint / oxlint
+├── ✖ stack (git hooks)         → git hooks: husky + simple-git-hooks at once, they fight over the same job, keep one
+├── ✖ stack (package manager)   → package manager: npm + yarn at once, they fight over the same job, keep one
+└── ✖ tslint.json               → not allowed: leftover config of a dead tool
 
-Taste: base · git · github · js
+Taste: base · git · js
 ```
 
 ### The taste
 
-Chous looks at the project and stacks the tastes that apply. They live in [`src/taste/`](src/taste):
+Chous sniffs out smells, not fashions. A smell is something that is wrong today and will still be wrong in three years: a dead package, a file the platform made pointless, two tools fighting over the same job, a secret about to be committed. Chous never tells you which linter or bundler to pick — today's fresh tool is tomorrow's stale one.
+
+The tastes live in [`src/taste/`](src/taste) and stack up by what the project looks like:
 
 | Taste | Applies when |
 | --- | --- |
 | `base` | always |
-| `git` · `github` · `cnb` | a git repo; the host comes from the `origin` remote, `.github/` or `.cnb.yml` |
-| `js` · `monorepo` · `bun` | `package.json`; workspace packages; Bun as runtime |
-| `cloudflare` | a `wrangler` config |
+| `git` · `github` | a git repository; `.github/workflows` |
+| `js` · `monorepo` · `bun` · `cloudflare` | `package.json`; workspace packages; Bun; a `wrangler` config |
 | `go` · `python` | `go.mod`; `pyproject.toml` and friends |
 | `nextjs` · `nuxt3` · `nuxt4` | the framework's config file |
 
-- **Root is a whitelist, dotfiles included.** Anything at the root that no taste allows is an error — `.prettierrc` and `.idea` too.
-- **Git hygiene.** A `.gitignore`; no `.DS_Store`, `.env` or `*.log` that would get committed; one CI — GitHub Actions or CNB (`.cnb.yml`), not Travis / CircleCI / Jenkins.
-- **GitHub.** `.github/` holds only what GitHub reads; workflows are kebab-case `.yml`.
-- **One name per concept.** `test/`, not `tests/`, `__tests__/` or `spec/`. `scripts/`, not `script/`.
-- **One tool per role.** pnpm, TypeScript, oxlint, Vitest, simple-git-hooks. Published packages also get tsdown and changelogen. Anything else in the same role is an error, with migration notes from the built-in knowledge base.
-- **No obsolete dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts): packages the platform already replaced (`uuid` → `crypto.randomUUID()`, `node-fetch` → `fetch`, `chalk` → `util.styleText`, `rimraf` → `fs.rm`, …) and dead ones (`moment`, `request`, `node-sass`, `tslint`, `ts-node`, …). Each error says what to use instead.
+- **Rotten dependencies.** A hand-kept list in [`src/taste/deps.ts`](src/taste/deps.ts): packages the platform replaced exactly (`node-fetch` → `fetch`, `rimraf` → `fs.rm`, `left-pad` → `padStart`, …) and dead ones (`request`, `moment`, `node-sass`, `tslint`, `colors`, …). Each error says what to use instead.
+- **Tools that fight.** Two package managers, two formatters, two git-hook managers or two release tools at once. Which one you keep is up to you.
+- **Leaks and junk.** `.env`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored; a git repo without `.gitignore`.
+- **A tidy root.** Root files are a whitelist: docs, licenses, config files (any JSON / TOML / YAML, `*.config.*`) and the usual folders. Stray notes and scripts are errors. Dotfiles are left alone.
+- **One name per concept.** `test/`, not `tests/`, `__tests__/` or `spec/`. `scripts/`, not `script/`. Workflows are kebab-case `.yml`.
 - **ESM only.** `"type": "module"` in every package.json.
-- **Monorepos.** Every workspace package is linted as its own project with its own taste — a Nuxt app in `apps/web` gets the Nuxt layout. The root is private and holds tooling only; one lockfile; one version per dependency (or a pnpm catalog); internal deps use `workspace:*`.
-- **Bun.** Bun projects use Bun as package manager (`bun.lock`, not `bun.lockb`), `@types/bun`, `bun:sqlite`, and no `tsx`.
-- **Cloudflare.** `wrangler.jsonc`, `wrangler types` instead of `@cloudflare/workers-types`, and `.dev.vars` never committed.
+- **Monorepos.** Every workspace package is linted as its own project with its own taste. The root is private and holds tooling only; one lockfile; one version per dependency; internal deps use `workspace:*`.
 - **Framework layouts.** Next.js App Router and Nuxt 3 / 4 directory and naming conventions.
 
 Disagree? Fork it. That's the point.

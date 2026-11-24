@@ -29,10 +29,8 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
       });
     }
     if (
-      rule.kind === "packageManager" ||
       rule.kind === "deps" ||
-      rule.kind === "replaceDep" ||
-      rule.kind === "role" ||
+      rule.kind === "stack" ||
       rule.kind === "manifest" ||
       rule.kind === "workspace"
     ) {

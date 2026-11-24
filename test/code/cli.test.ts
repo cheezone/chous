@@ -31,8 +31,8 @@ describe("cli", () => {
     const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
     const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
     const en = runCli(["-l", "en", "-v"], garbage).stdout;
-    expect(zh).toContain("依赖 uuid 已过时 → crypto.randomUUID() （Node 19+ 和浏览器都内置。）");
-    expect(en).toContain("dependency uuid is obsolete → crypto.randomUUID() (Built into Node 19+ and browsers.)");
+    expect(zh).toContain("依赖 node-fetch 已过时 → fetch （fetch 在 Node 18+ 和所有浏览器里都是全局的。）");
+    expect(en).toContain("dependency node-fetch is obsolete → fetch (fetch is global in Node 18+ and every browser.)");
   });
 
   it("only ships English and Chinese", () => {

@@ -109,22 +109,12 @@ const zh = {
 		has: {
 			mustExist: '未找到文件（必须存在：{name}）',
 		},
-		packageManager: {
-			wrong: '包管理器应为 {expected}（当前是 {actual}）',
-			missing: '包管理器应为 {expected}',
-		},
 		deps: {
-			missing: '缺少依赖 {name}',
 			forbidden: '不允许依赖 {name}',
 			obsolete: '依赖 {name} 已过时 → {use}',
 		},
-		replaceDep: {
-			replace: '把依赖 {from} 换成 {to}',
-		},
-		role: {
-			mismatch: '{role} 应为 {expected}（当前是 {actual}）',
-			missing: '{role} 应为 {expected}',
-			deprecated: '{tool} 已过时',
+		stack: {
+			conflict: '{role} 同时用了 {tools}，它们会互相打架，只留一个',
 		},
 		manifest: {
 			expected: '"{field}" 应为 {expected}',

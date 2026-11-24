@@ -1,6 +1,6 @@
 import picomatch from "picomatch";
 import type { WorkspaceSnapshot } from "../vfs/snapshot";
-import type { KindDef, MigrationDef, Resolution, Signal, ToolDef } from "./types";
+import type { KindDef, Signal, ToolDef } from "./types";
 import type { RoleId } from "./roles";
 import { getKnowledge } from "./registry";
 
@@ -101,52 +101,4 @@ export function detectKinds(
     if (hit) found.push(kind.id);
   }
   return found;
-}
-
-export function lookupMigration(
-  role: RoleId,
-  from: string,
-  to: string,
-  migrations: MigrationDef[] = getKnowledge().migrations,
-): MigrationDef | undefined {
-  return migrations.find((m) => m.role === role && m.from === from && m.to === to);
-}
-
-export function defaultResolution(migration: MigrationDef | undefined): Resolution {
-  return migration?.resolution ?? "agent";
-}
-
-/** Config files to allow for declared tools; forbid for sibling tools in the same role. */
-export function toolFileEffects(
-  declaredByRole: Map<RoleId, string[]>,
-  tools: ToolDef[] = getKnowledge().tools,
-): { allow: string[]; forbid: string[] } {
-  const allow = new Set<string>();
-  const forbid = new Set<string>();
-  const toolById = new Map(tools.map((t) => [t.id, t]));
-
-  for (const [role, declared] of declaredByRole) {
-    const declaredSet = new Set(declared);
-    for (const tool of tools) {
-      const presence = tool.roles[role];
-      if (!presence?.files?.length) continue;
-      if (declaredSet.has(tool.id)) {
-        for (const f of presence.files) allow.add(f);
-      } else {
-        // Only forbid siblings when at least one tool is declared for the role
-        if (declared.length === 0) continue;
-        for (const f of presence.files) forbid.add(f);
-      }
-    }
-    // Also allow files from declared tools even if tool id alias
-    for (const id of declared) {
-      const tool = toolById.get(id);
-      const files = tool?.roles[role]?.files;
-      if (files) for (const f of files) allow.add(f);
-    }
-  }
-
-  // Declared allow wins over forbid
-  for (const f of allow) forbid.delete(f);
-  return { allow: [...allow], forbid: [...forbid] };
 }

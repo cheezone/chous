@@ -5,6 +5,6 @@ Real projects, used to see what chous's taste says about real repositories. Most
 | Project | Source | Verdict |
 | --- | --- | --- |
 | `project-layout` | golang-standards/project-layout | Passes |
-| `nuxt.com` | nuxt/nuxt.com | Move from ESLint to oxlint |
+| `nuxt.com` | nuxt/nuxt.com | Passes |
 | `ai-chatbot` | vercel/ai-chatbot | Rename `tests/` to `test/`; replace `dotenv` with the native API |
 | `pythondotorg` | python/pythondotorg | Cluttered root |

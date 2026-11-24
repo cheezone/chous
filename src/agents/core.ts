@@ -85,10 +85,6 @@ function describeFix(fix: SafeFix): string {
       return `rename ${fix.fromPath} → ${fix.toPath}`;
     case "deleteEmptyDir":
       return `delete empty dir ${fix.path}`;
-    case "pkgSetManager":
-      return `set packageManager to ${fix.manager}`;
-    case "pkgReplaceDep":
-      return `replace dep ${fix.from} with ${fix.to}`;
   }
 }
 

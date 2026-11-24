@@ -32,13 +32,15 @@ const EXPECTED: Record<string, string[]> = {
     "dependency bun-types is obsolete → @types/bun",
     "dependency tsx is obsolete → bun",
   ],
-  cloudflare: [
-    "wrangler.toml → not allowed: use wrangler.jsonc",
-    ".dev.vars → not allowed: Worker secrets",
-    "dependency @cloudflare/workers-types is obsolete",
+  cloudflare: [".dev.vars → not allowed: Worker secrets"],
+  garbage: [
+    "dependency moment is obsolete → dayjs",
+    "dependency node-sass is obsolete → sass",
+    "dependency node-fetch is obsolete → fetch",
   ],
-  cnb: [".cnb.yaml → not allowed: CNB pipelines live in .cnb.yml"],
-  github: ["Release.yaml → not in allow list", "notes.txt → not in allow list"],
+  github: ["Release.yaml → not in allow list"],
+  go: ["MyApp → should be snake_case"],
+  js: ["tests → should be renamed to test/", '"type" should be "module"'],
   monorepo: [
     'remove "dependencies": the workspace root holds tooling only',
     "vue has several versions (^3.4.0 in apps/web; ^3.5.0 in packages/ui)",
@@ -46,21 +48,18 @@ const EXPECTED: Record<string, string[]> = {
     "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
     "apps/web/app/components/header.vue → should be PascalCase",
   ],
-  garbage: [
-    "dependency moment is obsolete → dayjs",
-    "dependency node-sass is obsolete → sass",
-    "dependency uuid is obsolete → crypto.randomUUID()",
-  ],
-  go: ["MyApp/ → should be snake_case"],
-  js: ["tests/ → should be renamed to test/"],
-  library: ["package manager should be pnpm (found npm)", "linter should be oxlint (found eslint)"],
   nextjs: ["Button.tsx → not in allow list"],
   nuxt3: ["button.vue → should be PascalCase"],
   nuxt4: ["button.vue → should be PascalCase"],
   "pnpm-workspace": ["stray.xyz → not in allow list"],
   python: ["forbidden.md"],
   "root-clutter": ["notes.txt → not in allow list"],
-  yarn: ["yarn.lock"],
+  stack: [
+    "package manager: npm + pnpm at once",
+    "formatter: oxfmt + prettier at once",
+    "git hooks: husky + simple-git-hooks at once",
+  ],
+  yarn: ["package manager: pnpm + yarn at once"],
 };
 
 describe("fixtures that match the taste", () => {
@@ -81,9 +80,10 @@ describe("fixtures that break the taste", () => {
       expect(r.code, r.stdout + r.stderr).toBe(1);
       const expected = EXPECTED[name];
       expect(expected, `add an EXPECTED entry for fail/${name}`).toBeDefined();
-      // The tree pads columns; compare with single spaces.
-      const output = r.stdout.replace(/ +/g, " ");
-      for (const text of expected!) expect(output).toContain(text);
+      // Verbose mode lists every finding once, flat. Each must be expected — nothing more.
+      const errors = r.stdout.split("\n").filter((line) => line.startsWith("  ✖ ")).map((line) => line.replace(/ +/g, " "));
+      for (const text of expected!) expect(errors.some((line) => line.includes(text)), text).toBe(true);
+      expect(errors, "unexpected findings").toHaveLength(expected!.length);
     });
   }
 });

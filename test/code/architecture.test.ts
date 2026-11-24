@@ -4,7 +4,6 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
-import { detectGitHost } from "../../src/taste/git";
 import { execFileSync } from "node:child_process";
 import { DEAD, NATIVE } from "../../src/taste/deps";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
@@ -35,14 +34,6 @@ describe("taste resolution", () => {
     expect(resolveTaste(root).ids).toEqual(["base", "js", "nuxt4"]);
   });
 
-  it("asks published packages for a bundler and a release tool", () => {
-    const app = resolveTaste(project({ "package.json": JSON.stringify({ private: true }) }));
-    const lib = resolveTaste(project({ "package.json": JSON.stringify({ exports: "./dist/index.mjs" }) }));
-    const roles = (rules: typeof app.rules) => rules.flatMap((r) => (r.kind === "role" ? [r.role] : []));
-    expect(roles(app.rules)).not.toContain("bundler");
-    expect(roles(lib.rules)).toEqual(expect.arrayContaining(["bundler", "release"]));
-  });
-
   it("tags every rule with the taste that produced it", () => {
     const { rules } = resolveTaste(project({ "go.mod": "module x\n" }));
     expect(new Set(rules.map((r) => r.source.taste))).toEqual(new Set(["base", "go"]));
@@ -68,37 +59,28 @@ describe("VFS snapshot", () => {
   });
 });
 
-describe("git hosts", () => {
-  function repo(remote: string | undefined, files: Record<string, string> = {}): string {
+describe("git", () => {
+  function repo(files: Record<string, string> = {}): string {
     const dir = mkdtempSync(join(tmpdir(), "chous-git-"));
     execFileSync("git", ["init", "-q"], { cwd: dir });
-    if (remote) execFileSync("git", ["remote", "add", "origin", remote], { cwd: dir });
-    for (const [name, content] of Object.entries(files)) writeFileSync(join(dir, name), content, "utf8");
+    for (const [name, content] of Object.entries(files)) {
+      mkdirSync(join(dir, name, ".."), { recursive: true });
+      writeFileSync(join(dir, name), content, "utf8");
+    }
     return dir;
   }
 
-  it.each([
-    ["git@github.com:me/app.git", "github"],
-    ["https://github.com/me/app", "github"],
-    ["https://cnb.cool/me/app", "cnb"],
-    ["git@cnb.cool:me/app.git", "cnb"],
-    ["https://gitlab.com/me/app.git", "gitlab"],
-    ["https://example.com/me/app.git", "other"],
-  ])("reads %s as %s", (remote, host) => {
-    expect(detectGitHost(repo(remote))).toBe(host);
+  it("applies the git taste to a repository root", () => {
+    expect(resolveTaste(repo()).ids).toEqual(["base", "git"]);
   });
 
-  it("applies the host taste from the remote alone", () => {
-    expect(resolveTaste(repo("https://cnb.cool/me/app")).ids).toEqual(["base", "git", "cnb"]);
-    expect(resolveTaste(repo("git@github.com:me/app.git")).ids).toEqual(["base", "git", "github"]);
+  it("applies the GitHub taste when there are workflows", () => {
+    expect(resolveTaste(repo({ ".github/workflows/ci.yml": "" })).ids).toEqual(["base", "git", "github"]);
   });
 
-  it("requires a .gitignore and bans other CI systems", async () => {
-    const dir = repo("git@github.com:me/app.git", { ".travis.yml": "", "README.md": "" });
-    const result = await lintWorkspace({ root: dir });
-    const messages = result.issues.map((i) => `${i.displayPath} ${i.message.key}`);
-    expect(messages).toContain(".gitignore issue.has.mustExist");
-    expect(messages).toContain(".travis.yml issue.no.because");
+  it("requires a .gitignore", async () => {
+    const result = await lintWorkspace({ root: repo({ "README.md": "" }) });
+    expect(result.issues.map((i) => `${i.displayPath} ${i.message.key}`)).toContain(".gitignore issue.has.mustExist");
   });
 });
 
@@ -108,12 +90,6 @@ describe("obsolete dependency list", () => {
     expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
   });
 
-  it("does not ban a tool the taste requires", () => {
-    const names = new Set([...NATIVE, ...DEAD].flatMap((d) => d.names));
-    for (const tool of ["pnpm", "typescript", "oxlint", "vitest", "simple-git-hooks", "tsdown", "changelogen"]) {
-      expect(names.has(tool)).toBe(false);
-    }
-  });
 });
 
 describe("rule compiler", () => {
@@ -164,27 +140,6 @@ describe("safe autofix", () => {
     expect(existsSync(from)).toBe(false);
   });
 
-  it("replaces a dependency in package.json", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "chous-pkg-"));
-    const pkgPath = join(dir, "package.json");
-    writeFileSync(pkgPath, JSON.stringify({ devDependencies: { prettier: "^3.0.0", eslint: "^9.0.0" } }, null, 2) + "\n", "utf8");
-    const result = await applySafeFixes([
-      {
-        ruleKind: "replaceDep",
-        ruleSource: { taste: "test" },
-        path: `${pkgPath}#replace:prettier`,
-        displayPath: "package.json (replace prettier)",
-        message: { key: "issue.replaceDep.replace", params: { from: "prettier", to: "@antfu/eslint-config" } },
-        category: "forbidden",
-        severity: "error",
-        fix: { type: "pkgReplaceDep", pkgJsonPath: pkgPath, from: "prettier", to: "@antfu/eslint-config" },
-      },
-    ]);
-    expect(result.applied).toBe(1);
-    const pkg = JSON.parse(readFileSync(pkgPath, "utf8")) as { devDependencies: Record<string, string> };
-    expect(pkg.devDependencies.prettier).toBeUndefined();
-    expect(pkg.devDependencies["@antfu/eslint-config"]).toBe("^3.0.0");
-  });
 });
 
 describe("lint pipeline integration", () => {

@@ -21,7 +21,7 @@
     "pre-commit": "pnpm run typecheck",
     "commit-msg": "pnpm exec commitlint --edit"
   },
-  "description": "Opinionated taste linter. No config: one person's layout and stack, enforced.",
+  "description": "Opinionated taste linter. No config: sniffs out what has rotten, not what is out of fashion.",
   "author": "Cheez Lin <https://cheez.tech>",
   "license": "MIT",
   "repository": {

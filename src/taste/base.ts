@@ -17,59 +17,29 @@ const DOCS = [
 
 const LICENSES = ["LICENSE*", "LICENCE*", "COPYING*", "COPYRIGHT*"];
 
-/** Deployment / hosting configs that platforms require at the repo root. */
-const DEPLOY = [
-  "renovate.json",
-  "Dockerfile*",
-  "docker-compose.{yml,yaml}",
-  "nginx.conf",
-  "wrangler.{toml,json,jsonc}",
-  "wrangler.example.{toml,json,jsonc}",
-  "_redirects",
-  "_headers",
-  "edgeone.json",
-  "vercel.json",
-  "vercel.yaml",
-  "netlify.toml",
-  "fly.toml",
-  "CNAME",
-  "railway.json",
-  "railway.toml",
-  "render.yaml",
-  "amplify.yml",
-  "apprunner.yaml",
-  "Dockerrun.aws.json",
-  "template.yaml",
-  "captain-definition",
-  "coolify.yml",
-  "firebase.json",
-  "app.yaml",
-  "cron.yaml",
-  "dispatch.yaml",
-  "index.yaml",
-  "Chart.yaml",
-  "values.yaml",
-  "Procfile",
-  "kustomization.yaml",
-  "nixpacks.toml",
-  "serverless.yml",
-];
+/**
+ * Config files are allowed by format, not by name: hosting platforms and tools
+ * come and go, but they keep reading JSON / TOML / YAML from the repo root.
+ */
+const CONFIG_FORMATS = ["*.{json,jsonc,json5,toml,yaml,yml}", "*.lock", "*.lockb"];
+
+/** Extensionless files that tools have read from the root for decades. */
+const CLASSIC = ["Dockerfile*", "Containerfile*", "Makefile", "Procfile", "CNAME", "_redirects", "_headers"];
 
 /** Applies to every repository. */
 export function base() {
   const t = taste("base");
 
-  // The root is a whitelist — dotfiles included: anything no taste allows is an error.
-  t.dir(".", [], { strict: true, dotfiles: true });
-  t.allow([".gitignore", ".gitattributes", ".gitmodules", ".mailmap", ".git-blame-ignore-revs"]);
-  t.allow([".editorconfig", ".vscode", ".devcontainer", ".dockerignore", ".env.example"]);
-  t.allow([".claude", ".cursor", ".mcp.json"], { reason: { en: "Coding agent settings", zh: "AI 编程助手的配置" } });
+  // The root is a whitelist of visible files. Dotfiles are left alone: new tools
+  // keep adding them, and the ones that rot or leak are banned explicitly below.
+  t.dir(".", [], { strict: true });
 
   t.allow([...LICENSES, "CODEOWNERS"]);
-  t.allow([`*.config.${CONFIG_EXT}`, `*.config.*.${CONFIG_EXT}`], { reason: { en: "Tool configs", zh: "工具配置文件" } });
+  t.allow([`*.config.${CONFIG_EXT}`, `*.config.*.${CONFIG_EXT}`, ...CONFIG_FORMATS, ...CLASSIC], {
+    reason: { en: "Tool configs", zh: "工具配置文件" },
+  });
   t.allow(["docs", "examples", "docker", "charts"]);
   t.allow(DOCS);
-  t.allow(DEPLOY, { reason: { en: "Hosting platforms read these from the repo root", zh: "托管平台从仓库根目录读取这些文件" } });
 
   t.only("./*.md", [...DOCS, ...LICENSES], {
     reason: { en: "Root Markdown is for project docs only; put the rest in docs/", zh: "根目录的 Markdown 只放项目文档，其余放进 docs/" },

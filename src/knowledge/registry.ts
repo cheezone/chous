@@ -1,4 +1,4 @@
-import type { KindDef, MigrationDef, ToolDef } from "./types";
+import type { KindDef, ToolDef } from "./types";
 import type { RoleId } from "./roles";
 import { ROLE_IDS } from "./roles";
 
@@ -35,19 +35,11 @@ import electron from "./kinds/electron";
 import nxWorkspace from "./kinds/nx-workspace";
 import rustCrate from "./kinds/rust-crate";
 
-import yarnPnpm from "./migrations/yarn-pnpm";
-import npmPnpm from "./migrations/npm-pnpm";
-import eslintOxlint from "./migrations/eslint-oxlint";
-import jestVitest from "./migrations/jest-vitest";
-import tsupTsdown from "./migrations/tsup-tsdown";
-import huskySimpleGitHooks from "./migrations/husky-simple-git-hooks";
-import prettierAntfu from "./migrations/prettier-antfu";
 
 export type KnowledgeBundle = {
   roles: readonly RoleId[];
   tools: ToolDef[];
   kinds: KindDef[];
-  migrations: MigrationDef[];
 };
 
 export const knowledge: KnowledgeBundle = {
@@ -79,15 +71,6 @@ export const knowledge: KnowledgeBundle = {
     playwright,
   ],
   kinds: [library, cli, nuxtApp, viteApp, electron, nxWorkspace, rustCrate],
-  migrations: [
-    yarnPnpm,
-    npmPnpm,
-    eslintOxlint,
-    jestVitest,
-    tsupTsdown,
-    huskySimpleGitHooks,
-    prettierAntfu,
-  ],
 };
 
 export function getKnowledge(): KnowledgeBundle {
@@ -100,6 +83,5 @@ export function knowledgeToJSON(): unknown {
     roles: [...knowledge.roles],
     tools: knowledge.tools,
     kinds: knowledge.kinds,
-    migrations: knowledge.migrations,
   };
 }
