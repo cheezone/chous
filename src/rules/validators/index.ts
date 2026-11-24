@@ -10,6 +10,7 @@ import { NamingRuleValidator } from "./naming";
 import { InDirOnlyRuleValidator } from "./inDirOnly";
 import { StackRuleValidator } from "./deps";
 import { RoleRuleValidator } from "./role";
+import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import type { RuleValidator } from "./types";
 
 /**
@@ -28,6 +29,8 @@ export const validators: RuleValidator[] = [
   new InDirOnlyRuleValidator(),
   new StackRuleValidator(),
   new RoleRuleValidator(),
+  new ManifestRuleValidator(),
+  new WorkspaceRuleValidator(),
 ];
 
 /**

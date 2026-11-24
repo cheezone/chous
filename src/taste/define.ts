@@ -60,7 +60,7 @@ export function taste(id: string) {
     dir(
       dir: string,
       only: string[],
-      opts?: Extra & { strict?: boolean; fileType?: InDirOnlyRule["fileType"] },
+      opts?: Extra & { strict?: boolean; fileType?: InDirOnlyRule["fileType"]; dotfiles?: boolean },
     ) {
       const { strict, ...rest } = opts ?? {};
       push({ kind: "inDirOnly", dir, only, mode: strict ? "strict" : "permissive", ...rest });
@@ -94,8 +94,23 @@ export function taste(id: string) {
     },
 
     /** Declare which tool owns a stack role. The first tool is the migration target. */
-    role(role: string, tools: string[], extra?: Extra) {
+    role(role: string, tools: string[], extra?: Extra & { optional?: boolean }) {
       push({ kind: "role", role, tools, ...extra });
+    },
+
+    /** A package.json field must equal `value`. */
+    field(field: string, value: string | boolean, extra?: Extra) {
+      push({ kind: "manifest", field, equals: value, ...extra });
+    },
+
+    /** A package.json field must not exist. */
+    noField(field: string, why: string) {
+      push({ kind: "manifest", field, absent: true, reason: why });
+    },
+
+    /** Cross-package checks for a monorepo root. */
+    workspace() {
+      push({ kind: "workspace" });
     },
 
     banDeps(names: string[], extra?: Extra) {

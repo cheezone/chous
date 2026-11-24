@@ -29,14 +29,14 @@ describe("real-world samples", () => {
   it("nuxt.com is told to move from ESLint to oxlint", () => {
     const r = runCli(resolve(SAMPLES, "nuxt.com"));
     expect(r.code).toBe(1);
-    expect(r.stdout).toContain("Taste: base · js · nuxt4");
+    expect(r.stdout).toContain("Taste: base · github · js · nuxt4");
     expect(r.stdout).toContain("linter should be oxlint (found eslint)");
   });
 
   it("ai-chatbot is told to rename tests/ and drop dotenv", () => {
     const r = runCli(resolve(SAMPLES, "ai-chatbot"));
     expect(r.code).toBe(1);
-    expect(r.stdout).toContain("Taste: base · js · nextjs");
+    expect(r.stdout).toContain("Taste: base · github · js · nextjs");
     expect(r.stdout).toContain("tests → should be renamed to test/");
     expect(r.stdout).toContain("dependency dotenv is obsolete → process.loadEnvFile()");
   });

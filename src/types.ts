@@ -46,7 +46,9 @@ export type Rule =
   | PackageManagerRule
   | DepsRule
   | ReplaceDepRule
-  | RoleRule;
+  | RoleRule
+  | ManifestRule
+  | WorkspaceRule;
 
 export type MoveRule = RuleBase & {
   kind: "move";
@@ -78,6 +80,8 @@ export type InDirOnlyRule = RuleBase & {
   only: string[]; // globs relative to that dir (usually **/*.ts)
   mode?: "strict" | "permissive"; // strict = enforce whitelist, permissive = suggest only
   fileType?: "files" | "dirs"; // Optional filter for files or directories
+  /** Strict mode also checks names starting with "." (skipped by default). */
+  dotfiles?: boolean;
 };
 
 export type AllowRule = RuleBase & {
@@ -133,6 +137,19 @@ export type ReplaceDepRule = RuleBase & {
   to: string;
 };
 
+/** A package.json field must equal a value, or must not exist. */
+export type ManifestRule = RuleBase & {
+  kind: "manifest";
+  field: string;
+  equals?: string | boolean;
+  absent?: boolean;
+};
+
+/** Monorepo root: one version per dependency, `workspace:` for internal packages. */
+export type WorkspaceRule = RuleBase & {
+  kind: "workspace";
+};
+
 /**
  * Stack-layer role declaration: which tool(s) occupy a role.
  * First name is the preferred migration target when others are detected.
@@ -144,6 +161,8 @@ export type RoleRule = RuleBase & {
   role: string;
   /** Preferred tool first; additional names are also accepted. */
   tools: string[];
+  /** Do not report when nothing occupies the role (e.g. inside a workspace package). */
+  optional?: boolean;
 };
 
 /** How to act on a finding — derived from knowledge. */
@@ -171,6 +190,7 @@ export type IssueMessage =
   | { key: "issue.inDirOnly.dirMustExist"; params: { only: string | string[] } }
   | { key: "issue.inDirOnly.forbiddenOnlyAllowed"; params: { dir: string; only: string | string[] } }
   | { key: "issue.no.forbidden"; params: { name: string } }
+  | { key: "issue.no.because"; params: { reason: string } }
   | { key: "issue.has.mustExist"; params: { name: string } }
   | { key: "issue.packageManager.wrong"; params: { expected: string; actual: string } }
   | { key: "issue.packageManager.missing"; params: { expected: string } }
@@ -181,6 +201,10 @@ export type IssueMessage =
   | { key: "issue.role.missing"; params: { role: string; expected: string } }
   | { key: "issue.role.deprecated"; params: { tool: string } }
   | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
+  | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
+  | { key: "issue.manifest.remove"; params: { field: string; reason: string } }
+  | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
+  | { key: "issue.workspace.protocol"; params: { name: string; spec: string } }
   | { key: "issue.naming.invalid"; params: { style: string } }
   | { key: "issue.naming.invalidPrefix"; params: { pattern: string } }
   | { key: "issue.naming.invalidSuffix"; params: { pattern: string } }

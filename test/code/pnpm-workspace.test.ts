@@ -68,10 +68,10 @@ describe("workspace lint", () => {
   it("does not treat nested source dirs as packages under packages/**", () => {
     const dir = mkdtempSync(join(PROJECT_ROOT, "test", "tmp-pnpm-nested-"));
     try {
-      writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "nested", private: true, packageManager: "pnpm@10.0.0" }), "utf8");
+      writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "nested", type: "module", private: true, packageManager: "pnpm@10.0.0" }), "utf8");
       writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - 'packages/**'\n", "utf8");
       mkdirSync(join(dir, "packages", "core", "src", "comp"), { recursive: true });
-      writeFileSync(join(dir, "packages", "core", "package.json"), JSON.stringify({ name: "@demo/core" }), "utf8");
+      writeFileSync(join(dir, "packages", "core", "package.json"), JSON.stringify({ name: "@demo/core", type: "module" }), "utf8");
       writeFileSync(join(dir, "packages", "core", "src", "index.ts"), "export {}\n", "utf8");
       writeFileSync(join(dir, "packages", "core", "src", "comp", "rect.ts"), "export {}\n", "utf8");
 

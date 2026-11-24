@@ -2,16 +2,27 @@ import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import type { Rule } from "../types";
 import { base } from "./base";
+import { cnb, detectGitHost, git, github, isGitRoot } from "./git";
 import { go } from "./go";
-import { js } from "./js";
+import { bun, cloudflare, js, monorepo, type Runtime } from "./js";
 import { nextjs } from "./nextjs";
 import { nuxt3, nuxt4 } from "./nuxt";
 import { python } from "./python";
 
 export type Taste = {
-  /** Applied tastes, broadest first, e.g. `["base", "js", "nuxt4"]`. */
+  /** Applied tastes, broadest first, e.g. `["base", "git", "js", "nuxt4"]`. */
   ids: string[];
   rules: Rule[];
+  runtime: Runtime;
+};
+
+export type TasteOptions = {
+  /** The root of a monorepo (pnpm-workspace.yaml, workspaces, …). */
+  monorepo?: boolean;
+  /** A package inside a monorepo. */
+  workspacePackage?: boolean;
+  /** Runtime inherited from the workspace root. */
+  runtime?: Runtime;
 };
 
 function readJson(path: string): Record<string, any> | undefined {
@@ -53,6 +64,15 @@ function detectFramework(root: string): "nuxt3" | "nuxt4" | "nextjs" | undefined
   return undefined;
 }
 
+/** Bun when the project says so; Node otherwise. */
+function detectRuntime(root: string): Runtime {
+  if (anyExists(root, ["bunfig.toml", "bun.lock", "bun.lockb"])) return "bun";
+  const pkg = readJson(resolve(root, "package.json"));
+  if (typeof pkg?.packageManager === "string" && pkg.packageManager.startsWith("bun@")) return "bun";
+  const dev = { ...pkg?.dependencies, ...pkg?.devDependencies };
+  return "@types/bun" in dev || "bun-types" in dev ? "bun" : "node";
+}
+
 function isLibrary(root: string): boolean {
   const pkg = readJson(resolve(root, "package.json"));
   return Boolean(pkg && !pkg.private && (pkg.bin || pkg.exports || pkg.main));
@@ -62,18 +82,28 @@ function isLibrary(root: string): boolean {
  * Pick the tastes for a project root. There is no config: the project's
  * shape decides which opinions apply.
  */
-export function resolveTaste(root: string): Taste {
+export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
   const framework = detectFramework(root);
+  const runtime = opts.runtime ?? detectRuntime(root);
   const tastes: Array<[string, Rule[]]> = [["base", base()]];
 
+  const host = detectGitHost(root);
+  if (isGitRoot(root)) tastes.push(["git", git(host)]);
+  if (host === "github" || anyExists(root, [".github"])) tastes.push(["github", github()]);
+  if (host === "cnb" || anyExists(root, [".cnb.yml", ".cnb.yaml", ".cnb"])) tastes.push(["cnb", cnb()]);
+
   if (framework || anyExists(root, ["package.json", "tsconfig.json", "jsconfig.json"])) {
-    tastes.push(["js", js({ library: !framework && isLibrary(root) })]);
+    const library = !framework && isLibrary(root);
+    tastes.push(["js", js({ library, runtime, workspacePackage: opts.workspacePackage })]);
+    if (opts.monorepo) tastes.push(["monorepo", monorepo(runtime)]);
+    if (runtime === "bun") tastes.push(["bun", bun()]);
   }
+  if (anyExists(root, ["wrangler.jsonc", "wrangler.json", "wrangler.toml"])) tastes.push(["cloudflare", cloudflare()]);
   if (anyExists(root, ["go.mod"])) tastes.push(["go", go()]);
   if (anyExists(root, ["pyproject.toml", "setup.py", "requirements.txt", "Pipfile", "poetry.lock"])) {
     tastes.push(["python", python()]);
   }
   if (framework) tastes.push([framework, { nuxt3, nuxt4, nextjs }[framework]()]);
 
-  return { ids: tastes.map(([id]) => id), rules: tastes.flatMap(([, rules]) => rules) };
+  return { ids: tastes.map(([id]) => id), rules: tastes.flatMap(([, rules]) => rules), runtime };
 }

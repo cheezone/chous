@@ -1,5 +1,6 @@
 {
   "name": "nextjs",
+  "type": "module",
   "private": true,
   "packageManager": "pnpm@10.0.0",
   "devDependencies": {

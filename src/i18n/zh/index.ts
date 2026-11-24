@@ -104,6 +104,7 @@ const zh = {
 		},
 		no: {
 			forbidden: '命中黑名单（{name}）',
+			because: '不允许：{reason}',
 		},
 		has: {
 			mustExist: '未找到文件（必须存在：{name}）',
@@ -124,6 +125,14 @@ const zh = {
 			mismatch: '{role} 应为 {expected}（当前是 {actual}）',
 			missing: '{role} 应为 {expected}',
 			deprecated: '{tool} 已过时',
+		},
+		manifest: {
+			expected: '"{field}" 应为 {expected}',
+			remove: '删除 "{field}"：{reason}',
+		},
+		workspace: {
+			drift: '{name} 有多个版本（{versions}），统一成一个，或改用 pnpm catalog',
+			protocol: '依赖工作区包 {name} 要写 workspace:*（当前是 {spec}）',
 		},
 		merged: {
 			notInAllowList: '不在白名单（{labels}）',

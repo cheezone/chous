@@ -1,0 +1,12 @@
+{
+  "name": "@demo/ui",
+  "type": "module",
+  "exports": "./dist/index.mjs",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "vue": "catalog:",
+    "tsdown": "0.15.0"
+  }
+}

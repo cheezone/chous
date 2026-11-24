@@ -30,7 +30,7 @@ export async function processInDirOnlyGroup(
   context: RuleValidatorContext,
   filesMatchedByMoveRules: Set<string>
 ): Promise<{ hitCount: number }> {
-  const { root, snapshot, rawIssues, debugLogMsg, rootAllowedSet, forceStrict } = context;
+  const { root, snapshot, rawIssues, debugLogMsg, rootAllowedSet } = context;
   const DEBUG_FILE = process.env.DEBUG_FILE;
 
   const dirAbs = resolve(root, dir);
@@ -39,7 +39,9 @@ export async function processInDirOnlyGroup(
   const allOnly = group.flatMap((r) => r.only);
   const representative = group[0]!;
 
-  const hasStrictMode = forceStrict || group.some((r) => r.mode === "strict" || r.mode === undefined);
+  const hasStrictMode = group.some((r) => r.mode === "strict" || r.mode === undefined);
+  const checkDotfiles = group.some((r) => r.dotfiles);
+  const isSkipped = (rel: string) => rel.startsWith(".") && !checkDotfiles;
 
   if (!dirExists && dir !== "." && dir !== "") return { hitCount: 0 };
 
@@ -123,7 +125,7 @@ export async function processInDirOnlyGroup(
     const hasBothFileTypes = hasStrictDirs && hasStrictFiles;
 
     for (const rel of allPathsRel) {
-      if (rel.startsWith(".")) continue;
+      if (isSkipped(rel)) continue;
 
       const abs = resolve(dirAbs, rel);
       const isDir = snapshot.isDirectory(abs);
@@ -185,5 +187,5 @@ export async function processInDirOnlyGroup(
     }
   }
 
-  return { hitCount: hasStrictMode ? allPathsRel.filter((rel) => !rel.startsWith(".")).length : 0 };
+  return { hitCount: hasStrictMode ? allPathsRel.filter((rel) => !isSkipped(rel)).length : 0 };
 }

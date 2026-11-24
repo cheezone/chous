@@ -59,8 +59,11 @@ const DEPLOY = [
 export function base() {
   const t = taste("base");
 
-  // The root is a whitelist: anything no taste allows is an error.
-  t.dir(".", [], { strict: true });
+  // The root is a whitelist — dotfiles included: anything no taste allows is an error.
+  t.dir(".", [], { strict: true, dotfiles: true });
+  t.allow([".gitignore", ".gitattributes", ".gitmodules", ".mailmap", ".git-blame-ignore-revs"]);
+  t.allow([".editorconfig", ".vscode", ".devcontainer", ".dockerignore", ".env.example"]);
+  t.allow([".claude", ".cursor", ".mcp.json"], { reason: "Coding agent settings" });
 
   t.allow([...LICENSES, "CODEOWNERS"]);
   t.allow([`*.config.${CONFIG_EXT}`, `*.config.*.${CONFIG_EXT}`], { reason: "Tool configs" });
@@ -72,9 +75,14 @@ export function base() {
     reason: "Root Markdown is for project docs only; put the rest in docs/",
   });
 
-  t.no([".chous", ".chousignore"], {
-    reason: "chous has no config: delete it",
+  t.no([".chous", ".chousignore"], { reason: "chous has no config, delete it" });
+
+  // Anything still visible here is not gitignored, so it would be committed.
+  t.no(["**/.DS_Store", "**/Thumbs.db", "**/desktop.ini"], { reason: "OS junk, delete it and gitignore it" });
+  t.no(["**/.env", "**/.env.local", "**/.env.*.local"], {
+    reason: "secrets, gitignore it and commit .env.example instead",
   });
+  t.no(["**/*.log"], { reason: "logs, gitignore them" });
 
   return t.rules;
 }

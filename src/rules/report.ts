@@ -198,6 +198,16 @@ export function formatIssueMessage(LL: TranslationFunctions, msg: IssueMessage):
       return String(LL.issue.role.missing(msg.params));
     case "issue.role.deprecated":
       return String(LL.issue.role.deprecated(msg.params));
+    case "issue.manifest.expected":
+      return LL.issue.manifest.expected(msg.params);
+    case "issue.manifest.remove":
+      return LL.issue.manifest.remove(msg.params);
+    case "issue.workspace.drift":
+      return LL.issue.workspace.drift(msg.params);
+    case "issue.workspace.protocol":
+      return LL.issue.workspace.protocol(msg.params);
+    case "issue.no.because":
+      return LL.issue.no.because(msg.params);
     case "issue.deps.obsolete":
       return LL.issue.deps.obsolete(msg.params);
     case "issue.naming.invalid":

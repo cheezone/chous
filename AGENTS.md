@@ -4,7 +4,9 @@
 
 ## 项目概览
 - 仓库：`chous`，一个**没有配置**的品味检查 CLI（taste linter），像 `gofmt`：品味就是工具本身。
-- 品味规则全部写在 `src/taste/*.ts`（`base` / `js` / `go` / `python` / `nextjs` / `nuxt`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
+- 品味规则全部写在 `src/taste/*.ts`（`base` / `git`（含 github、cnb）/ `js`（含 monorepo、bun、cloudflare）/ `deps` / `go` / `python` / `nextjs` / `nuxt`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
+- Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
+- 规则语义：`allow` 只扩大白名单，**不会**撤销 `no`；带 `reason` 的 `no` 会直接显示原因，并压过同一路径上泛泛的「不在白名单」。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 只有 `en` 和 `zh`（`src/i18n/`）。参数类型由 `en` 字符串推导，改文案时两份一起改；不要再引入 typesafe-i18n（它不支持 TS 7）。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。

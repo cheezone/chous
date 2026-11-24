@@ -2,7 +2,6 @@ import type {
   AllowRule,
   HasFileRule,
   InDirOnlyRule,
-  NoFilesRule,
   RoleRule,
   Rule,
   RuleSource,
@@ -17,7 +16,7 @@ export type DirectoryWhitelistGroup = {
 };
 
 export type CompiledRules = {
-  /** Taste + derived rules ready for validators (includes expanded monorepo `no` rules). */
+  /** Taste + derived rules ready for validators. */
   rules: Rule[];
   /** inDirOnly groups keyed by directory (relative posix path, "." for root). */
   inDirGroups: Map<string, InDirOnlyRule[]>;
@@ -45,15 +44,13 @@ function isGlobPattern(name: string): boolean {
 /**
  * Normalize taste rules into a validation plan:
  * - fold root `allow` / static `has` into inDirOnly groups
- * - expand monorepo package whitelists and package-scoped `no` rules
+ * - allow workspace package directories at the root
  * - compute required top-level names
  */
 export function compileRules(
   input: Rule[],
   workspace: WorkspaceInfo,
-  opts?: { forceStrict?: boolean },
 ): CompiledRules {
-  const forceStrict = opts?.forceStrict ?? false;
   const workspaceSource: RuleSource = { taste: `${workspace.tool}-workspace` };
 
   const inDirGroups = new Map<string, InDirOnlyRule[]>();
@@ -95,7 +92,7 @@ export function compileRules(
       kind: "no",
       names: fileEffects.forbid,
       source: syntheticSource,
-      reason: "Config for a tool this taste does not use.",
+      reason: "config for a tool this taste does not use",
     });
   }
 
@@ -150,71 +147,15 @@ export function compileRules(
     }
   }
 
-  // Fold synthetic `no` into expanded rules (allow already folded into inDirGroups above)
-  const rootStrictRules = inDirRules.filter(
-    (r) => (r.dir === "." || r.dir === "") && (r.mode === "strict" || r.mode === undefined),
-  );
-
+  // Workspace packages are linted on their own; the root only has to allow their top-level dirs.
   const workspacePackages = workspace.packages;
-  const expandedRules: Rule[] = [...rulesWithToolFiles];
   const expandedAllowOnly = [...rootAllowOnly];
-
-  if (workspacePackages.length > 0) {
-    const topDirs = topLevelWorkspaceDirs(workspacePackages);
-    if (topDirs.length > 0) {
-      const rootGroup = inDirGroups.get(".") ?? [];
-      rootGroup.push({
-        kind: "inDirOnly",
-        dir: ".",
-        only: topDirs,
-        mode: "permissive",
-        source: workspaceSource,
-      });
-      inDirGroups.set(".", rootGroup);
-      expandedAllowOnly.push(...topDirs);
-    }
-
-    for (const pkg of workspacePackages) {
-      if (inDirGroups.has(pkg)) continue;
-      const pkgGroup: InDirOnlyRule[] = [];
-      if (expandedAllowOnly.length > 0) {
-        pkgGroup.push({
-          kind: "inDirOnly",
-          dir: pkg,
-          only: [...expandedAllowOnly],
-          mode: "permissive",
-          source: workspaceSource,
-        });
-      }
-      for (const strictRule of rootStrictRules) {
-        pkgGroup.push({
-          ...strictRule,
-          dir: pkg,
-          only: [...strictRule.only],
-          source: workspaceSource,
-        });
-      }
-      if (forceStrict && !pkgGroup.some((r) => r.mode === "strict" || r.mode === undefined)) {
-        pkgGroup.push({
-          kind: "inDirOnly",
-          dir: pkg,
-          only: [],
-          mode: "strict",
-          source: workspaceSource,
-        });
-      }
-      if (pkgGroup.length > 0) inDirGroups.set(pkg, pkgGroup);
-    }
-
-    for (const rule of rulesWithToolFiles) {
-      if (rule.kind !== "no") continue;
-      const packageScoped = (rule as NoFilesRule).names
-        .filter((name) => !name.includes("/") && !name.includes("**"))
-        .flatMap((name) => workspacePackages.map((pkg) => `${pkg}/${name}`));
-      if (packageScoped.length > 0) {
-        expandedRules.push({ ...rule, names: packageScoped });
-      }
-    }
+  const topDirs = topLevelWorkspaceDirs(workspacePackages);
+  if (topDirs.length > 0) {
+    const rootGroup = inDirGroups.get(".") ?? [];
+    rootGroup.push({ kind: "inDirOnly", dir: ".", only: topDirs, mode: "permissive", source: workspaceSource });
+    inDirGroups.set(".", rootGroup);
+    expandedAllowOnly.push(...topDirs);
   }
 
   const required = new Set<string>();
@@ -233,7 +174,7 @@ export function compileRules(
   required.delete(".");
 
   return {
-    rules: expandedRules,
+    rules: rulesWithToolFiles,
     inDirGroups,
     requiredTopLevelNames: Array.from(required).sort(),
     rootAllowOnly: expandedAllowOnly,

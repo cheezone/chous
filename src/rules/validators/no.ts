@@ -18,7 +18,7 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
 
     const currentRuleFiles = new Set<string>();
     for (const name of rule.names) {
-      for (const match of snapshot.match(name, { onlyFiles: true })) {
+      for (const match of snapshot.match(name, { onlyFiles: false })) {
         currentRuleFiles.add(resolve(root, match));
       }
     }
@@ -32,7 +32,7 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
 
     let hitCount = 0;
     for (const name of rule.names) {
-      const matches = snapshot.match(name, { onlyFiles: true });
+      const matches = snapshot.match(name, { onlyFiles: false });
       for (const match of matches) {
         const abs = resolve(root, match);
         if (!snapshot.exists(abs)) continue;
@@ -44,7 +44,10 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
         rawIssues.push(issueFromRule(rule, {
           path: abs,
           displayPath: toDisplayPath(abs, root),
-          message: { key: "issue.no.forbidden", params: { name } },
+          // A ban with a reason says why; a bare ban joins the numbered blacklist.
+          message: rule.reason
+            ? { key: "issue.no.because", params: { reason: rule.reason } }
+            : { key: "issue.no.forbidden", params: { name } },
           category: "forbidden",
           severity: "error",
           reason: false,

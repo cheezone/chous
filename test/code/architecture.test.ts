@@ -4,6 +4,8 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
+import { detectGitHost } from "../../src/taste/git";
+import { execFileSync } from "node:child_process";
 import { DEAD, NATIVE } from "../../src/taste/deps";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
@@ -63,6 +65,40 @@ describe("VFS snapshot", () => {
     expect(snap.exists("README.md")).toBe(true);
     expect(snap.isDirectory("docs")).toBe(true);
     expect(snap.listDir("docs").map((e) => e.name)).toEqual(["guide.md"]);
+  });
+});
+
+describe("git hosts", () => {
+  function repo(remote: string | undefined, files: Record<string, string> = {}): string {
+    const dir = mkdtempSync(join(tmpdir(), "chous-git-"));
+    execFileSync("git", ["init", "-q"], { cwd: dir });
+    if (remote) execFileSync("git", ["remote", "add", "origin", remote], { cwd: dir });
+    for (const [name, content] of Object.entries(files)) writeFileSync(join(dir, name), content, "utf8");
+    return dir;
+  }
+
+  it.each([
+    ["git@github.com:me/app.git", "github"],
+    ["https://github.com/me/app", "github"],
+    ["https://cnb.cool/me/app", "cnb"],
+    ["git@cnb.cool:me/app.git", "cnb"],
+    ["https://gitlab.com/me/app.git", "gitlab"],
+    ["https://example.com/me/app.git", "other"],
+  ])("reads %s as %s", (remote, host) => {
+    expect(detectGitHost(repo(remote))).toBe(host);
+  });
+
+  it("applies the host taste from the remote alone", () => {
+    expect(resolveTaste(repo("https://cnb.cool/me/app")).ids).toEqual(["base", "git", "cnb"]);
+    expect(resolveTaste(repo("git@github.com:me/app.git")).ids).toEqual(["base", "git", "github"]);
+  });
+
+  it("requires a .gitignore and bans other CI systems", async () => {
+    const dir = repo("git@github.com:me/app.git", { ".travis.yml": "", "README.md": "" });
+    const result = await lintWorkspace({ root: dir });
+    const messages = result.issues.map((i) => `${i.displayPath} ${i.message.key}`);
+    expect(messages).toContain(".gitignore issue.has.mustExist");
+    expect(messages).toContain(".travis.yml issue.no.because");
   });
 });
 

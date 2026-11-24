@@ -73,7 +73,8 @@ export type WorkspaceSnapshot = {
   /** Absolute -> entry */
   byAbs: Map<string, VfsEntry>;
   fileCount: number;
-  ig: ReturnType<typeof ignore>;
+  /** Gitignore matcher for paths relative to `root`. */
+  ig: { ignores(relPath: string): boolean };
   manifest: PackageManifestSnapshot;
   workspace: WorkspaceInfo;
   exists(relOrAbs: string): boolean;
@@ -183,7 +184,7 @@ export function readPackageManifestSnapshot(root: string): PackageManifestSnapsh
 }
 
 /** True when the root looks like a monorepo — skip @manypkg otherwise (large repos). */
-function looksLikeMonorepo(root: string): boolean {
+export function looksLikeMonorepo(root: string): boolean {
   if (existsSync(resolve(root, "pnpm-workspace.yaml"))) return true;
   if (existsSync(resolve(root, "lerna.json"))) return true;
   if (existsSync(resolve(root, "nx.json"))) return true;
@@ -527,6 +528,39 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     manifest,
     workspace,
     ...api,
+  };
+}
+
+/**
+ * View of one workspace package inside an already-built root snapshot.
+ * No rescan, and the root's .gitignore keeps applying.
+ */
+export function subSnapshot(parent: WorkspaceSnapshot, pkgRel: string): WorkspaceSnapshot {
+  const prefix = `${normalizeRel(pkgRel)}/`;
+  const root = resolve(parent.root, pkgRel);
+  const byRel = new Map<string, VfsEntry>();
+  const byAbs = new Map<string, VfsEntry>();
+  const visibleAbs = new Set<string>();
+  let fileCount = 0;
+  for (const entry of parent.byRel.values()) {
+    if (!entry.relPath.startsWith(prefix)) continue;
+    const child = { ...entry, relPath: entry.relPath.slice(prefix.length) };
+    byRel.set(child.relPath, child);
+    byAbs.set(child.absPath, child);
+    visibleAbs.add(child.absPath);
+    if (!child.isDir) fileCount++;
+  }
+  const ig = { ignores: (rel: string) => parent.ig.ignores(prefix + rel) };
+  return {
+    root,
+    visibleAbs,
+    byRel,
+    byAbs,
+    fileCount,
+    ig,
+    manifest: readPackageManifestSnapshot(root),
+    workspace: { packages: [], tool: "root" },
+    ...buildMatchers(root, byRel, byAbs),
   };
 }
 

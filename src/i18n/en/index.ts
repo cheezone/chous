@@ -103,6 +103,7 @@ const en = {
 		},
 		no: {
 			forbidden: 'hit blacklist ({name})',
+			because: 'not allowed: {reason}',
 		},
 		has: {
 			mustExist: 'file not found (required: {name})',
@@ -123,6 +124,14 @@ const en = {
 			mismatch: '{role} should be {expected} (found {actual})',
 			missing: '{role} should be {expected}',
 			deprecated: '{tool} is deprecated',
+		},
+		manifest: {
+			expected: '"{field}" should be {expected}',
+			remove: 'remove "{field}": {reason}',
+		},
+		workspace: {
+			drift: '{name} has several versions ({versions}), pick one or use a pnpm catalog',
+			protocol: 'depend on workspace package {name} with workspace:* (found {spec})',
 		},
 		merged: {
 			notInAllowList: 'not in allow list ({labels})',

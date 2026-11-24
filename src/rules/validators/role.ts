@@ -70,6 +70,7 @@ export class RoleRuleValidator extends BaseRuleValidator<RoleRule> {
     }
 
     if (occupants.length === 0) {
+      if (rule.optional) return { hitCount };
       // Role declared but nothing detected — soft missing (warn)
       hitCount++;
       context.rawIssues.push({

@@ -25,7 +25,6 @@ export interface RuleValidatorContext {
   inDirGroups?: Map<string, InDirOnlyRule[]>;
   rootAllowedSet?: Set<string>;
   filesMatchedByMoveRules?: Set<string>;
-  forceStrict?: boolean;
   config: { rules: Rule[] };
   processedThoseOnlyPatterns?: Map<string, number>;
   matchedGlobFiles?: Set<string>;

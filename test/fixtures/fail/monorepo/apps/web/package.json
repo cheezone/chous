@@ -1,0 +1,10 @@
+{
+  "name": "@demo/web",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "nuxt": "^4.0.0",
+    "vue": "^3.4.0",
+    "@demo/ui": "^1.0.0"
+  }
+}

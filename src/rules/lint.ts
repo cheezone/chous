@@ -1,7 +1,7 @@
-import { relative, sep } from "node:path";
+import { relative, resolve, sep } from "node:path";
 import type { Issue, LintResult, MoveRule, Rule } from "../types";
 import { toDisplayPath } from "../fsutil";
-import { buildWorkspaceSnapshot } from "../vfs/snapshot";
+import { buildWorkspaceSnapshot, looksLikeMonorepo, subSnapshot, type WorkspaceSnapshot } from "../vfs/snapshot";
 import { resolveTaste } from "../taste";
 import { compileRules } from "./compile";
 import {
@@ -32,7 +32,9 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
       rule.kind === "packageManager" ||
       rule.kind === "deps" ||
       rule.kind === "replaceDep" ||
-      rule.kind === "role"
+      rule.kind === "role" ||
+      rule.kind === "manifest" ||
+      rule.kind === "workspace"
     ) {
       return true;
     }
@@ -46,27 +48,17 @@ function hasRootLevelOnlyRules(rules: Rule[]): boolean {
   });
 }
 
-/**
- * Lint a project root: taste → snapshot → compile → validate → dedup.
- */
-export async function lintWorkspace(opts: {
-  root: string;
-  strict?: boolean;
-  relevantDirs?: Set<string>;
-}): Promise<LintResult> {
-  const startTime = performance.now();
-  const { root, strict: forceStrict, relevantDirs } = opts;
+type RootCheck = {
+  issues: Issue[];
+  compiled: ReturnType<typeof compileRules>;
+  matchedGlobFiles: Set<string>;
+  statistics: RuleStatisticsCollector;
+};
+
+/** Validate one root (the repo, or one workspace package) against its rules. */
+async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapshot): Promise<RootCheck> {
   const rawIssues: Issue[] = [];
-  const taste = resolveTaste(root);
-
-  const rootOnly = !relevantDirs && hasRootLevelOnlyRules(taste.rules);
-  const snapshot = await buildWorkspaceSnapshot({
-    root,
-    rootOnly,
-    relevantDirs,
-  });
-
-  const compiled = compileRules(taste.rules, snapshot.workspace, { forceStrict });
+  const compiled = compileRules(rules, snapshot.workspace);
 
   // Track files claimed by move rules so strict whitelist skips them
   const moveRules = compiled.rules.filter((r): r is MoveRule => r.kind === "move");
@@ -103,7 +95,6 @@ export async function lintWorkspace(opts: {
     inDirGroups: compiled.inDirGroups,
     rootAllowedSet,
     filesMatchedByMoveRules,
-    forceStrict,
     config: { rules: compiled.rules },
     processedThoseOnlyPatterns,
     matchedGlobFiles,
@@ -135,34 +126,75 @@ export async function lintWorkspace(opts: {
     }
   }
 
-  // 3. Dedup + gitignore filter
+  // 3. Dedup + gitignore filter. A ban that says why beats the generic whitelist miss.
+  const explained = new Set(rawIssues.filter((i) => i.message.key === "issue.no.because").map((i) => i.path));
   const finalIssues: Issue[] = [];
   const seen = new Set<string>();
   for (const i of rawIssues) {
     const rel = relative(root, i.path.split("#")[0]!).split(sep).join("/");
     if (rel && !rel.startsWith("..") && snapshot.ig.ignores(rel)) continue;
+    if (i.ruleKind === "inDirOnly" && explained.has(i.path)) continue;
     const key = `${i.ruleKind}:${i.path}:${i.message.key}`;
     if (seen.has(key)) continue;
     seen.add(key);
     finalIssues.push(i);
   }
 
+  return { issues: finalIssues, compiled, matchedGlobFiles, statistics: statisticsCollector };
+}
+
+/**
+ * Lint a project: taste → snapshot → validate. In a monorepo every workspace
+ * package is linted as its own project with its own taste.
+ */
+export async function lintWorkspace(opts: {
+  root: string;
+  relevantDirs?: Set<string>;
+}): Promise<LintResult> {
+  const startTime = performance.now();
+  const { root, relevantDirs } = opts;
+  const probe = resolveTaste(root);
+  const rootOnly = !relevantDirs && !looksLikeMonorepo(root) && hasRootLevelOnlyRules(probe.rules);
+  const snapshot = await buildWorkspaceSnapshot({ root, rootOnly, relevantDirs });
+  // A pnpm-workspace.yaml may only hold settings; packages make it a monorepo.
+  const taste = snapshot.workspace.packages.length > 0 ? resolveTaste(root, { monorepo: true }) : probe;
+  const main = await checkRoot(root, taste.rules, snapshot);
+
+  const issues = [...main.issues];
+  const seen = new Set(issues.map(issueKey));
+  for (const pkg of snapshot.workspace.packages) {
+    const pkgRoot = resolve(root, pkg);
+    const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true, runtime: taste.runtime });
+    const pkgCheck = await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg));
+    for (const issue of pkgCheck.issues) {
+      const key = issueKey(issue);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      issues.push({ ...issue, displayPath: `${pkg}/${issue.displayPath}` });
+    }
+  }
+
   const requiredTopLevelNames = Array.from(
-    new Set([...compiled.requiredTopLevelNames, ...matchedGlobFiles]),
+    new Set([...main.compiled.requiredTopLevelNames, ...main.matchedGlobFiles]),
   ).sort();
 
   return {
     root,
     tastes: taste.ids,
-    issues: finalIssues,
+    issues,
     requiredTopLevelNames,
     visibleSet: snapshot.visibleAbs,
     listDir: (absDir) =>
       snapshot.listDir(absDir).map((e) => ({ name: e.name, absPath: e.absPath, isDir: e.isDir })),
-    ...(compiled.workspacePackages.length > 0 ? { workspacePackages: compiled.workspacePackages } : {}),
+    ...(snapshot.workspace.packages.length > 0 ? { workspacePackages: snapshot.workspace.packages } : {}),
     fileCount: snapshot.fileCount,
     duration: Math.round(performance.now() - startTime),
-    ruleMetrics: statisticsCollector.getAllMetrics(),
-    rules: compiled.rules,
+    ruleMetrics: main.statistics.getAllMetrics(),
+    rules: main.compiled.rules,
   };
+}
+
+/** The same finding reached from the root and from a package is reported once. */
+function issueKey(issue: Issue): string {
+  return `${issue.path}:${issue.message.key}`;
 }
