@@ -134,3 +134,63 @@ describe("tool format contracts", () => {
     ).toEqual([]);
   });
 });
+
+describe("ecosystem contracts", () => {
+  it("knows what npm, pnpm 11 and Yarn 2 no longer read", async () => {
+    expect(
+      await contracts({
+        "package.json": JSON.stringify({ name: "app", packageManager: "pnpm@11.2.0", pnpm: { overrides: {} } }),
+        ".npmrc": "registry=https://registry.npmjs.org/\n//registry.npmjs.org/:_authToken=${NPM_TOKEN}\nshamefully-hoist=true\nauto-install-peers=true\n",
+        "npm-shrinkwrap.json": "{}",
+        "lib/package.json": JSON.stringify({ name: "MyLib", files: ["dist"] }),
+        "lib/.npmignore": "src",
+        "old/package.json": JSON.stringify({ name: "old", private: true }),
+        "old/.yarnrc": "registry x",
+        "old/.yarnrc.yml": "nodeLinker: node-modules",
+      }),
+    ).toEqual(["npmName lib/package.json", "npmShrinkwrap npm-shrinkwrap.json", "npmignoreWithFiles lib/.npmignore", "pnpmField package.json", "pnpmNpmrc .npmrc", "yarnrc old/.yarnrc"]);
+  });
+
+  it("leaves .npmrc alone before pnpm 11, and private packages' names alone", async () => {
+    expect(
+      await contracts({
+        "package.json": JSON.stringify({ name: "App", private: true, packageManager: "pnpm@10.0.0", pnpm: {} }),
+        ".npmrc": "shamefully-hoist=true\n",
+      }),
+    ).toEqual([]);
+  });
+
+  it("names the config each tool never reads, by its own precedence", async () => {
+    expect(
+      await contracts({
+        "package.json": JSON.stringify({ name: "a", private: true, prettier: {}, devDependencies: { prettier: "^3.0.0" } }),
+        ".prettierrc.json": "{}",
+        "eslint.config.js": "export default []",
+        "eslint.config.ts": "export default []",
+        "py/pytest.ini": "",
+        "py/pyproject.toml": "[tool.pytest.ini_options]\naddopts = '-q'\n[tool.ruff]\nline-length = 100\n[tool.mypy]\nstrict = true\n",
+        "py/ruff.toml": "line-length = 88",
+        "py/mypy.ini": "[mypy]",
+        "solo/package.json": JSON.stringify({ name: "s", private: true, devDependencies: { prettier: "^3.0.0" } }),
+        "solo/.prettierrc": "{}",
+      }),
+    ).toEqual([
+      "eslintConfigs eslint.config.ts",
+      "mypyConfigs py/pyproject.toml",
+      "prettierConfigs .prettierrc.json",
+      "pytestConfigs py/pyproject.toml",
+      "ruffConfigs py/pyproject.toml",
+    ]);
+  });
+
+  it("lists the tsconfig options TypeScript 6 deprecated, and Node pinned twice", async () => {
+    expect(
+      await contracts({
+        "tsconfig.json": '{\n  // comments are fine\n  "compilerOptions": { "baseUrl": ".", "moduleResolution": "Node", "strict": true, },\n}',
+        "tsconfig.build.json": '{ "compilerOptions": { "moduleResolution": "bundler" } }',
+        ".nvmrc": "20\n",
+        ".node-version": "22.11.0\n",
+      }),
+    ).toEqual(["nodeVersions .nvmrc", "tsconfigDeprecated tsconfig.json"]);
+  });
+});

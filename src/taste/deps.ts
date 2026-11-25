@@ -74,6 +74,8 @@ export const DEPRECATED: ObsoleteDep[] = [
   { names: ["babel-polyfill", "@babel/polyfill"], use: "a modern runtime target" },
   { names: ["karma"], use: "a browser-mode test runner (Vitest, Playwright)" },
   { names: ["react-scripts"], use: "a framework, or Vite / Parcel / Rsbuild" },
+  { names: ["@vue/cli-service"], use: "create-vue (Vite)" },
+  { names: ["react-test-renderer"], use: "@testing-library/react" },
 ];
 
 /** 3. Broken on purpose by its own author. */

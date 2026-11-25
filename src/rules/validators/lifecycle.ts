@@ -102,7 +102,7 @@ function findVersions(context: RuleValidatorContext): Found[] {
     }
     if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
-    for (const product of ["vue", "nuxt"] as const) {
+    for (const product of ["vue", "nuxt", "eslint"] as const) {
       if (typeof deps[product] === "string") add(product, deps[product].split(".")[0], "package.json");
     }
   }

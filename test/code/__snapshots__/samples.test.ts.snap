@@ -6,7 +6,11 @@ exports[`real-world samples > ai-chatbot 1`] = `
 ]
 `;
 
-exports[`real-world samples > nuxt.com 1`] = `[]`;
+exports[`real-world samples > nuxt.com 1`] = `
+[
+  "smell modernity package.json (ESLint 9) issue.lifecycle.ended {"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}",
+]
+`;
 
 exports[`real-world samples > project-layout 1`] = `[]`;
 

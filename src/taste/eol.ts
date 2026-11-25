@@ -7,7 +7,7 @@
  * still run; it is still rotten.
  */
 
-export type Product = "node" | "python" | "vue" | "nuxt";
+export type Product = "node" | "python" | "vue" | "nuxt" | "eslint";
 
 export type Eol = {
   /** Version as it appears in a version file, e.g. `18`, `3.8`, `2.7`. */
@@ -71,6 +71,21 @@ export const EOL: Record<Product, { label: string; source: string; versions: Eol
     label: "Vue",
     source: "https://v2.vuejs.org/eol/",
     versions: [{ version: "2", date: "2023-12-31" }],
+  },
+  eslint: {
+    label: "ESLint",
+    source: "https://eslint.org/version-support/",
+    versions: [
+      { version: "1", date: "2016-08-12" },
+      { version: "2", date: "2017-01-01" },
+      { version: "3", date: "2017-12-11" },
+      { version: "4", date: "2018-12-22" },
+      { version: "5", date: "2019-12-21" },
+      { version: "6", date: "2020-11-08" },
+      { version: "7", date: "2022-04-09" },
+      { version: "8", date: "2024-10-05" },
+      { version: "9", date: "2026-08-06" },
+    ],
   },
   nuxt: {
     label: "Nuxt",

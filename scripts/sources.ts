@@ -42,10 +42,12 @@ const python = await json("https://peps.python.org/api/release-cycle.json");
 const raw = async (url: string) => (await fetch(url)).text();
 const vue = await raw("https://raw.githubusercontent.com/vuejs/v2.vuejs.org/master/src/eol/index.md");
 const nuxt = await raw("https://raw.githubusercontent.com/nuxt/nuxt/main/docs/5.community/6.roadmap.md");
+const eslint = await raw("https://raw.githubusercontent.com/eslint/eslint.org/main/src/content/pages/version-support.md");
 const official: Record<string, (version: string) => string | undefined> = {
   node: (v) => node[`v${v}`]?.end,
   python: (v) => python[v]?.end_of_life,
   vue: (v) => (v === "2" && vue.includes("Vue 2 has reached End of Life on December 31st, 2023") ? "2023-12-31" : undefined),
+  eslint: (v) => new RegExp(`^\\| v${v}\\.0\\.0-v${v}\\.[\\d.]+ +\\| EOL +\\|[^|]*\\|[^|]*\\| (\\d{4}-\\d{2}-\\d{2}) `, "m").exec(eslint)?.[1],
   nuxt: (v) => new RegExp(`\\*\\*${v}\\.x\\*\\* \\(\\w+\\) \\|[^|]*\\|[^|]*\\| (\\d{4}-\\d{2}-\\d{2}) `).exec(nuxt)?.[1],
 };
 for (const [product, { versions }] of Object.entries(EOL)) {

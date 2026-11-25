@@ -11,7 +11,7 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 ### 现代
 
 - 停止维护的技术就是臭的，从停止维护那天起，没有宽限期。它还能跑，和臭不臭无关。
-- 作者宣布废弃的、作者故意破坏的、作者自己称为遗留（legacy）的，都是臭的。
+- 作者宣布废弃的、作者故意破坏的、作者自己称为遗留（legacy）或维护模式的，都是臭的：TypeScript 6 废弃的 tsconfig 选项（`baseUrl`、`moduleResolution: "node"`……）、停止维护的 ESLint 版本、进入维护模式的 Vue CLI。
 - 健康的旧技术不臭。不追新，不搞技术鄙视链：慢、老、不时髦都不算臭，没人宣布的「没人维护」也不算。
 
 ### 秩序
@@ -23,13 +23,15 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 - 配置尽量集中，但不打破职责边界：一个工具的配置放一处，不同的工具各自一份。
 - 不平铺。一个目录里堆着几百个文件、一个文件塞进所有职责，都是没有组织。但数量本身证明不了什么，所以 chous 不按数量判，交给 agent 判断（见下文）。
 - 一种职责只用一个工具：两个包管理器、两个格式化工具、两套 git hooks、两个发版工具并存，是臭的。chous 不声称它们一定会互相破坏，只说一件事用了两个工具。
-- 同一个事实只说一遍：一个依赖跨两个大版本、两份内容一模一样的说明文件、两份内容不一致的 workspace 列表，都是臭的。
+- 一个目录里，同一个工具只放一份配置。Prettier、ESLint、pytest、Ruff、mypy 都按自己的优先级只读其中一份，其余的永远不会被读。
+- 同一个事实只说一遍：一个依赖跨两个大版本、两份内容一模一样的说明文件、两份内容不一致的 workspace 列表、写了两遍又不一样的 Node 版本，都是臭的。
 - 文件数量和依赖数量本身不是臭味。
 
 ### 约定
 
 - 框架写明了约定，就照约定来。框架根本不会读的文件（Next.js 根目录有 `app/` 时的 `src/app`、Nuxt 4 放在 `app/` 外面的 `pages/`）是死代码，看着像活的，最臭。
 - 官方给了明确限制的，照限制来：Codex 只读 AGENTS.md 的前 32 KiB，Claude Code 建议 CLAUDE.md 不超过 200 行，SKILL.md 不超过 500 行，GitHub 对超过 50 MiB 的文件发警告。
+- 包管理器规定了读什么，就照着写：npm 12 不再读 `npm-shrinkwrap.json`，pnpm 11 只从 `.npmrc` 读认证、不再读 `package.json` 的 `pnpm` 字段，Yarn 2 起只读 `.yarnrc.yml`；包名遵守 npm 的规则。
 - 工具规定了文件放在哪、叫什么、用什么格式，就照着放：Copilot 只读 `.github/instructions/` 里的 `*.instructions.md`，Cursor 只把 `.mdc` 当规则，GitHub Actions 只读 `.github/workflows/`。放错地方的文件永远不会被读。
 - 工具自己称为旧格式、旧位置的，就是臭的：`.claude/commands/`（已并入 skills）、`.windsurfrules` 和 `.windsurf/`（Devin 称为 legacy）、`.clinerules/`（Cline 称为旧布局）、`.chatmode.md`、`.eslintrc`（ESLint 9 起）、`docker-compose.yml` 和 Compose 的 `version` 字段。
 - 允许兼容多个运行时，允许必要的重复：`package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 内容一致时，是为了让 npm、Yarn、Bun 也能读，不算臭；内容不一致才臭。
@@ -106,6 +108,10 @@ chous 怎样确认事实：
 | 放错地方、起错名字、永远不会被读的文件：不是 `.mdc` 的 Cursor 规则、不是 `*.instructions.md` 的 Copilot 指令、被同名 skill 覆盖的命令、第二份 CODEOWNERS、`.github/` 外的 dependabot.yml、`.github/workflows/` 外的工作流、Tailwind 4 下没被 `@config` 加载的 `tailwind.config` | 文件的位置、名字、包版本，以及工具文档的原话 | 照工具规定的位置和名字来 | 约定 | 臭味 |
 | GitHub 的体积上限：超过 50 MiB 的文件、超过 500 KiB 的 README、3 MB 及以上的 CODEOWNERS | 文件大小，以及 GitHub 文档的原话 | 照平台的限制来 | 约定 | 臭味 |
 | 工具自己称为旧格式、旧位置的文件 | 文件存在，以及工具文档的原话 | 换成工具推荐的写法 | 现代 | 臭味 |
+| TypeScript 6 废弃的 tsconfig 选项 | tsconfig 的内容，以及 TypeScript 6.0 发布说明 | TypeScript 7 不再支持，现在就换 | 现代 | 臭味 |
+| 同一目录里同一个工具的第二份配置（Prettier、ESLint、pytest、Ruff、mypy） | 哪些配置文件存在，以及工具文档里的优先级 | 一个工具一份配置 | 秩序 | 臭味 |
+| 写了两遍又不一样的 Node 版本 | `.nvmrc`、`.node-version`、`.tool-versions` 的内容 | 同一个事实只说一遍 | 秩序 | 臭味 |
+| 包管理器不再读的文件和字段、不合规的包名 | 文件、字段、`packageManager` 的版本，以及 npm、pnpm、Yarn 文档的原话 | 照包管理器的规定写 | 约定 | 臭味 |
 | 构建产物 | 构建工具写下的标记文件，或者有构建脚本 | 不提交构建产物 | 洁净 | 臭味 |
 | 系统垃圾、`local.properties` | 文件内容是操作系统或 Android Studio 写的 | 不提交系统垃圾和本机配置 | 洁净 | 臭味 |
 | `.env*.local`、个人 IDE 和 agent 配置 | 文件名，以及工具文档里「不要提交」的原话 | 不提交个人和本地的东西 | 洁净 | 臭味 |

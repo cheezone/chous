@@ -98,6 +98,13 @@ describe("end of life", () => {
     expect(await lint("^18 || ^22")).toEqual([]);
   });
 
+  it("knows ESLint's end-of-life dates from its dependency", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-eslint-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", private: true, devDependencies: { eslint: "^8.57.0" } }), "utf8");
+    const issues = (await lintWorkspace({ root: dir, today: "2026-11-25" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(issues.map((i) => [i.displayPath, i.message.params?.date])).toEqual([["package.json (ESLint 8)", "2024-10-05"]]);
+  });
+
   it("smells a framework the day after it ends", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-eol-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", dependencies: { nuxt: "^3.12.0" } }), "utf8");

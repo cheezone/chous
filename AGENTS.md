@@ -19,6 +19,7 @@
 - **不按行数、体积、文件数量判**（实测：知名仓库的大文件比 vibe 项目还多，行数证明不了职责过多）。只有官方文档给了具体限制才写规则，例如 `CLAUDE.md` 200 行（Claude Code 文档原话）。巨型文件、平铺目录、多语言混用写进宣言交给 agent，并要求 agent 不得为了行数机械拆分文件。
 - 文件身份靠内容确认：OS 垃圾、`local.properties` 看文件内容（`KNOWN_BY_CONTENT`）；安装包（apk/ipa/msi/deb/rpm/AppImage，smell）和可执行文件/库（exe/dll/so/dylib，review，可能是构建输入，如 Android `jniLibs`）看文件头签名；构建产物目录必须有工具写下的标记文件。
 - 「作者宣布废弃」只认作者的原话（npm `deprecated` 字段、README、安全公告），登记在 `sources.ts`。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
+- **优先级：生态约定先于 AI 工具约定。** npm、Node、pnpm、Yarn、TypeScript、ESLint、Prettier、Python 工具的规定多年不变，最符合「三年后依然对」；AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研。
 - **工具契约**（`src/taste/contracts.ts`）：一张声明式的表，每条写明看哪些文件、检查什么、属于哪种品味；文案在 `issue.contract.<id>`，原话在 `sources.ts` 同名 key。只收工具官方文档里写明的位置、命名、上限和旧格式。覆盖哪些工具要先调研再定（用户量、是否还在维护、是否改名）：2026 年 Windsurf 已改名 Devin（`.windsurf*` 是 legacy）、Gemini CLI 只服务企业版（`GEMINI.md` 仍被读，不报）、Cursor 已被 SpaceX 收购（产品照常）。文件大小要现读（`statSync`），快照里的 `size` 恒为 0。
 - 工具并存只说「一件事两个工具」，不声称它们会互相破坏（没验证过行为）。
 - `package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 一致时是必要的兼容重复，不报；不一致才是 smell。

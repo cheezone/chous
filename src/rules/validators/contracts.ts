@@ -73,6 +73,8 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         all,
         pkg: () => pkgFor(rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ""),
         cssLoadsConfig,
+        read: (other) => (all.has(other) ? read(resolve(root, other)) : ""),
+        rootPkg: () => pkgFor(""),
       };
       for (const contract of CONTRACTS) {
         if ((!ours && !contract.everywhere) || !contract.match.test(rel)) continue;

@@ -1,6 +1,8 @@
 AdekunleBamz/stackhub	review	cleanliness	./	issue.leftover.worklogs	{"count":4,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
+AdekunleBamz/stackhub	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 AdekunleBamz/stackhub	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
 Albertsun6/ontology-builder	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+Albertsun6/ontology-builder	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Algodons/AlgoBrainDoctor	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 Algodons/AlgoBrainDoctor	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"ARCHITECTURE.md, IMPLEMENTATION_SUMMARY.md, MERMEDA.md, QUICKSTART.md"}
 Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20251213T0000_wikidata_food_graph/581_relevance_scoring/RUNBOOK_20260718_PHASE2_DEV_SYNC.md	issue.leftover.worklog	{}
@@ -15,6 +17,13 @@ Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (dotenv)	issue.de
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-mobile/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":712,"limit":200}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
+Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
+Ayato-kosaka/nanitabeyo	smell	modernity	e2e-mobile/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\", baseUrl: \".\""}
+Ayato-kosaka/nanitabeyo	smell	modernity	e2e-web/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+Ayato-kosaka/nanitabeyo	smell	modernity	tsconfig.base.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 Ayato-kosaka/nanitabeyo	smell	order	app-expo/lib/	issue.twins.styles	{"styles":"camelCase ×59 + kebab-case ×1","examples":"addressFormat.test.ts, frontend-utils.ts"}
 Ayato-kosaka/nanitabeyo	smell	order	e2e-web/utils/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"consoleHarness.ts, preload-assets.ts"}
 Ayato-kosaka/nanitabeyo	smell	order	package.json (eslint)	issue.workspace.drift	{"name":"eslint","versions":"api: ^9.18.0; app-expo: ^8.57.1"}
@@ -49,6 +58,8 @@ FouadMagdy01/RNCopilot	smell	cleanliness	.claude/settings.local.json	issue.no.be
 FouadMagdy01/RNCopilot	smell	modernity	.clinerules	issue.contract.clinerules	{"count":1}
 FouadMagdy01/RNCopilot	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 FouadMagdy01/RNCopilot	smell	modernity	.windsurfrules	issue.contract.windsurfLegacy	{"use":".devin/rules/","count":1}
+FouadMagdy01/RNCopilot	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+FouadMagdy01/RNCopilot	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 FouadMagdy01/RNCopilot	smell	order	src/theme/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"dark-theme.ts, themeManager.ts"}
 JuanPabloGilA/your-saas-starterkit	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":348,"limit":200}
 JuanPabloGilA/your-saas-starterkit	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
@@ -87,11 +98,13 @@ RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
 SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+SankrityaT/InstaCare	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 SankrityaT/InstaCare	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm + pnpm"}
 Walbrkt/HackBerlin_Solar	review	cleanliness	./	issue.leftover.worklogs	{"count":6,"names":"AGENT_PROMPTS.md, DATA_QUALITY_REPORT.md, INFERENCE_SERVER_SUMMARY.md, MODEL_TRAINING_REPORT.md, PIPELINE_SUMMARY.md, …"}
 Walbrkt/HackBerlin_Solar	smell	cleanliness	package-lock.json.bak	issue.leftover.backup	{"original":"package-lock.json"}
 Walbrkt/HackBerlin_Solar	smell	cleanliness	package.json.bak	issue.leftover.backup	{"original":"package.json"}
 Walbrkt/HackBerlin_Solar	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+Walbrkt/HackBerlin_Solar	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"limit":3,"names":"AGENT_PROMPTS.md, API_DOCUMENTATION.md, DATA_QUALITY_REPORT.md, END_TO_END_PHILOSOPHY.md, INFERENCE_SERVER_SUMMARY.md, …"}
 Walbrkt/HackBerlin_Solar	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 ai-assist-org/ai-assist	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
@@ -117,10 +130,36 @@ calcom/cal.com	smell	convention	.opencode/skill/vercel-react-best-practices/AGEN
 calcom/cal.com	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
 calcom/cal.com	smell	convention	agents/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
 calcom/cal.com	smell	modernity	apps/api/v2/docker-compose.yaml	issue.contract.composeName	{}
+calcom/cal.com	smell	modernity	apps/api/v2/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 calcom/cal.com	smell	modernity	apps/web/test/docker-compose.yml	issue.contract.composeName	{}
+calcom/cal.com	smell	modernity	apps/web/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 calcom/cal.com	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
+calcom/cal.com	smell	modernity	example-apps/credential-sync/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+calcom/cal.com	smell	modernity	packages/app-store-cli/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/app-store/tsconfig.build.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/app-store/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/coss-ui/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./src\""}
 calcom/cal.com	smell	modernity	packages/emails/docker-compose.yml	issue.contract.composeName	{}
+calcom/cal.com	smell	modernity	packages/embeds/embed-core/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\", baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/embeds/embed-react/test/packaged/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\", baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/embeds/embed-react/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\", baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/embeds/embed-snippet/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/features/auth/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/features/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/lib/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
+calcom/cal.com	smell	modernity	packages/lib/tsconfig.test.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
+calcom/cal.com	smell	modernity	packages/platform/atoms/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/platform/constants/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"ES5\", baseUrl: \"./\""}
+calcom/cal.com	smell	modernity	packages/platform/enums/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"ES5\", baseUrl: \"./\""}
+calcom/cal.com	smell	modernity	packages/platform/examples/base/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"Node\""}
+calcom/cal.com	smell	modernity	packages/platform/libraries/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+calcom/cal.com	smell	modernity	packages/platform/types/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"ES5\""}
+calcom/cal.com	smell	modernity	packages/platform/utils/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"ES5\""}
 calcom/cal.com	smell	modernity	packages/prisma/docker-compose.yml	issue.contract.composeName	{}
+calcom/cal.com	smell	modernity	packages/testing/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
+calcom/cal.com	smell	modernity	packages/trpc/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+calcom/cal.com	smell	modernity	packages/trpc/tsconfig.react.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+calcom/cal.com	smell	modernity	packages/trpc/tsconfig.server.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 calcom/cal.com	smell	order	./	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"i18n-unused.config.js, setupVitest.ts"}
 calcom/cal.com	smell	order	apps/api/v2/src/lib/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"api-versions.ts, filterReqHeaders.ts"}
 calcom/cal.com	smell	order	apps/web/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"getNextjsOrgRewriteConfig.ts, cron-tester.ts"}
@@ -169,6 +208,7 @@ curtmorgan3/quest-bound	review	cleanliness	cypress/SELECTOR-FIXES-SUMMARY.md	iss
 curtmorgan3/quest-bound	review	cleanliness	cypress/TEST-RESULTS-SUMMARY.md	issue.leftover.worklog	{}
 curtmorgan3/quest-bound	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 curtmorgan3/quest-bound	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
+curtmorgan3/quest-bound	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/DEPLOYMENT_FIXES.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/WAR_ROOM_IMPLEMENTATION.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/API_IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
@@ -181,19 +221,33 @@ dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ISSUE_FI
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/PAGE_MERGE_SUMMARY.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ROUTING_FIXES.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", baseUrl: \".\""}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 denoland/deno	review	cleanliness	tests/specs/lockfile/out_of_date_npm_info/deno.lock.old	issue.leftover.maybeBackup	{}
 denoland/deno	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":433,"limit":200}
+denoland/deno	smell	convention	tests/registry/npm/@denotest/CAPITALS/1.0.0/package.json	issue.contract.npmName	{"name":"@denotest/CAPITALS"}
+denoland/deno	smell	convention	tests/registry/npm/@denotest/MixedCase/1.0.0/package.json	issue.contract.npmName	{"name":"@denotest/MixedCase"}
+denoland/deno	smell	modernity	libs/core_testing/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
 denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
 denoland/deno	smell	order	tests/specs/node/node_test_mock_module/	issue.twins.styles	{"styles":"snake_case ×7 + kebab-case ×3","examples":"main_cache.mjs, basic-cjs.cjs"}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+eryngordon/quiz-lead-magnet-maker	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 eryngordon/quiz-lead-magnet-maker	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 facebook/react	review	modernity	package.json (mkdirp)	issue.deps.native	{"name":"mkdirp","use":"fs.mkdir(path, { recursive: true })"}
 facebook/react	review	modernity	package.json (ncp)	issue.deps.native	{"name":"ncp","use":"fs.cp(src, dest, { recursive: true })"}
 facebook/react	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	review	modernity	packages/react-devtools-extensions/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	smell	convention	compiler/CLAUDE.md	issue.contract.claudeMdLines	{"lines":276,"limit":200}
+facebook/react	smell	modernity	compiler/apps/playground/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+facebook/react	smell	modernity	compiler/packages/babel-plugin-react-compiler-rust/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+facebook/react	smell	modernity	package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
 facebook/react	smell	modernity	packages/eslint-plugin-react-hooks/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	modernity	packages/eslint-plugin-react-hooks/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true, baseUrl: \".\""}
+facebook/react	smell	modernity	packages/jest-react/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
 facebook/react	smell	modernity	packages/react-devtools-extensions/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
 facebook/react	smell	modernity	packages/react-devtools-inline/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
 facebook/react	smell	modernity	packages/react-devtools-shell/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
@@ -212,11 +266,16 @@ facebook/react	smell	order	scripts/ci/	issue.twins.styles	{"styles":"snake_case 
 facebook/react	smell	order	scripts/error-codes/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"extract-errors.js, invertObject.js"}
 facebook/react	smell	order	scripts/flow/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×2","examples":"createFlowConfigs.js, react-devtools.js"}
 facebook/react	smell	order	scripts/jest/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"patchMessageChannel.js, dont-run-jest-directly.js"}
+hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 kartikramachandrula/thynk	smell	cleanliness	backend/__pycache__/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	backend/ocr_models/__pycache__/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
+kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+kartikramachandrula/thynk	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":284,"limit":200}
+matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
 nuxt/nuxt	review	modernity	packages/kit/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
 nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
@@ -227,7 +286,27 @@ oven-sh/bun	smell	convention	src/format/CLAUDE.md	issue.contract.claudeMdLines	{
 oven-sh/bun	smell	convention	src/jsc/bindings/v8/CLAUDE.md	issue.contract.claudeMdLines	{"lines":331,"limit":200}
 oven-sh/bun	smell	convention	src/lint/CLAUDE.md	issue.contract.claudeMdLines	{"lines":345,"limit":200}
 oven-sh/bun	smell	convention	test/CLAUDE.md	issue.contract.claudeMdLines	{"lines":247,"limit":200}
+oven-sh/bun	smell	convention	test/cli/install/registry/packages/@url/encoding.2/package.json	issue.contract.npmName	{"name":"@url%2fencoding.2"}
+oven-sh/bun	smell	convention	test/cli/install/registry/packages/@url/encoding.3/package.json	issue.contract.npmName	{"name":"%40url%2fencoding.3"}
 oven-sh/bun	smell	modernity	.claude/commands/	issue.contract.claudeCommands	{"count":5}
+oven-sh/bun	smell	modernity	bench/bundle/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	bench/expect-to-equal/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-debug-adapter-protocol/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-error/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+oven-sh/bun	smell	modernity	packages/bun-inspector-frontend/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-inspector-protocol/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-lambda/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+oven-sh/bun	smell	modernity	packages/bun-plugin-yaml/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-release/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+oven-sh/bun	smell	modernity	packages/bun-vscode/example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	packages/bun-vscode/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+oven-sh/bun	smell	modernity	src/js/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+oven-sh/bun	smell	modernity	src/runtime/bake/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+oven-sh/bun	smell	modernity	src/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-nearest-has-a-base-url/imports/app/mods/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-program-base-url-alone/app/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"../imports/app/src\""}
+oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-through-inherited-base-url/app/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"../imports/app/src\""}
+oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-through-the-base-url/app/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"../imports/app/src\""}
 oven-sh/bun	smell	modernity	test/docker/docker-compose.yml	issue.contract.composeName	{}
 oven-sh/bun	smell	modernity	test/integration/next-pages/.eslintrc.json	issue.contract.eslintrc	{"version":9}
 oven-sh/bun	smell	order	bench/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×2","examples":"aes-gcm-throughput.mjs, asymmetricCipher.js"}
@@ -460,6 +539,7 @@ pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	
 pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
 ruvnet/ruflo	review	cleanliness	.claude-plugin/docs/PLUGIN_SUMMARY.md	issue.leftover.worklog	{}
@@ -568,6 +648,7 @@ ruvnet/ruflo	smell	convention	.claude/skills/v3-cli-modernization/SKILL.md	issue
 ruvnet/ruflo	smell	convention	.claude/skills/v3-core-implementation/SKILL.md	issue.contract.skillLines	{"lines":797,"limit":500}
 ruvnet/ruflo	smell	convention	.claude/skills/v3-mcp-optimization/SKILL.md	issue.contract.skillLines	{"lines":777,"limit":500}
 ruvnet/ruflo	smell	convention	.claude/skills/verification-quality/SKILL.md	issue.contract.skillLines	{"lines":694,"limit":500}
+ruvnet/ruflo	smell	convention	.npmignore	issue.contract.npmignoreWithFiles	{}
 ruvnet/ruflo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":1562,"limit":200}
 ruvnet/ruflo	smell	convention	SKILL.md	issue.contract.skillName	{"name":"ruflo","folder":""}
 ruvnet/ruflo	smell	convention	plugin/skills/agentdb-advanced/SKILL.md	issue.contract.skillLines	{"lines":550,"limit":500}
@@ -617,20 +698,31 @@ ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/.claude/skills/v3-mcp-optimiza
 ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/.claude/skills/verification-quality/SKILL.md	issue.contract.skillLines	{"lines":694,"limit":500}
 ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/CLAUDE.md	issue.contract.claudeMdLines	{"lines":731,"limit":200}
 ruvnet/ruflo	smell	convention	v3/@claude-flow/mcp/CLAUDE.md	issue.contract.claudeMdLines	{"lines":711,"limit":200}
+ruvnet/ruflo	smell	convention	v3/@claude-flow/security/.npmignore	issue.contract.npmignoreWithFiles	{}
 ruvnet/ruflo	smell	modernity	.claude/commands/	issue.contract.claudeCommands	{"count":156}
+ruvnet/ruflo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.public.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/src/ruvocal/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeVersion	{}
+ruvnet/ruflo	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/browser/docker/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/browser/docker/docker-compose.yml	issue.contract.composeVersion	{}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli-core/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\""}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/.claude/commands/	issue.contract.claudeCommands	{"count":155}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.workers.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.workers.yml	issue.contract.composeVersion	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.yml	issue.contract.composeName	{}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/tsconfig.context-delegation.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/tsconfig.mod-guidance.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/codex/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/mcp/.claude/commands/	issue.contract.claudeCommands	{"count":88}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/plugins/examples/ruvector/docker-compose.yml	issue.contract.composeName	{}
+ruvnet/ruflo	smell	modernity	v3/goal_ui/tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/goal_ui/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/tsconfig.vitest-temp.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 ruvnet/ruflo	smell	order	docs/assets/readme/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"generate-learning-cosmos.py, theme_artwork.py"}
 ruvnet/ruflo	smell	order	package.json (agentic-flow)	issue.workspace.drift	{"name":"agentic-flow","versions":".: ^3.0.0; v3/@claude-flow/plugin-agent-federation: 2.0.14"}
 ruvnet/ruflo	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
@@ -642,8 +734,13 @@ ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"r
 ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/symbolic-scribe	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 ruvnet/symbolic-scribe	smell	modernity	harness/.claude/commands/	issue.contract.claudeCommands	{"count":3}
+ruvnet/symbolic-scribe	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ruvnet/symbolic-scribe	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/symbolic-scribe	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ruvnet/symbolic-scribe	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 shadcn-ui/taxonomy	smell	modernity	.nvmrc (Node 16)	issue.lifecycle.ended	{"name":"Node 16","date":"2023-09-11","use":{"t":"eol.node"}}
+shadcn-ui/taxonomy	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+shadcn-ui/taxonomy	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\", baseUrl: \".\""}
 sindresorhus/execa	review	modernity	package.json (path-exists)	issue.deps.native	{"name":"path-exists","use":"fs.existsSync / fs.access"}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/DOC (1).png	issue.leftover.maybeBackup	{}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/MP3 (1).png	issue.leftover.maybeBackup	{}
@@ -651,12 +748,28 @@ theaiautomators/insights-lm-public	review	cleanliness	public/file-types/PDF (1).
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/TXT (1).png	issue.leftover.maybeBackup	{}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/WEB (1).svg	issue.leftover.maybeBackup	{}
 theaiautomators/insights-lm-public	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+theaiautomators/insights-lm-public	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+theaiautomators/insights-lm-public	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+theaiautomators/insights-lm-public	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 theaiautomators/insights-lm-public	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 theaiautomators/insights-lm-public	smell	order	src/hooks/	issue.twins.styles	{"styles":"camelCase ×13 + kebab-case ×2","examples":"useAudioOverview.tsx, use-mobile.tsx"}
 unocss/unocss	smell	cleanliness	examples/sveltekit-preprocess/dist/	issue.leak.artifact	{}
+unocss/unocss	smell	modernity	examples/quasar/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+unocss/unocss	smell	modernity	examples/remix/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+unocss/unocss	smell	modernity	examples/vite-preact/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"esModuleInterop: false"}
+unocss/unocss	smell	modernity	examples/vite-react/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"esModuleInterop: false"}
+unocss/unocss	smell	modernity	examples/vite-svelte-postcss/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+unocss/unocss	smell	modernity	examples/vite-svelte-scoped/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+unocss/unocss	smell	modernity	examples/vite-svelte/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+unocss/unocss	smell	modernity	examples/vite-watch-mode/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"esModuleInterop: false"}
 unocss/unocss	smell	order	packages-integrations/svelte-scoped/src/_vite/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"createCssTransformerPlugins.ts, config-hmr.ts"}
 v833/q-code	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 v833/q-code	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":37,"limit":32}
+vercel/commerce	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true, moduleResolution: \"node\", baseUrl: \".\""}
+vercel/next-learn	smell	modernity	basics/typescript-final/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\""}
+vercel/next-learn	smell	modernity	dashboard/final-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+vercel/next-learn	smell	modernity	dashboard/starter-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+vercel/next-learn	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 vitejs/vite	smell	order	packages/vite/src/node/server/__tests__/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"htmlSafeModulePaths.spec.ts, search-root.spec.ts"}
 vitejs/vite	smell	order	packages/vite/src/shared/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"bundledDevHmr.ts, pretty-format.ts"}
 vitejs/vite	smell	order	packages/vite/src/shared/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"forwardConsole.spec.ts, pretty-format.spec.ts"}

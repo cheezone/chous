@@ -89,6 +89,10 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   "dep.babel-polyfill": [{ url: "https://babeljs.io/docs/babel-polyfill", check: `${GH}/babel/website/main/docs/polyfill.md`, quote: "As of Babel 7.4.0, this package has been deprecated" }],
   "dep.karma": [{ url: "https://github.com/karma-runner/karma#readme", check: `${GH}/karma-runner/karma/master/README.md`, quote: "Karma is deprecated and is not accepting new features or general bug fixes." }],
   "dep.react-scripts": [{ url: "https://github.com/facebook/create-react-app#readme", check: `${GH}/facebook/create-react-app/main/README.md`, quote: "## Deprecated" }],
+  "dep.@vue/cli-service": [{ url: "https://github.com/vuejs/vue-cli#readme", check: `${GH}/vuejs/vue-cli/dev/README.md`, quote: "Vue CLI is now in maintenance mode." }],
+  "dep.react-test-renderer": [
+    { url: "https://www.npmjs.com/package/react-test-renderer", check: `${GH}/facebook/react/main/packages/react-test-renderer/README.md`, quote: "react-test-renderer is deprecated and no longer maintained." },
+  ],
   "dep.colors": [
     {
       url: "https://github.com/advisories/GHSA-5rqg-jm4f-cqx7",
@@ -284,6 +288,53 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       url: "https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file",
       check: `${GH}/rust-lang/rustup/main/doc/user-guide/src/overrides.md`,
       quote: "For backwards compatibility, rust-toolchain files also support a legacy format",
+    },
+  ],
+  "issue.contract.npmShrinkwrap": [
+    { url: "https://docs.npmjs.com/cli/configuring-npm/package-lock-json", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-lock-json.md`, quote: "As of npm v12, npm-shrinkwrap.json is no longer read or written by npm." },
+  ],
+  "issue.contract.npmignoreWithFiles": [
+    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#files", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "At the root of your package it will not override the \"files\" field" },
+  ],
+  "issue.contract.npmName": [
+    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#name", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "The name must be less than or equal to 214 characters." },
+    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#name", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "New packages must not have uppercase letters in the name." },
+  ],
+  "issue.contract.pnpmNpmrc": [{ url: "https://pnpm.io/blog/releases/11.0", check: `${GH}/pnpm/pnpm.io/main/blog/releases/11.0.md`, quote: "pnpm no longer reads non-auth settings from .npmrc." }],
+  "issue.contract.pnpmField": [{ url: "https://pnpm.io/blog/releases/11.0", check: `${GH}/pnpm/pnpm.io/main/blog/releases/11.0.md`, quote: "pnpm no longer reads the pnpm field in package.json." }],
+  "issue.contract.yarnrc": [
+    {
+      url: "https://yarnpkg.com/getting-started/migration",
+      check: `${GH}/yarnpkg/berry/master/packages/docusaurus/docs/getting-started/migrating/steps.mdx`,
+      quote: "Yarn Modern now uses .yarnrc.yml. Any other file is now ignored",
+    },
+  ],
+  "issue.contract.prettierConfigs": [{ url: "https://prettier.io/docs/configuration", check: `${GH}/prettier/prettier/main/docs/configuration.md`, quote: "You can configure Prettier via (in order of precedence):" }],
+  "issue.contract.eslintConfigs": [
+    {
+      url: "https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-precedence",
+      check: `${GH}/eslint/eslint/main/docs/src/use/configure/configuration-files.md`,
+      quote: "If you have multiple ESLint configuration files, ESLint prioritizes JavaScript files over TypeScript files.",
+    },
+  ],
+  "issue.contract.pytestConfigs": [
+    { url: "https://docs.pytest.org/en/stable/reference/customize.html", check: `${GH}/pytest-dev/pytest/main/doc/en/reference/customize.rst`, quote: "pytest.ini files take precedence over other files (except pytest.toml and .pytest.toml), even when empty." },
+  ],
+  "issue.contract.ruffConfigs": [
+    {
+      url: "https://docs.astral.sh/ruff/configuration/",
+      check: `${GH}/astral-sh/ruff/main/docs/configuration.md`,
+      quote: "If Ruff detects multiple configuration files in the same directory, the .ruff.toml file will take precedence over the ruff.toml file",
+    },
+  ],
+  "issue.contract.mypyConfigs": [
+    { url: "https://mypy.readthedocs.io/en/stable/config_file.html", check: `${GH}/python/mypy/master/docs/source/config_file.rst`, quote: "It is important to understand that there is no merging of configuration" },
+  ],
+  "issue.contract.tsconfigDeprecated": [
+    {
+      url: "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html",
+      check: `${GH}/microsoft/TypeScript-Website/v2/packages/documentation/copy/en/release-notes/TypeScript%206.0.md`,
+      quote: "however, note that TypeScript 7.0 will not support any of these deprecated options.",
     },
   ],
   "issue.twins.copy": [
