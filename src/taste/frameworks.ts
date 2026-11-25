@@ -3,7 +3,7 @@
  * is a file the framework silently never reads — dead code that looks alive —
  * and cites the page that says so. Which framework you pick is not our call.
  */
-import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { taste } from "./define";
 
@@ -14,7 +14,23 @@ export function majorOf(range: unknown): number | undefined {
   return m ? Number(m[1]) : undefined;
 }
 
-const has = (root: string, rel: string) => existsSync(resolve(root, rel));
+/**
+ * A path exists with exactly this spelling. `existsSync("app")` is true for
+ * `App/` on macOS and Windows, whose file systems ignore case — the very case
+ * these rules are about.
+ */
+function has(root: string, rel: string): boolean {
+  let dir = root;
+  for (const part of rel.split("/")) {
+    try {
+      if (!readdirSync(dir).includes(part)) return false;
+    } catch {
+      return false;
+    }
+    dir = resolve(dir, part);
+  }
+  return true;
+}
 
 /**
  * Next.js
@@ -59,7 +75,7 @@ function nuxtUsesAppDir(root: string): boolean {
     }
   }
   try {
-    return readdirSync(resolve(root, "app")).some((f) => f !== "spa-loading-template.html" && !f.startsWith("router.options"));
+    return has(root, "app") && readdirSync(resolve(root, "app")).some((f) => f !== "spa-loading-template.html" && !f.startsWith("router.options"));
   } catch {
     return false;
   }
