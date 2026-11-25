@@ -89,6 +89,11 @@ export default {
       case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
       plural: "{{other}} 也存在：同一个概念两个名字，合并它们",
       synonyms: "同一个意思用了两个名字，只留一个",
+      copy: "和 {{other}} 内容完全相同：只留一份，另一份用软链接，或者在 CLAUDE.md 里写 `@AGENTS.md`",
+    },
+    license: {
+      missingText: "声明了 {{license}} 却没有附上许可证全文；MIT、ISC、BSD、Apache 2.0 都要求每份拷贝都带上全文",
+      none: "没有许可证：默认任何人都不能使用、复制或修改这份代码（GitHub 文档）；加一个，或者设置 \"private\": true",
     },
     leak: {
       artifact: "构建产物没有被 gitignore，会被提交上去",

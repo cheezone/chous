@@ -15,7 +15,7 @@ async function findings(files: Record<string, string>) {
   return result.issues.map((i) => i.displayPath).sort();
 }
 
-const pkg = (deps: Record<string, string>) => JSON.stringify({ type: "module", dependencies: deps });
+const pkg = (deps: Record<string, string>) => JSON.stringify({ type: "module", private: true, dependencies: deps });
 
 describe("majorOf", () => {
   it("reads the major of a range, nothing else", () => {

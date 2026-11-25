@@ -13,6 +13,7 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
   t.artifacts();
   t.leftovers({ scripts: !opts.workspacePackage });
   t.twins();
+  if (!opts.workspacePackage) t.license();
 
   t.no([".chous", ".chousignore"], { reason: "reason.chousConfig" });
 

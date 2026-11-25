@@ -87,6 +87,11 @@ export default {
       case: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
       plural: "{{other}} also exists: one concept, two names; merge them",
       synonyms: "one thing under two names, keep one",
+      copy: "same text as {{other}}: keep one file and symlink the other, or put `@AGENTS.md` in CLAUDE.md",
+    },
+    license: {
+      missingText: "declares {{license}} but ships no license text; MIT, ISC, BSD and Apache 2.0 all require it to go with every copy",
+      none: "no license: by default no one may use, copy or change this code (GitHub docs); add one, or set \"private\": true",
     },
     leak: {
       artifact: "build output that is not gitignored, so it gets committed",

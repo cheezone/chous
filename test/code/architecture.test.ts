@@ -114,7 +114,7 @@ describe("lint pipeline integration", () => {
 
   it("lets one test directory be, whatever its name, but not two", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-lint-"));
-    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module" }), "utf8");
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", private: true }), "utf8");
     mkdirSync(join(dir, "tests"));
     writeFileSync(join(dir, "tests", "a.test.ts"), "", "utf8");
     expect((await lintWorkspace({ root: dir })).issues).toEqual([]);

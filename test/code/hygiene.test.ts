@@ -18,7 +18,7 @@ describe("committed build output", () => {
   it("flags output that is not gitignored", async () => {
     expect(
       await findings({
-        "package.json": "{\"type\":\"module\"}",
+        "package.json": "{\"type\":\"module\",\"private\":true}",
         "dist/index.js": "",
         "node_modules/.package-lock.json": "{}",
         "api/Cargo.toml": "",
@@ -31,10 +31,10 @@ describe("committed build output", () => {
     expect(
       await findings({
         ".gitignore": "dist\n",
-        "package.json": "{\"type\":\"module\"}",
+        "package.json": "{\"type\":\"module\",\"private\":true}",
         "dist/index.js": "",
         "action/action.yml": "",
-        "action/package.json": "{\"type\":\"module\"}",
+        "action/package.json": "{\"type\":\"module\",\"private\":true}",
         "action/dist/index.js": "",
         "test/fixtures/node_modules/foo/index.js": "",
         "tasks/coverage/Cargo.toml": "",
@@ -63,7 +63,7 @@ describe("leftovers", () => {
   it("flags one-off scripts at the root, unless something names them", async () => {
     expect(
       await findings({
-        "package.json": JSON.stringify({ type: "module", files: ["test-utils.js"] }),
+        "package.json": JSON.stringify({ type: "module", private: true, files: ["test-utils.js"] }),
         "test-utils.js": "",
         "fix_login.sh": "",
         "scripts/fix_login.sh": "",

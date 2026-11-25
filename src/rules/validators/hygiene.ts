@@ -1,11 +1,11 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ArtifactsRule, LeftoverRule, Rule, TwinsRule } from "../../types";
+import type { ArtifactsRule, LeftoverRule, LicenseRule, Rule, TwinsRule } from "../../types";
 import type { MessageKey } from "../../i18n";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
+import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, LICENSE_FILE, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -110,12 +110,13 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
   protected async validateInternal(rule: TwinsRule, context: RuleValidatorContext) {
     const { snapshot } = context;
     let hitCount = 0;
-    const report = (rel: string, key: MessageKey, other: string) => {
+    const report = (rel: string, key: MessageKey, other: string, severity?: "warn") => {
       hitCount++;
       context.rawIssues.push(issueFromRule(rule, {
         path: resolve(context.root, rel),
         displayPath: rel,
         message: { key, params: other ? { other } : undefined },
+        severity,
       }));
     };
 
@@ -135,10 +136,83 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
       const present = group.filter((d) => rootDirs.has(d));
       if (present.length > 1) report(present.map((d) => `${d}/`).join(" + "), "issue.twins.synonyms", "");
     }
+    // The same instructions twice. Bun and cal.com keep one file and symlink the other;
+    // Claude Code's docs also offer `@AGENTS.md` in CLAUDE.md. Different contents are fine:
+    // a CLAUDE.md may add to AGENTS.md on purpose.
+    const agents = resolve(context.root, "AGENTS.md");
+    const claude = resolve(context.root, "CLAUDE.md");
+    if (sameRegularFile(agents, claude)) report("CLAUDE.md", "issue.twins.copy", "AGENTS.md", "warn");
+
     for (const dir of rootDirs) {
       if (SYNONYM_DIRS.some((g) => g.includes(dir))) continue;
       if (rootDirs.has(`${dir}s`)) report(`${dir}/`, "issue.twins.plural", `${dir}s/`);
     }
     return { hitCount };
+  }
+}
+
+/** Two regular files (not symlinks) with the same text. */
+function sameRegularFile(a: string, b: string): boolean {
+  try {
+    if (lstatSync(a).isSymbolicLink() || lstatSync(b).isSymbolicLink()) return false;
+    return readFileSync(a, "utf8").trim() === readFileSync(b, "utf8").trim();
+  } catch {
+    return false;
+  }
+}
+
+/** `license` field in Cargo.toml's [package], if any. */
+function cargoLicense(root: string): string | undefined {
+  try {
+    const text = readFileSync(resolve(root, "Cargo.toml"), "utf8");
+    return /^\s*license\s*=\s*"([^"]+)"/m.exec(text)?.[1];
+  } catch {
+    return undefined;
+  }
+}
+
+/**
+ * - Declares a license (`"license": "MIT"`) but ships no text: MIT, BSD and
+ *   Apache 2.0 all require the text to go with every copy. An error.
+ * - Publishable (not `"private": true`) and no license at all: by GitHub's
+ *   docs "no one may reproduce, distribute, or create derivative works". A warning:
+ *   a private project may want exactly that.
+ */
+export class LicenseRuleValidator extends BaseRuleValidator<LicenseRule> {
+  canHandle(rule: Rule): rule is LicenseRule {
+    return rule.kind === "license";
+  }
+
+  protected async validateInternal(rule: LicenseRule, context: RuleValidatorContext) {
+    const { snapshot } = context;
+    if (snapshot.listDir(".").some((e) => !e.isDir && LICENSE_FILE.test(e.name))) return { hitCount: 0 };
+
+    let pkg: Record<string, unknown> | undefined;
+    try {
+      pkg = snapshot.manifest.exists ? JSON.parse(readFileSync(snapshot.manifest.path, "utf8")) : undefined;
+    } catch {
+      pkg = undefined;
+    }
+    const declared = [typeof pkg?.license === "string" ? pkg.license : undefined, cargoLicense(context.root)]
+      .find((l) => l && !/^(UNLICENSED|SEE LICENSE IN)/i.test(l));
+
+    if (declared) {
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${context.root}#license`,
+        displayPath: "LICENSE",
+        message: { key: "issue.license.missingText", params: { license: declared } },
+      }));
+      return { hitCount: 1 };
+    }
+    if (pkg && pkg.private !== true && pkg.license === undefined) {
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${context.root}#license`,
+        displayPath: "LICENSE",
+        message: { key: "issue.license.none" },
+        severity: "warn",
+      }));
+      return { hitCount: 1 };
+    }
+    return { hitCount: 0 };
   }
 }

@@ -71,6 +71,11 @@ export function taste(id: string) {
       push({ kind: "leftover", ...opts });
     },
 
+    /** A declared license with no text next to it; no license on something publishable. */
+    license() {
+      push({ kind: "license" });
+    },
+
     /** One name written two ways: only case differs, or singular next to plural. */
     twins() {
       push({ kind: "twins" });

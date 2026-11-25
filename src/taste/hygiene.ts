@@ -16,6 +16,8 @@ export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: strin
   { dir: ".output" },
   { dir: ".svelte-kit" },
   { dir: "__pycache__" },
+  // Gradle's docs: `.gradle` and `build` "are transient files Gradle uses to support features like incremental builds".
+  { dir: ".gradle", when: ["settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "gradlew"] },
   { dir: "coverage", marker: ["lcov.info", "coverage-final.json", "coverage-summary.json", "clover.xml", "lcov-report"] },
   { dir: "target", when: ["Cargo.toml", "pom.xml"] },
   { dir: "build", when: ["build.gradle", "build.gradle.kts"] },
@@ -68,6 +70,9 @@ export const RELEASE_BINARY = /\.(apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
  * `desktop.ini` test case, `cargo vendor` writes `Cargo.toml.orig` itself.
  */
 export const NOT_OURS = /(^|\/)(tests?|__tests__|specs?|fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?|vendor|third_party)\//i;
+
+/** Where a project keeps its license text: `LICENSE`, `LICENSE.md`, `LICENSE-MIT`, `COPYING`. */
+export const LICENSE_FILE = /^(licen[cs]e|copying|unlicense)([.\-_].*)?$/i;
 
 /**
  * More hand-written root docs than this, and the root reads as a junk drawer:
