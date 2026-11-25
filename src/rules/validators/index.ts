@@ -3,7 +3,7 @@ import { DepsRuleValidator } from "./deps";
 import { ExclusiveRuleValidator, OneToolPerRoleValidator } from "./stack";
 import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import { LifecycleRuleValidator } from "./lifecycle";
-import { ArtifactsRuleValidator, WorklogRuleValidator } from "./hygiene";
+import { ArtifactsRuleValidator, CaseRuleValidator, WorklogRuleValidator } from "./hygiene";
 import type { Rule } from "../../types";
 import type { RuleValidator } from "./types";
 
@@ -17,6 +17,7 @@ const validators: RuleValidator[] = [
   new LifecycleRuleValidator(),
   new ArtifactsRuleValidator(),
   new WorklogRuleValidator(),
+  new CaseRuleValidator(),
 ];
 
 export function findValidator(rule: Rule): RuleValidator | undefined {

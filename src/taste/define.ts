@@ -21,16 +21,10 @@ export function taste(id: string) {
     id,
     rules,
 
-
-
     /** Paths that must not exist. */
     no(names: string[], extra: Extra & { reason: MessageKey }) {
       push({ kind: "no", names, ...extra });
     },
-
-
-
-
 
     /** At most one of these root-level names may exist. */
     oneOf(names: string[]) {
@@ -80,6 +74,11 @@ export function taste(id: string) {
     /** Agent work logs left at the root. */
     worklogs() {
       push({ kind: "worklog" });
+    },
+
+    /** Two paths that differ only in case. */
+    caseCollisions() {
+      push({ kind: "case" });
     },
   };
 }

@@ -76,6 +76,8 @@ Chous 只嗅臭味，不追时髦。它只看项目的作者或平台自己说�
 
   停止维护日期写在 [`src/taste/eol.ts`](src/taste/eol.ts)，抄自各项目的官方时间表，只收已经过去的日期。版本取自项目实际运行的：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile 的 `FROM`、锁定版本的 `engines.node`、`vue` / `nuxt` 依赖。满两年后，"过期"会自己变成"腐烂"。
 - **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
+- **框架根本不读的文件。** 只收框架官方文档写明的情况，每条提示都附上文档链接：根目录有 `app/` 时的 `src/app`（Next.js 会忽略它）；Next.js 16 的 `middleware.ts`（已改名为 `proxy`）；Nuxt 4 里放在 `app/` 外面的 `pages/`、`layouts/`；没有小写路由目录时的 `App/`、`Pages/`，在 macOS 上能跑，到 Linux 就消失。规则在 [`src/taste/frameworks.ts`](src/taste/frameworks.ts)。
+- **只差大小写的文件名。** `README.md` 旁边还有个 `Readme.md`：macOS 和 Windows 检出时只会留下一个。
 - **重复。** monorepo 里同一个依赖用了两个大版本（会装两份）；`test/` 和 `tests/` 同时存在；工作区包里有自己的 lockfile。
 - **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。以及 `.env*.local`、`.dev.vars`、`.DS_Store`、`*.log`。规则在 [`src/taste/hygiene.ts`](src/taste/leaks.ts)。
 - **AI 工作日志。** 根目录里以事件或状态命名的 Markdown，比如 `IMPLEMENTATION_COMPLETE.md`、`FIXES_SUMMARY.md`。它只描述某个时刻，提交当天就开始过时（错误：它属于 PR 描述，不属于根目录）。实测：Vue、Vite、React、Oxc、SQLite 一个都没有，抽样的 vibe coding 项目里一半都有。

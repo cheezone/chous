@@ -26,6 +26,7 @@ export type Rule =
   | LifecycleRule
   | ArtifactsRule
   | WorklogRule
+  | CaseRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -64,6 +65,11 @@ export type LifecycleRule = RuleBase & {
 /** Build output that is not gitignored (see `taste/hygiene.ts`). */
 export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
+};
+
+/** Paths that differ only in case. */
+export type CaseRule = RuleBase & {
+  kind: "case";
 };
 
 /** Agent work logs left at the root (see `taste/hygiene.ts`). */

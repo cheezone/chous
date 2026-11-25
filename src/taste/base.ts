@@ -12,6 +12,7 @@ export function base() {
   t.lifecycle();
   t.artifacts();
   t.worklogs();
+  t.caseCollisions();
 
   t.no([".chous", ".chousignore"], { reason: "reason.chousConfig" });
 

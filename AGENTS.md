@@ -4,8 +4,8 @@
 
 ## 项目概览
 - 仓库：`chous`，一个**没有配置**的品味检查 CLI（taste linter），像 `gofmt`：品味就是工具本身。
-- 品味规则全部写在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `deps` / `eol`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
-- **不管文件放在哪儿。** 根目录白名单、框架目录约定、workflow 命名都删掉了：在 React、Vue、Oxc、SQLite、Vite 的官方仓库上实测，它们产生的全是误报。`test/samples` 里的真实项目一旦被报出错误，测试就失败。
+- 品味规则全部写在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
+- **只管「框架根本不读」的文件，不管喜好。** 根目录白名单、workflow 命名这类偏好删掉了：在 React、Vue、Oxc、SQLite、Vite 的官方仓库上实测全是误报。框架目录约定（`src/taste/frameworks.ts`）只收官方文档写明「会被忽略」的情况，比如 Next.js 根目录有 `app/` 时忽略 `src/app`、Nuxt 4 有 `app/` 时不再读根目录的 `pages/`；能被手动 import 的目录（`components/`、`utils/`）不报（nuxt.com 自己就这么用）。每条规则在注释和文案里写明来源链接。大小写只查「同目录下只差大小写」（macOS/Windows 检出会丢一个）。`test/samples` 里的真实项目一旦被报出错误，测试就失败。
 - **只嗅臭味，不追时髦。** 加规则前先问：三年后它报出来的错还对吗？只收录腐烂的东西（死掉的包、停止维护的运行时、平台已原样自带的轮子、互相打架的工具、重复、泄露）。**不要**规定用哪个工具（「linter 必须是 oxlint」这种），也不要收录需要跟着外部生态频繁更新的名单。
 - 判定只认**作者/平台亲口说过、而且已经发生的事实**；年龄、速度、实现语言（Rust/Go/Zig 重写）、流行度都不算，沉默（没人维护但没人宣布）也不算，实验/玩具项目不判。四种状态：
   - 不判：还在维护的（不新鲜也行）、实验项目。

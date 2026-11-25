@@ -79,6 +79,9 @@ export default {
     worklog: {
       found: "looks like a work log: it describes one moment and goes stale; keep what lasts in README or docs/, the rest in commit messages",
     },
+    case: {
+      collision: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
+    },
     leak: {
       artifact: "build output that is not gitignored, so it gets committed",
     },
@@ -109,6 +112,11 @@ export default {
     bunRunsTs: "Bun runs TypeScript directly.",
     devVars: "Worker secrets, gitignore it and commit .dev.vars.example instead",
     wranglerState: "local Wrangler state, gitignore it",
+    nextSrcIgnored: "Next.js ignores src/app and src/pages when app/ or pages/ is at the root (nextjs.org/docs/app/api-reference/file-conventions/src-folder)",
+    nextCase: "Next.js looks for lowercase app/, pages/ and public/; this name works on macOS and vanishes on Linux (nextjs.org/docs/app/getting-started/project-structure)",
+    nextProxy: "deprecated in Next.js 16, rename it to proxy (nextjs.org/docs/app/api-reference/file-conventions/proxy)",
+    nuxtSrcDir: "Nuxt 4 reads these from app/, so this one is never loaded; move it into app/ (nuxt.com/docs/4.x/getting-started/upgrade#new-directory-structure)",
+    nuxtCase: "Nuxt scans lowercase directories only; this name works on macOS and vanishes on Linux (nuxt.com/docs/guide/directory-structure)",
   },
   dep: {
     "node-fetch": "fetch is global in Node 18+ and every browser.",

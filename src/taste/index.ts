@@ -3,6 +3,7 @@ import { resolve } from "node:path";
 import type { Rule } from "../types";
 import { base } from "./base";
 import { bun, cloudflare, js, monorepo, type Runtime } from "./js";
+import { majorOf, next, nuxt } from "./frameworks";
 
 export type Taste = {
   /** Applied tastes, broadest first, e.g. `["base", "js", "monorepo"]`. */
@@ -53,6 +54,10 @@ export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
     tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);
     if (opts.monorepo) tastes.push(["monorepo", monorepo(anyExists(root, ["pnpm-workspace.yaml", "pnpm-lock.yaml"]))]);
     if (runtime === "bun") tastes.push(["bun", bun()]);
+    const pkg = readJson(resolve(root, "package.json"));
+    const deps = { ...pkg?.devDependencies, ...pkg?.dependencies };
+    if ("next" in deps) tastes.push(["next", next(root, majorOf(deps.next))]);
+    if ("nuxt" in deps) tastes.push(["nuxt", nuxt(root, majorOf(deps.nuxt))]);
   }
   if (anyExists(root, ["wrangler.jsonc", "wrangler.json", "wrangler.toml"])) tastes.push(["cloudflare", cloudflare()]);
 

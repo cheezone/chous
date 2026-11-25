@@ -81,6 +81,9 @@ export default {
     worklog: {
       found: "看起来是一份工作日志：它只描述某个时刻，提交当天就开始过时；长期有用的写进 README 或 docs/，其余写进提交信息",
     },
+    case: {
+      collision: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
+    },
     leak: {
       artifact: "构建产物没有被 gitignore，会被提交上去",
     },
@@ -111,6 +114,11 @@ export default {
     bunRunsTs: "Bun 直接运行 TypeScript。",
     devVars: "Worker 密钥，加进 .gitignore，改为提交 .dev.vars.example",
     wranglerState: "Wrangler 本地状态，加进 .gitignore",
+    nextSrcIgnored: "根目录有 app/ 或 pages/ 时，Next.js 会忽略 src/app 和 src/pages（nextjs.org/docs/app/api-reference/file-conventions/src-folder）",
+    nextCase: "Next.js 只认小写的 app/、pages/、public/；在 macOS 上能跑，到了 Linux 就找不到（nextjs.org/docs/app/getting-started/project-structure）",
+    nextProxy: "Next.js 16 已废弃，改名为 proxy（nextjs.org/docs/app/api-reference/file-conventions/proxy）",
+    nuxtSrcDir: "Nuxt 4 从 app/ 读取这些目录，这里的永远不会被加载；移进 app/（nuxt.com/docs/4.x/getting-started/upgrade#new-directory-structure）",
+    nuxtCase: "Nuxt 只扫描小写目录；在 macOS 上能跑，到了 Linux 就找不到（nuxt.com/docs/guide/directory-structure）",
   },
   dep: {
     "node-fetch": "fetch 在 Node 18+ 和所有浏览器里都是全局的。",
