@@ -10,6 +10,7 @@ export function base() {
   const t = taste("base");
 
   t.lifecycle();
+  t.leaks();
 
   t.no([".chous", ".chousignore"], { reason: { en: "chous has no config, delete it", zh: "chous 没有配置，删掉它" } });
 

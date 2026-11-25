@@ -78,6 +78,10 @@ const en = {
 		workspace: {
 			drift: '{name} is on several major versions ({versions}), so it gets installed twice',
 		},
+		leak: {
+			secret: '{name} committed in plain text, revoke it and load it from an untracked env file',
+			artifact: 'build output that is not gitignored, so it gets committed',
+		},
 		lifecycle: {
 			expired: '{name} reached end of life on {date}, no more security fixes → {use}',
 			rotten: '{name} reached end of life on {date}, more than two years ago → {use}',

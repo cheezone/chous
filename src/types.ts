@@ -24,6 +24,8 @@ export type Rule =
   | StackRule
   | ExclusiveRule
   | LifecycleRule
+  | SecretsRule
+  | ArtifactsRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -57,6 +59,16 @@ export type ManifestRule = RuleBase & {
 /** Runtimes and frameworks past their published end of life (see `taste/eol.ts`). */
 export type LifecycleRule = RuleBase & {
   kind: "lifecycle";
+};
+
+/** Keys committed in plain text (see `taste/leaks.ts`). */
+export type SecretsRule = RuleBase & {
+  kind: "secrets";
+};
+
+/** Build output that is not gitignored (see `taste/leaks.ts`). */
+export type ArtifactsRule = RuleBase & {
+  kind: "artifacts";
 };
 
 /** At most one of these root-level names may exist: one name per concept. */
@@ -93,7 +105,9 @@ export type IssueMessage =
   | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
   | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }
   | { key: "issue.manifest.missing"; params: { field: string; reason: Text } }
-  | { key: "issue.workspace.drift"; params: { name: string; versions: string } };
+  | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
+  | { key: "issue.leak.secret"; params: { name: string } }
+  | { key: "issue.leak.artifact" };
 
 export type Issue = {
   ruleKind: Rule["kind"];

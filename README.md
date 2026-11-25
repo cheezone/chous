@@ -77,7 +77,7 @@ The checks live in [`src/taste/`](src/taste):
   End-of-life dates live in [`src/taste/eol.ts`](src/taste/eol.ts), copied from each project's official schedule, and only ever list dates that have passed. Versions come from what the project runs on — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, a pinned `engines.node`, the `vue` / `nuxt` dependency. Expired turns into rotten on its own when two years are up.
 - **Tools that fight.** Two package managers, two formatters, two git-hook managers or two release tools at once. Which one you keep is up to you.
 - **Duplicates.** One dependency on two major versions across a monorepo (installed twice); `test/` next to `tests/`; a lockfile inside a workspace package.
-- **Leaks.** `.env*.local`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored.
+- **Leaks.** Keys committed in plain text — only formats that are secret by definition (OpenAI, Anthropic, GitHub, AWS, Stripe live, Slack, a Supabase `service_role` JWT, a Gemini key); never Firebase config, Supabase `anon` or Maps keys, which are public by design. Build output that is not gitignored (`node_modules`, `.next`, `dist`, Cargo/Maven `target`, `__pycache__`, …, recognised by markers the tools write, not by name alone). `.env*.local`, `.dev.vars`, `.DS_Store`, `*.log`. See [`src/taste/leaks.ts`](src/taste/leaks.ts).
 - **A declared module type.** Every package.json says `"type": "module"` or `"commonjs"`, as Node's docs recommend (a warning).
 
 Chous runs clean on Vite and SQLite, and finds only real problems in React, Vue and Oxc.

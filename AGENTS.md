@@ -17,6 +17,8 @@
 - 引用官方文档时以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason`，报错就是这个原因。
+- 泄露检查（`src/taste/leaks.ts`）：密钥只收「按定义就是机密」且厂商公布了固定前缀的格式；公开设计的 key（Firebase、Supabase anon、Maps）不报；输出里永远不打印密钥本身。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
+- 测试里不要写真实格式的假密钥（GitHub 推送保护会拦），在运行时拼接。
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 只有 `en` 和 `zh`（`src/i18n/`）。参数类型由 `en` 字符串推导，改文案时两份一起改；不要再引入 typesafe-i18n（它不支持 TS 7）。

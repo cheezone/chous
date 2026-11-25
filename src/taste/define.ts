@@ -71,6 +71,12 @@ export function taste(id: string) {
     lifecycle() {
       push({ kind: "lifecycle" });
     },
+
+    /** Keys committed in plain text, and build output that is not gitignored. */
+    leaks() {
+      push({ kind: "secrets" });
+      push({ kind: "artifacts" });
+    },
   };
 }
 

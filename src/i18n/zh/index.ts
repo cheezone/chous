@@ -79,6 +79,10 @@ const zh = {
 		workspace: {
 			drift: '{name} 同时用了不同的大版本（{versions}），会被装两份',
 		},
+		leak: {
+			secret: '{name} 以明文提交了，作废它，改从不提交的环境变量文件读取',
+			artifact: '构建产物没有被 gitignore，会被提交上去',
+		},
 		lifecycle: {
 			expired: '{name} 已于 {date} 停止维护，不再有安全修复 → {use}',
 			rotten: '{name} 已于 {date} 停止维护，超过两年了 → {use}',
