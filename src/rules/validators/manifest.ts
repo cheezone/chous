@@ -18,7 +18,7 @@ function readManifest(path: string): Manifest | undefined {
   }
 }
 
-/** A package.json field must equal a value, or must not exist. */
+/** A package.json field that must not exist. */
 export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
   canHandle(rule: Rule): rule is ManifestRule {
     return rule.kind === "manifest";
@@ -27,38 +27,12 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
   protected async validateInternal(rule: ManifestRule, context: RuleValidatorContext) {
     const { manifest } = context.snapshot;
     const pkg = manifest.exists ? readManifest(manifest.path) : undefined;
-    if (!pkg) return { hitCount: 0 };
-
-    const value = pkg[rule.field];
-    const base = {
+    if (pkg?.[rule.field] === undefined) return { hitCount: 0 };
+    context.rawIssues.push(issueFromRule(rule, {
       path: `${manifest.path}#field:${rule.field}`,
       displayPath: `package.json (${rule.field})`,
-      severity: "error" as const,
-      reason: false as const,
-    };
-
-    if (rule.absent) {
-      if (value === undefined) return { hitCount: 1 };
-      context.rawIssues.push(issueFromRule(rule, {
-        ...base,
-        message: { key: "issue.manifest.remove", params: { field: rule.field, reason: { t: rule.reason! } } },
-      }));
-      return { hitCount: 1 };
-    }
-
-    if (rule.present) {
-      if (value !== undefined) return { hitCount: 1 };
-      context.rawIssues.push(issueFromRule(rule, {
-        ...base,
-        message: { key: "issue.manifest.missing", params: { field: rule.field, reason: { t: rule.reason! } } },
-      }));
-      return { hitCount: 1 };
-    }
-
-    if (value === rule.equals) return { hitCount: 1 };
-    context.rawIssues.push(issueFromRule(rule, {
-      ...base,
-      message: { key: "issue.manifest.expected", params: { field: rule.field, expected: JSON.stringify(rule.equals) } },
+      message: { key: "issue.manifest.remove", params: { field: rule.field, reason: { t: rule.reason! } } },
+      reason: false,
     }));
     return { hitCount: 1 };
   }
@@ -116,7 +90,6 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
         path: `${snapshot.manifest.path}#drift:${name}`,
         displayPath: `package.json (${name})`,
         message: { key: "issue.workspace.drift", params: { name, versions } },
-        severity: "error",
       }));
     }
     return { hitCount };

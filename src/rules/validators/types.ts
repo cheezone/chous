@@ -1,4 +1,4 @@
-import type { Issue, IssueMessage, Rule, Severity } from "../../types";
+import type { Issue, IssueMessage, Rule, Value, Verdict } from "../../types";
 import type { MessageKey } from "../../i18n";
 import type { WorkspaceSnapshot } from "../../vfs/snapshot";
 
@@ -16,14 +16,16 @@ export interface RuleValidator<R extends Rule = Rule> {
   validate(rule: R, context: RuleValidatorContext): Promise<void>;
 }
 
-/** Build an issue that inherits the rule's source, reason and severity override. */
+/** Build an issue that inherits the rule's source, reason, value and verdict. */
 export function issueFromRule(
   rule: Rule,
   partial: {
     path: string;
     displayPath: string;
     message: IssueMessage;
-    severity?: Severity;
+    verdict?: Verdict;
+    /** When one rule reports for another value (a crowded root is disorder, not dirt). */
+    value?: Value;
     /** `false` keeps the rule's reason out (when the message already says it). */
     reason?: MessageKey | false;
   },
@@ -36,6 +38,7 @@ export function issueFromRule(
     path: partial.path,
     displayPath: partial.displayPath,
     message: partial.message,
-    severity: rule.severity ?? partial.severity ?? "error",
+    verdict: rule.verdict ?? partial.verdict ?? "smell",
+    value: partial.value ?? rule.value,
   };
 }

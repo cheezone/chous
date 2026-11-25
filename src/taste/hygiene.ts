@@ -9,7 +9,7 @@
  * generic names also need a sibling file (`when`) or a file that only the
  * generating tool writes inside (`marker`).
  */
-export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: string[]; marker?: string[] }> = [
+export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: string[]; marker?: string[]; built?: boolean }> = [
   { dir: "node_modules", marker: [".package-lock.json", ".modules.yaml", ".yarn-integrity", ".yarn-state.yml"] },
   { dir: ".next" },
   { dir: ".nuxt" },
@@ -22,28 +22,30 @@ export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: strin
   { dir: "target", when: ["Cargo.toml", "pom.xml"] },
   { dir: "build", when: ["build.gradle", "build.gradle.kts"] },
   // GitHub's docs tell JavaScript actions to commit dist/.
-  { dir: "dist", when: ["package.json"], unless: ["action.yml", "action.yaml"] },
+  // Built only if something builds it: Deno's test registry hand-writes `dist/` packages.
+  { dir: "dist", when: ["package.json"], unless: ["action.yml", "action.yaml"], built: true },
 ];
 
-/**
- * Leftovers: files that describe one moment of work, or copy what git already
- * keeps. Every pattern here was measured: zero hits in Vue, Vite, React, Oxc,
- * SQLite, Next.js Commerce, cal.com and nuxt.com; common in vibe-coded repos.
- */
+/** Signs that a package builds something: a `build` script, or a bundler's config next to package.json. */
+export const BUNDLER_CONFIG = /^(vite|vitest|tsdown|tsup|rollup|rolldown|webpack|esbuild|unbuild|parcel|rspack|rsbuild|svelte|astro|nuxt|next)\.config\.[cm]?[jt]s$|^tsconfig(\.[\w-]+)?\.json$/;
 
 /**
- * Markdown named after an event or a status — what an agent writes at the end
- * of a session (`IMPLEMENTATION_COMPLETE.md`, `FIXES_SUMMARY.md`,
- * `PHASE_4_PLAN.md`). Any name at the root; SCREAMING_CASE names deeper down.
+ * Leftovers. chous knows a file's name, place and content; it does not know
+ * what the file is for. So a name alone never makes a smell: a file named
+ * like a work log or a one-off script is put up for review, and a backup is a
+ * smell only when the original sits right next to it.
  */
+
+/** Named like a work log: `IMPLEMENTATION_COMPLETE.md`, `FIXES_SUMMARY.md`, `PHASE_4_PLAN.md`. Any name at the root; SCREAMING_CASE deeper down. */
 export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status|progress|report|reports|fix|fixes|fixed|bugfix|hotfix|done|improvements?|implementation|changes[_-]made|session|handoff|walkthrough|analysis|cleanup|audit|debug|phase[_-]?\d*|prompts?|brief)([_\-. ]|$)/i;
 
 /**
  * Root directories that mean the same thing. Which name you pick is up to you;
- * two of them is a mess. Plain plurals (`plugin/` + `plugins/`) are found
+ * two of them is a mess. `spec/` is left out: it may hold tests (RSpec) or
+ * specifications (fastrender keeps the WHATWG specs there). Plain plurals (`plugin/` + `plugins/`) are found
  * without a list.
  */
-export const SYNONYM_DIRS = [["test", "tests", "__tests__", "spec", "specs"]];
+export const SYNONYM_DIRS = [["test", "tests", "__tests__"]];
 
 /**
  * Naming styles of multi-word file names. One word (`index`) fits every style;
@@ -63,37 +65,62 @@ export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro|py
 /** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
 export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client)\./;
 
-/** Decision records keep their history on purpose: `docs/adr/ADR-003-…`, `rfcs/0001-…`. */
+/** Decision records and book tables of contents are formats, not logs: `docs/adr/ADR-003-…`, mdBook's `src/SUMMARY.md`. */
 export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[-_]?\d/i;
 
-/** Root docs every project may have, whatever words they contain. */
-export const STANDARD_DOCS = /^(readme|changelog|license|licence|contributing|security|code_of_conduct|agents|claude|support|governance)/i;
+/**
+ * Root docs with a claim to the root: hosts and tools look for them there.
+ * README and LICENSE everywhere; GitHub's community health files; the files
+ * coding agents read. Everything else is a doc like any other, and docs
+ * belong together.
+ */
+export const ROOT_CONTRACT_DOCS = /^(readme|licen[cs]e|copying|unlicense|notice|changelog|contributing|security|code_of_conduct|support|governance|agents|claude|gemini)([.\-_].*)?$/i;
 
-/** One-off scripts at the root: `fix_login.sh`, `test_api.py`, `debug-auth.js`. */
+/** Prose, as opposed to config: what counts as a doc at the root. */
+export const DOC_FILE = /\.(md|mdx|markdown|rst|adoc|asciidoc|org)$/i;
+
+/**
+ * chous's position, not a measurement: the root is an entrance. Past this many
+ * docs besides the contract ones, they belong in `docs/`.
+ */
+export const ROOT_DOCS_LIMIT = 3;
+
+/** Named like a one-off script: `fix_login.sh`, `test_api.py`, `debug-auth.js`. */
 export const ONE_OFF_SCRIPT = /^(fix|test|debug|check|verify|temp|tmp|quick|try)[_-][\w.-]*\.(sh|bash|py|js|mjs|cjs|ts|bat|cmd|ps1)$/i;
 
-/** Hand-made copies: `package.json.bak`, `logo.png_original`, `DOC (1).png`, `app copy.tsx`. */
-export const BACKUP = /(\.(bak|backup|orig|old)|_original|~)$| \(\d+\)(\.\w+)?$| copy(\.\w+)?$/i;
+/**
+ * Hand-made copies, and the name of the original they were copied from:
+ * `package.json.bak` ← `package.json`, `logo (1).png` ← `logo.png`.
+ */
+export function backupOf(name: string): string | undefined {
+  const forms: Array<[RegExp, string]> = [
+    [/^(.+)\.(bak|backup|orig|old)$/i, "$1"],
+    [/^(.+)_original$/i, "$1"],
+    [/^(.+)~$/, "$1"],
+    [/^(.+) \(\d+\)(\.\w+)?$/, "$1$2"],
+    [/^(.+) copy(\.\w+)?$/i, "$1$2"],
+  ];
+  for (const [re, to] of forms) if (re.test(name)) return name.replace(re, to);
+  return undefined;
+}
 
 /**
- * Installers and app bundles — never a build input, unlike an `.exe` (uv embeds
- * prebuilt trampolines). Git keeps every version forever; GitHub points
- * binaries to Releases: https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github#distributing-large-binaries
+ * Built binaries: executables, libraries, installers. Built things belong in
+ * releases, not the source tree; git keeps every version of them forever.
  */
-export const RELEASE_BINARY = /\.(apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
+export const BUILT_BINARY = /\.(exe|dll|so|dylib|apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
 
 /**
- * Not the project's own files: test inputs, examples and vendored code may be
- * anything. Deno commits `dist/` packages for its npm registry tests, Zig a
- * `desktop.ini` test case, `cargo vendor` writes `Cargo.toml.orig` itself.
+ * Data, and other people's code: test fixtures may hold anything, `vendor/`
+ * is someone else's taste. Tests and examples are the project's own code and
+ * are checked like the rest.
  */
-export const NOT_OURS = /(^|\/)(tests?|__tests__|specs?|fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?|playgrounds?|vendor|third_party)\//i;
+export const NOT_OURS = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
 
-/** Where a project keeps its license text: `LICENSE`, `LICENSE.md`, `LICENSE-MIT`, `COPYING`. */
-export const LICENSE_FILE = /^(licen[cs]e|copying|unlicense)([.\-_].*)?$/i;
-
-/**
- * More hand-written root docs than this, and the root reads as a junk drawer:
- * the official repos measured keep at most three besides the standard ones.
- */
-export const ROOT_DOCS_LIMIT = 5;
+/** What the OS writes into these files: a file by the same name that lacks it is something else (Zig tests a `desktop.ini`). */
+export const OS_JUNK: Array<{ name: string; content: RegExp }> = [
+  { name: ".DS_Store", content: /Bud1/ },
+  // An OLE compound file: D0 CF 11 E0.
+  { name: "Thumbs.db", content: new RegExp(`^${String.fromCharCode(0xd0, 0xcf, 0x11, 0xe0)}`) },
+  { name: "desktop.ini", content: /ShellClassInfo|LocalizedFileNames|ViewState/i },
+];

@@ -58,7 +58,7 @@ describe("fixtures that match the taste", () => {
       const r = runCli(resolve(FIXTURES, "pass", name));
       if (r.code !== 0) console.log(r.stdout, r.stderr);
       expect(r.code).toBe(0);
-      expect(r.stdout).toContain("No issues found");
+      expect(r.stdout).toContain("Nothing smells");
     });
   }
 });
@@ -71,7 +71,7 @@ describe("fixtures that break the taste", () => {
       const expected = EXPECTED[name];
       expect(expected, `add an EXPECTED entry for fail/${name}`).toBeDefined();
       // Verbose mode lists every finding once, flat. Each must be expected — nothing more.
-      const errors = r.stdout.split("\n").filter((line) => line.startsWith("✖ ")).map((line) => line.replace(/ +/g, " "));
+      const errors = r.stdout.split("\n").filter((line) => /^\s+✗ /.test(line)).map((line) => line.trim().replace(/ +/g, " "));
       for (const text of expected!) expect(errors.some((line) => line.includes(text)), text).toBe(true);
       expect(errors, "unexpected findings").toHaveLength(expected!.length);
     });

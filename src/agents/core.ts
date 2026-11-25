@@ -7,7 +7,7 @@ export type AgentIssue = {
   root: string;
   displayPath: string;
   message: string;
-  severity: "error" | "warn";
+  verdict: "smell" | "review";
   reason?: string;
 };
 
@@ -63,7 +63,7 @@ export async function checkWorkspaces(opts: {
         root,
         displayPath: issue.displayPath,
         message: formatIssueMessage(t, issue.message),
-        severity: issue.severity,
+        verdict: issue.verdict,
         reason: issue.reason && t(issue.reason),
       });
     }
@@ -85,11 +85,11 @@ export function formatAgentSummary(lang: string, issues: AgentIssue[]): string {
   const { t } = getT(lang);
   const lines = [t("agent.intro"), ""];
   const limited = issues.slice(0, SUMMARY_ISSUE_LIMIT);
-  const errors = limited.filter((i) => i.severity === "error");
-  const warnings = limited.filter((i) => i.severity === "warn");
+  const smells = limited.filter((i) => i.verdict === "smell");
+  const reviews = limited.filter((i) => i.verdict === "review");
 
-  if (errors.length) lines.push(t("agent.errorsSection"), ...formatIssueBlock(t, errors), "");
-  if (warnings.length) lines.push(t("agent.warningsSection"), ...formatIssueBlock(t, warnings), "");
+  if (smells.length) lines.push(t("agent.smells"), ...formatIssueBlock(t, smells), "");
+  if (reviews.length) lines.push(t("agent.review"), ...formatIssueBlock(t, reviews), "");
   if (issues.length > SUMMARY_ISSUE_LIMIT) lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`, "");
   lines.push(t("agent.fix"));
   return lines.join("\n");

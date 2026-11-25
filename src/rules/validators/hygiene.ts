@@ -1,11 +1,43 @@
-import { existsSync, lstatSync, readFileSync, statSync } from "node:fs";
+import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ArtifactsRule, LeftoverRule, LicenseRule, Rule, TwinsRule } from "../../types";
+import type { ArtifactsRule, IssueMessage, LeftoverRule, Rule, TwinsRule, Verdict } from "../../types";
 import type { MessageKey } from "../../i18n";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, LICENSE_FILE, NAME_EXEMPT, SOURCE_FILE, nameStyle, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
+import {
+  ARTIFACT_DIRS,
+  BUNDLER_CONFIG,
+  BUILT_BINARY,
+  DECISION_RECORD,
+  DOC_FILE,
+  NAME_EXEMPT,
+  NOT_OURS,
+  ONE_OFF_SCRIPT,
+  OS_JUNK,
+  ROOT_CONTRACT_DOCS,
+  ROOT_DOCS_LIMIT,
+  SOURCE_FILE,
+  SYNONYM_DIRS,
+  WORKLOG,
+  backupOf,
+  nameStyle,
+} from "../../taste/hygiene";
+
+/** A `build` script in package.json, or a bundler config beside it. */
+function buildsSomething(dir: string): boolean {
+  try {
+    const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+    if (pkg?.scripts && Object.keys(pkg.scripts).some((s) => /^build\b/.test(s))) return true;
+  } catch {
+    // no readable package.json
+  }
+  try {
+    return readdirSync(dir).some((f) => BUNDLER_CONFIG.test(f));
+  } catch {
+    return false;
+  }
+}
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -24,12 +56,13 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
       // An artifact's own contents are not candidates for more artifacts.
       if (ARTIFACT_DIRS.some(({ dir }) => parent === dir || parent.endsWith(`/${dir}`) || parent.includes(`/${dir}/`) || parent.startsWith(`${dir}/`))) continue;
       const parentAbs = resolve(root, parent);
-      for (const { dir, when, unless, marker } of ARTIFACT_DIRS) {
+      for (const { dir, when, unless, marker, built } of ARTIFACT_DIRS) {
         const rel = parent ? `${parent}/${dir}` : dir;
         if (!existsSync(join(parentAbs, dir)) || ignored(rel)) continue;
         if (when && !when.some((f) => existsSync(join(parentAbs, f)))) continue;
         if (unless?.some((f) => existsSync(join(parentAbs, f)))) continue;
         if (marker && !marker.some((f) => existsSync(join(parentAbs, dir, f)))) continue;
+        if (built && !buildsSomething(parentAbs)) continue;
         hitCount++;
         rawIssues.push(issueFromRule(rule, {
           path: resolve(root, rel),
@@ -42,10 +75,10 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   }
 }
 
-/** Text of the root's own files (package.json, configs, scripts), small ones only. */
+/** Text of the root's own files (package.json, configs, README), small ones only. */
 function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
   return snapshot.listDir(".")
-    .filter((e) => !e.isDir && !/\.md$/i.test(e.name) && !ONE_OFF_SCRIPT.test(e.name))
+    .filter((e) => !e.isDir && !ONE_OFF_SCRIPT.test(e.name))
     .map((e) => {
       try {
         return statSync(e.absPath).size < 256_000 ? readFileSync(e.absPath, "utf8") : "";
@@ -56,7 +89,31 @@ function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
     .join("\n");
 }
 
-/** Work logs, one-off scripts, hand-made backups and release binaries. */
+/** `a, b, c, d, e, …` */
+function list(names: string[], max = 5): string {
+  const sorted = [...names].sort();
+  return sorted.slice(0, max).join(", ") + (sorted.length > max ? ", …" : "");
+}
+
+/** The first bytes of a file, as latin1, NULs dropped (desktop.ini is often UTF-16). */
+function head(path: string, bytes = 512): string {
+  try {
+    const fd = openSync(path, "r");
+    const buf = Buffer.alloc(bytes);
+    const n = readSync(fd, buf, 0, bytes, 0);
+    closeSync(fd);
+    return buf.subarray(0, n).toString("latin1").replaceAll("\0", "");
+  } catch {
+    return "";
+  }
+}
+
+/**
+ * What a work session leaves behind. Smells where chous knows: OS junk (by
+ * what the OS writes into it), built binaries, a copy next to its original, a
+ * crowded root. Review where only the name speaks: work logs, one-off scripts,
+ * a backup whose original is gone.
+ */
 export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   canHandle(rule: Rule): rule is LeftoverRule {
     return rule.kind === "leftover";
@@ -65,42 +122,74 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   protected async validateInternal(rule: LeftoverRule, context: RuleValidatorContext) {
     const { snapshot, rawIssues } = context;
     let hitCount = 0;
-    const report = (rel: string, key: MessageKey, params?: Record<string, number>, severity?: "warn") => {
+    const report = (rel: string, message: IssueMessage, verdict: Verdict = "smell") => {
       hitCount++;
-      rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message: { key, params }, severity }));
+      rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message, verdict }));
     };
-    let rootDocs = 0;
-    // A script that package.json or a config file names is part of the build, not a leftover.
+    const extraDocs: string[] = [];
+    const rootLogs: string[] = [];
+    // Named in package.json, a config or the README: someone runs it.
     const referenced = rule.scripts ? rootText(snapshot) : "";
 
     for (const [rel, entry] of snapshot.byRel) {
       if (entry.isDir || NOT_OURS.test(rel)) continue;
       const atRoot = !rel.includes("/");
       const name = entry.name;
-      const doc = /\.md$/i.exec(name) ? name.slice(0, -3) : undefined;
+      const stem = name.replace(/\.[^.]+$/, "");
 
-      // `src/SUMMARY.md` is mdBook's table of contents.
-      const bookToc = !atRoot && doc === "SUMMARY";
-      if (doc !== undefined && !bookToc && !STANDARD_DOCS.test(doc) && !DECISION_RECORD.test(rel) && (atRoot || /^[A-Z0-9_-]+$/.test(doc)) && WORKLOG.test(doc)) {
-        report(rel, "issue.leftover.worklog");
-      } else if (doc !== undefined && atRoot && !STANDARD_DOCS.test(doc)) {
-        rootDocs++;
-      } else if (rule.scripts && atRoot && ONE_OFF_SCRIPT.test(name) && !referenced.includes(name)) {
-        report(rel, "issue.leftover.script");
-      } else if (BACKUP.test(name)) {
-        report(rel, "issue.leftover.backup");
-      } else if (RELEASE_BINARY.test(name)) {
-        report(rel, "issue.leftover.binary");
+      const junk = OS_JUNK.find((j) => j.name === name);
+      if (junk) {
+        if (junk.content.test(head(entry.absPath))) report(rel, { key: "issue.no.because", params: { reason: { t: "reason.osJunk" } } });
+        continue;
       }
+
+      if (DOC_FILE.test(name)) {
+        if (atRoot && !ROOT_CONTRACT_DOCS.test(name)) extraDocs.push(name);
+        const format = DECISION_RECORD.test(rel) || (!atRoot && stem === "SUMMARY");
+        if (!format && (atRoot || /^[A-Z0-9_-]+$/.test(stem)) && !ROOT_CONTRACT_DOCS.test(name) && WORKLOG.test(stem)) {
+          if (atRoot) rootLogs.push(name);
+          else report(rel, { key: "issue.leftover.worklog" }, "review");
+        }
+        continue;
+      }
+
+      if (rule.scripts && atRoot && ONE_OFF_SCRIPT.test(name) && !referenced.includes(name)) {
+        report(rel, { key: "issue.leftover.script" }, "review");
+        continue;
+      }
+
+      const original = backupOf(name);
+      if (original) {
+        const sibling = rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original;
+        if (snapshot.byRel.has(sibling)) report(rel, { key: "issue.leftover.backup", params: { original } });
+        else report(rel, { key: "issue.leftover.maybeBackup" }, "review");
+        continue;
+      }
+
+      if (BUILT_BINARY.test(name)) report(rel, { key: "issue.leftover.binary" });
     }
-    if (rootDocs > ROOT_DOCS_LIMIT) report("*.md", "issue.leftover.docs", { count: rootDocs }, "warn");
+
+    // At the root they are one finding, not twenty.
+    if (rootLogs.length === 1) report(rootLogs[0]!, { key: "issue.leftover.worklog" }, "review");
+    if (rootLogs.length > 1) report("./", { key: "issue.leftover.worklogs", params: { count: rootLogs.length, names: list(rootLogs) } }, "review");
+
+    if (rule.rootDocs && extraDocs.length > ROOT_DOCS_LIMIT) {
+      hitCount++;
+      rawIssues.push(issueFromRule(rule, {
+        path: `${context.root}#root-docs`,
+        displayPath: "./",
+        message: { key: "issue.leftover.rootDocs", params: { count: extraDocs.length, limit: ROOT_DOCS_LIMIT, names: list(extraDocs) } },
+        value: "order",
+      }));
+    }
     return { hitCount };
   }
 }
 
 /**
  * One concept, two names: `README.md` next to `Readme.md` (case-insensitive
- * file systems keep one), `test/` next to `tests/`, `plugin/` next to `plugins/`.
+ * file systems keep one), `test/` next to `tests/`, `plugin/` next to
+ * `plugins/`, one directory naming files two ways, the same instructions twice.
  */
 export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
   canHandle(rule: Rule): rule is TwinsRule {
@@ -110,13 +199,12 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
   protected async validateInternal(rule: TwinsRule, context: RuleValidatorContext) {
     const { snapshot } = context;
     let hitCount = 0;
-    const report = (rel: string, key: MessageKey, other: string, severity?: "warn") => {
+    const report = (rel: string, key: MessageKey, other?: string) => {
       hitCount++;
       context.rawIssues.push(issueFromRule(rule, {
         path: resolve(context.root, rel),
         displayPath: rel,
         message: { key, params: other ? { other } : undefined },
-        severity,
       }));
     };
 
@@ -134,14 +222,15 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
     const rootDirs = new Set(snapshot.listDir(".").filter((e) => e.isDir).map((e) => e.name));
     for (const group of SYNONYM_DIRS) {
       const present = group.filter((d) => rootDirs.has(d));
-      if (present.length > 1) report(present.map((d) => `${d}/`).join(" + "), "issue.twins.synonyms", "");
+      if (present.length > 1) report(present.map((d) => `${d}/`).join(" + "), "issue.twins.synonyms");
     }
+
     // The same instructions twice. Bun and cal.com keep one file and symlink the other;
-    // Claude Code's docs also offer `@AGENTS.md` in CLAUDE.md. Different contents are fine:
-    // a CLAUDE.md may add to AGENTS.md on purpose.
-    const agents = resolve(context.root, "AGENTS.md");
-    const claude = resolve(context.root, "CLAUDE.md");
-    if (sameRegularFile(agents, claude)) report("CLAUDE.md", "issue.twins.copy", "AGENTS.md", "warn");
+    // Claude Code's docs also offer `@AGENTS.md` in CLAUDE.md. Different contents are
+    // fine: a CLAUDE.md may add to AGENTS.md on purpose.
+    if (sameRegularFile(resolve(context.root, "AGENTS.md"), resolve(context.root, "CLAUDE.md"))) {
+      report("CLAUDE.md", "issue.twins.copy", "AGENTS.md");
+    }
 
     hitCount += mixedStyles(rule, context);
 
@@ -160,62 +249,6 @@ function sameRegularFile(a: string, b: string): boolean {
     return readFileSync(a, "utf8").trim() === readFileSync(b, "utf8").trim();
   } catch {
     return false;
-  }
-}
-
-/** `license` field in Cargo.toml's [package], if any. */
-function cargoLicense(root: string): string | undefined {
-  try {
-    const text = readFileSync(resolve(root, "Cargo.toml"), "utf8");
-    return /^\s*license\s*=\s*"([^"]+)"/m.exec(text)?.[1];
-  } catch {
-    return undefined;
-  }
-}
-
-/**
- * - Declares a license (`"license": "MIT"`) but ships no text: MIT, BSD and
- *   Apache 2.0 all require the text to go with every copy. An error.
- * - Publishable (not `"private": true`) and no license at all: by GitHub's
- *   docs "no one may reproduce, distribute, or create derivative works". A warning:
- *   a private project may want exactly that.
- */
-export class LicenseRuleValidator extends BaseRuleValidator<LicenseRule> {
-  canHandle(rule: Rule): rule is LicenseRule {
-    return rule.kind === "license";
-  }
-
-  protected async validateInternal(rule: LicenseRule, context: RuleValidatorContext) {
-    const { snapshot } = context;
-    if (snapshot.listDir(".").some((e) => !e.isDir && LICENSE_FILE.test(e.name))) return { hitCount: 0 };
-
-    let pkg: Record<string, unknown> | undefined;
-    try {
-      pkg = snapshot.manifest.exists ? JSON.parse(readFileSync(snapshot.manifest.path, "utf8")) : undefined;
-    } catch {
-      pkg = undefined;
-    }
-    const declared = [typeof pkg?.license === "string" ? pkg.license : undefined, cargoLicense(context.root)]
-      .find((l) => l && !/^(UNLICENSED|SEE LICENSE IN)/i.test(l));
-
-    if (declared) {
-      context.rawIssues.push(issueFromRule(rule, {
-        path: `${context.root}#license`,
-        displayPath: "LICENSE",
-        message: { key: "issue.license.missingText", params: { license: declared } },
-      }));
-      return { hitCount: 1 };
-    }
-    if (pkg && pkg.private !== true && pkg.license === undefined) {
-      context.rawIssues.push(issueFromRule(rule, {
-        path: `${context.root}#license`,
-        displayPath: "LICENSE",
-        message: { key: "issue.license.none" },
-        severity: "warn",
-      }));
-      return { hitCount: 1 };
-    }
-    return { hitCount: 0 };
   }
 }
 
@@ -252,7 +285,6 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
           examples: ordered.map(([, names]) => names.sort()[0]).join(", "),
         },
       },
-      severity: "warn",
     }));
   }
   return hits;

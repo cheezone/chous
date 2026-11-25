@@ -3,29 +3,29 @@
 面向 AI 编程助手的项目说明。改动仓库前请先读此文件，避免重复踩坑。
 
 ## 项目概览
-- 仓库：`chous`，一个**没有配置**的品味检查 CLI（taste linter），像 `gofmt`：品味就是工具本身。
-- 品味规则全部写在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene`）。`resolveTaste(root)` 按项目形态叠加适用的品味。
-- **只管「框架根本不读」的文件，不管喜好。** 根目录白名单、workflow 命名这类偏好删掉了：在 React、Vue、Oxc、SQLite、Vite 的官方仓库上实测全是误报。框架目录约定（`src/taste/frameworks.ts`）只收官方文档写明「会被忽略」的情况，比如 Next.js 根目录有 `app/` 时忽略 `src/app`、Nuxt 4 有 `app/` 时不再读根目录的 `pages/`；能被手动 import 的目录（`components/`、`utils/`）不报（nuxt.com 自己就这么用）。每条规则在注释和文案里写明来源链接。大小写只查「同目录下只差大小写」（macOS/Windows 检出会丢一个）。`test/samples` 里的真实项目一旦被报出错误，测试就失败。
-- **只嗅臭味，不追时髦。** 加规则前先问：三年后它报出来的错还对吗？只收录腐烂的东西（死掉的包、停止维护的运行时、平台已原样自带的轮子、互相打架的工具、重复、泄露）。**不要**规定用哪个工具（「linter 必须是 oxlint」这种），也不要收录需要跟着外部生态频繁更新的名单。
-- 判定只认**作者/平台亲口说过、而且已经发生的事实**；年龄、速度、实现语言（Rust/Go/Zig 重写）、流行度都不算，沉默（没人维护但没人宣布）也不算，实验/玩具项目不判。四种状态：
-  - 不判：还在维护的（不新鲜也行）、实验项目。
-  - 鸡肋（警告）：平台已自带等价能力（`deps.ts` 的 `NATIVE`）。
-  - 过期（警告）：官方停止维护日期已过，不满两年（`eol.ts`）。
-  - 腐烂（错误）：停止维护满两年（`ROT_AFTER_YEARS`）；作者宣布废弃（`DEPRECATED`）；作者故意破坏（`SABOTAGED`）。
-- `src/taste/eol.ts` 只收**已经过去**并查证过的日期（计划中的日期会变，Node 16 就提前了五个月），条目只增不改；附上官方来源链接。
-- 命名类规则（`twins`）：只差大小写、`SYNONYM_DIRS` 里的同义目录、根目录单复数并存、**同一目录里多单词文件名混用 kebab/snake/camel（警告）**。不规定用哪种风格，只要求一致；PascalCase、单词名、工具起的名字（`*.d.ts`、`*.gen.*`、Next.js 的 `not-found.tsx` 等）、Rust（交给 rustc 的 `non_snake_case`）不算。官方仓库也会被报（Nuxt、Vite、React、Bun、cal.com），那是真的混用。
-- 引用官方文档时以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
+- 仓库：`chous`，一个**没有配置**的品味检查 CLI，像 `gofmt`：品味就是工具本身。**能跑，但还是臭。**
+- **最高设计依据是 [`docs/manifesto.zh.md`](docs/manifesto.zh.md)**（英文版 `docs/manifesto.md`，`chous manifesto` 输出它）。改规则前先读；规则和宣言冲突时改规则，或者先改宣言。宣言附录逐条写了「chous 知道什么、主张什么」，加规则时同步加一行。
+- chous 检查品味，不检查正确性、安全、性能、测试。**不惩罚缺失**（没有测试、CI、许可证、`"type"` 字段都不报）。
+- 四种品味：现代（modernity）、秩序（order）、约定（convention）、洁净（cleanliness）。每条规则必须属于其中一种（`RuleBase.value`），报告按它分组。
+- **两种结果，没有 error/warning/info、没有分数**：
+  - `smell`：事实确定，违反品味，不需要判断。有 smell 时退出码为 1。
+  - `review`：事实确定，含义需要上下文（用途、意图）。交给人或 agent 判断，不影响退出码。
+  - 这是「chous 知道多少」，不是严重程度。**只凭文件名的猜测永远只能是 review**（工作日志、一次性脚本、找不到原件的备份）；要成为 smell 必须有事实（原件就在旁边、文件内容是 OS 写的、工具写下的标记文件）。
+- **事实错了才是误报，审美不同不是。** 知名项目也会被报，那不是误报；**不为迁就任何项目加豁免**。只维护两种名单：官方位置约定（`ROOT_CONTRACT_DOCS`、框架约定、`NAME_EXEMPT` 里工具起的名字），和已经发生、可核实的历史事实（`eol.ts`、`deps.ts`）。
+- 腐烂没有宽限期：停止维护那天起就是 smell（`hasEnded`）。`eol.ts` 只收已经过去并查证过的日期，附官方来源。
+- 「平台已自带」（`NATIVE`）是 review：平台自带了什么是事实，能否完全替代要看项目怎么用。
+- 根目录克制：除位置约定文档外最多 `ROOT_DOCS_LIMIT`（3）份文档。这是立场，不是测量。
+- 作用域：只有测试数据（`fixtures/`、`testdata/`、`__snapshots__/`）和 `vendor/`/`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 是项目自己的代码，照常检查。工作区里位于这些目录的包不检查。
+- 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用）不写成启发式规则，写进宣言「交给 agent 的部分」。
+- 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
+- **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 显示。文案里不写 URL。`pnpm run sources` 逐条核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
+- 引用官方文档以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
+- 校准：在 Vue/Vite/React/Oxc/SQLite、antfu/sindresorhus/Bun/Deno/Zig/Rust 等仓库和 vibe 项目上跑一遍，**逐条核对事实**，事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。`test/fixtures/samples` 里的真实项目用快照锁定 chous 对它们说的每一句话，快照变化必须人工读过再更新。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
-- `no` 规则必须带 `reason`，报错就是这个原因。
-- **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 时显示来源。文案里不写 URL。`pnpm run sources` 逐条抓取页面核对原话还在不在（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
-- 卫生检查（`src/taste/hygiene.ts`）：**不查明文密钥**，那是安全扫描器的事，不是品味。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
-- 结构类规则要拿真实仓库校准：在 Vue/Vite/React/Oxc/SQLite、antfu/sindresorhus/Bun/Deno/Zig/Rust 等仓库和 `test/samples` 上跑一遍，**每一条命中都要人工看**：是真臭味就留着（官方仓库也会臭），是误伤就改规则（例如 ripgrep 的 `RELEASE-CHECKLIST.md`、mdBook 的 `SUMMARY.md`）。官方仓库零命中**不是**目标。
-- 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
-- **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
-- i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（i18next 打包进 dist，是 devDependency）（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导，写错就是类型错误。品味里的原因只存 key（`reason: "reason.xxx"`、`dep.<包名>`、`eol.<产品>`、`role.<角色>`），不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。
-- 残留物（`leftover`）都是错误：工作日志、根目录没被引用的一次性脚本、手动备份、发布二进制；测试输入、示例、`vendor` 目录（`NOT_OURS`）、ADR、mdBook 的 `SUMMARY.md` 不查；`.exe` 不算（uv 有意提交预编译 trampoline）。验证集还包括 antfu、sindresorhus、Hono、Bun、Deno、Zig、Rust、ripgrep、tokio、uv。根目录手写文档超过 `ROOT_DOCS_LIMIT` 份是警告。
-- 许可证（`LicenseRuleValidator`）：声明了 license 却没有全文是错误；不是 `private` 又没有任何 license 是警告（GitHub 文档：没有许可证就没人能用）。不检查 CI、测试、`.editorconfig` 这类「缺了什么」：有品味不等于当家长。
-- `AGENTS.md` 与 `CLAUDE.md` 内容不同是允许的（CLAUDE.md 可能有意追加内容），只有内容完全相同才报（应该软链接或 `@AGENTS.md`）。
+- `no` 规则必须带 `reason` 和 `value`。
+- **不要**重新引入 `.chous` 配置、DSL、预设、人设、开关规则的选项（`--ignore-warnings` 这类也已删除）或任何让用户自定义规则的入口。
+- 运行时离线：不联网、不调用 AI、不需要 key。
+- i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导。品味里的原因只存 key，不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。
 - 运行时依赖尽量少：小依赖放 devDependencies，由 tsdown `deps.onlyBundle` 打进 `dist`（目前是 i18next）。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。
 - Node 要求：`engines.node >= 22`；CI 矩阵测试 node 22 与 24。

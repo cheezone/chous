@@ -4,7 +4,7 @@ import type { LifecycleRule, Rule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { EOL, eolDate, lifecycleStatus, lineOf, type Product } from "../../taste/eol";
+import { EOL, eolDate, hasEnded, lineOf, type Product } from "../../taste/eol";
 
 type Found = { product: Product; version: string; file: string };
 
@@ -80,15 +80,13 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
     const found = findVersions(context);
     for (const { product, version, file } of found) {
       const date = eolDate(product, version);
-      const status = lifecycleStatus(date, today);
-      if (status === "supported") continue;
+      if (!hasEnded(date, today)) continue;
       const { label } = EOL[product];
       const name = `${label} ${lineOf(product, version)}`;
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(context.root, file)}#eol:${product}`,
         displayPath: `${file} (${name})`,
-        message: { key: status === "rotten" ? "issue.lifecycle.rotten" : "issue.lifecycle.expired", params: { name, date: date!, use: { t: `eol.${product}` } } },
-        severity: status === "rotten" ? "error" : "warn",
+        message: { key: "issue.lifecycle.ended", params: { name, date: date!, use: { t: `eol.${product}` } } },
       }));
     }
     return { hitCount: found.length };

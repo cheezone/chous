@@ -1,7 +1,7 @@
-import type { Rule, RuleBase } from "../types";
+import type { Rule, RuleBase, Value } from "../types";
 import type { MessageKey } from "../i18n";
 
-type Extra = Pick<RuleBase, "reason" | "severity">;
+type Extra = Pick<RuleBase, "reason" | "verdict" | "value">;
 
 /** A rule without its source — the builder fills that in. */
 type RuleInput = Rule extends infer R ? (R extends Rule ? Omit<R, "source"> : never) : never;
@@ -22,63 +22,48 @@ export function taste(id: string) {
     rules,
 
     /** Paths that must not exist. */
-    no(names: string[], extra: Extra & { reason: MessageKey }) {
+    no(names: string[], extra: Extra & { reason: MessageKey; value: Value }) {
       push({ kind: "no", names, ...extra });
     },
 
     /** In these roles, a second tool is a bug. */
     oneToolPer(roles: string[]) {
-      push({ kind: "stack", roles });
-    },
-
-    /** A package.json field must equal `value`. */
-    field(field: string, value: string | boolean, extra?: Extra) {
-      push({ kind: "manifest", field, equals: value, ...extra });
-    },
-
-    /** A package.json field must be present, whatever its value. */
-    requireField(field: string, why: MessageKey, extra?: Pick<RuleBase, "severity">) {
-      push({ kind: "manifest", field, present: true, reason: why, ...extra });
+      push({ kind: "stack", roles, value: "order" });
     },
 
     /** A package.json field must not exist. */
-    noField(field: string, why: MessageKey) {
-      push({ kind: "manifest", field, absent: true, reason: why });
+    noField(field: string, why: MessageKey, value: Value = "order") {
+      push({ kind: "manifest", field, reason: why, value });
     },
 
     /** Cross-package checks for a monorepo root. */
     workspace() {
-      push({ kind: "workspace" });
+      push({ kind: "workspace", value: "order" });
     },
 
     /** Rotten deps (an error), or with `native` redundant ones the platform now ships (a warning). */
     obsolete(names: string[], use: string, why: MessageKey, opts?: { native?: boolean }) {
-      push({ kind: "deps", mode: "no", names, use, reason: why, ...opts });
+      push({ kind: "deps", mode: "no", names, use, reason: why, value: "modernity", ...opts });
     },
 
     /** Runtimes and frameworks past their published end of life. */
     lifecycle() {
-      push({ kind: "lifecycle" });
+      push({ kind: "lifecycle", value: "modernity" });
     },
 
     /** Build output that is not gitignored. */
     artifacts() {
-      push({ kind: "artifacts" });
+      push({ kind: "artifacts", value: "cleanliness" });
     },
 
     /** Work logs, one-off scripts, hand-made backups, release binaries. */
-    leftovers(opts: { scripts: boolean }) {
-      push({ kind: "leftover", ...opts });
-    },
-
-    /** A declared license with no text next to it; no license on something publishable. */
-    license() {
-      push({ kind: "license" });
+    leftovers(opts: { scripts: boolean; rootDocs: boolean }) {
+      push({ kind: "leftover", value: "cleanliness", ...opts });
     },
 
     /** One name written two ways: only case differs, or singular next to plural. */
     twins() {
-      push({ kind: "twins" });
+      push({ kind: "twins", value: "order" });
     },
   };
 }

@@ -61,9 +61,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "the new Nuxt default srcDir is app/ by default",
     },
   ],
-  "reason.moduleType": [
-    { url: "https://nodejs.org/api/packages.html#type", check: `${GH}/nodejs/node/main/doc/api/packages.md`, quote: "even in packages where all sources are CommonJS" },
-  ],
   "reason.pnpmWorkspaces": [
     { url: "https://pnpm.io/workspaces", check: `${GH}/pnpm/pnpm.io/main/docs/workspaces.md`, quote: "only pnpm-workspace.yaml is read" },
   ],
@@ -81,18 +78,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       check: `${GH}/cloudflare/cloudflare-docs/production/src/content/docs/workers/platform/deploy-buttons.mdx`,
       quote: "can be defined in a .dev.vars.example or .env.example file",
     },
-  ],
-  "issue.license.none": [
-    {
-      url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository",
-      check: `${GH}/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository.md`,
-      quote: "no one may reproduce, distribute, or create derivative works from your work",
-    },
-  ],
-  "issue.license.missingText": [
-    { url: "https://spdx.org/licenses/MIT.html", check: `${GH}/spdx/license-list-data/main/text/MIT.txt`, quote: "shall be included in all copies or substantial portions of the Software" },
-    { url: "https://spdx.org/licenses/ISC.html", check: `${GH}/spdx/license-list-data/main/text/ISC.txt`, quote: "provided that the above copyright notice and this permission notice appear in all copies" },
-    { url: "https://spdx.org/licenses/Apache-2.0.html", check: `${GH}/spdx/license-list-data/main/text/Apache-2.0.txt`, quote: "You must give any other recipients of the Work or Derivative Works a copy of this License" },
   ],
   "issue.leftover.binary": [
     {

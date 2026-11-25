@@ -16,7 +16,7 @@ export type ScanRepoResult = {
   issues: Array<{
     displayPath: string;
     message: string;
-    severity: string;
+    verdict: string;
     reason?: string;
   }>;
   components?: Array<{ name: string; path: string[]; techs: string[] }>;
@@ -156,7 +156,7 @@ async function scanOneRepo(opts: {
   const issues: ScanRepoResult["issues"] = result.issues.map((i: Issue) => ({
     displayPath: i.displayPath,
     message: formatIssueMessage(t, i.message),
-    severity: i.severity,
+    verdict: i.verdict,
     reason: i.reason && t(i.reason),
   }));
 
@@ -215,7 +215,7 @@ export function formatScanText(result: ScanResult, t: TFunction): string {
     }
     lines.push(`  ${t("scan.issues", { count: repo.issues.length })}${repo.issues.length ? ":" : ""}`);
     for (const i of repo.issues.slice(0, 30)) {
-      lines.push(`    - [${i.severity}] ${i.displayPath}: ${i.message}`);
+      lines.push(`    - [${i.verdict}] ${i.displayPath}: ${i.message}`);
     }
     lines.push("");
   }

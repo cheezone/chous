@@ -14,11 +14,24 @@ async function findings(files: Record<string, string>) {
   return result.issues.map((i) => i.displayPath).sort();
 }
 
+/** `smell <path>` / `review <path>`: what chous knows, per finding. */
+async function claims(files: Record<string, string>) {
+  const root = mkdtempSync(join(tmpdir(), "chous-claims-"));
+  for (const [path, content] of Object.entries(files)) {
+    mkdirSync(dirname(join(root, path)), { recursive: true });
+    writeFileSync(join(root, path), content, "latin1");
+  }
+  const result = await lintWorkspace({ root });
+  return result.issues.map((i) => `${i.verdict} ${i.displayPath}`).sort();
+}
+
 describe("committed build output", () => {
   it("flags output that is not gitignored", async () => {
     expect(
       await findings({
-        "package.json": "{\"type\":\"module\",\"private\":true}",
+        "package.json": "{\"type\":\"module\",\"private\":true,\"scripts\":{\"build\":\"tsdown\"}}",
+        "fixture-pkg/package.json": "{\"main\":\"dist/index.js\"}",
+        "fixture-pkg/dist/index.js": "",
         "dist/index.js": "",
         "node_modules/.package-lock.json": "{}",
         "api/Cargo.toml": "",
@@ -44,50 +57,68 @@ describe("committed build output", () => {
 });
 
 describe("leftovers", () => {
-  it("flags docs named after an event: any name at the root, SCREAMING_CASE deeper", async () => {
+  it("puts docs named like work logs up for review, and never ADRs or book tables of contents", async () => {
     expect(
-      await findings({
+      await claims({
         "README.md": "",
-        "CHANGELOG.md": "",
-        "ROADMAP.md": "",
-        "ARCHITECTURE.md": "",
         "IMPLEMENTATION_COMPLETE.md": "",
-        "FIXES_SUMMARY.md": "",
         "docs/BUGFIX_LOGIN.md": "",
         "docs/report-format.md": "",
         "docs/adr/ADR-001-IMPLEMENTATION.md": "",
+        "book/src/SUMMARY.md": "",
       }),
-    ).toEqual(["FIXES_SUMMARY.md", "IMPLEMENTATION_COMPLETE.md", "docs/BUGFIX_LOGIN.md"]);
+    ).toEqual(["review IMPLEMENTATION_COMPLETE.md", "review docs/BUGFIX_LOGIN.md"]);
   });
 
-  it("flags one-off scripts at the root, unless something names them", async () => {
+  it("smells a crowded root, whatever the docs are, counting only what has no claim to the root", async () => {
+    const root = { "README.md": "", "LICENSE": "", "CHANGELOG.md": "", "CONTRIBUTING.md": "", "SECURITY.md": "", "AGENTS.md": "", "CLAUDE.md": "x" };
+    const docs = { "ARCHITECTURE.md": "", "DESIGN.md": "", "API.md": "" };
+    expect(await claims({ ...root, ...docs })).toEqual([]);
+    expect(await claims({ ...root, ...docs, "ROADMAP.md": "" })).toEqual(["smell ./"]);
+  });
+
+  it("merges root work logs into one review", async () => {
+    expect(await claims({ "FIXES_SUMMARY.md": "", "IMPLEMENTATION_COMPLETE.md": "" })).toEqual(["review ./"]);
+  });
+
+  it("puts unreferenced one-off scripts up for review", async () => {
     expect(
-      await findings({
+      await claims({
         "package.json": JSON.stringify({ type: "module", private: true, files: ["test-utils.js"] }),
+        "README.md": "Run `./check-env.sh` first.",
+        "check-env.sh": "",
         "test-utils.js": "",
         "fix_login.sh": "",
         "scripts/fix_login.sh": "",
       }),
-    ).toEqual(["fix_login.sh"]);
+    ).toEqual(["review fix_login.sh"]);
   });
 
-  it("flags hand-made backups and release binaries, but not fixtures or vendored code", async () => {
+  it("smells a copy next to its original; a lone backup is for review", async () => {
     expect(
-      await findings({
+      await claims({
+        "package.json": "{}",
         "package.json.bak": "",
+        "public/logo.png": "",
         "public/logo (1).png": "",
-        "app-release.apk": "",
+        "old-config.js.orig": "",
         "vendor/serde/Cargo.toml.orig": "",
-        "test/fixtures/setup.exe": "",
+        "test/fixtures/x.bak": "",
       }),
-    ).toEqual(["app-release.apk", "package.json.bak", "public/logo (1).png"]);
+    ).toEqual(["review old-config.js.orig", "smell package.json.bak", "smell public/logo (1).png"]);
   });
 
-  it("warns once when the root fills up with hand-written docs", async () => {
-    const docs = Object.fromEntries(["A", "B", "C", "D", "E", "F"].map((n) => [`GUIDE_${n}.md`, ""]));
-    expect(await findings(docs)).toEqual(["*.md"]);
-    delete docs["GUIDE_F.md"];
-    expect(await findings(docs)).toEqual([]);
+  it("smells built binaries anywhere but test data and vendored code", async () => {
+    expect(
+      await claims({ "app-release.apk": "", "tools/helper.exe": "", "test/fixtures/setup.exe": "", "vendor/lib.dll": "" }),
+    ).toEqual(["smell app-release.apk", "smell tools/helper.exe"]);
+  });
+
+  it("knows OS junk by what the OS writes into it", async () => {
+    const dsStore = `\0\0\0\u0001Bud1${"\0".repeat(16)}`;
+    expect(
+      await claims({ ".DS_Store": dsStore, "test/cases/desktop.ini": ".{ .name = .desktop }", "assets/desktop.ini": "[.ShellClassInfo]\nIconResource=x" }),
+    ).toEqual(["smell .DS_Store", "smell assets/desktop.ini"]);
   });
 
   it("flags personal files their tools say to keep out of git", async () => {

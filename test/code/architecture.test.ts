@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { resolveTaste } from "../../src/taste";
 import { DEPRECATED, NATIVE, SABOTAGED } from "../../src/taste/deps";
-import { EOL, eolDate, lifecycleStatus } from "../../src/taste/eol";
+import { EOL, eolDate, hasEnded } from "../../src/taste/eol";
 import { pinnedVersion } from "../../src/rules/validators/lifecycle";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
@@ -71,11 +71,10 @@ describe("end of life", () => {
     expect(eolDate("nuxt", "3")).toBe("2026-07-31");
   });
 
-  it("turns from expired into rotten after two years, with no change to chous", () => {
-    expect(lifecycleStatus("2026-07-31", "2026-07-30")).toBe("supported");
-    expect(lifecycleStatus("2026-07-31", "2026-07-31")).toBe("expired");
-    expect(lifecycleStatus("2026-07-31", "2028-07-30")).toBe("expired");
-    expect(lifecycleStatus("2026-07-31", "2028-07-31")).toBe("rotten");
+  it("smells the day end of life comes, with no grace period and no change to chous", () => {
+    expect(hasEnded("2026-07-31", "2026-07-30")).toBe(false);
+    expect(hasEnded("2026-07-31", "2026-07-31")).toBe(true);
+    expect(hasEnded(undefined, "2026-07-31")).toBe(false);
   });
 
   it("only lists dates that have already passed", () => {
@@ -85,13 +84,13 @@ describe("end of life", () => {
     }
   });
 
-  it("warns on a framework that just expired", async () => {
+  it("smells a framework the day after it ends", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-eol-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", dependencies: { nuxt: "^3.12.0" } }), "utf8");
-    const issues = (await lintWorkspace({ root: dir, today: "2026-11-24" })).issues.filter((i) => i.ruleKind === "lifecycle");
-    expect(issues.map((i) => [i.message.key, i.severity])).toEqual([["issue.lifecycle.expired", "warn"]]);
-    const later = (await lintWorkspace({ root: dir, today: "2028-08-01" })).issues.filter((i) => i.ruleKind === "lifecycle");
-    expect(later.map((i) => [i.message.key, i.severity])).toEqual([["issue.lifecycle.rotten", "error"]]);
+    const before = (await lintWorkspace({ root: dir, today: "2026-07-30" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(before).toEqual([]);
+    const after = (await lintWorkspace({ root: dir, today: "2026-08-01" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(after.map((i) => [i.message.key, i.verdict, i.value])).toEqual([["issue.lifecycle.ended", "smell", "modernity"]]);
   });
 });
 

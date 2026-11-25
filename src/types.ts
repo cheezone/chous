@@ -5,13 +5,23 @@ export type RuleSource = {
   taste: string;
 };
 
-export type Severity = "error" | "warn";
+/**
+ * What chous knows, not how bad it is.
+ * - smell: a fact chous is sure of, against a stated taste. Nothing to decide.
+ * - review: a fact worth a look, whose meaning needs context chous does not
+ *   have (what a file is for). A person or an agent decides.
+ */
+export type Verdict = "smell" | "review";
+
+/** The taste a rule stands for (see docs/manifesto.md). */
+export type Value = "modernity" | "order" | "convention" | "cleanliness";
 
 /** Shared metadata on every rule. */
 export type RuleBase = {
   source: RuleSource;
-  /** Overrides the validator's default severity. */
-  severity?: Severity;
+  value: Value;
+  /** Overrides the validator's default verdict. */
+  verdict?: Verdict;
   /** Why this rule exists: a message in `src/locales`. */
   reason?: MessageKey;
 };
@@ -26,7 +36,6 @@ export type Rule =
   | ArtifactsRule
   | LeftoverRule
   | TwinsRule
-  | LicenseRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -44,17 +53,14 @@ export type DepsRule = RuleBase & {
   names: string[];
   /** What to use instead. */
   use?: string;
-  /** The platform ships an equivalent: redundant, not rotten (a warning). */
+  /** The platform ships something similar: whether it fully replaces the package is for review. */
   native?: boolean;
 };
 
-/** A package.json field must equal a value, be present, or not exist. */
+/** A package.json field that must not exist. */
 export type ManifestRule = RuleBase & {
   kind: "manifest";
   field: string;
-  equals?: string | boolean;
-  absent?: boolean;
-  present?: boolean;
 };
 
 /** Runtimes and frameworks past their published end of life (see `taste/eol.ts`). */
@@ -67,11 +73,6 @@ export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
 };
 
-/** A license that is declared but not shipped, or none at all (see `LicenseRuleValidator`). */
-export type LicenseRule = RuleBase & {
-  kind: "license";
-};
-
 /** One name written two ways (see `TwinsRuleValidator`). */
 export type TwinsRule = RuleBase & {
   kind: "twins";
@@ -82,6 +83,8 @@ export type LeftoverRule = RuleBase & {
   kind: "leftover";
   /** Look for one-off scripts (repository root only: a package root is part of a bigger build). */
   scripts: boolean;
+  /** Count docs at the root (repository root only). */
+  rootDocs: boolean;
 };
 
 /** Monorepo root: one major version per dependency across packages. */
@@ -118,7 +121,8 @@ export type Issue = {
   /** Relative to the linted root. */
   displayPath: string;
   message: IssueMessage;
-  severity: Severity;
+  verdict: Verdict;
+  value: Value;
 };
 
 export type LintResult = {

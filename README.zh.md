@@ -27,9 +27,9 @@
 
 _/tʃoʊs/_
 
-Chous 是一个有主见的品味检查器。AI 编辑器会自己发明目录、格式化工具和测试框架，项目从没要求过这些。Chous 嗅仓库里的臭味：腐烂的依赖、停止维护的运行时、互相打架的工具、根目录的垃圾，然后告诉 AI 该改成什么。
+Chous 是一个有主见的品味检查器：**能跑，但还是臭。** 它不管你的代码对不对，只管你的仓库干不干净、有没有秩序、用的东西烂没烂。AI 很会创造东西，却不负责收拾：迁移工具后留下旧配置，做完一件事留下五份总结，修一个 bug 留下三个临时脚本。Chous 把这些臭味指出来，交给你或你的 agent 去收拾。
 
-没有配置，没有预设，也没有插件。品味就是工具本身，像 `gofmt` 一样。
+没有配置，没有预设，也没有插件。品味就是工具本身，像 `gofmt` 一样。完整的立场写在 [宣言](docs/manifesto.zh.md) 里。
 
 \* *chous* 来自中文「抽丝」：抽丝剥茧，理清头绪。
 
@@ -39,59 +39,56 @@ npx chous
 
 ### 输出
 
-```
-✖ .env.local                     → 不允许：本地环境变量文件，可能含密钥；Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore
-✖ package.json (git-hooks)       → Git 钩子同时用了 husky + simple-git-hooks，它们会互相打架，只留一个
-✖ package.json (package-manager) → 包管理器同时用了 npm + yarn，它们会互相打架，只留一个
-✖ package.json (request)         → 依赖 request 已过时 → fetch
-✖ package.json (Vue 2)           → Vue 2 已于 2023-12-31 停止维护，超过两年了 → Vue 3
-✖ test/ + tests/                 → 同一个意思用了两个名字，只留一个
-⚠ .nvmrc (Node 20)               → Node 20 已于 2026-04-30 停止维护，不再有安全修复 → 仍在维护的 LTS 版本
-⚠ package.json (rimraf)          → 依赖 rimraf 平台已经自带 → fs.rm(path, { recursive: true, force: true })
-⚠ package.json (type)            → 加上 "type"："module" 或 "commonjs"，Node 官方建议显式声明
+```现代
+  ✗ .nvmrc (Node 16)       → Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
+  ✗ package.json (request) → 依赖 request 已过时 → fetch
+  ✗ package.json (Vue 2)   → Vue 2 已于 2023-12-31 停止维护 → Vue 3
 
-发现 6 个错误，3 个警告
+秩序
+  ✗ ./                             → 根目录除 README、LICENSE 这类之外还有 4 份文档（ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md）：根目录是入口，最多留 3 份，其余移进 docs/
+  ✗ package.json (package-manager) → 包管理器同时用了 npm + pnpm，它们会互相打架，只留一个
+  ✗ src/composables/               → 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
+  ✗ test/ + tests/                 → 同一个意思用了两个名字，只留一个
 
-品味：base · js
+洁净
+  ✗ .DS_Store        → 不允许：系统垃圾文件，删掉并加进 .gitignore
+  ✗ package.json.bak → package.json 的拷贝：git 本来就保留了旧版本
+
+待审视：chous 知道事实，不知道用途。由你或你的 agent 判断。
+  ? ./                        → 2 份文档名字像工作日志（FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md）：如果记录的是某一次工作，应该写进 PR，而不是留在仓库里
+  ? package.json (node-fetch) → 平台已经自带 fetch：能否完全替代 node-fetch，取决于你怎么用它
+
+臭味 9 处 · 待审视 2 处
+只看品味：不检查正确性、安全和测试。
 ```
+
+### 两种结果
+
+- **臭味**：chous 确定的事实，违反了它的品味，不需要再判断。按四种品味分组：现代、秩序、约定、洁净。
+- **待审视**：事实确定，但含义需要上下文。比如一个名字像工作日志的文件，chous 知道它叫什么，不知道它写了什么，交给你或你的 agent 判断。
+
+没有错误、警告、提示之分，也没有分数。有臭味时 chous 以非零状态退出，待审视的不影响退出码。事实错了才是误报，审美不同不是。
 
 ### 检查什么
 
-Chous 只嗅臭味，不追时髦。它只看项目的作者或平台自己说过的话，而且必须是已经发生的事。年龄、速度、实现语言、流行度都不算，没人说话（沉默）也不算。文件放在哪儿是各个生态自己的事：SQLite、React、Vue 的根目录各不相同，它们都没错。
+| 品味 | 臭味 | 待审视 |
+| --- | --- | --- |
+| 现代 | 停止维护的运行时和框架（从停止那天起，没有宽限期）；作者废弃或故意破坏的依赖；死掉的工具留下的配置；作者称为旧格式的文件（`.cursorrules`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 平台已经自带同类能力的依赖 |
+| 秩序 | 一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；同一职责的工具并存；monorepo 里跨大版本的依赖、嵌套 lockfile；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
+| 约定 | 框架根本不读的文件（Next.js 的 `src/app`、Nuxt 4 放在 `app/` 外的 `pages/`）；框架找不到的大写目录 | |
+| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾（靠文件内容识别）；日志、`.env*.local`、个人 IDE 和 agent 配置；旁边就有原件的备份；源码树里的二进制 | 名字像工作日志的文档；没人提到的一次性脚本；找不到原件的备份 |
 
-规则都在 [`src/taste/`](src/taste)：
+不检查缺失（没有测试、没有 CI、没有许可证都不报），也不检查正确性和安全。测试夹具和 `vendor/` 不查，`tests/`、`examples/` 是你自己的代码，照常检查。
 
-| 品味 | 什么时候生效 |
-| --- | --- |
-| `base` | 总是 |
-| `js` · `monorepo` · `bun` · `cloudflare` | 有 `package.json`；有工作区包；用 Bun；有 `wrangler` 配置 |
+每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处。原话登记在 [`src/taste/sources.ts`](src/taste/sources.ts)，`pnpm run sources` 会逐条核对原话还在不在页面上。
 
-- **只凭事实判断腐烂。**
-
-  | 状态 | 事实 | 例子 | 级别 |
-  | --- | --- | --- | --- |
-  | 鸡肋 | 平台已经自带等价能力 | `node-fetch` → `fetch`、`rimraf` → `fs.rm` | 警告 |
-  | 过期 | 官方公布的停止维护日期已过 | Node 20、Nuxt 3、Python 3.10 | 警告 |
-  | 腐烂 | 停止维护超过两年；作者宣布废弃；作者故意破坏 | Node 16、Python 2.7、Vue 2、`request`、`babel-eslint`、`colors` | 错误 |
-
-  停止维护日期写在 [`src/taste/eol.ts`](src/taste/eol.ts)，抄自各项目的官方时间表，只收已经过去的日期。版本取自项目实际运行的：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile 的 `FROM`、锁定版本的 `engines.node`、`vue` / `nuxt` 依赖。满两年后，"过期"会自己变成"腐烂"。
-- **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
-- **框架根本不读的文件。** 只收框架官方文档写明的情况，每条提示都附上文档链接：根目录有 `app/` 时的 `src/app`（Next.js 会忽略它）；Next.js 16 的 `middleware.ts`（已改名为 `proxy`）；Nuxt 4 里放在 `app/` 外面的 `pages/`、`layouts/`；没有小写路由目录时的 `App/`、`Pages/`，在 macOS 上能跑，到 Linux 就消失。规则在 [`src/taste/frameworks.ts`](src/taste/frameworks.ts)。
-- **同一个概念两个名字。** 同一个目录里文件名混用两种风格（`asyncData.ts` 和 `lazy-hydration.ts` 并排，警告：用哪种都行，只用一种）；`README.md` 旁边还有 `Readme.md`（在 macOS 和 Windows 上检出只会留下一个）；`test/` 和 `tests/` 并存；`plugin/` 和 `plugins/` 并存；`CLAUDE.md` 和 `AGENTS.md` 内容一模一样（Bun 和 cal.com 都是一份文件加一个软链接）。
-- **说了有、实际没有的许可证。** `package.json` 写了 `"license": "MIT"`（或 Cargo 的 `license`），却没有许可证全文：MIT、ISC、BSD、Apache 2.0 都要求每份拷贝带上全文。可发布的包完全没有许可证是警告：按 GitHub 文档，别人不能用它。
-- **重复。** monorepo 里同一个依赖用了两个大版本（会装两份）；工作区包里有自己的 lockfile。
-- **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。工具自己说是「个人」的文件：`.env*.local`、`.dev.vars`、`CLAUDE.local.md` 和 `.claude/settings.local.json`（Claude Code 文档），Android 的 `local.properties`（文件头写着「绝不能提交」）、JetBrains 的 `.idea/workspace.xml`；以及 Cursor 称为旧格式的 `.cursorrules`。以及 `.DS_Store`、`*.log`。
-- **残留物。** 一次工作留下的东西：以事件或状态命名的 Markdown（`IMPLEMENTATION_COMPLETE.md`、`PHASE_4_PLAN.md`；根目录任何写法，子目录只查全大写，决策记录 ADR 除外）；根目录里没被任何文件引用的一次性脚本（`fix_login.sh`、`test_api.py`）；手动备份（`package.json.bak`、`logo (1).png`）；安装包（`.apk`、`.dmg`、`.msi`，应该放到 Releases）；根目录手写文档超过五份时给一个警告。规则在 [`src/taste/hygiene.ts`](src/taste/hygiene.ts)。实测：Vue、Vite、React、Oxc、SQLite、cal.com、Next.js Commerce、nuxt.com，以及 antfu、sindresorhus、Hono、Bun、Deno、Zig、Rust、ripgrep、tokio、uv 的仓库零命中；28 个 vibe coding 项目里 25 个命中。
-- **声明模块类型。** 每个 package.json 都写 `"type": "module"` 或 `"commonjs"`，这是 Node 官方文档的建议（警告）。
-
-每一条引用别人说法的原因都附有来源：加 `--verbose` 就会在每条结果下面显示出处。原话登记在 [`src/taste/sources.ts`](src/taste/sources.ts)，`pnpm run sources` 会逐条核对原话还在不在页面上。
-
-Chous 在 React、Vue、Vite、Oxc 上也能报出真问题：名气大的项目也有臭的地方。
+规则在 [`src/taste/`](src/taste)：`base` 总是生效；`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目的样子叠加。
 
 ### 命令
 
 ```bash
 npx chous                 # 检查当前目录
+npx chous manifesto       # 输出品味宣言，给 agent 读完再审视整个仓库
 npx chous claude install  # 在 Claude Code hooks 里运行 chous
 npx chous cursor install  # 在 Cursor hooks 里运行 chous
 npx chous scan .          # 找 git 仓库，识别项目类型 / 技术栈角色

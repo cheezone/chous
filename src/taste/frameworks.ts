@@ -26,16 +26,16 @@ const has = (root: string, rel: string) => existsSync(resolve(root, rel));
 export function next(root: string, version: number | undefined) {
   const t = taste("next");
   for (const dir of ["app", "pages"]) {
-    if (has(root, dir)) t.no([`src/${dir}`], { reason: "reason.nextSrcIgnored" });
+    if (has(root, dir)) t.no([`src/${dir}`], { reason: "reason.nextSrcIgnored", value: "convention" });
   }
   // Routers are found by exact name: with no lowercase router, `App/` is one
   // that works on macOS and vanishes on Linux.
   if (!["app", "pages", "src/app", "src/pages"].some((d) => has(root, d))) {
-    t.no(["{,src/}App", "{,src/}Pages"], { reason: "reason.nextCase" });
+    t.no(["{,src/}App", "{,src/}Pages"], { reason: "reason.nextCase", value: "convention" });
   }
-  t.no(["Public"], { reason: "reason.nextCase" });
+  t.no(["Public"], { reason: "reason.nextCase", value: "convention" });
   if (version !== undefined && version >= 16) {
-    t.no(["{,src/}middleware.{ts,js}"], { reason: "reason.nextProxy" });
+    t.no(["{,src/}middleware.{ts,js}"], { reason: "reason.nextProxy", value: "modernity" });
   }
   return t.rules;
 }
@@ -74,8 +74,8 @@ function nuxtUsesAppDir(root: string): boolean {
 export function nuxt(root: string, version: number | undefined) {
   const t = taste("nuxt");
   const src = version !== undefined && version >= 4 && nuxtUsesAppDir(root) ? "app/" : "";
-  if (src) t.no([...NUXT_SRC, ...NUXT_SRC_FILES], { reason: "reason.nuxtSrcDir" });
+  if (src) t.no([...NUXT_SRC, ...NUXT_SRC_FILES], { reason: "reason.nuxtSrcDir", value: "convention" });
   const capital = (d: string) => `${src}${d[0]!.toUpperCase()}${d.slice(1)}`;
-  t.no([...NUXT_SRC.map(capital), "Public", "Server"], { reason: "reason.nuxtCase" });
+  t.no([...NUXT_SRC.map(capital), "Public", "Server"], { reason: "reason.nuxtCase", value: "convention" });
   return t.rules;
 }

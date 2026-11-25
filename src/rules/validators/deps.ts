@@ -36,7 +36,7 @@ export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
             : rule.native
               ? { key: "issue.deps.native", params: { name, use: rule.use } }
               : { key: "issue.deps.obsolete", params: { name, use: rule.use } },
-          severity: rule.native ? "warn" : "error",
+          verdict: rule.native ? "review" : "smell",
         }));
       }
     }

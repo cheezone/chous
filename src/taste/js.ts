@@ -26,21 +26,16 @@ const FIGHTING_ROLES = ["package-manager", "formatter", "git-hooks", "release"];
 export function js(project: JsProject = {}) {
   const t = taste("js");
 
-  // Node's own docs: always declare it, even for CommonJS packages.
-  t.requireField("type", "reason.moduleType", { severity: "warn" });
-
   t.oneToolPer(FIGHTING_ROLES);
 
   if (project.workspacePackage) {
-    t.no(LOCKFILES, { reason: "reason.nestedLockfile" });
+    t.no(LOCKFILES, { reason: "reason.nestedLockfile", value: "order" });
     t.noField("packageManager", "reason.nestedPackageManager");
   }
 
   for (const dep of NATIVE) t.obsolete(dep.names, dep.use, depReason(dep), { native: true });
   for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, depReason(dep));
-  t.no([".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json"], {
-    reason: "reason.deadToolConfig",
-  });
+  t.no([".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json"], { reason: "reason.deadToolConfig", value: "modernity" });
 
   return t.rules;
 }
@@ -58,7 +53,7 @@ export function monorepo(pnpm: boolean) {
 /** Bun as runtime. */
 export function bun() {
   const t = taste("bun");
-  t.no(["bun.lockb"], { reason: "reason.bunLockb" });
+  t.no(["bun.lockb"], { reason: "reason.bunLockb", value: "modernity" });
   t.obsolete(["tsx", "ts-node"], "bun", "reason.bunRunsTs", { native: true });
   return t.rules;
 }
@@ -66,7 +61,7 @@ export function bun() {
 /** Cloudflare Workers / Pages projects (a wrangler config at the root). */
 export function cloudflare() {
   const t = taste("cloudflare");
-  t.no(["**/.dev.vars", "**/.dev.vars.!(example)"], { reason: "reason.devVars" });
-  t.no([".wrangler"], { reason: "reason.wranglerState" });
+  t.no(["**/.dev.vars", "**/.dev.vars.!(example)"], { reason: "reason.devVars", value: "cleanliness" });
+  t.no([".wrangler"], { reason: "reason.wranglerState", value: "cleanliness" });
   return t.rules;
 }

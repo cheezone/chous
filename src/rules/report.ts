@@ -1,4 +1,4 @@
-import type { Issue, IssueMessage, LintResult } from "../types";
+import type { Issue, IssueMessage, LintResult, Value } from "../types";
 import type { Colorizer } from "../color";
 import type { TFunction } from "../i18n";
 import { APP_NAME } from "../constants";
@@ -18,11 +18,9 @@ export function formatIssueMessage(t: TFunction, msg: IssueMessage): string {
   return t(msg.key, params);
 }
 
-/** Errors before warnings, then by path. */
-function byWeight(a: Issue, b: Issue): number {
-  if (a.severity !== b.severity) return a.severity === "error" ? -1 : 1;
-  return a.displayPath.localeCompare(b.displayPath);
-}
+const VALUES: Value[] = ["modernity", "order", "convention", "cleanliness"];
+
+const byPath = (a: Issue, b: Issue) => a.displayPath.localeCompare(b.displayPath);
 
 export function renderReport(
   result: LintResult,
@@ -40,28 +38,45 @@ export function renderReport(
   const by = t("app.by");
   lines.push(`${c.bold(APP_NAME)}${version} ${c.dim(`${by ? `${by} ` : ""}@Cheez Lin <https://cheez.tech>`)}`, "");
 
-  const issues = [...result.issues].sort(byWeight);
-  const shown = verbose ? issues : issues.slice(0, CONCISE_LIMIT);
-  const width = Math.max(0, ...shown.map((i) => visibleLength(i.displayPath)));
+  const smells = result.issues.filter((i) => i.verdict === "smell");
+  const reviews = result.issues.filter((i) => i.verdict === "review").sort(byPath);
+  const groups = VALUES.map((value) => ({ value, issues: smells.filter((i) => i.value === value).sort(byPath) })).filter((g) => g.issues.length);
 
-  for (const issue of shown) {
-    const icon = issue.severity === "error" ? c.red("✖") : c.yellow("⚠");
-    const reason = verbose && issue.reason ? ` ${c.dim(t("report.reason", { reason: t(issue.reason) }))}` : "";
-    lines.push(`${icon} ${issue.displayPath.padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
-    if (verbose) {
-      const nested = Object.values(issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
-      for (const { url } of sourcesFor([issue.reason, issue.message.key, ...nested])) lines.push(c.dim(`  ${t("report.source", { url })}`));
+  let budget = verbose ? Infinity : CONCISE_LIMIT;
+  let hidden = 0;
+  const block = (issues: Issue[], mark: string) => {
+    const shown = issues.slice(0, Math.max(0, budget));
+    budget -= shown.length;
+    hidden += issues.length - shown.length;
+    const width = Math.max(0, ...shown.map((i) => visibleLength(i.displayPath)));
+    for (const issue of shown) {
+      const reason = verbose && issue.reason ? ` ${c.dim(t("report.reason", { reason: t(issue.reason) }))}` : "";
+      lines.push(`  ${mark} ${issue.displayPath.padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
+      if (verbose) {
+        const nested = Object.values(issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
+        for (const { url } of sourcesFor([issue.reason, issue.message.key, ...nested])) lines.push(c.dim(`      ${t("report.source", { url })}`));
+      }
     }
-  }
-  if (shown.length < issues.length) lines.push(c.dim(t("report.moreHidden", { count: issues.length - shown.length })));
-  if (shown.length > 0) lines.push("");
+  };
 
-  const errors = issues.filter((i) => i.severity === "error").length;
+  for (const { value, issues } of groups) {
+    lines.push(c.bold(t(`report.value.${value}`)));
+    block(issues, c.red("✗"));
+    lines.push("");
+  }
+  if (reviews.length) {
+    lines.push(c.bold(t("report.review")));
+    block(reviews, c.yellow("?"));
+    lines.push("");
+  }
+  if (hidden) lines.push(c.dim(t("report.moreHidden", { count: hidden })), "");
+
   lines.push(
-    issues.length === 0
+    result.issues.length === 0
       ? c.green(t("report.noIssues"))
-      : t("report.found", { errors, warnings: issues.length - errors }),
+      : t("report.found", { smells: smells.length, reviews: reviews.length }),
   );
+  lines.push(c.dim(t("report.scope")));
 
   lines.push("", c.dim(t("meta.taste", { names: result.tastes.join(" · ") })));
   if (result.workspacePackages?.length) {

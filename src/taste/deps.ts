@@ -2,11 +2,11 @@
  * Dependencies with something wrong about them. Every entry must meet one of
  * these checkable facts — facts that stay true once they are true:
  *
- * 1. NATIVE (redundant, a warning): the platform ships an equivalent
- *    (Node >= 22, evergreen browsers). It still works; it is just one more
- *    package to trust.
- * 2. DEPRECATED (rotten, an error): its own authors deprecated or abandoned it.
- * 3. SABOTAGED (rotten, an error): its author broke it on purpose.
+ * 1. NATIVE (for review): the platform ships something that does the same job
+ *    (Node >= 22, evergreen browsers). That much is a fact; whether it fully
+ *    replaces the package for this project is not, so a person or agent decides.
+ * 2. DEPRECATED (a smell): its own authors deprecated or abandoned it.
+ * 3. SABOTAGED (a smell): its author broke it on purpose.
  *
  * "Old", "slow", "written in the wrong language" or "there is something newer"
  * are not rot. Those change; facts do not. Silence is not evidence either: an
@@ -63,7 +63,6 @@ export const NATIVE: ObsoleteDep[] = [
   { names: ["es6-symbol", "es6-map", "es6-set", "es6-weak-map"], use: "Symbol / Map / Set / WeakMap" },
 ];
 
-/** Dead or superseded. Use the named replacement. */
 /** 2. Deprecated or abandoned by its own authors. */
 export const DEPRECATED: ObsoleteDep[] = [
   { names: ["request", "request-promise", "request-promise-native"], use: "fetch" },

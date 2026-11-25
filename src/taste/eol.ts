@@ -3,10 +3,9 @@
  * already passed. A planned date can move (Node 16 ended five months early);
  * a passed one cannot. Entries are only ever added, never edited.
  *
- * Expired: past end of life, no more security fixes → warning.
- * Rotten: more than ROT_AFTER_YEARS past end of life → error.
+ * Past end of life is a smell the day it happens: no grace period. It may
+ * still run; it is still rotten.
  */
-export const ROT_AFTER_YEARS = 2;
 
 export type Product = "node" | "python" | "vue" | "nuxt";
 
@@ -115,11 +114,7 @@ export function eolDate(product: Product, version: string): string | undefined {
   return undefined;
 }
 
-export type LifecycleStatus = "supported" | "expired" | "rotten";
-
-export function lifecycleStatus(date: string | undefined, today: string): LifecycleStatus {
-  if (!date || date > today) return "supported";
-  const [y, m, d] = date.split("-");
-  const rotAt = `${Number(y) + ROT_AFTER_YEARS}-${m}-${d}`;
-  return rotAt <= today ? "rotten" : "expired";
+/** True once the published end-of-life date has come. */
+export function hasEnded(date: string | undefined, today: string): boolean {
+  return Boolean(date && date <= today);
 }

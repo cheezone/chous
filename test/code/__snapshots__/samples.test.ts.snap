@@ -1,0 +1,17 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`real-world samples > ai-chatbot 1`] = `
+[
+  "review modernity package.json (dotenv) issue.deps.native {"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}",
+]
+`;
+
+exports[`real-world samples > nuxt.com 1`] = `[]`;
+
+exports[`real-world samples > project-layout 1`] = `[]`;
+
+exports[`real-world samples > pythondotorg 1`] = `
+[
+  "smell order static/js/plugins/ issue.twins.styles {"styles":"camelCase ×1 + kebab-case ×1","examples":"getComputedStyle.js, ie7-squish.js"}",
+]
+`;

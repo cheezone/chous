@@ -20,15 +20,13 @@ const VERSION: string = packageJson.version;
 type HookSubcommand = "after-edit" | "stop" | "install";
 
 type CliOptions = {
-  command: "lint" | "cursor" | "claude" | "scan" | "knowledge";
+  command: "lint" | "cursor" | "claude" | "scan" | "knowledge" | "manifesto";
   hook?: HookSubcommand;
   cwd: string;
   verbose: boolean;
   lang?: string;
   color: boolean;
   help: boolean;
-  failOnWarnings: boolean;
-  ignoreWarnings: boolean;
   /** File paths from lint-staged or similar tools. */
   filePaths?: string[];
   json?: boolean;
@@ -56,8 +54,6 @@ function parseArgs(argv: string[], t: TFunction): CliOptions {
     verbose: false,
     color: Boolean(process.stdout.isTTY) && process.env.NO_COLOR == null,
     help: false,
-    failOnWarnings: false,
-    ignoreWarnings: false,
   };
   const filePaths: string[] = [];
 
@@ -76,11 +72,10 @@ function parseArgs(argv: string[], t: TFunction): CliOptions {
         i++;
       }
     } else if (a === "knowledge") opts.command = "knowledge";
+    else if (a === "manifesto") opts.command = "manifesto";
     else if (a === "--json") opts.json = true;
     else if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
-    else if (a === "--fail-on-warnings") opts.failOnWarnings = true;
-    else if (a === "--ignore-warnings") opts.ignoreWarnings = true;
     else if (a === "--no-color") opts.color = false;
     else if (a === "--lang" || a === "-l") {
       const code = argv[++i];
@@ -98,9 +93,6 @@ function parseArgs(argv: string[], t: TFunction): CliOptions {
   }
 
   if (filePaths.length > 0) opts.filePaths = filePaths;
-  if (opts.ignoreWarnings && opts.failOnWarnings) {
-    throw new Error(t("cli.error.conflictIgnoreAndFailWarnings"));
-  }
   return opts;
 }
 
@@ -114,6 +106,7 @@ function printHelp(t: TFunction): void {
     t("cli.help.commands"),
     row(t("cli.help.noCommand"), "cli.help.lintCmdDesc"),
     row("scan [dir]", "cli.help.scanCmdDesc"),
+    row("manifesto", "cli.help.manifestoCmdDesc"),
     row("knowledge", "cli.help.knowledgeCmdDesc"),
     row("cursor install", "cli.help.installCursorHookDesc"),
     row("claude install", "cli.help.installClaudeHookDesc"),
@@ -121,8 +114,6 @@ function printHelp(t: TFunction): void {
     t("cli.help.options"),
     row("-v, --verbose", "cli.help.verboseHint"),
     row("-l, --lang <code>", "cli.help.langHint"),
-    row("--fail-on-warnings", "cli.help.failOnWarningsHint"),
-    row("--ignore-warnings", "cli.help.ignoreWarningsHint"),
     row("--no-color", "cli.help.noColorHint"),
     row("-h, --help", "cli.help.helpHint"),
     "",
@@ -232,11 +223,7 @@ function relevantDirsFor(cwd: string, filePaths: string[]): Set<string> {
 
 async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
-  let result = await lintWorkspace({ root: opts.cwd, relevantDirs });
-
-  if (opts.ignoreWarnings) {
-    result = { ...result, issues: result.issues.filter((i) => i.severity === "error") };
-  }
+  const result = await lintWorkspace({ root: opts.cwd, relevantDirs });
 
   console.log(
     renderReport(result, {
@@ -247,9 +234,8 @@ async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
     }) + "\n",
   );
 
-  const errors = result.issues.filter((i) => i.severity === "error").length;
-  const warnings = result.issues.length - errors;
-  return errors > 0 || (warnings > 0 && opts.failOnWarnings) ? 1 : 0;
+  // Smells fail; things to review never do.
+  return result.issues.some((i) => i.verdict === "smell") ? 1 : 0;
 }
 
 async function main() {
@@ -293,6 +279,13 @@ async function main() {
     return;
   }
 
+  if (opts.command === "manifesto") {
+    // docs/ sits next to dist/ in the package and next to src/ in the repository.
+    const file = lang.startsWith("zh") ? "manifesto.zh.md" : "manifesto.md";
+    console.log(readFileSync(new URL(`../docs/${file}`, import.meta.url), "utf8"));
+    return;
+  }
+
   if (opts.command === "knowledge") {
     const { knowledgeToJSON } = await import("./knowledge");
     console.log(JSON.stringify(knowledgeToJSON(), null, 2));
@@ -309,7 +302,7 @@ async function main() {
       withSpecfy: true,
     });
     console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, getT(lang).t));
-    process.exitCode = result.repos.some((r) => r.issues.some((i) => i.severity === "error")) ? 1 : 0;
+    process.exitCode = result.repos.some((r) => r.issues.some((i) => i.verdict === "smell")) ? 1 : 0;
     return;
   }
 
