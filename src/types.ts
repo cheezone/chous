@@ -36,6 +36,7 @@ export type Rule =
   | ArtifactsRule
   | LeftoverRule
   | TwinsRule
+  | ContractsRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -71,6 +72,11 @@ export type LifecycleRule = RuleBase & {
 /** Build output that is not gitignored (see `taste/hygiene.ts`). */
 export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
+};
+
+/** Rules tools state for the files they read (see `taste/contracts.ts`). */
+export type ContractsRule = RuleBase & {
+  kind: "contracts";
 };
 
 /** One name written two ways (see `TwinsRuleValidator`). */

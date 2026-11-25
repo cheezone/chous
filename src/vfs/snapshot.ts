@@ -37,6 +37,7 @@ export type VfsEntry = {
   /** Path relative to root, posix separators */
   relPath: string;
   isDir: boolean;
+  /** Always 0: sizes are not read while walking. Stat the file when a rule needs it. */
   size: number;
   name: string;
 };

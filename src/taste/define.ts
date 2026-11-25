@@ -61,6 +61,11 @@ export function taste(id: string) {
       push({ kind: "leftover", value: "cleanliness", ...opts });
     },
 
+    /** The rules tools state for the files they read: places, names, sizes, legacy formats. */
+    contracts() {
+      push({ kind: "contracts", value: "convention" });
+    },
+
     /** One name written two ways: only case differs, or singular next to plural. */
     twins() {
       push({ kind: "twins", value: "order" });

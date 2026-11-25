@@ -95,8 +95,12 @@ export function createVfsProvider(snapshot: WorkspaceSnapshot) {
     async stat(pathRelative: string) {
       const rel = pathRelative.replace(/^\.\//, "");
       const entry = snapshot.byRel.get(rel === "" ? "." : rel);
-      if (entry) return { size: entry.size };
-      return { size: 0 };
+      if (!entry) return { size: 0 };
+      try {
+        return { size: statSync(entry.absPath).size };
+      } catch {
+        return { size: 0 };
+      }
     },
   };
 }

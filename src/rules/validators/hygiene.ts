@@ -16,7 +16,6 @@ import {
   NOT_OURS,
   ONE_OFF_SCRIPT,
   KNOWN_BY_CONTENT,
-  CLAUDE_MD_LINES,
   RECORD_DIRS,
   SERIES,
   VERSION_NAMED,
@@ -103,14 +102,6 @@ function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
     .join("\n");
 }
 
-function lineCount(path: string): number {
-  try {
-    return readFileSync(path, "utf8").split(/\r?\n/).length - 1;
-  } catch {
-    return 0;
-  }
-}
-
 /** `a, b, c, d, e, …` */
 function list(names: string[], max = 5): string {
   const sorted = [...names].sort();
@@ -174,13 +165,6 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
         if (VERSION_NAMED.test(stem)) push(versionSeries, dir, name);
         if (RECORD_DIRS.test(dir.split("/").at(-1)!)) push(recordDirs, dir, name);
-        if (name === "CLAUDE.md") {
-          const lines = lineCount(entry.absPath);
-          if (lines > CLAUDE_MD_LINES) {
-            hitCount++;
-            rawIssues.push(issueFromRule(rule, { path: entry.absPath, displayPath: rel, message: { key: "issue.leftover.claudeLong", params: { lines, limit: CLAUDE_MD_LINES } }, value: "convention" }));
-          }
-        }
         const format = DECISION_RECORD.test(rel) || (!atRoot && stem === "SUMMARY");
         if (!format && (atRoot || /^[A-Z0-9_-]+$/.test(stem)) && !ROOT_CONTRACT_DOCS.test(name) && WORKLOG.test(stem)) {
           if (atRoot) rootLogs.push(name);

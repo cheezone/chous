@@ -156,9 +156,6 @@ export const KNOWN_BY_CONTENT: Array<{ name: string; content: RegExp; reason: "r
   { name: "local.properties", content: /must \*NOT\* be checked into Version Control/i, reason: "reason.localProperties" },
 ];
 
-/** Claude Code's docs: "target under 200 lines per CLAUDE.md file". */
-export const CLAUDE_MD_LINES = 200;
-
 /** Release notes kept one file per version: `v2.0.1.md`, `1.4.0.md`. */
 export const VERSION_NAMED = /^v?\d+\.\d+(\.\d+)?([-.][\w.]+)?$/i;
 

@@ -140,7 +140,152 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "the latter are transient files Gradle uses to support features like incremental builds",
     },
   ],
-  "issue.leftover.claudeLong": [{ url: "https://code.claude.com/docs/en/memory", check: "https://code.claude.com/docs/en/memory.md", quote: "target under 200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence." }],
+  "issue.contract.claudeMdLines": [{ url: "https://code.claude.com/docs/en/memory", check: "https://code.claude.com/docs/en/memory.md", quote: "target under 200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence." }],
+  // Contracts: rules tools state for the files they read (taste/contracts.ts).
+  "issue.contract.agentsMdBytes": [
+    { url: "https://developers.openai.com/codex/guides/agents-md", check: `${GH}/openai/codex/main/codex-rs/config/defaults.toml`, quote: "project_doc_max_bytes = 32768" },
+  ],
+  "issue.contract.skillLines": [
+    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "Keep SKILL.md under 500 lines." },
+    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Keep your main SKILL.md under 500 lines." },
+  ],
+  "issue.contract.skillName": [
+    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 64 characters. Lowercase letters, numbers, and hyphens only." },
+    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Must match the parent directory name" },
+  ],
+  "issue.contract.skillDescription": [
+    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 1024 characters. Non-empty." },
+  ],
+  "issue.contract.skillCompatibility": [
+    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 500 characters. Indicates environment requirements" },
+  ],
+  "issue.contract.claudeCommands": [
+    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "Custom commands have been merged into skills." },
+    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "is the older format and still works" },
+  ],
+  "issue.contract.commandShadowed": [
+    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "| A skill and a file in .claude/commands/ | The skill |" },
+  ],
+  "issue.contract.cursorRuleExtension": [{ url: "https://cursor.com/docs/context/rules", quote: "Project rules must use the .mdc extension." }],
+  "issue.contract.cursorRuleLines": [{ url: "https://cursor.com/docs/context/rules", quote: "Keep rules under 500 lines" }],
+  "issue.contract.copilotAgentPrompt": [
+    { url: "https://docs.github.com/en/copilot/reference/custom-agents-configuration", check: `${GH}/github/docs/main/content/copilot/reference/custom-agents-configuration.md`, quote: "The prompt can be a maximum of 30,000 characters." },
+  ],
+  "issue.contract.copilotAgentInfer": [
+    { url: "https://docs.github.com/en/copilot/reference/custom-agents-configuration", check: `${GH}/github/docs/main/content/copilot/reference/custom-agents-configuration.md`, quote: "Use disable-model-invocation and user-invocable instead." },
+  ],
+  "issue.contract.chatmode": [
+    {
+      url: "https://github.com/microsoft/vscode-docs/blob/main/docs/agents/reference/custom-agent-file-reference.md",
+      check: `${GH}/microsoft/vscode-docs/main/docs/agents/reference/custom-agent-file-reference.md`,
+      quote: "Custom agents were previously known as custom chat modes. If you have .chatmode.md files, rename them to .agent.md",
+    },
+  ],
+  "issue.contract.copilotInstructionsName": [
+    {
+      url: "https://docs.github.com/en/copilot/tutorials/cloud-agent/get-the-best-results",
+      check: `${GH}/github/docs/main/content/copilot/tutorials/cloud-agent/get-the-best-results.md`,
+      quote: "create one or more .github/instructions/**/*.instructions.md files",
+    },
+  ],
+  "issue.contract.windsurfLegacy": [
+    {
+      url: "https://docs.devin.ai/desktop/cascade/memories",
+      check: "https://docs.devin.ai/desktop/cascade/memories.md",
+      quote: "The legacy .windsurf/rules/*.md, .windsurf/global_rules.md, and .windsurfrules files are imported by default.",
+    },
+    { url: "https://docs.devin.ai/desktop/devin-desktop-faq", check: "https://docs.devin.ai/desktop/devin-desktop-faq.md", quote: "Legacy (read, fallback)" },
+  ],
+  "issue.contract.clinerules": [
+    {
+      url: "https://github.com/cline/cline/blob/main/docs/getting-started/config.mdx",
+      check: `${GH}/cline/cline/main/docs/getting-started/config.mdx`,
+      quote: "In a project, Cline also reads the older .clinerules/ layout",
+    },
+  ],
+  "issue.contract.largeFile": [
+    {
+      url: "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
+      check: `${GH}/github/docs/main/data/variables/large_files.yml`,
+      quote: "warning_size: '50 MiB'",
+    },
+    {
+      url: "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github",
+      check: `${GH}/github/docs/main/data/variables/large_files.yml`,
+      quote: "max_github_size: '100 MiB'",
+    },
+  ],
+  "issue.contract.readmeSize": [
+    {
+      url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
+      check: `${GH}/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes.md`,
+      quote: "any content beyond 500 KiB will be truncated.",
+    },
+  ],
+  "issue.contract.codeownersShadowed": [
+    {
+      url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      check: `${GH}/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md`,
+      quote: "will search for them in that order and use the first one it finds.",
+    },
+  ],
+  "issue.contract.codeownersSize": [
+    {
+      url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners",
+      check: `${GH}/github/docs/main/content/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners.md`,
+      quote: "CODEOWNERS files must be under 3 MB in size.",
+    },
+  ],
+  "issue.contract.dependabotPlace": [
+    {
+      url: "https://docs.github.com/en/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file",
+      check: `${GH}/github/docs/main/content/code-security/concepts/supply-chain-security/about-the-dependabot-yml-file.md`,
+      quote: "You must store this file in the .github directory of your repository",
+    },
+  ],
+  "issue.contract.workflowPlace": [
+    {
+      url: "https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax",
+      check: `${GH}/github/docs/main/content/actions/reference/workflows-and-actions/workflow-syntax.md`,
+      quote: "You must store workflow files in the .github/workflows directory of your repository.",
+    },
+  ],
+  "issue.contract.composeVersion": [
+    {
+      url: "https://docs.docker.com/reference/compose-file/version-and-name/",
+      check: `${GH}/docker/docs/main/content/reference/compose-file/version-and-name.md`,
+      quote: "you'll receive a warning message that it is obsolete if used.",
+    },
+  ],
+  "issue.contract.composeName": [
+    {
+      url: "https://docs.docker.com/compose/intro/compose-application-model/",
+      check: `${GH}/docker/docs/main/content/manuals/compose/intro/compose-application-model.md`,
+      quote: "Compose also supports docker-compose.yaml and docker-compose.yml for backwards compatibility of earlier versions.",
+    },
+  ],
+  "issue.contract.eslintrc": [
+    {
+      url: "https://eslint.org/docs/latest/use/migrate-to-9.0.0",
+      check: `${GH}/eslint/eslint/main/docs/src/use/migrate-to-9.0.0.md`,
+      quote: "The previous format, eslintrc, is now deprecated and will not automatically be searched for.",
+    },
+    { url: "https://eslint.org/docs/latest/use/migrate-to-10.0.0", check: `${GH}/eslint/eslint/main/docs/src/use/migrate-to-10.0.0.md`, quote: "Old config format no longer supported" },
+  ],
+  "issue.contract.tailwindConfig": [
+    {
+      url: "https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file",
+      check: `${GH}/tailwindlabs/tailwindcss.com/main/src/docs/upgrade-guide.mdx`,
+      quote: "JavaScript config files are still supported for backward compatibility, but they are no longer detected automatically in v4.",
+    },
+  ],
+  "issue.contract.rustToolchainLegacy": [
+    {
+      url: "https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file",
+      check: `${GH}/rust-lang/rustup/main/doc/user-guide/src/overrides.md`,
+      quote: "For backwards compatibility, rust-toolchain files also support a legacy format",
+    },
+  ],
   "issue.twins.copy": [
     { url: "https://code.claude.com/docs/en/memory#agents-md", check: "https://code.claude.com/docs/en/memory.md", quote: "imports AGENTS.md" },
   ],

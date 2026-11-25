@@ -5,15 +5,17 @@
 import { SOURCES } from "../src/taste/sources";
 import { EOL } from "../src/taste/eol";
 
-const normalize = (text: string) =>
-  text
-    .replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ")
-    .replace(/<[^>]+>/g, " ")
+/** Text of a page; tags are stripped only from HTML — Markdown keeps a literal `<name>`. */
+const normalize = (text: string) => {
+  const html = /^\s*(<!doctype|<html)/i.test(text);
+  const plain = html ? text.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ") : text;
+  return plain
     .replace(/&#x27;|&#39;|&apos;/g, "'")
     .replace(/&quot;/g, '"')
     .replace(/&amp;/g, "&")
     .replace(/[`*]/g, "")
     .replace(/\s+/g, " ");
+};
 
 const pages = new Map<string, Promise<string>>();
 const fetchText = (url: string) => {

@@ -29,7 +29,9 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 ### 约定
 
 - 框架写明了约定，就照约定来。框架根本不会读的文件（Next.js 根目录有 `app/` 时的 `src/app`、Nuxt 4 放在 `app/` 外面的 `pages/`）是死代码，看着像活的，最臭。
-- 官方给了明确限制的，照限制来。例如 Claude Code 文档建议每个 CLAUDE.md 不超过 200 行。
+- 官方给了明确限制的，照限制来：Codex 只读 AGENTS.md 的前 32 KiB，Claude Code 建议 CLAUDE.md 不超过 200 行，SKILL.md 不超过 500 行，GitHub 对超过 50 MiB 的文件发警告。
+- 工具规定了文件放在哪、叫什么、用什么格式，就照着放：Copilot 只读 `.github/instructions/` 里的 `*.instructions.md`，Cursor 只把 `.mdc` 当规则，GitHub Actions 只读 `.github/workflows/`。放错地方的文件永远不会被读。
+- 工具自己称为旧格式、旧位置的，就是臭的：`.claude/commands/`（已并入 skills）、`.windsurfrules` 和 `.windsurf/`（Devin 称为 legacy）、`.clinerules/`（Cline 称为旧布局）、`.chatmode.md`、`.eslintrc`（ESLint 9 起）、`docker-compose.yml` 和 Compose 的 `version` 字段。
 - 允许兼容多个运行时，允许必要的重复：`package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 内容一致时，是为了让 npm、Yarn、Bun 也能读，不算臭；内容不一致才臭。
 - 约定以官方原文为准，每一条都附有来源。
 
@@ -99,7 +101,11 @@ chous 怎样确认事实：
 | monorepo 里依赖跨大版本、嵌套 lockfile、两份不一致的 workspace 列表 | 版本号、文件位置、两份列表的内容 | 同一个事实只说一遍 | 秩序 | 臭味 |
 | `CLAUDE.md` 和 `AGENTS.md` 一模一样 | 两份文件内容完全相同 | 留一份，另一份软链接或 `@AGENTS.md` | 秩序 | 臭味 |
 | 框架不读的文件、框架找不到的大写目录 | 框架文档写明的规则 | 照框架的约定来 | 约定 | 臭味 |
-| 超过 200 行的 `CLAUDE.md` | 行数，以及 Claude Code 文档的原话 | 照官方给的限制来 | 约定 | 臭味 |
+| 超过官方限制的 agent 指令文件：AGENTS.md 超过 32 KiB（Codex）、CLAUDE.md 超过 200 行、SKILL.md 超过 500 行、Cursor 规则超过 500 行、Copilot agent 提示词超过 3 万字符 | 字节数、行数、字符数，以及工具文档的原话 | 照官方给的限制来 | 约定 | 臭味 |
+| 不符合 Agent Skills 规范的 skill：名字格式不对、和目录不同名、描述超过 1024 字符 | frontmatter 的内容 | 照规范来 | 约定 | 臭味 |
+| 放错地方、起错名字、永远不会被读的文件：不是 `.mdc` 的 Cursor 规则、不是 `*.instructions.md` 的 Copilot 指令、被同名 skill 覆盖的命令、第二份 CODEOWNERS、`.github/` 外的 dependabot.yml、`.github/workflows/` 外的工作流、Tailwind 4 下没被 `@config` 加载的 `tailwind.config` | 文件的位置、名字、包版本，以及工具文档的原话 | 照工具规定的位置和名字来 | 约定 | 臭味 |
+| GitHub 的体积上限：超过 50 MiB 的文件、超过 500 KiB 的 README、3 MB 及以上的 CODEOWNERS | 文件大小，以及 GitHub 文档的原话 | 照平台的限制来 | 约定 | 臭味 |
+| 工具自己称为旧格式、旧位置的文件 | 文件存在，以及工具文档的原话 | 换成工具推荐的写法 | 现代 | 臭味 |
 | 构建产物 | 构建工具写下的标记文件，或者有构建脚本 | 不提交构建产物 | 洁净 | 臭味 |
 | 系统垃圾、`local.properties` | 文件内容是操作系统或 Android Studio 写的 | 不提交系统垃圾和本机配置 | 洁净 | 臭味 |
 | `.env*.local`、个人 IDE 和 agent 配置 | 文件名，以及工具文档里「不要提交」的原话 | 不提交个人和本地的东西 | 洁净 | 臭味 |

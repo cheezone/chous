@@ -3,6 +3,7 @@ import { DepsRuleValidator } from "./deps";
 import { OneToolPerRoleValidator } from "./stack";
 import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import { LifecycleRuleValidator } from "./lifecycle";
+import { ContractsRuleValidator } from "./contracts";
 import { ArtifactsRuleValidator, LeftoverRuleValidator, TwinsRuleValidator } from "./hygiene";
 import type { Rule } from "../../types";
 import type { RuleValidator } from "./types";
@@ -14,6 +15,7 @@ const validators: RuleValidator[] = [
   new ManifestRuleValidator(),
   new WorkspaceRuleValidator(),
   new LifecycleRuleValidator(),
+  new ContractsRuleValidator(),
   new ArtifactsRuleValidator(),
   new LeftoverRuleValidator(),
   new TwinsRuleValidator(),

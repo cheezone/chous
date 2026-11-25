@@ -29,7 +29,9 @@ There is one taste. It cannot be configured or switched off. chous has the right
 ### Convention
 
 - Where a framework documents a convention, follow it. A file the framework never reads (`src/app` beside a root `app/` in Next.js, `pages/` outside `app/` in Nuxt 4) is dead code that looks alive, and stinks worst.
-- Where the vendor gives a limit, keep to it: Claude Code's docs target under 200 lines per CLAUDE.md.
+- Where the vendor gives a limit, keep to it: Codex reads only the first 32 KiB of AGENTS.md, Claude Code targets under 200 lines per CLAUDE.md and 500 per SKILL.md, GitHub warns on files over 50 MiB.
+- Where a tool says where a file lives, what it is called or what format it takes, follow it: Copilot reads only `*.instructions.md` from `.github/instructions/`, Cursor takes only `.mdc` files as rules, GitHub Actions reads only `.github/workflows/`. A file in the wrong place is never read.
+- What a tool itself calls an older format or location stinks: `.claude/commands/` (merged into skills), `.windsurfrules` and `.windsurf/` (legacy to Devin), `.clinerules/` (Cline's older layout), `.chatmode.md`, `.eslintrc` from ESLint 9, `docker-compose.yml` and Compose's `version` field.
 - Supporting several runtimes is fine, and so is the duplication it needs: `workspaces` in package.json alongside `pnpm-workspace.yaml` lets npm, Yarn and Bun read the workspace too. Only when the two disagree does it stink.
 - The convention is what the official docs say, word for word, and every rule cites them.
 
@@ -99,7 +101,11 @@ Some taste needs the code read and understood. That is not written into chous's 
 | Major-version drift, nested lockfiles, workspace lists that disagree, in a monorepo | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | `CLAUDE.md` identical to `AGENTS.md` | Both files have the same text | Keep one; symlink the other or import it with `@AGENTS.md` | Order | Smell |
 | Files a framework never reads; capitalised directories it cannot find | The rule as the framework's docs state it | Follow the framework's convention | Convention | Smell |
-| A `CLAUDE.md` over 200 lines | Its line count, and Claude Code's docs | Keep to the vendor's limit | Convention | Smell |
+| Agent instruction files over their vendor's limit: AGENTS.md over 32 KiB (Codex), CLAUDE.md over 200 lines, SKILL.md over 500 lines, Cursor rules over 500 lines, Copilot agent prompts over 30,000 characters | Bytes, lines, characters, and the tool's own docs | Keep to the vendor's limit | Convention | Smell |
+| Skills that break the Agent Skills spec: a malformed name, a name unlike its folder, a description over 1,024 characters | The frontmatter | Follow the spec | Convention | Smell |
+| Files in the wrong place or under the wrong name, never read: Cursor rules that are not `.mdc`, Copilot instructions that are not `*.instructions.md`, a command a skill of the same name shadows, a second CODEOWNERS, a dependabot.yml outside `.github/`, a workflow outside `.github/workflows/`, a `tailwind.config` Tailwind 4 never loads | Place, name, package version, and the tool's own docs | Put files where the tool reads them | Convention | Smell |
+| GitHub's size limits: files over 50 MiB, a README over 500 KiB, a CODEOWNERS of 3 MB or more | The size, and GitHub's docs | Keep to the platform's limits | Convention | Smell |
+| Files a tool itself calls an older format or location | The file exists, and the tool's own docs | Use what the tool recommends | Modernity | Smell |
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
 | OS junk, `local.properties` | The content the OS or Android Studio writes | No OS junk or machine settings committed | Cleanliness | Smell |
 | `.env*.local`, personal IDE and agent settings | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |

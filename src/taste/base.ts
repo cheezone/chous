@@ -11,6 +11,7 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
   t.artifacts();
   t.leftovers({ scripts: !opts.workspacePackage, rootDocs: !opts.workspacePackage });
   t.twins();
+  t.contracts();
 
   t.no([".chous", ".chousignore"], { reason: "reason.chousConfig", value: "cleanliness" });
 
