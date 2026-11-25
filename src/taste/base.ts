@@ -15,13 +15,12 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
   t.no([".chous", ".chousignore"], { reason: "reason.chousConfig", value: "cleanliness" });
 
   // Anything still visible here is not gitignored, so it would be committed.
-  // OS junk is found by what the OS writes into it (see `leftovers`).
+  // OS junk and local.properties are found by what their makers write into them (see `leftovers`).
   t.no(["**/.env*.local"], { reason: "reason.envLocal", value: "cleanliness" });
   t.no(["**/*.log"], { reason: "reason.logs", value: "cleanliness" });
 
   // Files their own tools call personal.
   t.no(["**/CLAUDE.local.md", "**/.claude/settings.local.json"], { reason: "reason.claudeLocal", value: "cleanliness" });
-  t.no(["**/local.properties"], { reason: "reason.localProperties", value: "cleanliness" });
   t.no(["**/.idea/workspace.xml"], { reason: "reason.ideaWorkspace", value: "cleanliness" });
 
   // Cursor calls it legacy.

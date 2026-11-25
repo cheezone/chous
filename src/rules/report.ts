@@ -87,3 +87,34 @@ export function renderReport(
   }
   return lines.join("\n");
 }
+
+/**
+ * The report as data, for agents: every finding with what chous knows about
+ * it — verdict, taste, rule, the message in words and as a key, why, and where
+ * the claim comes from.
+ */
+export function reportToJSON(result: LintResult, t: TFunction, version?: string) {
+  const findings = result.issues.map((issue) => {
+    const nested = Object.values(issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
+    return {
+      verdict: issue.verdict,
+      value: issue.value,
+      rule: issue.ruleKind,
+      taste: issue.ruleSource.taste,
+      path: issue.displayPath,
+      message: formatIssueMessage(t, issue.message),
+      key: issue.message.key,
+      params: Object.fromEntries(Object.entries(issue.message.params ?? {}).map(([k, v]) => [k, typeof v === "object" ? t(v.t) : v])),
+      ...(issue.reason ? { reason: t(issue.reason) } : {}),
+      sources: sourcesFor([issue.reason, issue.message.key, ...nested]).map((s) => s.url),
+    };
+  });
+  return {
+    tool: APP_NAME,
+    ...(version ? { version } : {}),
+    root: result.root,
+    tastes: result.tastes,
+    counts: { smells: findings.filter((f) => f.verdict === "smell").length, reviews: findings.filter((f) => f.verdict === "review").length },
+    findings,
+  };
+}

@@ -35,6 +35,16 @@ describe("cli", () => {
     expect(en).toContain("the platform ships fetch: whether it fully replaces node-fetch depends on how you use it (fetch is global in Node 18+ and every browser.)");
   });
 
+  it("speaks JSON to agents: every finding with its verdict, taste and sources", () => {
+    const eol = resolve(PROJECT_ROOT, "test/fixtures/fail/eol");
+    const r = runCli(["-l", "en", "--json"], eol);
+    expect(r.code).toBe(1);
+    const report = JSON.parse(r.stdout);
+    expect(report.counts.smells).toBeGreaterThan(0);
+    const node = report.findings.find((f: { path: string }) => f.path === ".nvmrc (Node 16)");
+    expect(node).toMatchObject({ verdict: "smell", value: "modernity", key: "issue.lifecycle.ended", sources: ["https://github.com/nodejs/Release/blob/main/schedule.json"] });
+  });
+
   it("only ships English and Chinese", () => {
     const r = runCli(["-l", "ja"]);
     expect(r.code).toBe(2);

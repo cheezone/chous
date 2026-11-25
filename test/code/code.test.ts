@@ -36,8 +36,8 @@ const EXPECTED: Record<string, string[]> = {
     "package.json (Vue 2) → Vue 2 reached end of life on 2023-12-31",
   ],
   garbage: [
-    "dependency moment is obsolete → dayjs",
-    "dependency node-sass is obsolete → sass",
+    "moment: Its maintainers call it a legacy project in maintenance mode. → dayjs",
+    "node-sass: Its authors: Node Sass is no longer supported. → sass",
   ],
   js: ["test/ + tests/ → one thing under two names"],
   monorepo: [
@@ -45,11 +45,11 @@ const EXPECTED: Record<string, string[]> = {
     "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
   ],
   stack: [
-    "package manager: npm + pnpm at once",
-    "formatter: oxfmt + prettier at once",
-    "git hooks: husky + simple-git-hooks at once",
+    "package manager: npm + pnpm, two tools for one job",
+    "formatter: oxfmt + prettier, two tools for one job",
+    "git hooks: husky + simple-git-hooks, two tools for one job",
   ],
-  yarn: ["package manager: pnpm + yarn at once"],
+  yarn: ["package manager: pnpm + yarn, two tools for one job"],
 };
 
 describe("fixtures that match the taste", () => {

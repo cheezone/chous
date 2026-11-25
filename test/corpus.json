@@ -1,0 +1,287 @@
+[
+  {
+    "repo": "antfu/eslint-config",
+    "commit": "bb2013690a517ea9b369d36d79a5708356326a64",
+    "group": "reference"
+  },
+  {
+    "repo": "antfu/ni",
+    "commit": "d27dccd94e04acd1bef06e679f50cdca78c6a6eb",
+    "group": "reference"
+  },
+  {
+    "repo": "antfu/taze",
+    "commit": "15dfd28112a1699ccd26fade5e1298cd06b591f3",
+    "group": "reference"
+  },
+  {
+    "repo": "antfu/vitesse",
+    "commit": "a8785264f83c2ebe1b3cf689296775a4949957c8",
+    "group": "reference"
+  },
+  {
+    "repo": "astral-sh/uv",
+    "commit": "e3e7c1eacb980339352a5ad69affcd3b6c206c92",
+    "group": "reference"
+  },
+  {
+    "repo": "BurntSushi/ripgrep",
+    "commit": "3e85c6c148fdce38a99ceeb9d2780dc7b03b4a4f",
+    "group": "reference"
+  },
+  {
+    "repo": "calcom/cal.com",
+    "commit": "ae027bb70e694e2d2c44569f398d6cbcee0389b1",
+    "group": "reference"
+  },
+  {
+    "repo": "denoland/deno",
+    "commit": "d8c551b5a5b46d8ec3892a91d0364cfcbca2c681",
+    "group": "reference"
+  },
+  {
+    "repo": "facebook/react",
+    "commit": "92bb0678c52133a47b3095f6e54da883ea0d6cff",
+    "group": "reference"
+  },
+  {
+    "repo": "honojs/hono",
+    "commit": "9c2f2948498434506f9ebc77a213bf67a2da5603",
+    "group": "reference"
+  },
+  {
+    "repo": "nuxt-ui-templates/dashboard",
+    "commit": "b025b2a010a53ca1a2a5b77bf9b8a77490c5e78b",
+    "group": "reference"
+  },
+  {
+    "repo": "nuxt/nuxt",
+    "commit": "f471666555f57e93bb471cc3c778e5724eb58989",
+    "group": "reference"
+  },
+  {
+    "repo": "nuxt/nuxt.com",
+    "commit": "47a1f3ba3fcccdac2a329bd6b7b0f11fc8e873b7",
+    "group": "reference"
+  },
+  {
+    "repo": "oven-sh/bun",
+    "commit": "0966e99d8f357833a147af2a4bce7d66321829c1",
+    "group": "reference"
+  },
+  {
+    "repo": "oxc-project/oxc",
+    "commit": "e87c19c123b72becc9ccb1e6de57ffbd70ac4c0e",
+    "group": "reference"
+  },
+  {
+    "repo": "pisces19860207/zhengdao",
+    "commit": "390fed25561b90564841ae6f779a42c8b21272ed",
+    "group": "reference"
+  },
+  {
+    "repo": "rust-lang/rust",
+    "commit": "c3f937f30ad170aa6dcb77413cde9c3fa71fda80",
+    "group": "reference"
+  },
+  {
+    "repo": "shadcn-ui/taxonomy",
+    "commit": "298a8857c7128a0d121e7f699dfd729f23b3966d",
+    "group": "reference"
+  },
+  {
+    "repo": "sindresorhus/execa",
+    "commit": "6f856d55bd3ea8b3f240a7fc4502d2ac50697eec",
+    "group": "reference"
+  },
+  {
+    "repo": "sindresorhus/ky",
+    "commit": "3541888878c4d303a8bc2ad61815f4e048f55a5d",
+    "group": "reference"
+  },
+  {
+    "repo": "sqlite/sqlite",
+    "commit": "18f72a6e603f7cdf2f62cc8411252c0af583a510",
+    "group": "reference"
+  },
+  {
+    "repo": "tokio-rs/tokio",
+    "commit": "854013a8cb7d1397e9d037315592dc1d2d55187d",
+    "group": "reference"
+  },
+  {
+    "repo": "unocss/unocss",
+    "commit": "b7f69bcab3d9b18cd4917e2fdd429421758da4df",
+    "group": "reference"
+  },
+  {
+    "repo": "v833/q-code",
+    "commit": "cbab8ddf4e0ebdc3b9e24e458ee139be23e28620",
+    "group": "reference"
+  },
+  {
+    "repo": "vercel/commerce",
+    "commit": "f7521d57d29f0eb3d23c1399cf9bb299d61fcd21",
+    "group": "reference"
+  },
+  {
+    "repo": "vercel/next-learn",
+    "commit": "bb2558441a6673ab76c89914c25018bffa27a2ba",
+    "group": "reference"
+  },
+  {
+    "repo": "vitejs/vite",
+    "commit": "e16ca5a13d74dddd005763df9d4db9fa01c74a4d",
+    "group": "reference"
+  },
+  {
+    "repo": "vuejs/core",
+    "commit": "44234e82bf4fcb234968061d7a51e37ea9f39e71",
+    "group": "reference"
+  },
+  {
+    "repo": "ziglang/zig",
+    "commit": "738d2be9d6b6ef3ff3559130c05159ef53336224",
+    "group": "reference"
+  },
+  {
+    "repo": "AdekunleBamz/stackhub",
+    "commit": "6545f0abba60cbdf8081fdd59f66bb67d5a4d2df",
+    "group": "vibe"
+  },
+  {
+    "repo": "ai-assist-org/ai-assist",
+    "commit": "0888a94fbde4d6097472c0347bb4c412795d61f1",
+    "group": "vibe"
+  },
+  {
+    "repo": "Albertsun6/ontology-builder",
+    "commit": "459ef5b58acc5b0212f0383cc4abac82a5f1ef7e",
+    "group": "vibe"
+  },
+  {
+    "repo": "Algodons/AlgoBrainDoctor",
+    "commit": "5150142577240b961c3bd094208530e8384aad1e",
+    "group": "vibe"
+  },
+  {
+    "repo": "Ayato-kosaka/nanitabeyo",
+    "commit": "c65369cd0eda910f59d6b7c3c7489fcfccc55793",
+    "group": "vibe"
+  },
+  {
+    "repo": "Beeta-inc/nbheditor.apps.beeta.com",
+    "commit": "b70bf08e34b0cbf981dc46e768747ea39650c07c",
+    "group": "vibe"
+  },
+  {
+    "repo": "BrianTran24/screen_record",
+    "commit": "ce8a0338e2f7ffd837302e5447d2b04e7085ed12",
+    "group": "vibe"
+  },
+  {
+    "repo": "coyvalyss1/model-matchmaker",
+    "commit": "4b99e64fa6a8e5e5e8ed0993cddc84d278ff9e1d",
+    "group": "vibe"
+  },
+  {
+    "repo": "curtmorgan3/quest-bound",
+    "commit": "c2c1da8450118dfdd8e760d4a7b3533f1220fc72",
+    "group": "vibe"
+  },
+  {
+    "repo": "dennislee928/Carbon_Trading_For_Individuals",
+    "commit": "bf8303f13a7bf07a8d2f160500f332683582a8f4",
+    "group": "vibe"
+  },
+  {
+    "repo": "eryngordon/quiz-lead-magnet-maker",
+    "commit": "ee2cdcfbe4dc89da22aee66434bd8d257429eb65",
+    "group": "vibe"
+  },
+  {
+    "repo": "FouadMagdy01/RNCopilot",
+    "commit": "84c8bbb02efca46fc50fe3c190771203391f80be",
+    "group": "vibe"
+  },
+  {
+    "repo": "hassana123/tailorpal",
+    "commit": "60b6f3c8685c048c39fecfc508a1dc96ef2c4526",
+    "group": "vibe"
+  },
+  {
+    "repo": "JuanPabloGilA/your-saas-starterkit",
+    "commit": "7885b1eaf64d34104c27627b9b54719fbb2a1a99",
+    "group": "vibe"
+  },
+  {
+    "repo": "kartikramachandrula/thynk",
+    "commit": "4957ee4b9d7009e29d0519a6a1673d612c95b061",
+    "group": "vibe"
+  },
+  {
+    "repo": "M-ElSibaii/pdtspt",
+    "commit": "a603ed7195778fbc710741637caf31ef1e9bbdd2",
+    "group": "vibe"
+  },
+  {
+    "repo": "matevzpoljanc/revolut-savings-account-tax-reports",
+    "commit": "35591240a0c520cd229741cfc6368a2246e64a11",
+    "group": "vibe"
+  },
+  {
+    "repo": "MohammadShamchi/ai-bookmark-enhancer",
+    "commit": "9373f606a72a8e2c39f08c5f83e1deb866ba0486",
+    "group": "vibe"
+  },
+  {
+    "repo": "Monisha-JR/Task_Management_With_AI",
+    "commit": "3a37b17bc84d0e5b0bcbbad45b87bd48291e8cfd",
+    "group": "vibe"
+  },
+  {
+    "repo": "MUKUL-PRASAD-SIGH/AetherSentrix",
+    "commit": "9606e6515e329af13deb94e1cea076f32afb4a93",
+    "group": "vibe"
+  },
+  {
+    "repo": "Neve77/comandaflow",
+    "commit": "638feecc39ae5946e1df1924aa6147058ea1fe54",
+    "group": "vibe"
+  },
+  {
+    "repo": "RoniAbravaya/ai-stock-summary-app",
+    "commit": "c6546065794ddee6a909ac5f1264b22fe5a137b1",
+    "group": "vibe"
+  },
+  {
+    "repo": "ruvnet/ruflo",
+    "commit": "c807316b066573e46607d78f557e431e253dce7b",
+    "group": "vibe"
+  },
+  {
+    "repo": "ruvnet/symbolic-scribe",
+    "commit": "8e5340554ba63537d69207b231d569d3031913ff",
+    "group": "vibe"
+  },
+  {
+    "repo": "SankrityaT/InstaCare",
+    "commit": "41d34138d3297d12096e4816e11fb65401394020",
+    "group": "vibe"
+  },
+  {
+    "repo": "theaiautomators/insights-lm-public",
+    "commit": "76cf9d808056c3b7afac3c1cb9bd180014ff6f64",
+    "group": "vibe"
+  },
+  {
+    "repo": "Walbrkt/HackBerlin_Solar",
+    "commit": "5deef2d7c820e4f118cda1499179c008797ce380",
+    "group": "vibe"
+  },
+  {
+    "repo": "wilsonzlin/fastrender",
+    "commit": "19bf1036105d4eeb8bf3330678b7cb11c1490bdc",
+    "group": "vibe"
+  }
+]

@@ -16,13 +16,22 @@ export type Eol = {
   date: string;
 };
 
-/** Every version older than the oldest entry ended no later than that entry. */
-/** What to move to lives in the locale files, under `eol.<product>`. */
+/**
+ * Exact versions only: a version missing from the table is not reported, and
+ * no date is ever inferred. `pnpm run sources` checks every date against the
+ * source named here.
+ */
 export const EOL: Record<Product, { label: string; source: string; versions: Eol[] }> = {
   node: {
     label: "Node",
-    source: "https://github.com/nodejs/Release",
+    source: "https://github.com/nodejs/Release/blob/main/schedule.json",
     versions: [
+      { version: "4", date: "2018-04-30" },
+      { version: "5", date: "2016-06-30" },
+      { version: "6", date: "2019-04-30" },
+      { version: "7", date: "2017-06-30" },
+      { version: "8", date: "2019-12-31" },
+      { version: "9", date: "2018-06-30" },
       { version: "10", date: "2021-04-30" },
       { version: "11", date: "2019-06-01" },
       { version: "12", date: "2022-04-30" },
@@ -41,7 +50,7 @@ export const EOL: Record<Product, { label: string; source: string; versions: Eol
   },
   python: {
     label: "Python",
-    source: "https://devguide.python.org/versions/",
+    source: "https://peps.python.org/api/release-cycle.json",
     versions: [
       { version: "2.6", date: "2013-10-29" },
       { version: "2.7", date: "2020-01-01" },
@@ -65,8 +74,9 @@ export const EOL: Record<Product, { label: string; source: string; versions: Eol
   },
   nuxt: {
     label: "Nuxt",
-    source: "https://nuxt.com/docs/3.x/migration/overview",
+    source: "https://nuxt.com/docs/community/roadmap",
     versions: [
+      { version: "1", date: "2019-09-21" },
       { version: "2", date: "2024-06-30" },
       { version: "3", date: "2026-07-31" },
     ],
@@ -91,27 +101,13 @@ function compare(a: number[], b: number[]): number {
   return 0;
 }
 
-/**
- * End-of-life date for a version, or undefined while it is supported (or unknown).
- * Versions older than every listed one take the oldest listed date as an upper bound.
- */
+/** End-of-life date for a version listed exactly in the table; undefined otherwise. */
 export function eolDate(product: Product, version: string): string | undefined {
   const { versions } = EOL[product];
   const depth = parts(versions[0]!.version).length;
   const wanted = parts(version).slice(0, depth);
   if (wanted.length < depth || wanted.some(Number.isNaN)) return undefined;
-
-  const exact = versions.find((v) => compare(parts(v.version), wanted) === 0);
-  if (exact) return exact.date;
-
-  // Older than everything listed in its own line (same major for Python, any for the rest).
-  const sameLine = versions.filter((v) => depth === 1 || parts(v.version)[0] === wanted[0]);
-  const oldest = sameLine.reduce<Eol | undefined>(
-    (min, v) => (!min || compare(parts(v.version), parts(min.version)) < 0 ? v : min),
-    undefined,
-  );
-  if (oldest && compare(wanted, parts(oldest.version)) < 0) return oldest.date;
-  return undefined;
+  return versions.find((v) => compare(parts(v.version), wanted) === 0)?.date;
 }
 
 /** True once the published end-of-life date has come. */

@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { checkWorkspaces } from "./agents/core";
 import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
-import { renderReport } from "./rules/report";
+import { renderReport, reportToJSON } from "./rules/report";
 import { createColorizer } from "./color";
 import { getT, isLocale, locales, type MessageKey, type TFunction } from "./i18n";
 import { detectSystemLang } from "./runtime";
@@ -114,6 +114,7 @@ function printHelp(t: TFunction): void {
     t("cli.help.options"),
     row("-v, --verbose", "cli.help.verboseHint"),
     row("-l, --lang <code>", "cli.help.langHint"),
+    row("--json", "cli.help.jsonHint"),
     row("--no-color", "cli.help.noColorHint"),
     row("-h, --help", "cli.help.helpHint"),
     "",
@@ -224,6 +225,11 @@ function relevantDirsFor(cwd: string, filePaths: string[]): Set<string> {
 async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
   const result = await lintWorkspace({ root: opts.cwd, relevantDirs });
+
+  if (opts.json) {
+    console.log(JSON.stringify(reportToJSON(result, t, VERSION), null, 2));
+    return result.issues.some((i) => i.verdict === "smell") ? 1 : 0;
+  }
 
   console.log(
     renderReport(result, {

@@ -1,0 +1,519 @@
+AdekunleBamz/stackhub	review	cleanliness	./	issue.leftover.worklogs	{"count":4,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
+AdekunleBamz/stackhub	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
+Albertsun6/ontology-builder	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+Algodons/AlgoBrainDoctor	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+Algodons/AlgoBrainDoctor	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"ARCHITECTURE.md, IMPLEMENTATION_SUMMARY.md, MERMEDA.md, QUICKSTART.md"}
+Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20251213T0000_wikidata_food_graph/581_relevance_scoring/RUNBOOK_20260718_PHASE2_DEV_SYNC.md	issue.leftover.worklog	{}
+Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20260808T0000_restaurant/0000_open_data_poc/REPORT.md	issue.leftover.worklog	{}
+Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20260808T0000_restaurant/1276_place_id_free_poc/REPORT.md	issue.leftover.worklog	{}
+Ayato-kosaka/nanitabeyo	review	modernity	api/package.json (abort-controller)	issue.deps.native	{"name":"abort-controller","use":"AbortController"}
+Ayato-kosaka/nanitabeyo	review	modernity	api/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+Ayato-kosaka/nanitabeyo	review	modernity	api/package.json (node-fetch)	issue.deps.native	{"name":"node-fetch","use":"fetch"}
+Ayato-kosaka/nanitabeyo	review	modernity	api/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (base-64)	issue.deps.native	{"name":"base-64","use":"atob / btoa"}
+Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+Ayato-kosaka/nanitabeyo	review	modernity	e2e-mobile/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+Ayato-kosaka/nanitabeyo	review	modernity	e2e-web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":712,"limit":200}
+Ayato-kosaka/nanitabeyo	smell	order	app-expo/lib/	issue.twins.styles	{"styles":"camelCase ×59 + kebab-case ×1","examples":"addressFormat.test.ts, frontend-utils.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	e2e-web/utils/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"consoleHarness.ts, preload-assets.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	package.json (eslint)	issue.workspace.drift	{"name":"eslint","versions":"api: ^9.18.0; app-expo: ^8.57.1"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/api/v1/constants/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×1","examples":"contentReports.ts, build-meta.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+Ayato-kosaka/nanitabeyo	smell	order	shared/prisma/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"index-browser.js, query_compiler_bg.js"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/utils/	issue.twins.styles	{"styles":"camelCase ×9 + snake_case ×2","examples":"devDB.types.ts, geo_search.ts"}
+Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	./	issue.leftover.worklogs	{"count":11,"names":"BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, FIX_GMAIL_LINKS.md, …"}
+Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	fix-signin.sh	issue.leftover.script	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.gradle/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.kotlin/errors/errors-1777453046994.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.0.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.1.2-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.2.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v3.1.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v4.2.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v4.3.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v4.5.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v4.5.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v5.0.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	backend/node_modules/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	build/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	local.properties	issue.no.because	{"reason":{"t":"reason.localProperties"}}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	logo-beeta.png_original	issue.leftover.backup	{"original":"logo-beeta.png"}
+Beeta-inc/nbheditor.apps.beeta.com	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"API_37_UPDATE.md, BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, …"}
+BrianTran24/screen_record	review	cleanliness	./	issue.leftover.worklogs	{"count":4,"names":"BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, VIDEO_RATIO_FIX.md"}
+BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
+BurntSushi/ripgrep	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"AI_POLICY.md, FAQ.md, GUIDE.md, RELEASE-CHECKLIST.md"}
+FouadMagdy01/RNCopilot	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
+FouadMagdy01/RNCopilot	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+FouadMagdy01/RNCopilot	smell	order	src/theme/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"dark-theme.ts, themeManager.ts"}
+JuanPabloGilA/your-saas-starterkit	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":348,"limit":200}
+JuanPabloGilA/your-saas-starterkit	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+JuanPabloGilA/your-saas-starterkit	smell	order	apps/web/bun.lock	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+JuanPabloGilA/your-saas-starterkit	smell	order	package.json (typescript)	issue.workspace.drift	{"name":"typescript","versions":"apps/api: ^7.0.2; apps/web: ^7.0.2; packages/config: ^7.0.2; packages/database: ^7.0.2; packages/shared: ^7.0.2; apps/landing: 6.0.3"}
+M-ElSibaii/pdtspt	review	cleanliness	IMPLEMENTATION_COMPLETE.md	issue.leftover.worklog	{}
+M-ElSibaii/pdtspt	review	cleanliness	docs/audit/ADMIN_AUDIT_REPORT.md	issue.leftover.worklog	{}
+M-ElSibaii/pdtspt	smell	modernity	package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+MUKUL-PRASAD-SIGH/AetherSentrix	review	cleanliness	./	issue.leftover.worklogs	{"count":2,"names":"COMPLETION_SUMMARY.md, IMPLEMENTATION_COMPLETE.md"}
+MUKUL-PRASAD-SIGH/AetherSentrix	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"ADAPTIVE_TRUST_DECEPTION_PLAN.md, CODEBASE.md, COMPLETION_SUMMARY.md, IMPLEMENTATION_COMPLETE.md, PRODUCTION_READINESS_PLAN.md"}
+MohammadShamchi/ai-bookmark-enhancer	review	cleanliness	./	issue.leftover.worklogs	{"count":9,"names":"AI_PROMPTS.md, AUDIT_REPORT.md, BOOKMARK_PROCESSING_ANALYSIS.md, CLEANUP_REPORT.md, IMPLEMENTATION_COMPLETE.md, …"}
+MohammadShamchi/ai-bookmark-enhancer	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
+MohammadShamchi/ai-bookmark-enhancer	smell	cleanliness	background.js.backup	issue.leftover.backup	{"original":"background.js"}
+MohammadShamchi/ai-bookmark-enhancer	smell	order	./	issue.leftover.rootDocs	{"count":20,"limit":3,"names":"AI_PROMPTS.md, AUDIT_REPORT.md, BOOKMARK_AI_PLAN.md, BOOKMARK_PROCESSING_ANALYSIS.md, CLEANUP_REPORT.md, …"}
+Monisha-JR/Task_Management_With_AI	review	cleanliness	./	issue.leftover.worklogs	{"count":2,"names":"REGISTRATION_FIXES.md, VALIDATION_IMPROVEMENTS.md"}
+Monisha-JR/Task_Management_With_AI	review	cleanliness	test_registration_fix.sh	issue.leftover.script	{}
+Monisha-JR/Task_Management_With_AI	review	cleanliness	test_validation.sh	issue.leftover.script	{}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/src/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/src/main/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/target/	issue.leak.artifact	{}
+Neve77/comandaflow	review	cleanliness	./	issue.leftover.worklogs	{"count":5,"names":"IMPLEMENTATION_COMPLETE.md, ORDER_MANAGEMENT_IMPLEMENTATION.md, REFACTOR_ANALYSIS.md, REFACTOR_IMPLEMENTATION.md, REFACTOR_SUMMARY.md"}
+Neve77/comandaflow	review	cleanliness	comandaflow.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	installed/comandaflow.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win32/nssm.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win64/nssm.exe	issue.leftover.executable	{}
+Neve77/comandaflow	smell	modernity	.nvmrc (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+Neve77/comandaflow	smell	order	./	issue.leftover.rootDocs	{"count":13,"limit":3,"names":"DEPLOYMENT.md, GERENCIADOR_PEDIDOS_GUIDE.md, GETTING_STARTED.md, IMPLEMENTATION_COMPLETE.md, ORDER_MANAGEMENT_IMPLEMENTATION.md, …"}
+RoniAbravaya/ai-stock-summary-app	review	cleanliness	./	issue.leftover.worklogs	{"count":16,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, DEPLOYMENT_FIX.md, …"}
+RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.leftover.script	{}
+RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
+SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
+SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+SankrityaT/InstaCare	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm + pnpm"}
+Walbrkt/HackBerlin_Solar	review	cleanliness	./	issue.leftover.worklogs	{"count":6,"names":"AGENT_PROMPTS.md, DATA_QUALITY_REPORT.md, INFERENCE_SERVER_SUMMARY.md, MODEL_TRAINING_REPORT.md, PIPELINE_SUMMARY.md, …"}
+Walbrkt/HackBerlin_Solar	smell	cleanliness	package-lock.json.bak	issue.leftover.backup	{"original":"package-lock.json"}
+Walbrkt/HackBerlin_Solar	smell	cleanliness	package.json.bak	issue.leftover.backup	{"original":"package.json"}
+Walbrkt/HackBerlin_Solar	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"limit":3,"names":"AGENT_PROMPTS.md, API_DOCUMENTATION.md, DATA_QUALITY_REPORT.md, END_TO_END_PHILOSOPHY.md, INFERENCE_SERVER_SUMMARY.md, …"}
+Walbrkt/HackBerlin_Solar	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+ai-assist-org/ai-assist	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+ai-assist-org/ai-assist	review	cleanliness	docs/SELF_IMPROVEMENT.md	issue.leftover.worklog	{}
+antfu/ni	smell	order	test/programmatic/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"catalog-interactive.spec.ts, runCli.spec.ts"}
+antfu/taze	smell	order	test/	issue.twins.styles	{"styles":"camelCase ×17 + kebab-case ×2","examples":"bunCatalog.test.ts, package-manager.test.ts"}
+astral-sh/uv	review	cleanliness	changelogs/	issue.leftover.versionNotes	{"count":12,"names":"0.1.x.md, 0.10.x.md, 0.11.x.md, 0.12.x.md, 0.2.x.md, …"}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-aarch64-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-aarch64-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-i686-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-i686-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×8","examples":"assemble-release-artifacts.py, build_uv_pgo.py"}
+calcom/cal.com	review	modernity	apps/api/v2/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+calcom/cal.com	review	modernity	apps/api/v2/package.json (querystring)	issue.deps.native	{"name":"querystring","use":"URL / URLSearchParams"}
+calcom/cal.com	review	modernity	example-apps/credential-sync/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+calcom/cal.com	review	modernity	packages/platform/examples/base/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+calcom/cal.com	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":244,"limit":200}
+calcom/cal.com	smell	order	./	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"i18n-unused.config.js, setupVitest.ts"}
+calcom/cal.com	smell	order	apps/api/v2/src/lib/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"api-versions.ts, filterReqHeaders.ts"}
+calcom/cal.com	smell	order	apps/web/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"getNextjsOrgRewriteConfig.ts, cron-tester.ts"}
+calcom/cal.com	smell	order	apps/web/lib/	issue.twins.styles	{"styles":"camelCase ×16 + kebab-case ×2","examples":"buildLegacyCtx.ts, app-providers-app-dir.tsx"}
+calcom/cal.com	smell	order	apps/web/playwright/lib/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×2","examples":"loadJSON.ts, chart-helpers.ts"}
+calcom/cal.com	smell	order	apps/web/test/lib/	issue.twins.styles	{"styles":"camelCase ×9 + kebab-case ×1","examples":"availabilityAsString.test.ts, next-config.test.ts"}
+calcom/cal.com	smell	order	apps/web/test/lib/getSchedule/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×1","examples":"calendarEvents.test.ts, delegation-credential.test.ts"}
+calcom/cal.com	smell	order	package.json (@faker-js/faker)	issue.workspace.drift	{"name":"@faker-js/faker","versions":".: 9.2.0; packages/lib: 7.6.0"}
+calcom/cal.com	smell	order	package.json (@testing-library/react)	issue.workspace.drift	{"name":"@testing-library/react","versions":".: 16.0.1; apps/web: 13.3.0"}
+calcom/cal.com	smell	order	package.json (@types/react)	issue.workspace.drift	{"name":"@types/react","versions":"apps/docs: ^19.0.0; apps/web: 18.0.26; example-apps/credential-sync: 18.0.26; packages/app-store-cli: 18.0.26; packages/embeds/embed-react: 18.0.26; packages/platform/atoms: 18.0.26; packages/platform/examples/base: 18.0.26; packages/ui: 18.0.26"}
+calcom/cal.com	smell	order	package.json (@types/uuid)	issue.workspace.drift	{"name":"@types/uuid","versions":"apps/web: 8.3.1; packages/trpc: 8.3.4; packages/ui: 10.0.0"}
+calcom/cal.com	smell	order	package.json (dotenv)	issue.workspace.drift	{"name":"dotenv","versions":"apps/api/v2: 16.6.1; example-apps/credential-sync: 16.6.1; packages/platform/examples/base: 17.2.2"}
+calcom/cal.com	smell	order	package.json (next)	issue.workspace.drift	{"name":"next","versions":"apps/docs: ^15.5.28; example-apps/credential-sync: 15.5.28; apps/web: 16.4.3; packages/platform/examples/base: 16.4.3"}
+calcom/cal.com	smell	order	package.json (react)	issue.workspace.drift	{"name":"react","versions":"apps/docs: ^19.0.0; apps/web: 18.2.0; example-apps/credential-sync: 18.2.0; packages/app-store-cli: 18.2.0; packages/platform/examples/base: 18.2.0"}
+calcom/cal.com	smell	order	package.json (react-dom)	issue.workspace.drift	{"name":"react-dom","versions":"apps/docs: ^19.0.0; apps/web: 18.2.0; example-apps/credential-sync: 18.2.0; packages/platform/examples/base: 18.2.0"}
+calcom/cal.com	smell	order	package.json (react-easy-crop)	issue.workspace.drift	{"name":"react-easy-crop","versions":"apps/web: 3.5.3; packages/ui: 5.0.0"}
+calcom/cal.com	smell	order	package.json (stripe)	issue.workspace.drift	{"name":"stripe","versions":"apps/api/v2: 15.4.0; apps/web: 9.16.0; packages/app-store/stripepayment: 9.16.0; packages/features: 9.16.0"}
+calcom/cal.com	smell	order	package.json (tailwind-merge)	issue.workspace.drift	{"name":"tailwind-merge","versions":"packages/coss-ui: 3.4.0; packages/platform/atoms: 1.13.2; packages/ui: 1.13.2"}
+calcom/cal.com	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"apps/web: 4.1.17; packages/embeds/embed-core: 4.1.17; packages/platform/atoms: 4.1.17; packages/platform/examples/base: 4.1.17; example-apps/credential-sync: 3.4.1"}
+calcom/cal.com	smell	order	package.json (uuid)	issue.workspace.drift	{"name":"uuid","versions":"apps/api/v2: 8.3.2; apps/web: 8.3.2; packages/app-store/stripepayment: 8.3.2; packages/lib: 8.3.2; packages/prisma: 8.3.2; packages/trpc: 8.3.2; packages/ui: 11.1.0"}
+calcom/cal.com	smell	order	packages/app-store/	issue.twins.styles	{"styles":"camelCase ×8 + kebab-case ×3","examples":"appStoreMetaData.ts, redirect-apps.generated.ts"}
+calcom/cal.com	smell	order	packages/app-store/_utils/	issue.twins.styles	{"styles":"camelCase ×31 + kebab-case ×1","examples":"bulkUpdateEventsToDefaultLocation.test.ts, paid-apps.ts"}
+calcom/cal.com	smell	order	packages/app-store/googlecalendar/tests/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"google-calendar.e2e.ts, testUtils.ts"}
+calcom/cal.com	smell	order	packages/app-store/stripepayment/lib/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"currencyOptions.ts, team-billing.ts"}
+calcom/cal.com	smell	order	packages/embeds/embed-core/bun.lockb	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+calcom/cal.com	smell	order	packages/embeds/embed-core/src/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×2","examples":"embed-iframe.ts, tailwindCss.ts"}
+calcom/cal.com	smell	order	packages/embeds/embed-core/src/embed-iframe/__tests__/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"react-hooks.test.ts, isLinkReady.test.ts"}
+calcom/cal.com	smell	order	packages/features/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×2","examples":"handleMarkNoShow.test.ts, get-cal-video-reference.test.ts"}
+calcom/cal.com	smell	order	packages/features/auth/lib/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×3","examples":"checkAdminOrOwner.ts, next-auth-custom-adapter.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/Booker/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"framer-features.tsx, useSlotReservationId.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/Booker/utils/	issue.twins.styles	{"styles":"camelCase ×18 + kebab-case ×2","examples":"areDifferentValidMonths.test.ts, query-param.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/	issue.twins.styles	{"styles":"camelCase ×40 + kebab-case ×3","examples":"bookingCreateBodySchema.ts, create-booking.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/	issue.twins.styles	{"styles":"camelCase ×25 + kebab-case ×1","examples":"checkActiveBookingsLimitForBooker.ts, global-booking-limits.test.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/test/	issue.twins.styles	{"styles":"kebab-case ×13 + camelCase ×4","examples":"booking-flags.test.ts, buildDryRunBooking.test.ts"}
+calcom/cal.com	smell	order	packages/features/calendars/lib/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×2","examples":"getAvailableDatesInMonth.timezone.test.ts, timezone-conversion.test.ts"}
+calcom/cal.com	smell	order	packages/features/form-builder/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"fieldTypes.ts, widget-types.ts"}
+calcom/cal.com	smell	order	packages/lib/	issue.twins.styles	{"styles":"camelCase ×99 + kebab-case ×10","examples":"buildCalEventFromBooking.ts, default-cookies.ts"}
+calcom/cal.com	smell	order	packages/lib/schedules/transformers/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"for-atom.ts, getScheduleListItemData.ts"}
+calcom/cal.com	smell	order	packages/lib/test/ + __tests__/	issue.twins.synonyms	{}
+coyvalyss1/model-matchmaker	review	cleanliness	test-auto-switch-timing.sh	issue.leftover.script	{}
+coyvalyss1/model-matchmaker	review	cleanliness	test-cc.sh	issue.leftover.script	{}
+coyvalyss1/model-matchmaker	review	cleanliness	test-context-monitor.sh	issue.leftover.script	{}
+coyvalyss1/model-matchmaker	review	cleanliness	test-mode-switch.sh	issue.leftover.script	{}
+coyvalyss1/model-matchmaker	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+curtmorgan3/quest-bound	review	cleanliness	cypress/SELECTOR-FIXES-SUMMARY.md	issue.leftover.worklog	{}
+curtmorgan3/quest-bound	review	cleanliness	cypress/TEST-RESULTS-SUMMARY.md	issue.leftover.worklog	{}
+curtmorgan3/quest-bound	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/DEPLOYMENT_FIXES.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/WAR_ROOM_IMPLEMENTATION.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/API_IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/AUTH_FIXES_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/DEPLOYMENT_FIXES.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/EMAILJS_FIX.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/FIXES_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/GMAIL_API_FIX.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ISSUE_FIXES_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/PAGE_MERGE_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ROUTING_FIXES.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+denoland/deno	review	cleanliness	tests/specs/lockfile/out_of_date_npm_info/deno.lock.old	issue.leftover.maybeBackup	{}
+denoland/deno	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":433,"limit":200}
+denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
+denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
+denoland/deno	smell	order	tests/specs/node/node_test_mock_module/	issue.twins.styles	{"styles":"snake_case ×7 + kebab-case ×3","examples":"main_cache.mjs, basic-cjs.cjs"}
+eryngordon/quiz-lead-magnet-maker	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+eryngordon/quiz-lead-magnet-maker	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+facebook/react	review	modernity	package.json (mkdirp)	issue.deps.native	{"name":"mkdirp","use":"fs.mkdir(path, { recursive: true })"}
+facebook/react	review	modernity	package.json (ncp)	issue.deps.native	{"name":"ncp","use":"fs.cp(src, dest, { recursive: true })"}
+facebook/react	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+facebook/react	review	modernity	packages/react-devtools-extensions/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+facebook/react	smell	convention	compiler/CLAUDE.md	issue.leftover.claudeLong	{"lines":276,"limit":200}
+facebook/react	smell	modernity	packages/eslint-plugin-react-hooks/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	modernity	packages/react-devtools-extensions/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	modernity	packages/react-devtools-inline/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	modernity	packages/react-devtools-shell/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/scripts/jest/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×3","examples":"e2e-classic.config.js, makeE2EConfig.js"}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/e2e/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"constant-prop.e2e.js, expectLogs.js"}
+facebook/react	smell	order	compiler/packages/snap/src/sprout/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"shared-runtime-type-provider.ts, useEffectWrapper.ts"}
+facebook/react	smell	order	package.json (babel-eslint)	issue.workspace.drift	{"name":"babel-eslint","versions":"packages/eslint-plugin-react-hooks: ^10.0.3; packages/react-devtools-extensions: ^9.0.0; packages/react-devtools-inline: ^9.0.0; packages/react-devtools-shell: ^9.0.0"}
+facebook/react	smell	order	package.json (chalk)	issue.workspace.drift	{"name":"chalk","versions":".: ^3.0.0; packages/react-devtools-extensions: ^4.1.1"}
+facebook/react	smell	order	package.json (rimraf)	issue.workspace.drift	{"name":"rimraf","versions":".: ^3.0.0; packages/react-devtools-extensions: ^6.1.4"}
+facebook/react	smell	order	package.json (semver)	issue.workspace.drift	{"name":"semver","versions":".: ^7.1.1; packages/react-devtools-shell: ^6.3.1"}
+facebook/react	smell	order	packages/react-devtools-shared/src/__tests__/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2","examples":"backend-test.js, optimisticKeyDevToolsIntegration.js"}
+facebook/react	smell	order	packages/react-dom/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"unstable_testing.experimental.js, test-utils.js"}
+facebook/react	smell	order	packages/react-dom/npm/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×2","examples":"react-dom.react-server.js, unstable_testing.js"}
+facebook/react	smell	order	scripts/babel/	issue.twins.styles	{"styles":"kebab-case ×5 + camelCase ×1","examples":"transform-lazy-jsx-import.js, getComments.js"}
+facebook/react	smell	order	scripts/ci/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"download_devtools_regression_build.js, merge-build-weights.js"}
+facebook/react	smell	order	scripts/error-codes/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"extract-errors.js, invertObject.js"}
+facebook/react	smell	order	scripts/flow/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×2","examples":"createFlowConfigs.js, react-devtools.js"}
+facebook/react	smell	order	scripts/jest/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"patchMessageChannel.js, dont-run-jest-directly.js"}
+kartikramachandrula/thynk	smell	cleanliness	backend/__pycache__/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	cleanliness	backend/ocr_models/__pycache__/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
+matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":284,"limit":200}
+nuxt/nuxt	review	modernity	packages/kit/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
+nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
+oven-sh/bun	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":244,"limit":200}
+oven-sh/bun	smell	convention	scripts/verify-baseline-static/CLAUDE.md	issue.leftover.claudeLong	{"lines":288,"limit":200}
+oven-sh/bun	smell	convention	src/CLAUDE.md	issue.leftover.claudeLong	{"lines":526,"limit":200}
+oven-sh/bun	smell	convention	src/format/CLAUDE.md	issue.leftover.claudeLong	{"lines":428,"limit":200}
+oven-sh/bun	smell	convention	src/jsc/bindings/v8/CLAUDE.md	issue.leftover.claudeLong	{"lines":331,"limit":200}
+oven-sh/bun	smell	convention	src/lint/CLAUDE.md	issue.leftover.claudeLong	{"lines":345,"limit":200}
+oven-sh/bun	smell	convention	test/CLAUDE.md	issue.leftover.claudeLong	{"lines":247,"limit":200}
+oven-sh/bun	smell	order	bench/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×2","examples":"aes-gcm-throughput.mjs, asymmetricCipher.js"}
+oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×122 + camelCase ×3","examples":"abort-signal.mjs, byteLength.mjs"}
+oven-sh/bun	smell	order	src/js/ahead-of-time/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"end-of-stream.ts, load_all.ts"}
+oven-sh/bun	smell	order	src/js/internal/fs/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"cp-sync.ts, file_handles.ts"}
+oven-sh/bun	smell	order	src/js/internal/net/	issue.twins.styles	{"styles":"camelCase ×1 + snake_case ×1","examples":"isIP.ts, server_abort_signal.ts"}
+oven-sh/bun	smell	order	src/js/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"add-abort-signal.ts, lazy_transform.ts"}
+oven-sh/bun	smell	order	src/js/thirdparty/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"isomorphic-fetch.ts, vercel_fetch.js"}
+oven-sh/bun	smell	order	src/node-fallbacks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"build-fallbacks.ts, string_decoder.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/a-preload-has-left-an-unrelated-ended-mock-behind/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/a-preload-has-left-an-unrelated-ended-mock-with-the-same-name-behind/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/the-ended-mock-of-a-preload-lay-on-the-file-itself/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-factory-imports-a-module-whose-own-factory-is-still-running/the-load-that-started-a-third-factory-leads-to-both-so-it-waits-for-the-mock/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"a-and-d.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-factory-imports-a-module-whose-own-factory-is-still-running/the-running-factory-waits-for-the-one-that-called-it-so-it-gets-the-original/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"b-and-r.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-hook-of-the-loader-laid-through-an-object-that-was-handed-on/a-package-that-only-hands-the-module-of-the-loader-on-leaves-the-imports-alone/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, reads-names.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-ring-of-three-mocks-below-two-compiled-roots-and-one-that-runs-from-its-text/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"a-and-d.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-above-two-compiled-files-each-above-one-mock/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-above-two-texts-each-above-a-compiled-file/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-a-compiled-file-above-both/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-both.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-a-text-above-both/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-both.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-two-texts-with-nothing-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-that-has-run-is-no-importer-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/two-roots-with-no-importer-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/two-texts-each-above-a-compiled-file-with-nothing-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-over-a-mock-whose-factory-still-runs/it-waits-for-the-next-load/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-r-again.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-over-a-mock-whose-factory-still-runs/the-mocks-of-the-next-test-over-two-modules-are-applied/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"both-again.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-while-the-body-of-the-module-is-behind-its-top-level-await/second-import-fails-behind-first/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"job-1.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-while-the-body-of-the-module-is-behind-its-top-level-await/second-import-settles-with-first/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"job-1.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/an-async-mock-is-laid-over-it/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-answer-of-a-mock-laid-over-it-has-a-getter-that-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-answers-at-once/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-is-async/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-of-a-mock-laid-over-it-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/a-factory-that-takes-the-original/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/nothing-is-mocked/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/one-mock-below-a-ring-that-comes-round-through-the-reader/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/the-mocked-file-stars-nothing/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/an-answer-that-asked-the-path-is-not-kept-for-another-path/a-ring-hands-the-name-on-under-another-name-and-back-and-a-mock-adds-it/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"a-s.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/a-second-mock-is-laid-over-the-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-answers-at-once-and-the-mocks-are-restored/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-is-async/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-of-the-second-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/own-file-and-folder/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/two-folder-urls/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/variable-swapped-between-folders/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-that-ends-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-that-ends-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/no-mock-yet-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/no-mock-yet-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-late-late-import-loaded-before/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-require-require-import-late-nothing-loaded/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-the-body-runs-once/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-then-unmock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/fails-behind-an-await-import-require-import-late-late-loaded-before/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/fails-behind-an-await-late-late-import-nothing-loaded/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/hooks-for-the-react-compiler/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"use-sum.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/mocks-stay-where-they-are-written/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×4","examples":"config-a.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/preloads-ask-for-the-names/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, setup-without-the-mark.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/the-names-of-vitest-lie-on-the-global-object/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"under-the-mark.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/what-else-the-parser-writes-anew/	issue.twins.styles	{"styles":"kebab-case ×8 + snake_case ×1","examples":"chai-under-the-mark.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/import-actual-inside-running-factory/commonjs-mocked-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, uses-cjs.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/dependency-evaluated-by-import-actual/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/dependency-evaluated-by-import/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/factory-imports-other-mocked-module/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"leads-to-all.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/leftover-importer-imported-directly/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/mock-module-patches-evaluated-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/file-above-inner/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/file-between-originals/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/hoisted-import-isolated/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/imported-directly-too/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/third-factory/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-imports-it-in-two-runs/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-imports-it/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-mocks-it-again/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-and-changed-under-the-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-under-a-mock-of-bun/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-under-a-mock-of-vitest/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/behind-a-mock-that-ended-it-was-laid-over/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"t_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/behind-a-mock-that-ended-twice/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"t_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/left-by-an-earlier-file-the-user-is-loaded-by-this-one/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/left-by-an-earlier-file-three-tests-the-middle-one-real/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/let-go-and-held-beside-a-file-that-is-loaded-again/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/both-modules-reexport-commonjs/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/bypassed-factory-is-not-called/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/commonjs-file-runs-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/commonjs-star-listed-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/export-added-after-require/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/not-called-beside-active-mocks/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-before-it-exports/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-into-the-cycle/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-nothing/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-the-reexporting-hub/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/throws-after-the-require/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/unmocked-file-adds-export-later/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/name-of-next-star/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/one-binding-by-two-stars/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/original-read-after-mock-two-stars/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/original-read-after-mock/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-change-linked-modules/import-waits-for-preload-factory/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"mocks-region.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/one-mock-in-the-preload-and-none-in-the-test-files/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/one-mock-in-the-preload-and-two-in-the-first-test-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/the-same-with-two-mocks-in-the-preload-and-a-mock-that-waits/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/the-test-takes-its-mock-off-and-the-preloads-comes-back-for-the-old-reader-at-once/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/two-mocks-in-the-preload-and-a-third-in-the-first-test-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-barrels-from-source/commonjs-dependency/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.ts, made-barrel.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-barrels-from-source/given-by-a-plugin/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.ts, made-barrel.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/a-name-is-imported-below-the-first-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/the-namespace-is-imported-below-the-first-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/the-real-module-is-loaded-between-two-mocks/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-behind-linked-stars/mock-between-lacks-name/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"named-n0.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-behind-linked-stars/static-star-beside-two-views/	issue.twins.styles	{"styles":"snake_case ×1 + camelCase ×1","examples":"a_test.js, asksMiddle.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-imported-through-getters-of-commonjs-files/a-settled-name-and-a-spy-on-the-door/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"fixed-door.cjs, t_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-imported-through-getters-of-commonjs-files/a-settled-name-in-two-test-files/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, fixed-door.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-commonjs-files-that-barrels-hand-on-beside-a-mock/a-namespace-read-off-what-require-gives/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, by-name.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/built-in-twice/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/default/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/folder/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/named/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/namespace/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-mocks-behind-stars/mock-adds-name/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, named-n1.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-the-runner-that-loads-a-file/helpers-below-a-test-file-that-imports-vitest/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"imports-bun-test.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/concurrent-load-keeps-its-link/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/fails-then-mocked-again/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/new-importer-requests-missing-name/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/originals-of-built-in-objects/a-factory-that-keeps-the-rest/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, place-of-the-run.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/importer-without-instances/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/throwing-factory-of-unrequested-mock/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/two-importers-without-instances/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/unrequested-mock-behind-two-files/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/pending-import-under-replaced-mock/earlier-import-gets-new-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-again.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/released-commonjs-files/importers-of-run-set-aside-again/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"user-late.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/released-commonjs-files/importers-of-run-set-aside/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/jest-mock-behind-do-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/jest-mock-behind-loaded-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-awaited-original/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-do-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-throwing-factory/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/patch-over-second-run/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"user-late.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/restored-mocks-before-next-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-a-file-makes-for-itself/the-name-of-the-file-is-stored-or-is-not/	issue.twins.styles	{"styles":"kebab-case ×13 + snake_case ×1","examples":"added-to.cjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-mock-in-one-test-file-and-none-in-the-next/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-mock-over-the-default/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-spy-on-the-object-of-the-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/both-mocks-removed/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/commonjs-member-mocked-too/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/cycle-member-imports-other/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/held-reader-is-called-again/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/no-commonjs-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/one-member-and-commonjs-mocked/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/project-reads-commonjs-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/tail-imported-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-links-of-a-load-go-back-where-a-body-below-it-throws/a-body-below-begins-a-load-of-its-own-that-fails/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"asks-for-nothing.mjs, cell_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-links-of-a-load-go-back-where-a-body-below-it-throws/the-load-that-fails-is-a-require/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"asks-for-nothing.mjs, cell_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-awaits-below-two-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-imports-its-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-lies-below-two-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-member-of-the-cycle-awaits/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-name-below-the-closed-cycle-is-not-exported/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-request-below-the-closed-cycle-finds-no-file/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/the-job-of-the-file-imports-a-member/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/the-second-importer-comes-while-the-graph-below-is-loaded-and-its-last-request-finds-no-file/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"path-one.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-eight-times-and-the-factory-stands-between/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-nine-times-and-the-original-has-imports/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-seven-times-and-ends-first/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-awaits-at-its-top/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-imports-the-module-that-mocks-it-and-awaits/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-imports-the-module-that-mocks-it/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-require-behind-a-late-failure-answers-the-body-that-has-run/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-require-between-two-factories-that-fail-late-gets-the-original/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-second-factory-laid-over-one-that-failed-late-is-called-by-the-next-import/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/the-module-in-front-removes-the-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, mocks-tax.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/two-readers-of-one-barrel-one-under-the-mock-and-one-behind-its-end/a-ring-of-barrel-and-reader-a-refused-load-and-then-a-root-over-the-reader/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, wants-more.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/two-readers-of-one-barrel-one-under-the-mock-and-one-behind-its-end/the-same-without-the-ring/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, wants-more.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/types-of-one-file-that-test-files-ask-for/a-call-comes-before-statements-of-two-types/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, as-yaml.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/types-of-one-file-that-test-files-ask-for/a-text-that-one-type-refuses/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, as-toml.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-module-imports-in-front-is-read-when-the-file-behind-it-runs/two-files-behind-it-hold-a-require-of-it/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, other-real.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/exports-defined-anew-on-the-entry-of-a-commonjs-file/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"by-a-getter.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/exports-deleted-on-the-entry-of-a-commonjs-file/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"by-reflect.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/on-an-entry-under-a-key-that-the-build-cannot-read/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.cjs, only-read.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-function/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-function.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-text/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-text.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel/packages/commonjs-interop/many-1/	issue.twins.styles	{"styles":"kebab-case ×42 + snake_case ×24","examples":"class-statics.default.mjs, reexport_of_array.mjs"}
+oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×151 + snake_case ×2","examples":"answers-test-from-source.ts, exact_counts.py"}
+oven-sh/bun	smell	order	test/bundler/	issue.twins.styles	{"styles":"kebab-case ×58 + snake_case ×42 + camelCase ×2","examples":"bun-build-api-dts.test.ts, bundler_allow_unresolved.test.ts, buildNoThrow.ts"}
+oven-sh/bun	smell	order	test/bundler/css/wpt/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"background-computed.test.ts, relative_color_out_of_gamut.test.ts"}
+oven-sh/bun	smell	order	test/bundler/transpiler/react-compiler-fixtures/	issue.twins.styles	{"styles":"kebab-case ×990 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
+oven-sh/bun	smell	order	test/cli/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×3","examples":"aot-builtin-modules-and-computed-paths.test.ts, update_interactive_formatting.test.ts"}
+oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×64 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
+oven-sh/bun	smell	order	test/internal/	issue.twins.styles	{"styles":"kebab-case ×50 + snake_case ×1","examples":"address-sanitizer-sees-wtf-allocations.test.ts, int_from_float.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"cipheriv-decipheriv.test.ts, webcryptoTestHelpers.ts"}
+oven-sh/bun	smell	order	test/js/bun/css/	issue.twins.styles	{"styles":"kebab-case ×17 + snake_case ×1","examples":"angle-serialization-hang.test.ts, doesnt_crash.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/http/	issue.twins.styles	{"styles":"kebab-case ×118 + camelCase ×2","examples":"async-iterator-stream.test.ts, decodeURIComponentSIMD.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/jsc-stress/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"jsc-stress.test.ts, testFFI.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/json5/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_json5_test_suite.ts, json5-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/resolve/	issue.twins.styles	{"styles":"kebab-case ×50 + camelCase ×2","examples":"build-error.test.ts, esModule.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/shell/	issue.twins.styles	{"styles":"kebab-case ×22 + snake_case ×2","examples":"assignments-in-pipeline.test.ts, pipeline_stack.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/spawn/	issue.twins.styles	{"styles":"kebab-case ×55 + camelCase ×1 + snake_case ×1","examples":"bad-fixture.js, spawnSync.test.ts, spawn_waiter_thread.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/test/	issue.twins.styles	{"styles":"kebab-case ×73 + snake_case ×7 + camelCase ×1","examples":"bun-jest-arguments.test.ts, bun_test.fixture.ts, spyMatchers.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/test/expect/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"huge-failure-message.test.ts, toHaveReturnedWith.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/toml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_toml_test_suite.ts, toml-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/udp/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×2","examples":"dgram-cluster-disconnect-fixture.ts, udp_socket.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/util/	issue.twins.styles	{"styles":"kebab-case ×55 + camelCase ×14 + snake_case ×1","examples":"base64-url-safe-encode.test.ts, escapeHTML.test.js, filesystem_router.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/xml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_xml_test_suite.ts, xml-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/yaml/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"yaml-block-scalar-matrix.test.ts, translate_yaml_test_suite_to_bun.py"}
+oven-sh/bun	smell	order	test/js/node/async_hooks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"async-local-storage-thenable.test.ts, async_hooks.node.test.ts"}
+oven-sh/bun	smell	order	test/js/node/child_process/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×5","examples":"child-process-exec.test.ts, child_process.test.ts"}
+oven-sh/bun	smell	order	test/js/node/module/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2 + snake_case ×1","examples":"esm-registry-concurrent-gc.test.ts, modulePrototypeOverwrite.cjs, esm_to_cjs_interop.mjs"}
+oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×6 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
+oven-sh/bun	smell	order	test/js/node/test/common/	issue.twins.styles	{"styles":"kebab-case ×7 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
+oven-sh/bun	smell	order	test/js/node/url/	issue.twins.styles	{"styles":"kebab-case ×15 + camelCase ×1","examples":"url-domain-ascii-unicode.test.js, pathToFileURL.test.ts"}
+oven-sh/bun	smell	order	test/js/node/worker_threads/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×4","examples":"a-message-listener-throws-behind-the-end-of-the-thread-fixture.ts, worker_destruction.test.ts"}
+oven-sh/bun	smell	order	test/js/node/zlib/	issue.twins.styles	{"styles":"kebab-case ×9 + camelCase ×1","examples":"deflate-streaming.test.ts, bytesWritten.test.ts"}
+oven-sh/bun	smell	order	test/js/web/fetch/	issue.twins.styles	{"styles":"kebab-case ×80 + snake_case ×1","examples":"abort-signal-leak.test.ts, fetch_headers.test.js"}
+oven-sh/bun	smell	order	test/js/web/timers/	issue.twins.styles	{"styles":"kebab-case ×8 + camelCase ×4","examples":"performance-entries.test.ts, setImmediate.test.js"}
+oven-sh/bun	smell	order	test/js/web/workers/	issue.twins.styles	{"styles":"kebab-case ×29 + snake_case ×1","examples":"a-read-of-a-file-descriptor-is-the-last-thing-pending.test.ts, worker_blob.test.ts"}
+oven-sh/bun	smell	order	test/napi/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"addon-allocations.test.ts, uv_stub.test.ts"}
+oven-sh/bun	smell	order	test/napi/napi-app/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×2","examples":"external-buffer-worker.js, test_experimental_crash.js"}
+oven-sh/bun	smell	order	test/napi/node-napi-tests/test/common/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
+oven-sh/bun	smell	order	test/napi/node-napi-tests/test/node-api/test_buffer/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"test-external-buffer.js, test_finalizer.js"}
+oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"kebab-case ×42 + snake_case ×1","examples":"abort-controller-fixture.js, test_env_loader_threading.test.ts"}
+oven-sh/bun	smell	order	test/snapshots/	issue.twins.styles	{"styles":"kebab-case ×105 + snake_case ×4","examples":"array-args-with-default-values.debug.js, spread_with_key.debug.tsx"}
+oven-sh/bun	smell	order	test/snippets/	issue.twins.styles	{"styles":"kebab-case ×30 + snake_case ×1","examples":"array-args-with-default-values.js, spread_with_key.tsx"}
+oxc-project/oxc	review	modernity	tasks/sprout/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
+oxc-project/oxc	smell	modernity	tasks/e2e/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+pisces19860207/zhengdao	review	cleanliness	.github/release-notes/	issue.leftover.versionNotes	{"count":29,"names":"v2.0.1.md, v2.0.10.md, v2.0.11.md, v2.0.12.md, v2.0.13.md, …"}
+pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	{"count":22,"names":"322-治理中心-交付-2026-11-08.md, 467-租约-交付-2026-11-08.md, 482-目标模式-交付-2026-11-08.md, 482-真机链路验收-2026-11-09.md, 498-能力盘点-交付-2026-11-07.md, …"}
+pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
+pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
+pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
+rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
+ruvnet/ruflo	review	cleanliness	.claude-plugin/docs/PLUGIN_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	.claude/agents/MIGRATION_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	.claude/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	docs/IMPROVEMENT-ROADMAP.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	docs/STATUS.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	plugin/agents/MIGRATION_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	plugin/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/.claude/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/TEST_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/docs/IMPLEMENTATION_COMPLETE.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/docs/REFACTORING_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/mcp/.claude/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/shared/docs/EVENTS_IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/__tests__/integration/TEST_SUMMARY.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/docs/releases/	issue.leftover.versionNotes	{"count":11,"names":"v3.32.28.md, v3.32.29.md, v3.32.30.md, v3.32.31.md, v3.32.32.md, …"}
+ruvnet/ruflo	review	cleanliness	v3/implementation/architecture/AGENTIC-FLOW-INTEGRATION-ANALYSIS.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/architecture/SDK-ARCHITECTURE-ANALYSIS.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/reports/V2-COMPATIBILITY-REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/v3-migration/CAPABILITY-GAP-ANALYSIS.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/mcp/tools/IMPLEMENTATION.md	issue.leftover.worklog	{}
+ruvnet/ruflo	smell	cleanliness	.claude/settings.json.bak	issue.leftover.backup	{"original":"settings.json"}
+ruvnet/ruflo	smell	cleanliness	CLAUDE.local.md	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
+ruvnet/ruflo	smell	convention	CLAUDE.md	issue.leftover.claudeLong	{"lines":1562,"limit":200}
+ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/CLAUDE.md	issue.leftover.claudeLong	{"lines":731,"limit":200}
+ruvnet/ruflo	smell	convention	v3/@claude-flow/mcp/CLAUDE.md	issue.leftover.claudeLong	{"lines":711,"limit":200}
+ruvnet/ruflo	smell	order	docs/assets/readme/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"generate-learning-cosmos.py, theme_artwork.py"}
+ruvnet/ruflo	smell	order	package.json (agentic-flow)	issue.workspace.drift	{"name":"agentic-flow","versions":".: ^3.0.0; v3/@claude-flow/plugin-agent-federation: 2.0.14"}
+ruvnet/ruflo	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
+ruvnet/ruflo	smell	order	package.json (vitest)	issue.workspace.drift	{"name":"vitest","versions":".: ^3.2.6; v3/@claude-flow/codex: ^4.1.0; v3/@claude-flow/mcp: ^4.1.0; v3/@claude-flow/plugin-agent-federation: ^4.1.0; v3/@claude-flow/security: ^4.1.0"}
+ruvnet/ruflo	smell	order	plugin/	issue.twins.plural	{"other":"plugins/"}
+ruvnet/ruflo	smell	order	ruflo/src/ruvocal/scripts/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"generate-welcome.mjs, updateLocalEnv.ts"}
+ruvnet/ruflo	smell	order	ruflo/src/ruvocal/src/lib/server/api/__tests__/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"conversations-id.spec.ts, testHelpers.ts"}
+ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/symbolic-scribe	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+ruvnet/symbolic-scribe	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+shadcn-ui/taxonomy	smell	modernity	.nvmrc (Node 16)	issue.lifecycle.ended	{"name":"Node 16","date":"2023-09-11","use":{"t":"eol.node"}}
+sindresorhus/execa	review	modernity	package.json (path-exists)	issue.deps.native	{"name":"path-exists","use":"fs.existsSync / fs.access"}
+theaiautomators/insights-lm-public	review	cleanliness	public/file-types/DOC (1).png	issue.leftover.maybeBackup	{}
+theaiautomators/insights-lm-public	review	cleanliness	public/file-types/MP3 (1).png	issue.leftover.maybeBackup	{}
+theaiautomators/insights-lm-public	review	cleanliness	public/file-types/PDF (1).svg	issue.leftover.maybeBackup	{}
+theaiautomators/insights-lm-public	review	cleanliness	public/file-types/TXT (1).png	issue.leftover.maybeBackup	{}
+theaiautomators/insights-lm-public	review	cleanliness	public/file-types/WEB (1).svg	issue.leftover.maybeBackup	{}
+theaiautomators/insights-lm-public	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+theaiautomators/insights-lm-public	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+theaiautomators/insights-lm-public	smell	order	src/hooks/	issue.twins.styles	{"styles":"camelCase ×13 + kebab-case ×2","examples":"useAudioOverview.tsx, use-mobile.tsx"}
+unocss/unocss	smell	cleanliness	examples/sveltekit-preprocess/dist/	issue.leak.artifact	{}
+unocss/unocss	smell	order	packages-integrations/svelte-scoped/src/_vite/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"createCssTransformerPlugins.ts, config-hmr.ts"}
+v833/q-code	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+vitejs/vite	smell	order	packages/vite/src/node/server/__tests__/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"htmlSafeModulePaths.spec.ts, search-root.spec.ts"}
+vitejs/vite	smell	order	packages/vite/src/shared/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"bundledDevHmr.ts, pretty-format.ts"}
+vitejs/vite	smell	order	packages/vite/src/shared/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"forwardConsole.spec.ts, pretty-format.spec.ts"}
+vitejs/vite	smell	order	playground/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"vitestGlobalSetup.ts, test-utils.ts"}
+vitejs/vite	smell	order	playground/alias/dir/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"from-script-src.js, url_conflict.js"}
+vitejs/vite	smell	order	playground/fs-serve/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"commonTests.ts, fs-serve.spec.ts"}
+vitejs/vite	smell	order	playground/hmr-ssr/accept-exports/export-from/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"depA.ts, export-from.ts"}
+vitejs/vite	smell	order	playground/hmr/accept-exports/export-from/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"depA.ts, export-from.ts"}
+vitejs/vite	smell	order	playground/ssr-html/src/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"error-js.js, importedVirtual.js"}
+vitejs/vite	smell	order	playground/worker/	issue.twins.styles	{"styles":"kebab-case ×33 + camelCase ×2","examples":"classic-esm.js, importMetaGlob.worker.js"}
+vitejs/vite	smell	order	playground/worker/modules/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"test-plugin.js, workerImport.ts"}
+vitejs/vite	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×3","examples":"detect-release.ts, mergeChangelog.ts"}
+vuejs/core	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
+vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/resources/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×2","examples":"eventtarget_shim.js, testdriver-actions.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/	issue.twins.styles	{"styles":"snake_case ×59 + kebab-case ×11 + camelCase ×1","examples":"assert_throws_dom_legacy_domexception_names.window.js, cross-document-appendchild-adopts.window.js, getDomExceptionName.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/collections/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×1","examples":"getelementsbyclassname-live.window.js, length_readonly.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/domparsing/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"domparser_parsefromstring_html.window.js, innerhtml-comments.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/html_integration/resources/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×3","examples":"defer-1.js, import_meta_resolve_foo.js"}
+ziglang/zig	smell	cleanliness	test/cases/compile_errors/zon/desktop.ini	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+ziglang/zig	smell	order	lib/compiler/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"build_runner.zig, std-docs.zig"}
+ziglang/zig	smell	order	lib/compiler_rt/	issue.twins.styles	{"styles":"snake_case ×71 + camelCase ×3","examples":"aarch64_outline_atomics.zig, mulXi3.zig"}
+ziglang/zig	smell	order	test/behavior/	issue.twins.styles	{"styles":"snake_case ×48 + kebab-case ×2","examples":"addrspace_and_linksection.zig, packed-struct.zig"}
+ziglang/zig	smell	order	test/cases/compile_errors/	issue.twins.styles	{"styles":"snake_case ×705 + kebab-case ×1","examples":"access_inactive_union_field_comptime.zig, non-comptime-parameter-used-as-array-size.zig"}
+ziglang/zig	smell	order	tools/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×3","examples":"fetch_them_macos_headers.zig, dump-cov.zig"}

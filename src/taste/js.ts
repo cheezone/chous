@@ -11,22 +11,23 @@ export type JsProject = {
 const LOCKFILES = ["pnpm-lock.yaml", "pnpm-workspace.yaml", "package-lock.json", "npm-shrinkwrap.json", "yarn.lock", "bun.lock", "bun.lockb"];
 
 /**
- * Roles where a second tool is always a bug: they fight over the same files.
+ * Roles where one job takes one tool. chous does not claim the two break each
+ * other — only that two tools hold one job.
  * Linters, test runners and bundlers are left alone — running two of them is
  * often a deliberate migration, not a mistake.
  */
-const FIGHTING_ROLES = ["package-manager", "formatter", "git-hooks", "release"];
+const ONE_JOB_ROLES = ["package-manager", "formatter", "git-hooks", "release"];
 
 /**
  * JavaScript / TypeScript projects (package.json, tsconfig.json or jsconfig.json).
  *
  * Picks no tools. It flags what has rotten (dead packages, things the platform
- * now ships) and tools that fight each other — both stay true for years.
+ * now ships) and two tools holding one job — both stay true for years.
  */
 export function js(project: JsProject = {}) {
   const t = taste("js");
 
-  t.oneToolPer(FIGHTING_ROLES);
+  t.oneToolPer(ONE_JOB_ROLES);
 
   if (project.workspacePackage) {
     t.no(LOCKFILES, { reason: "reason.nestedLockfile", value: "order" });
@@ -35,17 +36,16 @@ export function js(project: JsProject = {}) {
 
   for (const dep of NATIVE) t.obsolete(dep.names, dep.use, depReason(dep), { native: true });
   for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, depReason(dep));
-  t.no([".bowerrc", "bower.json", ".jshintrc", ".jscsrc", "tslint.json"], { reason: "reason.deadToolConfig", value: "modernity" });
+  // Tools their authors ended: TSLint (deprecated), JSCS (merged into ESLint).
+  // JSHint and Bower are not here: neither was ever declared dead.
+  t.no([".jscsrc", "tslint.json"], { reason: "reason.deadToolConfig", value: "modernity" });
 
   return t.rules;
 }
 
 /** Monorepo root: one major version of everything. */
-export function monorepo(pnpm: boolean) {
+export function monorepo() {
   const t = taste("monorepo");
-  if (pnpm) {
-    t.noField("workspaces", "reason.pnpmWorkspaces");
-  }
   t.workspace();
   return t.rules;
 }

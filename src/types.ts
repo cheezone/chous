@@ -93,9 +93,8 @@ export type WorkspaceRule = RuleBase & {
 };
 
 /**
- * Tools that fight over the same job must not coexist: two package managers
- * resolve different trees, two formatters rewrite each other, two git-hook
- * managers overwrite the same hooks.
+ * One job, one tool: a second package manager, formatter, git-hook manager or
+ * release tool holding the same job. Whether they actually collide is not claimed.
  */
 export type StackRule = RuleBase & {
   kind: "stack";

@@ -8,13 +8,18 @@ import { BaseRuleValidator } from "./base";
 import {
   ARTIFACT_DIRS,
   BUNDLER_CONFIG,
-  BUILT_BINARY,
+  EXECUTABLES,
+  INSTALLERS,
   DECISION_RECORD,
   DOC_FILE,
   NAME_EXEMPT,
   NOT_OURS,
   ONE_OFF_SCRIPT,
-  OS_JUNK,
+  KNOWN_BY_CONTENT,
+  CLAUDE_MD_LINES,
+  RECORD_DIRS,
+  SERIES,
+  VERSION_NAMED,
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
   SOURCE_FILE,
@@ -23,6 +28,14 @@ import {
   backupOf,
   nameStyle,
 } from "../../taste/hygiene";
+
+function safeList(dir: string): string[] {
+  try {
+    return readdirSync(dir);
+  } catch {
+    return [];
+  }
+}
 
 /** A `build` script in package.json, or a bundler config beside it. */
 function buildsSomething(dir: string): boolean {
@@ -56,12 +69,13 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
       // An artifact's own contents are not candidates for more artifacts.
       if (ARTIFACT_DIRS.some(({ dir }) => parent === dir || parent.endsWith(`/${dir}`) || parent.includes(`/${dir}/`) || parent.startsWith(`${dir}/`))) continue;
       const parentAbs = resolve(root, parent);
-      for (const { dir, when, unless, marker, built } of ARTIFACT_DIRS) {
+      for (const { dir, when, unless, marker, markerMatch, built } of ARTIFACT_DIRS) {
         const rel = parent ? `${parent}/${dir}` : dir;
         if (!existsSync(join(parentAbs, dir)) || ignored(rel)) continue;
         if (when && !when.some((f) => existsSync(join(parentAbs, f)))) continue;
         if (unless?.some((f) => existsSync(join(parentAbs, f)))) continue;
         if (marker && !marker.some((f) => existsSync(join(parentAbs, dir, f)))) continue;
+        if (markerMatch && !safeList(join(parentAbs, dir)).some((f) => markerMatch.test(f))) continue;
         if (built && !buildsSomething(parentAbs)) continue;
         hitCount++;
         rawIssues.push(issueFromRule(rule, {
@@ -89,20 +103,29 @@ function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
     .join("\n");
 }
 
+function lineCount(path: string): number {
+  try {
+    return readFileSync(path, "utf8").split(/\r?\n/).length - 1;
+  } catch {
+    return 0;
+  }
+}
+
 /** `a, b, c, d, e, …` */
 function list(names: string[], max = 5): string {
   const sorted = [...names].sort();
   return sorted.slice(0, max).join(", ") + (sorted.length > max ? ", …" : "");
 }
 
-/** The first bytes of a file, as latin1, NULs dropped (desktop.ini is often UTF-16). */
-function head(path: string, bytes = 512): string {
+/** The first bytes of a file, as latin1; NULs dropped for text (desktop.ini is often UTF-16), kept for signatures. */
+function head(path: string, bytes = 512, keepNul = false): string {
   try {
     const fd = openSync(path, "r");
     const buf = Buffer.alloc(bytes);
     const n = readSync(fd, buf, 0, bytes, 0);
     closeSync(fd);
-    return buf.subarray(0, n).toString("latin1").replaceAll("\0", "");
+    const text = buf.subarray(0, n).toString("latin1");
+    return keepNul ? text : text.replaceAll("\0", "");
   } catch {
     return "";
   }
@@ -127,6 +150,9 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message, verdict }));
     };
     const extraDocs: string[] = [];
+    const versionSeries = new Map<string, string[]>();
+    const recordDirs = new Map<string, string[]>();
+    const push = (map: Map<string, string[]>, key: string, name: string) => map.set(key, [...(map.get(key) ?? []), name]);
     const rootLogs: string[] = [];
     // Named in package.json, a config or the README: someone runs it.
     const referenced = rule.scripts ? rootText(snapshot) : "";
@@ -137,14 +163,24 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       const name = entry.name;
       const stem = name.replace(/\.[^.]+$/, "");
 
-      const junk = OS_JUNK.find((j) => j.name === name);
-      if (junk) {
-        if (junk.content.test(head(entry.absPath))) report(rel, { key: "issue.no.because", params: { reason: { t: "reason.osJunk" } } });
+      const known = KNOWN_BY_CONTENT.find((k) => k.name === name);
+      if (known) {
+        if (known.content.test(head(entry.absPath))) report(rel, { key: "issue.no.because", params: { reason: { t: known.reason } } });
         continue;
       }
 
       if (DOC_FILE.test(name)) {
         if (atRoot && !ROOT_CONTRACT_DOCS.test(name)) extraDocs.push(name);
+        const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
+        if (VERSION_NAMED.test(stem)) push(versionSeries, dir, name);
+        if (RECORD_DIRS.test(dir.split("/").at(-1)!)) push(recordDirs, dir, name);
+        if (name === "CLAUDE.md") {
+          const lines = lineCount(entry.absPath);
+          if (lines > CLAUDE_MD_LINES) {
+            hitCount++;
+            rawIssues.push(issueFromRule(rule, { path: entry.absPath, displayPath: rel, message: { key: "issue.leftover.claudeLong", params: { lines, limit: CLAUDE_MD_LINES } }, value: "convention" }));
+          }
+        }
         const format = DECISION_RECORD.test(rel) || (!atRoot && stem === "SUMMARY");
         if (!format && (atRoot || /^[A-Z0-9_-]+$/.test(stem)) && !ROOT_CONTRACT_DOCS.test(name) && WORKLOG.test(stem)) {
           if (atRoot) rootLogs.push(name);
@@ -166,7 +202,22 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         continue;
       }
 
-      if (BUILT_BINARY.test(name)) report(rel, { key: "issue.leftover.binary" });
+      const installer = INSTALLERS.find((b) => b.ext.test(name));
+      if (installer && installer.magic.some((m) => head(entry.absPath, 8, true).startsWith(m))) {
+        report(rel, { key: "issue.leftover.installer" });
+        continue;
+      }
+      const executable = EXECUTABLES.find((b) => b.ext.test(name));
+      if (executable && executable.magic.some((m) => head(entry.absPath, 8, true).startsWith(m))) {
+        report(rel, { key: "issue.leftover.executable" }, "review");
+      }
+    }
+
+    for (const [dir, names] of versionSeries) {
+      if (names.length >= SERIES) report(`${dir}/`, { key: "issue.leftover.versionNotes", params: { count: names.length, names: list(names) } }, "review");
+    }
+    for (const [dir, names] of recordDirs) {
+      if (names.length >= SERIES) report(`${dir}/`, { key: "issue.leftover.records", params: { count: names.length, names: list(names) } }, "review");
     }
 
     // At the root they are one finding, not twenty.

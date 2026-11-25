@@ -12,15 +12,24 @@
   - `review`：事实确定，含义需要上下文（用途、意图）。交给人或 agent 判断，不影响退出码。
   - 这是「chous 知道多少」，不是严重程度。**只凭文件名的猜测永远只能是 review**（工作日志、一次性脚本、找不到原件的备份）；要成为 smell 必须有事实（原件就在旁边、文件内容是 OS 写的、工具写下的标记文件）。
 - **事实错了才是误报，审美不同不是。** 知名项目也会被报，那不是误报；**不为迁就任何项目加豁免**。只维护两种名单：官方位置约定（`ROOT_CONTRACT_DOCS`、框架约定、`NAME_EXEMPT` 里工具起的名字），和已经发生、可核实的历史事实（`eol.ts`、`deps.ts`）。
-- 腐烂没有宽限期：停止维护那天起就是 smell（`hasEnded`）。`eol.ts` 只收已经过去并查证过的日期，附官方来源。
+- 腐烂没有宽限期：停止维护那天起就是 smell（`hasEnded`）。`eol.ts` 只收官方数据里写着的版本（Node `schedule.json`、PEP `release-cycle.json`、Vue EOL 页、Nuxt 路线图），**表里没有的版本不报，从不推断日期**。`pnpm run sources` 逐个比对每个日期。
+- 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile `FROM`、`volta.node`、框架依赖）。`engines.node` 是兼容承诺：只有声明的范围全部停止维护才报（`issue.lifecycle.declared`），`>=16` 这种开放范围不报。
 - 「平台已自带」（`NATIVE`）是 review：平台自带了什么是事实，能否完全替代要看项目怎么用。
 - 根目录克制：除位置约定文档外最多 `ROOT_DOCS_LIMIT`（3）份文档。这是立场，不是测量。
+- **不按行数、体积、文件数量判**（实测：知名仓库的大文件比 vibe 项目还多，行数证明不了职责过多）。只有官方文档给了具体限制才写规则，例如 `CLAUDE.md` 200 行（Claude Code 文档原话）。巨型文件、平铺目录、多语言混用写进宣言交给 agent，并要求 agent 不得为了行数机械拆分文件。
+- 文件身份靠内容确认：OS 垃圾、`local.properties` 看文件内容（`KNOWN_BY_CONTENT`）；安装包（apk/ipa/msi/deb/rpm/AppImage，smell）和可执行文件/库（exe/dll/so/dylib，review，可能是构建输入，如 Android `jniLibs`）看文件头签名；构建产物目录必须有工具写下的标记文件。
+- 「作者宣布废弃」只认作者的原话（npm `deprecated` 字段、README、安全公告），登记在 `sources.ts`。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
+- 工具并存只说「一件事两个工具」，不声称它们会互相破坏（没验证过行为）。
+- `package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 一致时是必要的兼容重复，不报；不一致才是 smell。
 - 作用域：只有测试数据（`fixtures/`、`testdata/`、`__snapshots__/`）和 `vendor/`/`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 是项目自己的代码，照常检查。工作区里位于这些目录的包不检查。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
 - **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 显示。文案里不写 URL。`pnpm run sources` 逐条核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
 - 引用官方文档以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
-- 校准：在 Vue/Vite/React/Oxc/SQLite、antfu/sindresorhus/Bun/Deno/Zig/Rust 等仓库和 vibe 项目上跑一遍，**逐条核对事实**，事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。`test/fixtures/samples` 里的真实项目用快照锁定 chous 对它们说的每一句话，快照变化必须人工读过再更新。
+- 校准：在真实仓库上跑一遍，**逐条核对事实**，事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。
+  - 自动回归（`pnpm run test`）：`test/fixtures/samples` 的 4 个真实项目，快照锁定每一句结论。
+  - 语料回归（`pnpm run corpus`，需要联网，不在 CI 里）：`test/corpus.json` 锁定 57 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行读，确认是事实正确的变化才 `pnpm run corpus --update`。缓存目录用 `CHOUS_CORPUS_DIR`。
+  - 两者不要混为一谈：手动校准不等于自动覆盖。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason` 和 `value`。
 - **不要**重新引入 `.chous` 配置、DSL、预设、人设、开关规则的选项（`--ignore-warnings` 这类也已删除）或任何让用户自定义规则的入口。

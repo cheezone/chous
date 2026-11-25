@@ -24,7 +24,47 @@ export function pinnedVersion(spec: string): string | undefined {
   return `${m[1]}${minor}`;
 }
 
-/** Versions the project actually runs on: version files, Dockerfiles, pinned engines and framework deps. */
+/**
+ * Node majors an `engines.node` range allows, or undefined when the range is
+ * open-ended (`>=16` reaches versions still supported) or unreadable.
+ * Handles `16`, `^16.2`, `~16`, `16.x`, `=16`, `<18`, `>=14 <18`, `14 - 16`, `a || b`.
+ */
+export function enginesMajors(spec: string): number[] | undefined {
+  const majors = new Set<number>();
+  for (const alt of spec.split("||").map((s) => s.trim())) {
+    if (!alt) return undefined;
+    const hyphen = /^v?(\d+)(?:\.[\dx*]+)*\s+-\s+v?(\d+)(?:\.[\dx*]+)*$/.exec(alt);
+    if (hyphen) {
+      for (let m = Number(hyphen[1]); m <= Number(hyphen[2]); m++) majors.add(m);
+      continue;
+    }
+    const pinned = pinnedVersion(alt);
+    if (pinned) {
+      majors.add(Number(pinned.split(".")[0]));
+      continue;
+    }
+    let lo = 0;
+    let hi: number | undefined;
+    for (const part of alt.split(/\s+/)) {
+      const m = /^(>=|>|<=|<)v?(\d+)(?:\.(\d+))?/.exec(part);
+      if (!m) return undefined;
+      const n = Number(m[2]);
+      if (m[1] === ">=") lo = Math.max(lo, n);
+      else if (m[1] === ">") lo = Math.max(lo, n);
+      else if (m[1] === "<=") hi = n;
+      else hi = m[3] && Number(m[3]) > 0 ? n : n - 1;
+    }
+    if (hi === undefined) return undefined;
+    for (let m = lo; m <= hi; m++) majors.add(m);
+  }
+  return majors.size ? [...majors].sort((a, b) => a - b) : undefined;
+}
+
+/**
+ * Versions the project actually runs on: version files, Dockerfiles, Volta's
+ * pin and framework deps. `engines` is a promise of compatibility, not a
+ * runtime, and is checked separately.
+ */
 function findVersions(context: RuleValidatorContext): Found[] {
   const { root, snapshot } = context;
   const found: Found[] = [];
@@ -60,7 +100,7 @@ function findVersions(context: RuleValidatorContext): Found[] {
     } catch {
       // ignore
     }
-    if (typeof pkg.engines?.node === "string") add("node", pkg.engines.node, "package.json");
+    if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
     for (const product of ["vue", "nuxt"] as const) {
       if (typeof deps[product] === "string") add(product, deps[product].split(".")[0], "package.json");
@@ -89,6 +129,31 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
         message: { key: "issue.lifecycle.ended", params: { name, date: date!, use: { t: `eol.${product}` } } },
       }));
     }
+
+    // A compatibility promise made only to versions that have all ended.
+    const declared = engines(context);
+    if (declared) {
+      const dates = declared.map((m) => eolDate("node", String(m)));
+      if (dates.every((d) => hasEnded(d, today))) {
+        const last = dates.sort().at(-1)!;
+        context.rawIssues.push(issueFromRule(rule, {
+          path: `${context.snapshot.manifest.path}#engines`,
+          displayPath: "package.json (engines.node)",
+          message: { key: "issue.lifecycle.declared", params: { versions: declared.map((m) => `Node ${m}`).join(", "), date: last, use: { t: "eol.node" } } },
+        }));
+      }
+    }
     return { hitCount: found.length };
+  }
+}
+
+function engines(context: RuleValidatorContext): number[] | undefined {
+  const { manifest } = context.snapshot;
+  if (!manifest.exists) return undefined;
+  try {
+    const spec = JSON.parse(read(manifest.path))?.engines?.node;
+    return typeof spec === "string" ? enginesMajors(spec) : undefined;
+  } catch {
+    return undefined;
   }
 }

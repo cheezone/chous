@@ -39,14 +39,15 @@ npx chous
 
 ### 输出
 
-```现代
+```
+现代
   ✗ .nvmrc (Node 16)       → Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
-  ✗ package.json (request) → 依赖 request 已过时 → fetch
+  ✗ package.json (request) → request：作者已于 2020 年宣布废弃。 → fetch
   ✗ package.json (Vue 2)   → Vue 2 已于 2023-12-31 停止维护 → Vue 3
 
 秩序
   ✗ ./                             → 根目录除 README、LICENSE 这类之外还有 4 份文档（ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md）：根目录是入口，最多留 3 份，其余移进 docs/
-  ✗ package.json (package-manager) → 包管理器同时用了 npm + pnpm，它们会互相打架，只留一个
+  ✗ package.json (package-manager) → 包管理器：npm + pnpm，一件事两个工具，只留一个
   ✗ src/composables/               → 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
   ✗ test/ + tests/                 → 同一个意思用了两个名字，只留一个
 
@@ -73,14 +74,14 @@ npx chous
 
 | 品味 | 臭味 | 待审视 |
 | --- | --- | --- |
-| 现代 | 停止维护的运行时和框架（从停止那天起，没有宽限期）；作者废弃或故意破坏的依赖；死掉的工具留下的配置；作者称为旧格式的文件（`.cursorrules`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 平台已经自带同类能力的依赖 |
-| 秩序 | 一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；同一职责的工具并存；monorepo 里跨大版本的依赖、嵌套 lockfile；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
-| 约定 | 框架根本不读的文件（Next.js 的 `src/app`、Nuxt 4 放在 `app/` 外的 `pages/`）；框架找不到的大写目录 | |
-| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾（靠文件内容识别）；日志、`.env*.local`、个人 IDE 和 agent 配置；旁边就有原件的备份；源码树里的二进制 | 名字像工作日志的文档；没人提到的一次性脚本；找不到原件的备份 |
+| 现代 | 停止维护的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；作者废弃、称为遗留或故意破坏的依赖；死掉的工具留下的配置；旧格式（`.cursorrules`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 平台已经自带同类能力的依赖 |
+| 秩序 | 一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；一件事两个工具；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
+| 约定 | 框架根本不读的文件（Next.js 的 `src/app`、Nuxt 4 放在 `app/` 外的 `pages/`）；框架找不到的大写目录；超过 Claude Code 文档建议的 200 行的 `CLAUDE.md` | |
+| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；`.env*.local`、个人 IDE 和 agent 配置；旁边就有原件的备份；安装包（靠文件头识别） | 可执行文件和库；名字像工作日志的文档；没人提到的一次性脚本；找不到原件的备份；成批的版本说明和工作记录 |
 
-不检查缺失（没有测试、没有 CI、没有许可证都不报），也不检查正确性和安全。测试夹具和 `vendor/` 不查，`tests/`、`examples/` 是你自己的代码，照常检查。
+不检查缺失（没有测试、没有 CI、没有许可证都不报）；不按行数、体积、文件数量判，除非官方文档给了具体限制；也不检查正确性和安全。测试夹具和 `vendor/` 不查，`tests/`、`examples/` 是你自己的代码，照常检查。
 
-每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处。原话登记在 [`src/taste/sources.ts`](src/taste/sources.ts)，`pnpm run sources` 会逐条核对原话还在不在页面上。
+每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。原话登记在 [`src/taste/sources.ts`](src/taste/sources.ts)；`pnpm run sources` 会逐条核对原话还在不在页面上，并把每个停止维护日期和官方数据比对。`pnpm run corpus` 会核对 chous 对 57 个真实仓库（锁定在 [`test/corpus.json`](test/corpus.json)）说的每一句话，和 [已记录的结论](test/corpus.claims.txt) 比对。
 
 规则在 [`src/taste/`](src/taste)：`base` 总是生效；`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目的样子叠加。
 
@@ -88,6 +89,7 @@ npx chous
 
 ```bash
 npx chous                 # 检查当前目录
+npx chous --json          # 以数据形式输出所有结果，给 agent 用
 npx chous manifesto       # 输出品味宣言，给 agent 读完再审视整个仓库
 npx chous claude install  # 在 Claude Code hooks 里运行 chous
 npx chous cursor install  # 在 Cursor hooks 里运行 chous

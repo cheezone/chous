@@ -5,7 +5,8 @@
  * 1. NATIVE (for review): the platform ships something that does the same job
  *    (Node >= 22, evergreen browsers). That much is a fact; whether it fully
  *    replaces the package for this project is not, so a person or agent decides.
- * 2. DEPRECATED (a smell): its own authors deprecated or abandoned it.
+ * 2. DEPRECATED (a smell): its own authors deprecated it, or call it legacy
+ *    (moment). Bower is not here: its README says it is maintained.
  * 3. SABOTAGED (a smell): its author broke it on purpose.
  *
  * "Old", "slow", "written in the wrong language" or "there is something newer"
@@ -63,7 +64,7 @@ export const NATIVE: ObsoleteDep[] = [
   { names: ["es6-symbol", "es6-map", "es6-set", "es6-weak-map"], use: "Symbol / Map / Set / WeakMap" },
 ];
 
-/** 2. Deprecated or abandoned by its own authors. */
+/** 2. Deprecated, or called legacy, by its own authors. Each has a source in sources.ts. */
 export const DEPRECATED: ObsoleteDep[] = [
   { names: ["request", "request-promise", "request-promise-native"], use: "fetch" },
   { names: ["moment"], use: "dayjs / date-fns / Temporal" },
@@ -71,7 +72,6 @@ export const DEPRECATED: ObsoleteDep[] = [
   { names: ["babel-eslint"], use: "@babel/eslint-parser" },
   { names: ["tslint"], use: "ESLint / oxlint" },
   { names: ["babel-polyfill", "@babel/polyfill"], use: "a modern runtime target" },
-  { names: ["bower"], use: "npm / pnpm" },
   { names: ["karma"], use: "a browser-mode test runner (Vitest, Playwright)" },
   { names: ["react-scripts"], use: "a framework, or Vite / Parcel / Rsbuild" },
 ];

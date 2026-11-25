@@ -52,7 +52,7 @@ export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
 
   if (anyExists(root, ["package.json"])) {
     tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);
-    if (opts.monorepo) tastes.push(["monorepo", monorepo(anyExists(root, ["pnpm-workspace.yaml", "pnpm-lock.yaml"]))]);
+    if (opts.monorepo) tastes.push(["monorepo", monorepo()]);
     if (runtime === "bun") tastes.push(["bun", bun()]);
     const pkg = readJson(resolve(root, "package.json"));
     const deps = { ...pkg?.devDependencies, ...pkg?.dependencies };

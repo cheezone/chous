@@ -5,22 +5,24 @@
 
 /**
  * Directories that are build output. A name alone can lie — Vite commits
- * hand-written `node_modules` fixtures, Oxc has a crate called `coverage` — so
- * generic names also need a sibling file (`when`) or a file that only the
- * generating tool writes inside (`marker`).
+ * hand-written `node_modules` fixtures, Oxc has a crate called `coverage`,
+ * Deno hand-writes `dist/` packages — so every entry needs evidence the tool
+ * left behind: a file only it writes inside (`marker`, `markerMatch`), the
+ * project file next to it (`when`), or a build that produces it (`built`).
  */
-export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: string[]; marker?: string[]; built?: boolean }> = [
+export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: string[]; marker?: string[]; markerMatch?: RegExp; built?: boolean }> = [
   { dir: "node_modules", marker: [".package-lock.json", ".modules.yaml", ".yarn-integrity", ".yarn-state.yml"] },
-  { dir: ".next" },
-  { dir: ".nuxt" },
-  { dir: ".output" },
-  { dir: ".svelte-kit" },
-  { dir: "__pycache__" },
+  { dir: ".next", marker: ["BUILD_ID", "build-manifest.json", "cache", "server", "trace", "types"] },
+  { dir: ".nuxt", marker: ["nuxt.d.ts", "tsconfig.json", "manifest"] },
+  { dir: ".output", marker: ["nitro.json"] },
+  { dir: ".svelte-kit", marker: ["ambient.d.ts", "tsconfig.json", "generated"] },
+  { dir: "__pycache__", markerMatch: /\.pyc$/ },
   // Gradle's docs: `.gradle` and `build` "are transient files Gradle uses to support features like incremental builds".
-  { dir: ".gradle", when: ["settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "gradlew"] },
+  { dir: ".gradle", when: ["settings.gradle", "settings.gradle.kts", "build.gradle", "build.gradle.kts", "gradlew"], marker: ["buildOutputCleanup", "vcs-1", "file-system.probe"] },
   { dir: "coverage", marker: ["lcov.info", "coverage-final.json", "coverage-summary.json", "clover.xml", "lcov-report"] },
-  { dir: "target", when: ["Cargo.toml", "pom.xml"] },
-  { dir: "build", when: ["build.gradle", "build.gradle.kts"] },
+  // Cargo writes CACHEDIR.TAG and .rustc_info.json; Maven's plugins write maven-status / maven-archiver.
+  { dir: "target", when: ["Cargo.toml", "pom.xml"], marker: ["CACHEDIR.TAG", ".rustc_info.json", "maven-status", "maven-archiver", "classes"] },
+  { dir: "build", when: ["build.gradle", "build.gradle.kts"], marker: ["tmp", "intermediates", "classes", "generated", "reports", "outputs", "libs", "kotlin"] },
   // GitHub's docs tell JavaScript actions to commit dist/.
   // Built only if something builds it: Deno's test registry hand-writes `dist/` packages.
   { dir: "dist", when: ["package.json"], unless: ["action.yml", "action.yaml"], built: true },
@@ -63,7 +65,7 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
 export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro|py|go|zig|rb|kt|swift|dart)$/;
 
 /** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
-export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client)\./;
+export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client|mdx-components)\./;
 
 /** Decision records and book tables of contents are formats, not logs: `docs/adr/ADR-003-…`, mdBook's `src/SUMMARY.md`. */
 export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[-_]?\d/i;
@@ -74,7 +76,7 @@ export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[
  * coding agents read. Everything else is a doc like any other, and docs
  * belong together.
  */
-export const ROOT_CONTRACT_DOCS = /^(readme|licen[cs]e|copying|unlicense|notice|changelog|contributing|security|code_of_conduct|support|governance|agents|claude|gemini)([.\-_].*)?$/i;
+export const ROOT_CONTRACT_DOCS = /^(readme|licen[cs]e|copying|unlicense|notice|changelog|contributing|security|code_of_conduct|support|governance|accessibility|agents|claude|gemini)([.\-_].*)?$/i;
 
 /** Prose, as opposed to config: what counts as a doc at the root. */
 export const DOC_FILE = /\.(md|mdx|markdown|rst|adoc|asciidoc|org)$/i;
@@ -104,11 +106,35 @@ export function backupOf(name: string): string | undefined {
   return undefined;
 }
 
+/** File signatures, as latin1 strings: the format is read from the bytes, never from the extension. */
+const ZIP = "PK\x03\x04";
+const MZ = "MZ";
+const ELF = "\x7fELF";
+const OLE = "\xd0\xcf\x11\xe0";
+const MACH_O = ["\xfe\xed\xfa\xce", "\xfe\xed\xfa\xcf", "\xce\xfa\xed\xfe", "\xcf\xfa\xed\xfe", "\xca\xfe\xba\xbe"];
+
 /**
- * Built binaries: executables, libraries, installers. Built things belong in
- * releases, not the source tree; git keeps every version of them forever.
+ * Installers and app bundles: what a build hands to users, never what a build
+ * reads. In the source tree they are a smell; they belong in releases.
  */
-export const BUILT_BINARY = /\.(exe|dll|so|dylib|apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
+export const INSTALLERS: Array<{ ext: RegExp; magic: string[] }> = [
+  { ext: /\.(apk|aab|ipa|msix)$/i, magic: [ZIP] },
+  { ext: /\.msi$/i, magic: [OLE] },
+  { ext: /\.deb$/i, magic: ["!<arch>"] },
+  { ext: /\.rpm$/i, magic: ["\xed\xab\xee\xdb"] },
+  { ext: /\.appimage$/i, magic: [ELF] },
+];
+
+/**
+ * Executables and libraries. A build may read them as well as write them —
+ * Android packages prebuilt `.so` files from `src/main/jniLibs`, uv embeds its
+ * trampolines — so they are put up for review, not called a smell.
+ */
+export const EXECUTABLES: Array<{ ext: RegExp; magic: string[] }> = [
+  { ext: /\.(exe|dll)$/i, magic: [MZ] },
+  { ext: /\.so(\.\d+)*$/i, magic: [ELF] },
+  { ext: /\.dylib$/i, magic: MACH_O },
+];
 
 /**
  * Data, and other people's code: test fixtures may hold anything, `vendor/`
@@ -117,10 +143,27 @@ export const BUILT_BINARY = /\.(exe|dll|so|dylib|apk|aab|ipa|dmg|msi|msix|appima
  */
 export const NOT_OURS = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
 
-/** What the OS writes into these files: a file by the same name that lacks it is something else (Zig tests a `desktop.ini`). */
-export const OS_JUNK: Array<{ name: string; content: RegExp }> = [
-  { name: ".DS_Store", content: /Bud1/ },
+/**
+ * Files known by what their maker writes into them, not by name alone: a file
+ * by the same name that lacks it is something else.
+ */
+export const KNOWN_BY_CONTENT: Array<{ name: string; content: RegExp; reason: "reason.osJunk" | "reason.localProperties" }> = [
+  { name: ".DS_Store", content: /Bud1/, reason: "reason.osJunk" },
   // An OLE compound file: D0 CF 11 E0.
-  { name: "Thumbs.db", content: new RegExp(`^${String.fromCharCode(0xd0, 0xcf, 0x11, 0xe0)}`) },
-  { name: "desktop.ini", content: /ShellClassInfo|LocalizedFileNames|ViewState/i },
+  { name: "Thumbs.db", content: new RegExp(`^${String.fromCharCode(0xd0, 0xcf, 0x11, 0xe0)}`), reason: "reason.osJunk" },
+  { name: "desktop.ini", content: /ShellClassInfo|LocalizedFileNames|ViewState/i, reason: "reason.osJunk" },
+  // Android Studio's own header: "This file must *NOT* be checked into Version Control Systems".
+  { name: "local.properties", content: /must \*NOT\* be checked into Version Control/i, reason: "reason.localProperties" },
 ];
+
+/** Claude Code's docs: "target under 200 lines per CLAUDE.md file". */
+export const CLAUDE_MD_LINES = 200;
+
+/** Release notes kept one file per version: `v2.0.1.md`, `1.4.0.md`. */
+export const VERSION_NAMED = /^v?\d+\.\d+(\.\d+)?([-.][\w.]+)?$/i;
+
+/** Directories that hold records of work done. */
+export const RECORD_DIRS = /^(reports?|handoffs?|progress|sessions?|worklogs?|task-reports?)$/i;
+
+/** How many alike files make a series. */
+export const SERIES = 5;

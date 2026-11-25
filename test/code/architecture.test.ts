@@ -61,9 +61,11 @@ describe("end of life", () => {
     expect(pinnedVersion("lts/*")).toBeUndefined();
   });
 
-  it("dates every version it knows, and bounds older ones", () => {
+  it("dates exactly the versions it lists, and infers nothing", () => {
     expect(eolDate("node", "18")).toBe("2025-04-30");
-    expect(eolDate("node", "8")).toBe("2021-04-30");
+    expect(eolDate("node", "8")).toBe("2019-12-31");
+    expect(eolDate("node", "0.12")).toBeUndefined();
+    expect(eolDate("python", "2.5")).toBeUndefined();
     expect(eolDate("node", "22")).toBeUndefined();
     expect(eolDate("python", "3.6")).toBe("2021-12-23");
     expect(eolDate("python", "3.10")).toBe("2026-10-01");
@@ -82,6 +84,18 @@ describe("end of life", () => {
     for (const product of Object.values(EOL)) {
       for (const { date } of product.versions) expect(date <= today).toBe(true);
     }
+  });
+
+  it("reads engines.node as a promise of compatibility, not a runtime", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-engines-"));
+    const lint = async (node: string) => {
+      writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", private: true, engines: { node } }), "utf8");
+      return (await lintWorkspace({ root: dir, today: "2026-11-25" })).issues.map((i) => i.message.key);
+    };
+    expect(await lint("^16")).toEqual(["issue.lifecycle.declared"]);
+    expect(await lint(">=14 <17")).toEqual(["issue.lifecycle.declared"]);
+    expect(await lint(">=16")).toEqual([]);
+    expect(await lint("^18 || ^22")).toEqual([]);
   });
 
   it("smells a framework the day after it ends", async () => {

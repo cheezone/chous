@@ -1,5 +1,5 @@
 export { lintWorkspace } from "./rules/lint";
-export { renderReport } from "./rules/report";
+export { renderReport, reportToJSON } from "./rules/report";
 export { resolveTaste, type Taste } from "./taste";
 export { buildWorkspaceSnapshot, createMemorySnapshot } from "./vfs/snapshot";
 export { getKnowledge, knowledgeToJSON, detectKinds, detectRoleOccupancy } from "./knowledge";

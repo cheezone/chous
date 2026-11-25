@@ -38,6 +38,37 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
   }
 }
 
+/** The `packages` list of a pnpm-workspace.yaml, or undefined if there is none. */
+function pnpmWorkspaceList(path: string): string[] | undefined {
+  let text: string;
+  try {
+    text = readFileSync(path, "utf8");
+  } catch {
+    return undefined;
+  }
+  const lines = text.split(/\r?\n/);
+  const start = lines.findIndex((l) => /^packages\s*:/.test(l));
+  if (start < 0) return undefined;
+  const list: string[] = [];
+  for (const line of lines.slice(start + 1)) {
+    if (/^\S/.test(line)) break;
+    const m = /^\s*-\s*['"]?([^'"#]+?)['"]?\s*(#.*)?$/.exec(line);
+    if (m) list.push(m[1]!.trim());
+  }
+  return list;
+}
+
+/** package.json `workspaces`: an array, or Yarn's `{ packages: [...] }`. */
+function workspacesField(value: unknown): string[] | undefined {
+  const list = Array.isArray(value) ? value : (value as { packages?: unknown } | undefined)?.packages;
+  return Array.isArray(list) ? list.map(String) : undefined;
+}
+
+function sameList(a: string[], b: string[]): boolean {
+  const norm = (l: string[]) => [...new Set(l.map((p) => p.replace(/^\.\//, "").replace(/\/$/, "")))].sort().join("\n");
+  return norm(a) === norm(b);
+}
+
 /** `^3.4.0`, `=19.2.3`, `3.x`, `v2` → the major; ranges, tags, `link:`, `catalog:`… → undefined. */
 function majorOf(spec: string): string | undefined {
   const m = spec.trim().match(/^[\^~=v]*\s*(\d+)(?:\.[\dx*]+){0,2}(?:-[\w.]+)?$/i);
@@ -81,6 +112,21 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
     }
 
     let hitCount = 0;
+
+    // Two workspace lists that disagree. Both may exist on purpose (npm, Yarn and
+    // Bun read package.json); pnpm reads only its own and warns when they differ.
+    const yamlList = pnpmWorkspaceList(resolve(root, "pnpm-workspace.yaml"));
+    const rootPkg = manifests.find((m) => m.dir === ".")?.pkg;
+    const jsonList = workspacesField(rootPkg?.workspaces);
+    if (yamlList && jsonList && !sameList(yamlList, jsonList)) {
+      hitCount++;
+      context.rawIssues.push(issueFromRule(rule, {
+        path: `${snapshot.manifest.path}#workspaces`,
+        displayPath: "package.json (workspaces)",
+        message: { key: "issue.workspace.listsDiffer", params: { json: jsonList.join(", "), yaml: yamlList.join(", ") } },
+      }));
+    }
+
     for (const [name, byMajor] of majors) {
       hitCount++;
       // Different majors can never resolve to one copy; same-major ranges usually do.

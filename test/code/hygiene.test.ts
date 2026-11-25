@@ -35,7 +35,10 @@ describe("committed build output", () => {
         "dist/index.js": "",
         "node_modules/.package-lock.json": "{}",
         "api/Cargo.toml": "",
+        "api/target/CACHEDIR.TAG": "",
         "api/target/debug/app": "",
+        "web/Cargo.toml": "",
+        "web/target/notes.md": "",
       }),
     ).toEqual(["api/target/", "dist/", "node_modules/"]);
   });
@@ -108,10 +111,17 @@ describe("leftovers", () => {
     ).toEqual(["review old-config.js.orig", "smell package.json.bak", "smell public/logo (1).png"]);
   });
 
-  it("smells built binaries anywhere but test data and vendored code", async () => {
+  it("reads a binary's format from its bytes: installers smell, executables are for review", async () => {
     expect(
-      await claims({ "app-release.apk": "", "tools/helper.exe": "", "test/fixtures/setup.exe": "", "vendor/lib.dll": "" }),
-    ).toEqual(["smell app-release.apk", "smell tools/helper.exe"]);
+      await claims({
+        "app-release.apk": "PK\u0003\u0004rest",
+        "renamed.apk": "just text",
+        "tools/helper.exe": "MZ\u0090\u0000",
+        "app/src/main/jniLibs/arm64-v8a/libcore.so": "\u007fELF\u0002",
+        "test/fixtures/setup.exe": "MZ",
+        "vendor/lib.dll": "MZ",
+      }),
+    ).toEqual(["review app/src/main/jniLibs/arm64-v8a/libcore.so", "review tools/helper.exe", "smell app-release.apk"]);
   });
 
   it("knows OS junk by what the OS writes into it", async () => {
@@ -122,8 +132,19 @@ describe("leftovers", () => {
   });
 
   it("flags personal files their tools say to keep out of git", async () => {
-    expect(await findings({ "CLAUDE.local.md": "", ".claude/settings.local.json": "{}", ".claude/settings.json": "{}", "android/local.properties": "" }))
+    const header = "## This file must *NOT* be checked into Version Control Systems,\nsdk.dir=/x\n";
+    expect(await findings({ "CLAUDE.local.md": "", ".claude/settings.local.json": "{}", ".claude/settings.json": "{}", "android/local.properties": header, "config/local.properties": "port=1" }))
       .toEqual([".claude/settings.local.json", "CLAUDE.local.md", "android/local.properties"]);
+  });
+
+  it("smells a CLAUDE.md past the 200 lines Claude Code's docs target", async () => {
+    expect(await claims({ "CLAUDE.md": "x\n".repeat(200), "packages/a/CLAUDE.md": "x\n".repeat(201) })).toEqual(["smell packages/a/CLAUDE.md"]);
+  });
+
+  it("puts a series of per-version notes and a pile of work records up for review", async () => {
+    const notes = Object.fromEntries(["v2.0.1", "v2.0.2", "v2.0.3", "v2.0.4", "v2.1.0"].map((v) => [`.github/release-notes/${v}.md`, ""]));
+    const reports = Object.fromEntries(["a", "b", "c", "d", "e"].map((n) => [`docs/reports/${n}.md`, ""]));
+    expect(await claims({ ...notes, ...reports, "docs/guide/1.0.md": "" })).toEqual(["review .github/release-notes/", "review docs/reports/"]);
   });
 });
 
@@ -151,5 +172,17 @@ describe("twins", () => {
 
   it("flags a plural next to its singular", async () => {
     expect(await findings({ "plugin/a.ts": "", "plugins/b.ts": "", "src/a.ts": "" })).toEqual(["plugin/"]);
+  });
+});
+
+describe("workspace lists", () => {
+  it("lets package.json and pnpm-workspace.yaml both list packages, as long as they agree", async () => {
+    const files = (json: string[]) => ({
+      "package.json": JSON.stringify({ private: true, workspaces: json }),
+      "pnpm-workspace.yaml": "packages:\n  - 'packages/*'\n",
+      "packages/a/package.json": JSON.stringify({ name: "a" }),
+    });
+    expect(await claims(files(["packages/*"]))).toEqual([]);
+    expect(await claims(files(["packages/*", "apps/*"]))).toEqual(["smell package.json (workspaces)"]);
   });
 });
