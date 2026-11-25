@@ -78,6 +78,9 @@ const en = {
 		workspace: {
 			drift: '{name} is on several major versions ({versions}), so it gets installed twice',
 		},
+		worklog: {
+			found: 'looks like a work log: it describes one moment and goes stale; keep what lasts in README or docs/, the rest in commit messages',
+		},
 		leak: {
 			secret: '{name} committed in plain text, revoke it and load it from an untracked env file',
 			artifact: 'build output that is not gitignored, so it gets committed',

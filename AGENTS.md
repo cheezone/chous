@@ -18,6 +18,7 @@
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason`，报错就是这个原因。
 - 泄露检查（`src/taste/leaks.ts`）：密钥只收「按定义就是机密」且厂商公布了固定前缀的格式；公开设计的 key（Firebase、Supabase anon、Maps）不报；输出里永远不打印密钥本身。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
+- 结构类规则要靠数据：只收「在官方仓库里一个没有、在 vibe 项目里很常见」的模式（例如根目录的 AI 工作日志），先在 Vue/Vite/React/Oxc/SQLite 和 `test/samples` 上验证零命中。
 - 测试里不要写真实格式的假密钥（GitHub 推送保护会拦），在运行时拼接。
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。

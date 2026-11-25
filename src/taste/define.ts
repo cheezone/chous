@@ -77,6 +77,11 @@ export function taste(id: string) {
       push({ kind: "secrets" });
       push({ kind: "artifacts" });
     },
+
+    /** Agent work logs left at the root. */
+    worklogs() {
+      push({ kind: "worklog" });
+    },
   };
 }
 

@@ -11,6 +11,7 @@ export function base() {
 
   t.lifecycle();
   t.leaks();
+  t.worklogs();
 
   t.no([".chous", ".chousignore"], { reason: { en: "chous has no config, delete it", zh: "chous 没有配置，删掉它" } });
 

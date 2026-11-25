@@ -31,7 +31,8 @@ function isServiceRole(token: string): boolean {
 }
 
 export const SECRETS: SecretFormat[] = [
-  { name: "OpenAI API key", pattern: /\bsk-(?:proj-|svcacct-|admin-)?[A-Za-z0-9_-]{32,}/g },
+  { name: "OpenAI API key", pattern: /\bsk-(?!ant-|or-)(?:proj-|svcacct-|admin-)?[A-Za-z0-9_-]{32,}/g },
+  { name: "OpenRouter API key", pattern: /\bsk-or-v1-[0-9a-f]{64}\b/g },
   { name: "Anthropic API key", pattern: /\bsk-ant-[A-Za-z0-9_-]{32,}/g },
   { name: "GitHub token", pattern: /\b(?:gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{60,})\b/g },
   { name: "AWS access key", pattern: /\b(?:AKIA|ASIA)[0-9A-Z]{16}\b/g },
@@ -43,7 +44,35 @@ export const SECRETS: SecretFormat[] = [
 ];
 
 /** Documentation placeholders and vendor examples, never real keys. */
-export const PLACEHOLDER = /x{4,}|your[_-]|example|dummy|placeholder|<|\.\.\./i;
+const PLACEHOLDER = /x{4,}|your[_-]|example|dummy|placeholder|<|\.\.\./i;
+
+/** Ascending runs like `1234567` or `ABCDEFG`: typed by a person, never generated. */
+function hasRun(text: string, length = 6): boolean {
+  let run = 1;
+  for (let i = 1; i < text.length; i++) {
+    run = text.charCodeAt(i) === text.charCodeAt(i - 1) + 1 ? run + 1 : 1;
+    if (run >= length) return true;
+  }
+  return false;
+}
+
+/** A short unit repeated over and over, like `a1B2a1B2a1B2…`. */
+function isRepetitive(text: string): boolean {
+  for (let unit = 1; unit <= 8; unit++) {
+    const head = text.slice(0, unit);
+    if (text.length >= unit * 4 && head.repeat(Math.ceil(text.length / unit)).startsWith(text)) return true;
+  }
+  return false;
+}
+
+/**
+ * Test data and documentation, not keys: placeholders, vendor examples, and the
+ * obviously typed fakes that redaction tests use. Real keys are random.
+ */
+export function looksFake(token: string): boolean {
+  const body = token.replace(/^[a-z]+[-_](?:[a-z0-9]+[-_])?/i, "");
+  return PLACEHOLDER.test(token) || hasRun(token) || isRepetitive(body);
+}
 
 /**
  * Directories that are build output. A name alone can lie — Vite commits
@@ -64,3 +93,14 @@ export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: strin
   // GitHub's docs tell JavaScript actions to commit dist/.
   { dir: "dist", when: ["package.json"], unless: ["action.yml", "action.yaml"] },
 ];
+
+/**
+ * Root Markdown named after an event or a status — what an agent writes at the
+ * end of a session (`IMPLEMENTATION_COMPLETE.md`, `FIXES_SUMMARY.md`). It
+ * describes one moment and goes stale the day it lands. Measured: none in Vue,
+ * Vite, React, Oxc or SQLite; half of the vibe-coded projects sampled.
+ */
+export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status|progress|report|reports|fix|fixes|fixed|bugfix|hotfix|done|improvements?|implementation|changes[_-]made|session|handoff|walkthrough)([_\-. ]|$)/i;
+
+/** Root docs every project may have, whatever words they contain. */
+export const STANDARD_DOCS = /^(readme|changelog|license|licence|contributing|security|code_of_conduct|agents|claude|support|governance)/i;

@@ -26,6 +26,7 @@ export type Rule =
   | LifecycleRule
   | SecretsRule
   | ArtifactsRule
+  | WorklogRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -71,6 +72,11 @@ export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
 };
 
+/** Agent work logs left at the root (see `taste/leaks.ts`). */
+export type WorklogRule = RuleBase & {
+  kind: "worklog";
+};
+
 /** At most one of these root-level names may exist: one name per concept. */
 export type ExclusiveRule = RuleBase & {
   kind: "exclusive";
@@ -107,7 +113,8 @@ export type IssueMessage =
   | { key: "issue.manifest.missing"; params: { field: string; reason: Text } }
   | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
   | { key: "issue.leak.secret"; params: { name: string } }
-  | { key: "issue.leak.artifact" };
+  | { key: "issue.leak.artifact" }
+  | { key: "issue.worklog.found" };
 
 export type Issue = {
   ruleKind: Rule["kind"];

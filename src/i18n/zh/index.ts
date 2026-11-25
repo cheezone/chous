@@ -79,6 +79,9 @@ const zh = {
 		workspace: {
 			drift: '{name} 同时用了不同的大版本（{versions}），会被装两份',
 		},
+		worklog: {
+			found: '看起来是一份工作日志：它只描述某个时刻，提交当天就开始过时；长期有用的写进 README 或 docs/，其余写进提交信息',
+		},
 		leak: {
 			secret: '{name} 以明文提交了，作废它，改从不提交的环境变量文件读取',
 			artifact: '构建产物没有被 gitignore，会被提交上去',

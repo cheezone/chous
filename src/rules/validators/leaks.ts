@@ -1,15 +1,16 @@
 import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ArtifactsRule, Rule, SecretsRule } from "../../types";
+import type { ArtifactsRule, Rule, SecretsRule, WorklogRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, PLACEHOLDER, SECRETS } from "../../taste/leaks";
+import { ARTIFACT_DIRS, SECRETS, STANDARD_DOCS, WORKLOG, looksFake } from "../../taste/leaks";
 import { toDisplayPath } from "../../fsutil";
 
 const MAX_BYTES = 1024 * 1024;
 const SKIP_FILE = /\.(png|jpe?g|gif|webp|avif|ico|icns|svg|woff2?|ttf|otf|eot|pdf|zip|gz|tgz|wasm|mp[34]|mov|lockb)$|(^|\/)(pnpm-lock\.yaml|package-lock\.json|yarn\.lock|bun\.lock|Cargo\.lock|poetry\.lock)$/i;
 const MAYBE_SECRET = /sk-|gh[pousr]_|github_pat_|AKIA|ASIA|_live_|xox[abprs]-|eyJ|AIza/;
+// (sk- also covers OpenRouter's sk-or-v1-.)
 
 /** Keys committed in plain text — only formats that are secret by definition. */
 export class SecretsRuleValidator extends BaseRuleValidator<SecretsRule> {
@@ -37,7 +38,7 @@ export class SecretsRuleValidator extends BaseRuleValidator<SecretsRule> {
         for (const format of SECRETS) {
           for (const match of line.matchAll(format.pattern)) {
             const token = match[0];
-            if (PLACEHOLDER.test(token)) continue;
+            if (looksFake(token)) continue;
             if (format.test && !format.test(token)) continue;
             if (format.near && !lines.slice(Math.max(0, index - 2), index + 3).some((l) => format.near!.test(l))) continue;
             rawIssues.push(issueFromRule(rule, {
@@ -84,5 +85,27 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
       }
     }
     return { hitCount };
+  }
+}
+
+/** Agent work logs at the root, e.g. `IMPLEMENTATION_COMPLETE.md`. A warning: clutter, not harm. */
+export class WorklogRuleValidator extends BaseRuleValidator<WorklogRule> {
+  canHandle(rule: Rule): rule is WorklogRule {
+    return rule.kind === "worklog";
+  }
+
+  protected async validateInternal(rule: WorklogRule, context: RuleValidatorContext) {
+    const docs = context.snapshot.listDir(".").filter((e) => !e.isDir && /\.md$/i.test(e.name));
+    for (const doc of docs) {
+      const stem = doc.name.replace(/\.md$/i, "");
+      if (STANDARD_DOCS.test(stem) || !WORKLOG.test(stem)) continue;
+      context.rawIssues.push(issueFromRule(rule, {
+        path: doc.absPath,
+        displayPath: doc.name,
+        message: { key: "issue.worklog.found" },
+        severity: "warn",
+      }));
+    }
+    return { hitCount: docs.length };
   }
 }
