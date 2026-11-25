@@ -28,8 +28,6 @@ function fixtures(kind: "pass" | "fail"): string[] {
 const EXPECTED: Record<string, string[]> = {
   bun: [
     "bun.lockb → not allowed: binary lockfile",
-    "dependency bun-types is obsolete → @types/bun",
-    "dependency tsx is obsolete → bun",
   ],
   cloudflare: [".dev.vars → not allowed: Worker secrets"],
   eol: [

@@ -22,7 +22,7 @@
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导，写错就是类型错误。品味里的原因只存 key（`reason: "reason.xxx"`、`dep.<包名>`、`eol.<产品>`、`role.<角色>`），不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。
-- 残留物（`leftover`）都是错误：工作日志、根目录没被引用的一次性脚本、手动备份、发布二进制；`fixtures`/`vendor` 目录和 ADR 不查（`cargo vendor` 自己会写 `Cargo.toml.orig`）。根目录手写文档超过 `ROOT_DOCS_LIMIT` 份是警告。
+- 残留物（`leftover`）都是错误：工作日志、根目录没被引用的一次性脚本、手动备份、发布二进制；测试输入、示例、`vendor` 目录（`NOT_OURS`）、ADR、mdBook 的 `SUMMARY.md` 不查；`.exe` 不算（uv 有意提交预编译 trampoline）。验证集还包括 antfu、sindresorhus、Hono、Bun、Deno、Zig、Rust、ripgrep、tokio、uv。根目录手写文档超过 `ROOT_DOCS_LIMIT` 份是警告。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。
 - Node 要求：`engines.node >= 22`；CI 矩阵测试 node 22 与 24。
 - 构建：tsdown（基于 rolldown）；测试：vitest。

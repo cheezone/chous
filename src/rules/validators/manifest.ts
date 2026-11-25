@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { NOT_OURS } from "../../taste/hygiene";
 import { resolve } from "node:path";
 import type { ManifestRule, Rule, WorkspaceRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
@@ -78,7 +79,7 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
   protected async validateInternal(rule: WorkspaceRule, context: RuleValidatorContext) {
     const { root, snapshot } = context;
     const manifests: Array<{ dir: string; pkg: Manifest }> = [];
-    for (const dir of [".", ...snapshot.workspace.packages]) {
+    for (const dir of [".", ...snapshot.workspace.packages.filter((p) => !NOT_OURS.test(`${p}/`))]) {
       const pkg = readManifest(resolve(root, dir, "package.json"));
       if (pkg) manifests.push({ dir, pkg });
     }

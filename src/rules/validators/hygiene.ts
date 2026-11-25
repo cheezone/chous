@@ -5,7 +5,7 @@ import type { MessageKey } from "../../i18n";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, FIXTURE_DIR, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
+import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -20,6 +20,7 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
     let hitCount = 0;
 
     for (const parent of parents) {
+      if (NOT_OURS.test(`${parent}/`)) continue;
       // An artifact's own contents are not candidates for more artifacts.
       if (ARTIFACT_DIRS.some(({ dir }) => parent === dir || parent.endsWith(`/${dir}`) || parent.includes(`/${dir}/`) || parent.startsWith(`${dir}/`))) continue;
       const parentAbs = resolve(root, parent);
@@ -73,12 +74,14 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     const referenced = rule.scripts ? rootText(snapshot) : "";
 
     for (const [rel, entry] of snapshot.byRel) {
-      if (entry.isDir || FIXTURE_DIR.test(rel)) continue;
+      if (entry.isDir || NOT_OURS.test(rel)) continue;
       const atRoot = !rel.includes("/");
       const name = entry.name;
       const doc = /\.md$/i.exec(name) ? name.slice(0, -3) : undefined;
 
-      if (doc !== undefined && !STANDARD_DOCS.test(doc) && !DECISION_RECORD.test(rel) && (atRoot || /^[A-Z0-9_-]+$/.test(doc)) && WORKLOG.test(doc)) {
+      // `src/SUMMARY.md` is mdBook's table of contents.
+      const bookToc = !atRoot && doc === "SUMMARY";
+      if (doc !== undefined && !bookToc && !STANDARD_DOCS.test(doc) && !DECISION_RECORD.test(rel) && (atRoot || /^[A-Z0-9_-]+$/.test(doc)) && WORKLOG.test(doc)) {
         report(rel, "issue.leftover.worklog");
       } else if (doc !== undefined && atRoot && !STANDARD_DOCS.test(doc)) {
         rootDocs++;
@@ -118,6 +121,7 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
 
     const seen = new Map<string, string>();
     for (const rel of [...snapshot.byRel.keys()].sort()) {
+      if (NOT_OURS.test(rel)) continue;
       // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
       const slash = rel.lastIndexOf("/");
       const key = `${rel.slice(0, slash + 1)}${rel.slice(slash + 1).toLowerCase()}`;

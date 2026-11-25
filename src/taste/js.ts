@@ -45,10 +45,9 @@ export function js(project: JsProject = {}) {
   return t.rules;
 }
 
-/** Monorepo root: never published, one major version of everything. */
+/** Monorepo root: one major version of everything. */
 export function monorepo(pnpm: boolean) {
   const t = taste("monorepo");
-  t.field("private", true, { reason: "reason.privateRoot" });
   if (pnpm) {
     t.noField("workspaces", "reason.pnpmWorkspaces");
   }
@@ -60,8 +59,7 @@ export function monorepo(pnpm: boolean) {
 export function bun() {
   const t = taste("bun");
   t.no(["bun.lockb"], { reason: "reason.bunLockb" });
-  t.obsolete(["bun-types"], "@types/bun", "reason.bunTypes");
-  t.obsolete(["tsx", "ts-node"], "bun", "reason.bunRunsTs");
+  t.obsolete(["tsx", "ts-node"], "bun", "reason.bunRunsTs", { native: true });
   return t.rules;
 }
 

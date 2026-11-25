@@ -34,7 +34,7 @@ export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: strin
  * of a session (`IMPLEMENTATION_COMPLETE.md`, `FIXES_SUMMARY.md`,
  * `PHASE_4_PLAN.md`). Any name at the root; SCREAMING_CASE names deeper down.
  */
-export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status|progress|report|reports|fix|fixes|fixed|bugfix|hotfix|done|improvements?|implementation|changes[_-]made|session|handoff|walkthrough|plan|analysis|cleanup|audit|debug|phase[_-]?\d*|checklist|prompts?|brief)([_\-. ]|$)/i;
+export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status|progress|report|reports|fix|fixes|fixed|bugfix|hotfix|done|improvements?|implementation|changes[_-]made|session|handoff|walkthrough|analysis|cleanup|audit|debug|phase[_-]?\d*|prompts?|brief)([_\-. ]|$)/i;
 
 /**
  * Root directories that mean the same thing. Which name you pick is up to you;
@@ -56,13 +56,18 @@ export const ONE_OFF_SCRIPT = /^(fix|test|debug|check|verify|temp|tmp|quick|try)
 export const BACKUP = /(\.(bak|backup|orig|old)|_original|~)$| \(\d+\)(\.\w+)?$| copy(\.\w+)?$/i;
 
 /**
- * Installers and app bundles. Git keeps every version forever; GitHub points
+ * Installers and app bundles — never a build input, unlike an `.exe` (uv embeds
+ * prebuilt trampolines). Git keeps every version forever; GitHub points
  * binaries to Releases: https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github#distributing-large-binaries
  */
-export const RELEASE_BINARY = /\.(apk|aab|ipa|exe|dmg|msi|msix|appimage|deb|rpm)$/i;
+export const RELEASE_BINARY = /\.(apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
 
-/** Test inputs and vendored code may be anything: `cargo vendor` writes `Cargo.toml.orig` itself. */
-export const FIXTURE_DIR = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
+/**
+ * Not the project's own files: test inputs, examples and vendored code may be
+ * anything. Deno commits `dist/` packages for its npm registry tests, Zig a
+ * `desktop.ini` test case, `cargo vendor` writes `Cargo.toml.orig` itself.
+ */
+export const NOT_OURS = /(^|\/)(tests?|__tests__|specs?|fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?|vendor|third_party)\//i;
 
 /**
  * More hand-written root docs than this, and the root reads as a junk drawer:

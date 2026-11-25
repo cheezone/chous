@@ -80,7 +80,7 @@ Chous 只嗅臭味，不追时髦。它只看项目的作者或平台自己说�
 - **同一个概念两个名字。** `README.md` 旁边还有 `Readme.md`（在 macOS 和 Windows 上检出只会留下一个）；`test/` 和 `tests/` 并存；`plugin/` 和 `plugins/` 并存。
 - **重复。** monorepo 里同一个依赖用了两个大版本（会装两份）；工作区包里有自己的 lockfile。
 - **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。工具自己说是「个人」的文件：`.env*.local`、`.dev.vars`、`CLAUDE.local.md` 和 `.claude/settings.local.json`（Claude Code 文档），Android 的 `local.properties`（文件头写着「绝不能提交」）。以及 `.DS_Store`、`*.log`。
-- **残留物。** 一次工作留下的东西：以事件或状态命名的 Markdown（`IMPLEMENTATION_COMPLETE.md`、`PHASE_4_PLAN.md`；根目录任何写法，子目录只查全大写，决策记录 ADR 除外）；根目录里没被任何文件引用的一次性脚本（`fix_login.sh`、`test_api.py`）；手动备份（`package.json.bak`、`logo (1).png`）；发布用的二进制（`.apk`、`.exe`、`.dmg`，应该放到 Releases）；根目录手写文档超过五份时给一个警告。规则在 [`src/taste/hygiene.ts`](src/taste/hygiene.ts)。实测：Vue、Vite、React、Oxc、SQLite、cal.com、Next.js Commerce、nuxt.com 零命中；28 个 vibe coding 项目里 25 个命中。
+- **残留物。** 一次工作留下的东西：以事件或状态命名的 Markdown（`IMPLEMENTATION_COMPLETE.md`、`PHASE_4_PLAN.md`；根目录任何写法，子目录只查全大写，决策记录 ADR 除外）；根目录里没被任何文件引用的一次性脚本（`fix_login.sh`、`test_api.py`）；手动备份（`package.json.bak`、`logo (1).png`）；安装包（`.apk`、`.dmg`、`.msi`，应该放到 Releases）；根目录手写文档超过五份时给一个警告。规则在 [`src/taste/hygiene.ts`](src/taste/hygiene.ts)。实测：Vue、Vite、React、Oxc、SQLite、cal.com、Next.js Commerce、nuxt.com，以及 antfu、sindresorhus、Hono、Bun、Deno、Zig、Rust、ripgrep、tokio、uv 的仓库零命中；28 个 vibe coding 项目里 25 个命中。
 - **声明模块类型。** 每个 package.json 都写 `"type": "module"` 或 `"commonjs"`，这是 Node 官方文档的建议（警告）。
 
 Chous 在 Vite 和 SQLite 上没有任何报错，在 React、Vue、Oxc 上只报出真问题。
