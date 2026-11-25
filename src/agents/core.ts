@@ -1,5 +1,5 @@
 import { isAbsolute, relative, resolve, sep } from "node:path";
-import { getLL } from "../i18n";
+import { getT, type TFunction } from "../i18n";
 import { lintWorkspace } from "../rules/lint";
 import { formatIssueMessage } from "../rules/report";
 
@@ -52,20 +52,19 @@ export async function checkWorkspaces(opts: {
   lang: string;
   editedFile?: string;
 }): Promise<AgentCheckResult> {
-  const { LL } = getLL(opts.lang);
+  const { t } = getT(opts.lang);
   const issues: AgentIssue[] = [];
   const relevantDirs = opts.editedFile ? relevantDirsFor(opts.editedFile, opts.workspaceRoots) : undefined;
 
-  const { locale } = getLL(opts.lang);
   for (const root of opts.workspaceRoots) {
     const result = await lintWorkspace({ root, relevantDirs });
     for (const issue of result.issues) {
       issues.push({
         root,
         displayPath: issue.displayPath,
-        message: formatIssueMessage(LL, issue.message),
+        message: formatIssueMessage(t, issue.message),
         severity: issue.severity,
-        reason: issue.reason?.[locale],
+        reason: issue.reason && t(issue.reason),
       });
     }
   }
@@ -73,25 +72,25 @@ export async function checkWorkspaces(opts: {
   return { issues, summary: formatAgentSummary(opts.lang, issues) };
 }
 
-function formatIssueBlock(LL: ReturnType<typeof getLL>["LL"], issues: AgentIssue[]): string[] {
+function formatIssueBlock(t: TFunction, issues: AgentIssue[]): string[] {
   const lines: string[] = [];
   for (const issue of issues) {
     lines.push(`- ${issue.displayPath}: ${issue.message}`);
-    if (issue.reason) lines.push(`  ${LL.agent.reason({ reason: issue.reason })}`);
+    if (issue.reason) lines.push(`  ${t("agent.reason", { reason: issue.reason })}`);
   }
   return lines;
 }
 
 export function formatAgentSummary(lang: string, issues: AgentIssue[]): string {
-  const { LL } = getLL(lang);
-  const lines = [LL.agent.intro(), ""];
+  const { t } = getT(lang);
+  const lines = [t("agent.intro"), ""];
   const limited = issues.slice(0, SUMMARY_ISSUE_LIMIT);
   const errors = limited.filter((i) => i.severity === "error");
   const warnings = limited.filter((i) => i.severity === "warn");
 
-  if (errors.length) lines.push(LL.agent.errorsSection(), ...formatIssueBlock(LL, errors), "");
-  if (warnings.length) lines.push(LL.agent.warningsSection(), ...formatIssueBlock(LL, warnings), "");
+  if (errors.length) lines.push(t("agent.errorsSection"), ...formatIssueBlock(t, errors), "");
+  if (warnings.length) lines.push(t("agent.warningsSection"), ...formatIssueBlock(t, warnings), "");
   if (issues.length > SUMMARY_ISSUE_LIMIT) lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`, "");
-  lines.push(LL.agent.fix());
+  lines.push(t("agent.fix"));
   return lines.join("\n");
 }

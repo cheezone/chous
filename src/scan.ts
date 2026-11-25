@@ -1,10 +1,9 @@
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative, resolve } from "node:path";
 import { detectKinds, detectRoleOccupancy, knowledgeToJSON, roleLabel, type RoleId } from "./knowledge";
-import type { TranslationFunctions } from "./i18n";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
-import { getLL } from "./i18n";
+import { getT, type TFunction } from "./i18n";
 import { buildWorkspaceSnapshot, type WorkspaceSnapshot } from "./vfs/snapshot";
 import type { Issue, LintResult } from "./types";
 
@@ -148,7 +147,7 @@ async function scanOneRepo(opts: {
   lang: string;
   withSpecfy: boolean;
 }): Promise<ScanRepoResult> {
-  const { LL, locale } = getLL(opts.lang);
+  const { t } = getT(opts.lang);
   const snapshot = await buildWorkspaceSnapshot({ root: opts.root });
   const kinds = detectKinds(snapshot);
   const roles = occupancyRecord(snapshot);
@@ -156,9 +155,9 @@ async function scanOneRepo(opts: {
   const result: LintResult = await lintWorkspace({ root: opts.root });
   const issues: ScanRepoResult["issues"] = result.issues.map((i: Issue) => ({
     displayPath: i.displayPath,
-    message: formatIssueMessage(LL, i.message),
+    message: formatIssueMessage(t, i.message),
     severity: i.severity,
-    reason: i.reason?.[locale],
+    reason: i.reason && t(i.reason),
   }));
 
   const components = opts.withSpecfy ? await detectSpecfyComponents(snapshot) : undefined;
@@ -201,21 +200,20 @@ export async function scanDirectory(opts: {
   };
 }
 
-export function formatScanText(result: ScanResult, LL: TranslationFunctions, locale: "en" | "zh"): string {
-  const t = LL.scan;
-  const none = t.none();
+export function formatScanText(result: ScanResult, t: TFunction): string {
+  const none = t("scan.none");
   const lines: string[] = [];
   for (const repo of result.repos) {
     lines.push(`# ${repo.root}`);
-    lines.push(`  ${t.kinds()}: ${repo.kinds.join(", ") || none}`);
+    lines.push(`  ${t("scan.kinds")}: ${repo.kinds.join(", ") || none}`);
     const roleLines = Object.entries(repo.roles)
-      .map(([role, tools]) => `${roleLabel(role as RoleId)[locale]}=${tools.join("|")}`)
+      .map(([role, tools]) => `${t(roleLabel(role as RoleId))}=${tools.join("|")}`)
       .join(", ");
-    lines.push(`  ${t.roles()}: ${roleLines || none}`);
+    lines.push(`  ${t("scan.roles")}: ${roleLines || none}`);
     for (const c of repo.components?.slice(0, 20) ?? []) {
-      lines.push(`  ${t.component({ name: c.name })}: ${c.techs.join(", ") || none}`);
+      lines.push(`  ${t("scan.component", { name: c.name })}: ${c.techs.join(", ") || none}`);
     }
-    lines.push(`  ${t.issues({ count: repo.issues.length })}${repo.issues.length ? ":" : ""}`);
+    lines.push(`  ${t("scan.issues", { count: repo.issues.length })}${repo.issues.length ? ":" : ""}`);
     for (const i of repo.issues.slice(0, 30)) {
       lines.push(`    - [${i.severity}] ${i.displayPath}: ${i.message}`);
     }

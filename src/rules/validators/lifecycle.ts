@@ -82,12 +82,12 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
       const date = eolDate(product, version);
       const status = lifecycleStatus(date, today);
       if (status === "supported") continue;
-      const { label, use } = EOL[product];
+      const { label } = EOL[product];
       const name = `${label} ${lineOf(product, version)}`;
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(context.root, file)}#eol:${product}`,
         displayPath: `${file} (${name})`,
-        message: { key: status === "rotten" ? "issue.lifecycle.rotten" : "issue.lifecycle.expired", params: { name, date: date!, use } },
+        message: { key: status === "rotten" ? "issue.lifecycle.rotten" : "issue.lifecycle.expired", params: { name, date: date!, use: { t: `eol.${product}` } } },
         severity: status === "rotten" ? "error" : "warn",
       }));
     }

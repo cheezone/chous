@@ -1,58 +1,11 @@
-import { existsSync, readFileSync, statSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ArtifactsRule, Rule, SecretsRule, WorklogRule } from "../../types";
+import type { ArtifactsRule, Rule, WorklogRule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, SECRETS, STANDARD_DOCS, WORKLOG, looksFake } from "../../taste/leaks";
-import { toDisplayPath } from "../../fsutil";
+import { ARTIFACT_DIRS, STANDARD_DOCS, WORKLOG } from "../../taste/hygiene";
 
-const MAX_BYTES = 1024 * 1024;
-const SKIP_FILE = /\.(png|jpe?g|gif|webp|avif|ico|icns|svg|woff2?|ttf|otf|eot|pdf|zip|gz|tgz|wasm|mp[34]|mov|lockb)$|(^|\/)(pnpm-lock\.yaml|package-lock\.json|yarn\.lock|bun\.lock|Cargo\.lock|poetry\.lock)$/i;
-const MAYBE_SECRET = /sk-|gh[pousr]_|github_pat_|AKIA|ASIA|_live_|xox[abprs]-|eyJ|AIza/;
-// (sk- also covers OpenRouter's sk-or-v1-.)
-
-/** Keys committed in plain text — only formats that are secret by definition. */
-export class SecretsRuleValidator extends BaseRuleValidator<SecretsRule> {
-  canHandle(rule: Rule): rule is SecretsRule {
-    return rule.kind === "secrets";
-  }
-
-  protected async validateInternal(rule: SecretsRule, context: RuleValidatorContext) {
-    const { root, snapshot, rawIssues } = context;
-    let hitCount = 0;
-    for (const entry of snapshot.byRel.values()) {
-      if (entry.isDir || SKIP_FILE.test(entry.relPath)) continue;
-      let text: string;
-      try {
-        if (statSync(entry.absPath).size > MAX_BYTES) continue;
-        text = readFileSync(entry.absPath, "utf8");
-      } catch {
-        continue;
-      }
-      if (!MAYBE_SECRET.test(text)) continue;
-      hitCount++;
-
-      const lines = text.split(/\r?\n/);
-      lines.forEach((line, index) => {
-        for (const format of SECRETS) {
-          for (const match of line.matchAll(format.pattern)) {
-            const token = match[0];
-            if (looksFake(token)) continue;
-            if (format.test && !format.test(token)) continue;
-            if (format.near && !lines.slice(Math.max(0, index - 2), index + 3).some((l) => format.near!.test(l))) continue;
-            rawIssues.push(issueFromRule(rule, {
-              path: `${entry.absPath}#secret:${index + 1}:${format.name}`,
-              displayPath: `${toDisplayPath(entry.absPath, root)}:${index + 1} (${format.name})`,
-              message: { key: "issue.leak.secret", params: { name: format.name } },
-            }));
-          }
-        }
-      });
-    }
-    return { hitCount };
-  }
-}
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -88,7 +41,7 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   }
 }
 
-/** Agent work logs at the root, e.g. `IMPLEMENTATION_COMPLETE.md`. A warning: clutter, not harm. */
+/** Agent work logs at the root, e.g. `IMPLEMENTATION_COMPLETE.md`. */
 export class WorklogRuleValidator extends BaseRuleValidator<WorklogRule> {
   canHandle(rule: Rule): rule is WorklogRule {
     return rule.kind === "worklog";
@@ -103,7 +56,6 @@ export class WorklogRuleValidator extends BaseRuleValidator<WorklogRule> {
         path: doc.absPath,
         displayPath: doc.name,
         message: { key: "issue.worklog.found" },
-        severity: "warn",
       }));
     }
     return { hitCount: docs.length };

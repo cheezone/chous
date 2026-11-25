@@ -20,7 +20,7 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
       rawIssues.push(issueFromRule(rule, {
         path: abs,
         displayPath: toDisplayPath(abs, root),
-        message: { key: "issue.no.because", params: { reason: rule.reason! } },
+        message: { key: "issue.no.because", params: { reason: { t: rule.reason! } } },
         reason: false,
       }));
     }

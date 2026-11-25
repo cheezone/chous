@@ -1,4 +1,4 @@
-import type { Locales } from "./i18n";
+import type { Locale as Locales } from "./i18n";
 
 // Supported languages are exactly the locales provided by the i18n dictionaries.
 // Deriving the type from the generated `Locales` keeps a single source of truth.

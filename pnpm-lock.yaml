@@ -172,6 +172,9 @@ importers:
       '@specfy/stack-analyser':
         specifier: ^1.27.6
         version: 1.27.6
+      i18next:
+        specifier: ^27.2.6
+        version: 27.2.6(typescript@7.0.2)
       ignore:
         specifier: ^7.0.9
         version: 7.0.9
@@ -1291,6 +1294,15 @@ packages:
 
   hookable@6.1.1:
     resolution: {integrity: sha512-U9LYDy1CwhMCnprUfeAZWZGByVbhd54hwepegYTK7Pi5NvqEj63ifz5z+xukznehT7i6NIZRu89Ay1AZmRsLEQ==}
+
+  i18next@27.2.6:
+    resolution: {integrity: sha512-ScRHHL/oAHaEgi78K770XIDQmOiq3BLjD4zxEoDeva4NLXXLPb83mzeSjFw7SefkwCEpLNC+560Pg0Q3BnCLsA==}
+    engines: {node: '>=22'}
+    peerDependencies:
+      typescript: ^5 || ^6 || ^7
+    peerDependenciesMeta:
+      typescript:
+        optional: true
 
   ignore@7.0.9:
     resolution: {integrity: sha512-brTTsvFRt5C1gGHtPst/281UjPD5t9fBqbgoMPlVWy11ZLTPfu7HxK4ZYqO9H7o/yC9rSTCI85EaQ4OoY12qYw==}
@@ -2650,6 +2662,10 @@ snapshots:
   graceful-fs@4.2.11: {}
 
   hookable@6.1.1: {}
+
+  i18next@27.2.6(typescript@7.0.2):
+    optionalDependencies:
+      typescript: 7.0.2
 
   ignore@7.0.9: {}
 

@@ -26,7 +26,7 @@ export class OneToolPerRoleValidator extends BaseRuleValidator<StackRule> {
       context.rawIssues.push(issueFromRule(rule, {
         path: `${manifest.path}#stack:${role}`,
         displayPath: `package.json (${role})`,
-        message: { key: "issue.stack.conflict", params: { role: roleLabel(role), tools: tools.join(" + ") } },
+        message: { key: "issue.stack.conflict", params: { role: { t: roleLabel(role) }, tools: tools.join(" + ") } },
         severity: "error",
       }));
     }

@@ -1,5 +1,5 @@
 import type { Issue, IssueMessage, Rule, Severity } from "../../types";
-import type { Text } from "../../i18n/text";
+import type { MessageKey } from "../../i18n";
 import type { WorkspaceSnapshot } from "../../vfs/snapshot";
 
 /** What every validator gets. The workspace is read through `snapshot`. */
@@ -25,7 +25,7 @@ export function issueFromRule(
     message: IssueMessage;
     severity?: Severity;
     /** `false` keeps the rule's reason out (when the message already says it). */
-    reason?: Text | false;
+    reason?: MessageKey | false;
   },
 ): Issue {
   const reason = partial.reason === false ? undefined : (partial.reason ?? rule.reason);

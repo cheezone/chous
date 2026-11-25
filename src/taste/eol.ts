@@ -6,8 +6,6 @@
  * Expired: past end of life, no more security fixes → warning.
  * Rotten: more than ROT_AFTER_YEARS past end of life → error.
  */
-import type { Text } from "../i18n/text";
-
 export const ROT_AFTER_YEARS = 2;
 
 export type Product = "node" | "python" | "vue" | "nuxt";
@@ -20,10 +18,10 @@ export type Eol = {
 };
 
 /** Every version older than the oldest entry ended no later than that entry. */
-export const EOL: Record<Product, { label: string; use: Text; source: string; versions: Eol[] }> = {
+/** What to move to lives in the locale files, under `eol.<product>`. */
+export const EOL: Record<Product, { label: string; source: string; versions: Eol[] }> = {
   node: {
     label: "Node",
-    use: { en: "a supported LTS release", zh: "仍在维护的 LTS 版本" },
     source: "https://github.com/nodejs/Release",
     versions: [
       { version: "10", date: "2021-04-30" },
@@ -44,7 +42,6 @@ export const EOL: Record<Product, { label: string; use: Text; source: string; ve
   },
   python: {
     label: "Python",
-    use: { en: "a supported Python 3 release", zh: "仍在维护的 Python 3 版本" },
     source: "https://devguide.python.org/versions/",
     versions: [
       { version: "2.6", date: "2013-10-29" },
@@ -64,13 +61,11 @@ export const EOL: Record<Product, { label: string; use: Text; source: string; ve
   },
   vue: {
     label: "Vue",
-    use: { en: "Vue 3", zh: "Vue 3" },
     source: "https://v2.vuejs.org/eol/",
     versions: [{ version: "2", date: "2023-12-31" }],
   },
   nuxt: {
     label: "Nuxt",
-    use: { en: "Nuxt 4", zh: "Nuxt 4" },
     source: "https://nuxt.com/docs/3.x/migration/overview",
     versions: [
       { version: "2", date: "2024-06-30" },

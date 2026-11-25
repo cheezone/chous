@@ -27,7 +27,7 @@
 
 _/tʃoʊs/_
 
-Chous 是一个有主见的品味检查器。AI 编辑器会自己发明目录、格式化工具和测试框架，项目从没要求过这些。Chous 嗅仓库里的臭味：腐烂的依赖、停止维护的运行时、互相打架的工具、要泄露的密钥，然后告诉 AI 该改成什么。
+Chous 是一个有主见的品味检查器。AI 编辑器会自己发明目录、格式化工具和测试框架，项目从没要求过这些。Chous 嗅仓库里的臭味：腐烂的依赖、停止维护的运行时、互相打架的工具、根目录的垃圾，然后告诉 AI 该改成什么。
 
 没有配置，没有预设，也没有插件。品味就是工具本身，像 `gofmt` 一样。
 
@@ -77,8 +77,8 @@ Chous 只嗅臭味，不追时髦。它只看项目的作者或平台自己说�
   停止维护日期写在 [`src/taste/eol.ts`](src/taste/eol.ts)，抄自各项目的官方时间表，只收已经过去的日期。版本取自项目实际运行的：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile 的 `FROM`、锁定版本的 `engines.node`、`vue` / `nuxt` 依赖。满两年后，"过期"会自己变成"腐烂"。
 - **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
 - **重复。** monorepo 里同一个依赖用了两个大版本（会装两份）；`test/` 和 `tests/` 同时存在；工作区包里有自己的 lockfile。
-- **泄露。** 明文提交的密钥：只认按定义就是机密的格式（OpenAI、Anthropic、GitHub、AWS、Stripe 正式环境、Slack、Supabase 的 `service_role` JWT、Gemini key）；Firebase 配置、Supabase `anon`、地图 key 这些本来就设计成公开的，一律不报。没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。以及 `.env*.local`、`.dev.vars`、`.DS_Store`、`*.log`。规则在 [`src/taste/leaks.ts`](src/taste/leaks.ts)。
-- **AI 工作日志。** 根目录里以事件或状态命名的 Markdown，比如 `IMPLEMENTATION_COMPLETE.md`、`FIXES_SUMMARY.md`。它只描述某个时刻，提交当天就开始过时（警告）。实测：Vue、Vite、React、Oxc、SQLite 一个都没有，抽样的 vibe coding 项目里一半都有。
+- **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。以及 `.env*.local`、`.dev.vars`、`.DS_Store`、`*.log`。规则在 [`src/taste/hygiene.ts`](src/taste/leaks.ts)。
+- **AI 工作日志。** 根目录里以事件或状态命名的 Markdown，比如 `IMPLEMENTATION_COMPLETE.md`、`FIXES_SUMMARY.md`。它只描述某个时刻，提交当天就开始过时（错误：它属于 PR 描述，不属于根目录）。实测：Vue、Vite、React、Oxc、SQLite 一个都没有，抽样的 vibe coding 项目里一半都有。
 - **声明模块类型。** 每个 package.json 都写 `"type": "module"` 或 `"commonjs"`，这是 Node 官方文档的建议（警告）。
 
 Chous 在 Vite 和 SQLite 上没有任何报错，在 React、Vue、Oxc 上只报出真问题。

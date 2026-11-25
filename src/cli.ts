@@ -8,7 +8,7 @@ import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
 import { renderReport } from "./rules/report";
 import { createColorizer } from "./color";
-import { getLL, isLocale, locales, type TranslationFunctions } from "./i18n";
+import { getT, isLocale, locales, type MessageKey, type TFunction } from "./i18n";
 import { detectSystemLang } from "./runtime";
 import { APP_NAME } from "./constants";
 
@@ -49,7 +49,7 @@ function isHookSubcommand(value: string | undefined): value is HookSubcommand {
   return value === "after-edit" || value === "stop" || value === "install";
 }
 
-function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
+function parseArgs(argv: string[], t: TFunction): CliOptions {
   const opts: CliOptions = {
     command: "lint",
     cwd: process.cwd(),
@@ -85,13 +85,13 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     else if (a === "--lang" || a === "-l") {
       const code = argv[++i];
       const supported = `${locales.join(" / ")} / auto`;
-      if (!code) throw new Error(String(LL.cli.error.missingLangValue({ supported })));
+      if (!code) throw new Error(t("cli.error.missingLangValue", { supported }));
       if (code !== "auto" && !isLocale(code)) {
-        throw new Error(String(LL.cli.error.unsupportedLang({ code, supported })));
+        throw new Error(t("cli.error.unsupportedLang", { code, supported }));
       }
       opts.lang = code;
     } else if (a.startsWith("-")) {
-      throw new Error(String(LL.cli.error.unknownArg({ arg: a })));
+      throw new Error(t("cli.error.unknownArg", { arg: a }));
     } else {
       filePaths.push(a);
     }
@@ -99,30 +99,34 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
 
   if (filePaths.length > 0) opts.filePaths = filePaths;
   if (opts.ignoreWarnings && opts.failOnWarnings) {
-    throw new Error(String(LL.cli.error.conflictIgnoreAndFailWarnings()));
+    throw new Error(t("cli.error.conflictIgnoreAndFailWarnings"));
   }
   return opts;
 }
 
-function printHelp(LL: TranslationFunctions): void {
-  const h = LL.cli.help;
-  console.log(`${APP_NAME} ${VERSION} — ${String(h.tagline())}
-
-${String(h.commands())}
-  ${String(h.noCommand()).padEnd(20)} ${String(h.lintCmdDesc())}
-  scan [dir]           ${String(h.scanCmdDesc())}
-  knowledge            ${String(h.knowledgeCmdDesc())}
-  cursor install       ${String(h.installCursorHookDesc())}
-  claude install       ${String(h.installClaudeHookDesc())}
-
-${String(h.options())}
-  -v, --verbose        ${String(h.verboseHint())}
-  -l, --lang <code>    ${String(h.langHint())}
-  --fail-on-warnings   ${String(h.failOnWarningsHint())}
-  --ignore-warnings    ${String(h.ignoreWarningsHint())}
-  --no-color           ${String(h.noColorHint())}
-  -h, --help           ${String(h.helpHint())}
-`);
+function printHelp(t: TFunction): void {
+  // Pad by display width: CJK characters take two columns.
+  const width = (text: string) => [...text].reduce((n, ch) => n + (ch.codePointAt(0)! > 0x2e80 ? 2 : 1), 0);
+  const row = (left: string, key: MessageKey) => `  ${left}${" ".repeat(Math.max(1, 21 - width(left)))}${t(key)}`;
+  console.log([
+    `${APP_NAME} ${VERSION} — ${t("cli.help.tagline")}`,
+    "",
+    t("cli.help.commands"),
+    row(t("cli.help.noCommand"), "cli.help.lintCmdDesc"),
+    row("scan [dir]", "cli.help.scanCmdDesc"),
+    row("knowledge", "cli.help.knowledgeCmdDesc"),
+    row("cursor install", "cli.help.installCursorHookDesc"),
+    row("claude install", "cli.help.installClaudeHookDesc"),
+    "",
+    t("cli.help.options"),
+    row("-v, --verbose", "cli.help.verboseHint"),
+    row("-l, --lang <code>", "cli.help.langHint"),
+    row("--fail-on-warnings", "cli.help.failOnWarningsHint"),
+    row("--ignore-warnings", "cli.help.ignoreWarningsHint"),
+    row("--no-color", "cli.help.noColorHint"),
+    row("-h, --help", "cli.help.helpHint"),
+    "",
+  ].join("\n"));
 }
 
 /**
@@ -226,7 +230,7 @@ function relevantDirsFor(cwd: string, filePaths: string[]): Set<string> {
   return dirs;
 }
 
-async function runLint(opts: CliOptions, LL: TranslationFunctions): Promise<number> {
+async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
   let result = await lintWorkspace({ root: opts.cwd, relevantDirs });
 
@@ -238,7 +242,7 @@ async function runLint(opts: CliOptions, LL: TranslationFunctions): Promise<numb
     renderReport(result, {
       verbose: opts.verbose,
       color: createColorizer({ enabled: opts.color }),
-      LL,
+      t,
       version: VERSION,
     }) + "\n",
   );
@@ -251,20 +255,20 @@ async function runLint(opts: CliOptions, LL: TranslationFunctions): Promise<numb
 async function main() {
   const argv = process.argv.slice(2);
   const preLang = detectLangArg(argv) ?? detectSystemLang();
-  const { LL } = getLL(preLang);
-  const opts = parseArgs(argv, LL);
+  const { t } = getT(preLang);
+  const opts = parseArgs(argv, t);
   const lang = opts.lang === "auto" ? detectSystemLang() : (opts.lang ?? preLang);
 
   if (opts.help) {
-    printHelp(LL);
+    printHelp(t);
     return;
   }
 
   if (opts.command === "cursor" && opts.hook) {
     if (opts.hook === "install") {
       const result = installCursorHook(opts.cwd);
-      if (result.installed) console.log(String(LL.cli.install.cursorHooksInstalled()));
-      if (result.code === 0) console.log(String(LL.cli.install.credit()));
+      if (result.installed) console.log(t("cli.install.cursorHooksInstalled"));
+      if (result.code === 0) console.log(t("cli.install.credit"));
       process.exitCode = result.code;
       return;
     }
@@ -275,8 +279,8 @@ async function main() {
   if (opts.command === "claude" && opts.hook) {
     if (opts.hook === "install") {
       const result = installClaudeHooks(opts.cwd, getRunnerCommand());
-      if (result.installed) console.log(String(LL.cli.install.claudeHooksInstalled()));
-      if (result.code === 0) console.log(String(LL.cli.install.credit()));
+      if (result.installed) console.log(t("cli.install.claudeHooksInstalled"));
+      if (result.code === 0) console.log(t("cli.install.credit"));
       process.exitCode = result.code;
       return;
     }
@@ -304,13 +308,12 @@ async function main() {
       withKnowledge: Boolean(opts.json && opts.verbose),
       withSpecfy: true,
     });
-    const { LL: scanLL, locale } = getLL(lang);
-    console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, scanLL, locale));
+    console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, getT(lang).t));
     process.exitCode = result.repos.some((r) => r.issues.some((i) => i.severity === "error")) ? 1 : 0;
     return;
   }
 
-  process.exitCode = await runLint(opts, LL);
+  process.exitCode = await runLint(opts, t);
 }
 
 main().catch((err) => {

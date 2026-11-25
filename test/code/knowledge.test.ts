@@ -63,7 +63,7 @@ describe("knowledge / roles", () => {
       writeFileSync(join(root, "yarn.lock"), "");
       const result = await lintWorkspace({ root });
       const conflict = result.issues.find((i) => i.message.key === "issue.stack.conflict");
-      expect(conflict?.message.params).toEqual({ role: { en: "package manager", zh: "包管理器" }, tools: "npm + yarn" });
+      expect(conflict?.message.params).toEqual({ role: { t: "role.package-manager" }, tools: "npm + yarn" });
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

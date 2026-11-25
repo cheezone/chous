@@ -17,13 +17,12 @@
 - 引用官方文档时以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason`，报错就是这个原因。
-- 泄露检查（`src/taste/leaks.ts`）：密钥只收「按定义就是机密」且厂商公布了固定前缀的格式；公开设计的 key（Firebase、Supabase anon、Maps）不报；输出里永远不打印密钥本身。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
+- 卫生检查（`src/taste/hygiene.ts`）：**不查明文密钥**，那是安全扫描器的事，不是品味。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
 - 结构类规则要靠数据：只收「在官方仓库里一个没有、在 vibe 项目里很常见」的模式（例如根目录的 AI 工作日志），先在 Vue/Vite/React/Oxc/SQLite 和 `test/samples` 上验证零命中。
-- 测试里不要写真实格式的假密钥（GitHub 推送保护会拦），在运行时拼接。
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
-- i18n 只有 `en` 和 `zh`（`src/i18n/`）。参数类型由 `en` 字符串推导，改文案时两份一起改；不要再引入 typesafe-i18n（它不支持 TS 7）。
-- 品味里的原因（`reason`、`why`、迁移 `notes`）一律写成 `Text`：`{ en, zh }`，少一种语言就是类型错误。
+- i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导，写错就是类型错误。品味里的原因只存 key（`reason: "reason.xxx"`、`dep.<包名>`、`eol.<产品>`、`role.<角色>`），不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。
+- AI 工作日志（根目录 `*_COMPLETE.md`、`*_SUMMARY.md` 这类）是错误。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。
 - Node 要求：`engines.node >= 22`；CI 矩阵测试 node 22 与 24。
 - 构建：tsdown（基于 rolldown）；测试：vitest。

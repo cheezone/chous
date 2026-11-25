@@ -1,4 +1,4 @@
-import type { Text } from "./i18n/text";
+import type { MessageKey } from "./i18n";
 
 /** Which built-in taste produced a rule (e.g. `base`, `js`, `monorepo`). */
 export type RuleSource = {
@@ -12,8 +12,8 @@ export type RuleBase = {
   source: RuleSource;
   /** Overrides the validator's default severity. */
   severity?: Severity;
-  /** Why this rule exists, in every language. */
-  reason?: Text;
+  /** Why this rule exists: a message in `src/locales`. */
+  reason?: MessageKey;
 };
 
 export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
@@ -24,7 +24,6 @@ export type Rule =
   | StackRule
   | ExclusiveRule
   | LifecycleRule
-  | SecretsRule
   | ArtifactsRule
   | WorklogRule
   | ManifestRule
@@ -62,17 +61,12 @@ export type LifecycleRule = RuleBase & {
   kind: "lifecycle";
 };
 
-/** Keys committed in plain text (see `taste/leaks.ts`). */
-export type SecretsRule = RuleBase & {
-  kind: "secrets";
-};
-
-/** Build output that is not gitignored (see `taste/leaks.ts`). */
+/** Build output that is not gitignored (see `taste/hygiene.ts`). */
 export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
 };
 
-/** Agent work logs left at the root (see `taste/leaks.ts`). */
+/** Agent work logs left at the root (see `taste/hygiene.ts`). */
 export type WorklogRule = RuleBase & {
   kind: "worklog";
 };
@@ -99,27 +93,19 @@ export type StackRule = RuleBase & {
   roles: string[];
 };
 
-export type IssueMessage =
-  | { key: "issue.no.because"; params: { reason: Text } }
-  | { key: "issue.deps.forbidden"; params: { name: string } }
-  | { key: "issue.deps.native"; params: { name: string; use: string } }
-  | { key: "issue.deps.obsolete"; params: { name: string; use: string } }
-  | { key: "issue.stack.conflict"; params: { role: Text; tools: string } }
-  | { key: "issue.exclusive.conflict" }
-  | { key: "issue.lifecycle.expired"; params: { name: string; date: string; use: Text } }
-  | { key: "issue.lifecycle.rotten"; params: { name: string; date: string; use: Text } }
-  | { key: "issue.manifest.expected"; params: { field: string; expected: string } }
-  | { key: "issue.manifest.remove"; params: { field: string; reason: Text } }
-  | { key: "issue.manifest.missing"; params: { field: string; reason: Text } }
-  | { key: "issue.workspace.drift"; params: { name: string; versions: string } }
-  | { key: "issue.leak.secret"; params: { name: string } }
-  | { key: "issue.leak.artifact" }
-  | { key: "issue.worklog.found" };
+/** A param that is itself a message: translated, then interpolated. */
+export type MessageRef = { t: MessageKey };
+
+/** A message in `src/locales` and its params. */
+export type IssueMessage = {
+  key: MessageKey;
+  params?: Record<string, string | number | MessageRef>;
+};
 
 export type Issue = {
   ruleKind: Rule["kind"];
   ruleSource: RuleSource;
-  reason?: Text;
+  reason?: MessageKey;
   /** Absolute; synthetic findings append `#something`. */
   path: string;
   /** Relative to the linted root. */

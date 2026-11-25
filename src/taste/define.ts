@@ -1,5 +1,5 @@
 import type { Rule, RuleBase } from "../types";
-import type { Text } from "../i18n/text";
+import type { MessageKey } from "../i18n";
 
 type Extra = Pick<RuleBase, "reason" | "severity">;
 
@@ -24,7 +24,7 @@ export function taste(id: string) {
 
 
     /** Paths that must not exist. */
-    no(names: string[], extra: Extra & { reason: Text }) {
+    no(names: string[], extra: Extra & { reason: MessageKey }) {
       push({ kind: "no", names, ...extra });
     },
 
@@ -48,12 +48,12 @@ export function taste(id: string) {
     },
 
     /** A package.json field must be present, whatever its value. */
-    requireField(field: string, why: Text, extra?: Pick<RuleBase, "severity">) {
+    requireField(field: string, why: MessageKey, extra?: Pick<RuleBase, "severity">) {
       push({ kind: "manifest", field, present: true, reason: why, ...extra });
     },
 
     /** A package.json field must not exist. */
-    noField(field: string, why: Text) {
+    noField(field: string, why: MessageKey) {
       push({ kind: "manifest", field, absent: true, reason: why });
     },
 
@@ -63,7 +63,7 @@ export function taste(id: string) {
     },
 
     /** Rotten deps (an error), or with `native` redundant ones the platform now ships (a warning). */
-    obsolete(names: string[], use: string, why: Text, opts?: { native?: boolean }) {
+    obsolete(names: string[], use: string, why: MessageKey, opts?: { native?: boolean }) {
       push({ kind: "deps", mode: "no", names, use, reason: why, ...opts });
     },
 
@@ -72,9 +72,8 @@ export function taste(id: string) {
       push({ kind: "lifecycle" });
     },
 
-    /** Keys committed in plain text, and build output that is not gitignored. */
-    leaks() {
-      push({ kind: "secrets" });
+    /** Build output that is not gitignored. */
+    artifacts() {
       push({ kind: "artifacts" });
     },
 
