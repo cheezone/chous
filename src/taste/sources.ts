@@ -113,7 +113,7 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ],
 };
 
-/** Sources for an issue: its reason's, else its message's. */
-export function sourcesFor(reason: MessageKey | undefined, message: MessageKey): Source[] {
-  return (reason && SOURCES[reason]) || SOURCES[message] || [];
+/** Sources for an issue: of its reason, its message, or a message inside the message. */
+export function sourcesFor(keys: Array<MessageKey | undefined>): Source[] {
+  return keys.flatMap((key) => (key && SOURCES[key]) || []);
 }

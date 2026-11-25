@@ -49,7 +49,8 @@ export function renderReport(
     const reason = verbose && issue.reason ? ` ${c.dim(t("report.reason", { reason: t(issue.reason) }))}` : "";
     lines.push(`${icon} ${issue.displayPath.padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
     if (verbose) {
-      for (const { url } of sourcesFor(issue.reason, issue.message.key)) lines.push(c.dim(`  ${t("report.source", { url })}`));
+      const nested = Object.values(issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
+      for (const { url } of sourcesFor([issue.reason, issue.message.key, ...nested])) lines.push(c.dim(`  ${t("report.source", { url })}`));
     }
   }
   if (shown.length < issues.length) lines.push(c.dim(t("report.moreHidden", { count: issues.length - shown.length })));
