@@ -1,25 +1,10 @@
-import type {
-  InDirOnlyRule,
-  NamingStyle,
-  Rule,
-  RuleBase,
-} from "../types";
+import type { Rule, RuleBase } from "../types";
 import type { Text } from "../i18n/text";
 
 type Extra = Pick<RuleBase, "reason" | "severity">;
 
 /** A rule without its source — the builder fills that in. */
 type RuleInput = Rule extends infer R ? (R extends Rule ? Omit<R, "source"> : never) : never;
-
-type NamingOptions = Extra & {
-  /** Check directory names (`<dir>/*`) instead of files. */
-  dirs?: boolean;
-  prefix?: string;
-  suffix?: string;
-  except?: string[];
-  ifContains?: string;
-  ifParentStyle?: NamingStyle;
-};
 
 /**
  * Rule builder bound to one taste. Every rule records which taste produced it,
@@ -36,54 +21,16 @@ export function taste(id: string) {
     id,
     rules,
 
-    /** Root-level names that may exist. */
-    allow(names: string[], extra?: Extra) {
-      push({ kind: "allow", names, ...extra });
-    },
 
-    /** Root-level names that must exist. */
-    must(names: string[], extra?: Extra) {
-      push({ kind: "has", names, ...extra });
-    },
 
     /** Paths that must not exist. */
-    no(names: string[], extra?: Extra) {
+    no(names: string[], extra: Extra & { reason: Text }) {
       push({ kind: "no", names, ...extra });
     },
 
-    /** Everything matching `pattern` must also match one of `only`. */
-    only(pattern: string, only: string[], extra?: Extra) {
-      push({ kind: "thoseOnly", pattern, only, ...extra });
-    },
 
-    /** Whitelist the direct children of `dir`. */
-    dir(
-      dir: string,
-      only: string[],
-      opts?: Extra & { strict?: boolean; fileType?: InDirOnlyRule["fileType"]; dotfiles?: boolean },
-    ) {
-      const { strict, ...rest } = opts ?? {};
-      push({ kind: "inDirOnly", dir, only, mode: strict ? "strict" : "permissive", ...rest });
-    },
 
-    /** Names under `pattern` must match any of `styles`. */
-    naming(pattern: string, styles: NamingStyle[], opts?: NamingOptions) {
-      const { dirs, ...rest } = opts ?? {};
-      for (const style of styles) {
-        push({
-          kind: "naming",
-          target: dirs ? "in" : "those",
-          pattern,
-          style,
-          fileType: dirs ? "dirs" : "files",
-          ...rest,
-        });
-      }
-    },
 
-    move(from: string, toDir: string, extra?: Extra) {
-      push({ kind: "move", from, toDir, ...extra });
-    },
 
     /** At most one of these root-level names may exist. */
     oneOf(names: string[]) {
@@ -101,8 +48,8 @@ export function taste(id: string) {
     },
 
     /** A package.json field must be present, whatever its value. */
-    requireField(field: string, why: Text) {
-      push({ kind: "manifest", field, present: true, reason: why });
+    requireField(field: string, why: Text, extra?: Pick<RuleBase, "severity">) {
+      push({ kind: "manifest", field, present: true, reason: why, ...extra });
     },
 
     /** A package.json field must not exist. */

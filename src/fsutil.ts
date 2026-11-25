@@ -1,8 +1,7 @@
 import { stat, readFile } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { basename, dirname, relative, resolve, sep } from "node:path";
+import { dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
-import ignore from "ignore";
 
 export const DEFAULT_IGNORE_DIRS = new Set([
   "node_modules",
@@ -14,12 +13,6 @@ export function toDisplayPath(absPath: string, root: string): string {
   const rel = relative(root, absPath) || ".";
   // Uniformly display as posix style to avoid inconsistent output on Windows/Mac
   return rel.split(sep).join("/");
-}
-
-export function pickTopLevelName(rel: string): string {
-  const cleaned = rel.replace(/^\.\//, "");
-  const seg = cleaned.split("/")[0];
-  return seg && seg !== "." ? seg : ".";
 }
 
 export function exists(p: string): boolean {
@@ -99,66 +92,3 @@ export async function loadGitIgnorePatterns(
   return allPatterns;
 }
 
-export async function walkFiles(dir: string, opts?: { gitignore?: boolean; root?: string }): Promise<string[]> {
-  const root = opts?.root ?? dir;
-  const ignorePatterns = Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`);
-
-  const matches = await glob("**/*", {
-    cwd: dir,
-    absolute: true,
-    dot: true,
-    onlyFiles: true,
-    ignore: ignorePatterns,
-  });
-
-  const absMatches = matches.map((p) => resolve(p));
-  if (opts?.gitignore === false) return absMatches;
-
-  const patterns = await loadGitIgnorePatterns(root);
-  const ig = ignore().add(patterns);
-
-  return absMatches.filter(abs => {
-    const rel = relative(root, abs).split(sep).join("/");
-    return !ig.ignores(rel);
-  });
-}
-
-export async function listTopLevel(root: string, opts?: { gitignore?: boolean }): Promise<{ name: string; abs: string; isDir: boolean }[]> {
-  const ignorePatterns = Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`);
-  const matches = await glob("*", {
-    cwd: root,
-    absolute: true,
-    dot: true,
-    onlyFiles: false,
-    ignore: ignorePatterns,
-  });
-
-  let absMatches = matches.map((p) => resolve(p));
-
-  if (opts?.gitignore !== false) {
-    const patterns = await loadGitIgnorePatterns(root);
-    const ig = ignore().add(patterns);
-    absMatches = absMatches.filter(abs => {
-      const rel = relative(root, abs).split(sep).join("/");
-      return !ig.ignores(rel);
-    });
-  }
-
-  const out = [];
-  for (const abs of absMatches) {
-    const s = await stat(abs);
-    out.push({ name: basename(abs), abs, isDir: s.isDirectory() });
-  }
-  return out;
-}
-
-export async function isPathIgnored(absPath: string, root: string): Promise<boolean> {
-  const base = basename(absPath);
-  if (DEFAULT_IGNORE_DIRS.has(base)) return true;
-
-  const rel = relative(root, absPath).split(sep).join("/");
-  const patterns = await loadGitIgnorePatterns(root);
-  const ig = ignore().add(patterns);
-
-  return ig.ignores(rel);
-}

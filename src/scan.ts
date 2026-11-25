@@ -6,7 +6,7 @@ import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
 import { getLL } from "./i18n";
 import { buildWorkspaceSnapshot, type WorkspaceSnapshot } from "./vfs/snapshot";
-import type { Issue, LintResult, Resolution } from "./types";
+import type { Issue, LintResult } from "./types";
 
 const DEFAULT_MAX_DEPTH = 4;
 
@@ -18,9 +18,7 @@ export type ScanRepoResult = {
     displayPath: string;
     message: string;
     severity: string;
-    resolution?: Resolution;
     reason?: string;
-    see?: string;
   }>;
   components?: Array<{ name: string; path: string[]; techs: string[] }>;
 };
@@ -160,9 +158,7 @@ async function scanOneRepo(opts: {
     displayPath: i.displayPath,
     message: formatIssueMessage(LL, i.message),
     severity: i.severity,
-    resolution: i.resolution,
     reason: i.reason?.[locale],
-    see: i.see,
   }));
 
   const components = opts.withSpecfy ? await detectSpecfyComponents(snapshot) : undefined;
@@ -221,8 +217,7 @@ export function formatScanText(result: ScanResult, LL: TranslationFunctions, loc
     }
     lines.push(`  ${t.issues({ count: repo.issues.length })}${repo.issues.length ? ":" : ""}`);
     for (const i of repo.issues.slice(0, 30)) {
-      const res = i.resolution ? `[${i.resolution}] ` : "";
-      lines.push(`    - ${res}${i.displayPath}: ${i.message}`);
+      lines.push(`    - [${i.severity}] ${i.displayPath}: ${i.message}`);
     }
     lines.push("");
   }

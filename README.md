@@ -27,7 +27,7 @@
 
 _/tʃoʊs/_
 
-Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous sniffs a repository for smells — rotten dependencies, tools that fight, leaked secrets, a cluttered root — and tells the agent what to change.
+Chous is an opinionated taste linter. AI editors invent folders, formatters, and test runners your project never asked for. Chous sniffs a repository for smells — rotten dependencies, runtimes past end of life, tools that fight, leaked secrets — and tells the agent what to change.
 
 There is no config, no preset and no plugin. The taste is the tool, like `gofmt`.
 
@@ -40,59 +40,52 @@ npx chous
 ### Output
 
 ```
-.
-├── ✖ .DS_Store                      → not allowed: OS junk, delete it and gitignore it
-├── ✖ .env                           → not allowed: secrets, gitignore it and commit .env.example instead
-├── ✖ notes.txt                      → not in allow list (1)
-├── ✖ package.json (git-hooks)       → git hooks: husky + simple-git-hooks at once, they fight over the same job, keep one
-├── ✖ package.json (moment)          → dependency moment is obsolete → dayjs / date-fns / Temporal
-├── ✖ package.json (node-fetch)      → dependency node-fetch is obsolete → fetch
-├── ✖ package.json (package-manager) → package manager: npm + yarn at once, they fight over the same job, keep one
-├── ✖ package.json (request)         → dependency request is obsolete → fetch
-├── ✖ package.json (tslint)          → dependency tslint is obsolete → ESLint / oxlint
-└── ✖ tslint.json                    → not allowed: leftover config of a dead tool
+✖ .env.local                     → not allowed: local env file that may hold secrets; Vite and Next.js say to gitignore *.local
+✖ package.json (git-hooks)       → git hooks: husky + simple-git-hooks at once, they fight over the same job, keep one
+✖ package.json (package-manager) → package manager: npm + yarn at once, they fight over the same job, keep one
+✖ package.json (request)         → dependency request is obsolete → fetch
+✖ package.json (Vue 2)           → Vue 2 reached end of life on 2023-12-31, more than two years ago → Vue 3
+✖ test/ + tests/                 → one thing under two names, keep one
+⚠ .nvmrc (Node 20)               → Node 20 reached end of life on 2026-04-30, no more security fixes → a supported LTS release
+⚠ package.json (rimraf)          → dependency rimraf is built in now → fs.rm(path, { recursive: true, force: true })
+⚠ package.json (type)            → add "type": "module" or "commonjs", Node recommends declaring it explicitly
 
-Taste: base · git · js
+Found 6 errors, 3 warnings
+
+Taste: base · js
 ```
 
-### The taste
+### What it checks
 
-Chous sniffs out smells, not fashions. A smell is something that is wrong today and will still be wrong in three years: a dead package, a file the platform made pointless, two tools fighting over the same job, a secret about to be committed. Chous never tells you which linter or bundler to pick — today's fresh tool is tomorrow's stale one.
+Chous sniffs out smells, not fashions. It judges only on what a project's own authors or platform have said, and only once it has happened — never on age, speed, implementation language, popularity or silence. Where files live is each ecosystem's own business: SQLite, React and Vue lay out their roots differently, and all of them are right.
 
-The tastes live in [`src/taste/`](src/taste) and stack up by what the project looks like:
+The checks live in [`src/taste/`](src/taste):
 
 | Taste | Applies when |
 | --- | --- |
 | `base` | always |
-| `git` · `github` | a git repository; `.github/workflows` |
 | `js` · `monorepo` · `bun` · `cloudflare` | `package.json`; workspace packages; Bun; a `wrangler` config |
-| `go` · `python` | `go.mod`; `pyproject.toml` and friends |
-| `nextjs` · `nuxt3` · `nuxt4` | the framework's config file |
 
-- **Rot, by facts only.** Something is judged only on what its own authors or platform have said and what has already happened — never on age, speed, implementation language or popularity, and never on silence:
+- **Rot, by facts only.**
 
   | State | Fact | Examples | Level |
   | --- | --- | --- | --- |
   | Redundant | The platform ships an equivalent | `node-fetch` → `fetch`, `rimraf` → `fs.rm` | warning |
-  | Expired | Its published end-of-life date has passed | Node 20, Nuxt 3 | warning |
-  | Rotten | End of life over two years ago; deprecated by its authors; sabotaged | Node 16, Python 2.7, Vue 2, `request`, `tslint`, `colors` | error |
+  | Expired | Its published end-of-life date has passed | Node 20, Nuxt 3, Python 3.10 | warning |
+  | Rotten | End of life over two years ago; deprecated by its authors; sabotaged | Node 16, Python 2.7, Vue 2, `request`, `babel-eslint`, `colors` | error |
 
-  End-of-life dates live in [`src/taste/eol.ts`](src/taste/eol.ts) and only ever list dates that have passed. Versions come from what the project runs on — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, a pinned `engines.node`, the `vue` / `nuxt` dependency. Expired turns into rotten on its own when two years are up; chous needs no update for that.
+  End-of-life dates live in [`src/taste/eol.ts`](src/taste/eol.ts), copied from each project's official schedule, and only ever list dates that have passed. Versions come from what the project runs on — `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, a pinned `engines.node`, the `vue` / `nuxt` dependency. Expired turns into rotten on its own when two years are up.
 - **Tools that fight.** Two package managers, two formatters, two git-hook managers or two release tools at once. Which one you keep is up to you.
-- **Leaks and junk.** `.env`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored; a git repo without `.gitignore`.
-- **A tidy root.** Root files are a whitelist: docs, licenses, config files (any JSON / TOML / YAML, `*.config.*`) and the usual folders. Stray notes and scripts are errors. Dotfiles are left alone.
-- **One name per concept.** `test/` or `tests/` or `spec/` — pick one, not two. Same for `scripts/` and `script/`. Workflows are kebab-case `.yml`.
-- **A declared module type.** Every package.json says `"type": "module"` or `"commonjs"`, as Node's docs recommend.
-- **Monorepos.** Every workspace package is linted as its own project with its own taste. The root is private and holds tooling only; one lockfile; one version per dependency; internal deps use `workspace:*`.
-- **Framework layouts.** Next.js App Router and Nuxt 3 / 4 directory and naming conventions.
+- **Duplicates.** One dependency on two major versions across a monorepo (installed twice); `test/` next to `tests/`; a lockfile inside a workspace package.
+- **Leaks.** `.env*.local`, `.dev.vars`, `.DS_Store`, `*.log` that are not gitignored.
+- **A declared module type.** Every package.json says `"type": "module"` or `"commonjs"`, as Node's docs recommend (a warning).
 
-Disagree? Fork it. That's the point.
+Chous runs clean on Vite and SQLite, and finds only real problems in React, Vue and Oxc.
 
 ### Commands
 
 ```bash
 npx chous                 # lint the current directory
-npx chous --fix           # apply safe fixes (renames, package.json edits)
 npx chous claude install  # run chous in Claude Code hooks
 npx chous cursor install  # run chous in Cursor hooks
 npx chous scan .          # find git repos, detect kinds / roles

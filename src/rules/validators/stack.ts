@@ -27,7 +27,6 @@ export class OneToolPerRoleValidator extends BaseRuleValidator<StackRule> {
         path: `${manifest.path}#stack:${role}`,
         displayPath: `package.json (${role})`,
         message: { key: "issue.stack.conflict", params: { role: roleLabel(role), tools: tools.join(" + ") } },
-        category: "forbidden",
         severity: "error",
       }));
     }
@@ -48,8 +47,7 @@ export class ExclusiveRuleValidator extends BaseRuleValidator<ExclusiveRule> {
       context.rawIssues.push(issueFromRule(rule, {
         path: `${context.root}#exclusive:${present.join("+")}`,
         displayPath: names,
-        message: { key: "issue.exclusive.conflict", params: { names } },
-        category: "forbidden",
+        message: { key: "issue.exclusive.conflict" },
         severity: "error",
       }));
     }

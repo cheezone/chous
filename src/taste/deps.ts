@@ -69,6 +69,7 @@ export const DEPRECATED: ObsoleteDep[] = [
   { names: ["request", "request-promise", "request-promise-native"], use: "fetch", why: { en: "request is deprecated since 2020.", zh: "request 2020 年起已废弃。" } },
   { names: ["moment"], use: "dayjs / date-fns / Temporal", why: { en: "Its maintainers call it a legacy project and discourage new use.", zh: "维护者称其为遗留项目，不建议新项目使用。" } },
   { names: ["node-sass"], use: "sass", why: { en: "Deprecated, LibSass is dead.", zh: "已废弃，LibSass 已停止维护。" } },
+  { names: ["babel-eslint"], use: "@babel/eslint-parser", why: { en: "Renamed by its authors; the old name gets no more updates.", zh: "作者已改名，旧包不再更新。" } },
   { names: ["tslint"], use: "ESLint / oxlint", why: { en: "Deprecated since 2019.", zh: "2019 年起已废弃。" } },
   { names: ["babel-polyfill", "@babel/polyfill"], use: "a modern runtime target", why: { en: "Deprecated.", zh: "已废弃。" } },
   { names: ["bower"], use: "npm / pnpm", why: { en: "Dead package manager.", zh: "已经死掉的包管理器。" } },

@@ -26,19 +26,13 @@ const FIGHTING_ROLES = ["package-manager", "formatter", "git-hooks", "release"];
 export function js(project: JsProject = {}) {
   const t = taste("js");
 
-  t.must(["package.json"]);
-  t.allow(["src", "test", "scripts", "public", "patches"]);
-  t.allow(["packages", "apps", "libs", "tools"]);
-  t.allow(["*.d.ts"], { reason: { en: "Root-level ambient type declarations", zh: "根目录的全局类型声明" } });
-
   // Node's own docs: always declare it, even for CommonJS packages.
   t.requireField("type", {
     en: '"module" or "commonjs", Node recommends declaring it explicitly',
     zh: '"module" 或 "commonjs"，Node 官方建议显式声明',
-  });
+  }, { severity: "warn" });
 
   // One name per concept. Which name is up to you; two of them is a mess.
-  t.allow(["tests", "__tests__", "spec", "specs", "script"]);
   t.oneOf(["test", "tests", "__tests__", "spec", "specs"]);
   t.oneOf(["scripts", "script"]);
 
@@ -58,11 +52,10 @@ export function js(project: JsProject = {}) {
   return t.rules;
 }
 
-/** Monorepo root: tooling only, one version of everything. */
+/** Monorepo root: never published, one major version of everything. */
 export function monorepo(pnpm: boolean) {
   const t = taste("monorepo");
   t.field("private", true, { reason: { en: "a workspace root is never published", zh: "工作区根目录永远不发布" } });
-  t.noField("dependencies", { en: "the workspace root holds tooling only, move runtime dependencies into a package", zh: "工作区根目录只放工具，运行时依赖移到具体的包里" });
   if (pnpm) {
     t.noField("workspaces", { en: "pnpm never reads it, packages are listed in pnpm-workspace.yaml", zh: "pnpm 不读这个字段，包列表写在 pnpm-workspace.yaml" });
   }

@@ -57,13 +57,6 @@ describe("workspace lint", () => {
     expect(r.stdout).toContain("workspace packages: 2");
   });
 
-  it("flags stray files inside a package without requiring root tooling there", () => {
-    const r = runCli(["--no-color", "-l", "en", "-v"], FAIL);
-    expect(r.code).not.toBe(0);
-    expect(r.stdout).toMatch(/packages\/core\/stray\.xyz/);
-    expect(r.stdout).not.toMatch(/packages\/core\/.*eslint\.config/);
-    expect(r.stdout).toContain("workspace packages: 1");
-  });
 
   it("does not treat nested source dirs as packages under packages/**", () => {
     const dir = mkdtempSync(join(PROJECT_ROOT, "test", "tmp-pnpm-nested-"));

@@ -26,38 +26,26 @@ function fixtures(kind: "pass" | "fail"): string[] {
 
 /** What each failing fixture must report — failing for the wrong reason is a bug. */
 const EXPECTED: Record<string, string[]> = {
-  basic: ["forbidden.md"],
   bun: [
     "bun.lockb → not allowed: binary lockfile",
     "dependency bun-types is obsolete → @types/bun",
     "dependency tsx is obsolete → bun",
   ],
   cloudflare: [".dev.vars → not allowed: Worker secrets"],
-  garbage: [
-    "dependency moment is obsolete → dayjs",
-    "dependency node-sass is obsolete → sass",
-  ],
   eol: [
     ".nvmrc (Node 16) → Node 16 reached end of life on 2023-09-11",
     "Dockerfile (Python 2.7) → Python 2.7 reached end of life on 2020-01-01",
     "package.json (Vue 2) → Vue 2 reached end of life on 2023-12-31",
   ],
-  github: ["Release.yaml → not in allow list"],
-  go: ["MyApp → should be snake_case"],
-  js: ["test/ + tests/ at once, they mean the same thing", 'add "type": "module" or "commonjs"'],
-  monorepo: [
-    'remove "dependencies": the workspace root holds tooling only',
-    "vue has several versions (^3.4.0 in apps/web; ^3.5.0 in packages/ui)",
-    "depend on workspace package @demo/ui with workspace:* (found ^1.0.0)",
-    "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
-    "apps/web/app/components/header.vue → should be PascalCase",
+  garbage: [
+    "dependency moment is obsolete → dayjs",
+    "dependency node-sass is obsolete → sass",
   ],
-  nextjs: ["Button.tsx → not in allow list"],
-  nuxt3: ["button.vue → should be PascalCase"],
-  nuxt4: ["button.vue → should be PascalCase"],
-  "pnpm-workspace": ["stray.xyz → not in allow list"],
-  python: ["forbidden.md"],
-  "root-clutter": ["notes.txt → not in allow list"],
+  js: ["test/ + tests/ → one thing under two names"],
+  monorepo: [
+    "zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)",
+    "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
+  ],
   stack: [
     "package manager: npm + pnpm at once",
     "formatter: oxfmt + prettier at once",
@@ -85,7 +73,7 @@ describe("fixtures that break the taste", () => {
       const expected = EXPECTED[name];
       expect(expected, `add an EXPECTED entry for fail/${name}`).toBeDefined();
       // Verbose mode lists every finding once, flat. Each must be expected — nothing more.
-      const errors = r.stdout.split("\n").filter((line) => line.startsWith("  ✖ ")).map((line) => line.replace(/ +/g, " "));
+      const errors = r.stdout.split("\n").filter((line) => line.startsWith("✖ ")).map((line) => line.replace(/ +/g, " "));
       for (const text of expected!) expect(errors.some((line) => line.includes(text)), text).toBe(true);
       expect(errors, "unexpected findings").toHaveLength(expected!.length);
     });

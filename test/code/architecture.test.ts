@@ -1,16 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from "node:fs";
+import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
-import { compileRules } from "../../src/rules/compile";
 import { resolveTaste } from "../../src/taste";
-import { execFileSync } from "node:child_process";
 import { DEPRECATED, NATIVE, SABOTAGED } from "../../src/taste/deps";
 import { EOL, eolDate, lifecycleStatus } from "../../src/taste/eol";
 import { pinnedVersion } from "../../src/rules/validators/lifecycle";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
 import { lintWorkspace } from "../../src/rules/lint";
-import { applySafeFixes } from "../../src/rules/autofix";
 
 describe("taste resolution", () => {
   function project(files: Record<string, string>): string {
@@ -23,22 +20,15 @@ describe("taste resolution", () => {
     expect(resolveTaste(project({ "README.md": "" })).ids).toEqual(["base"]);
   });
 
-  it("stacks language and framework tastes", () => {
-    const root = project({
-      "package.json": JSON.stringify({ dependencies: { nuxt: "^3.12.0" } }),
-      "nuxt.config.ts": "",
-    });
-    expect(resolveTaste(root).ids).toEqual(["base", "js", "nuxt3"]);
-  });
-
-  it("defaults Nuxt to the latest major", () => {
-    const root = project({ "package.json": "{}", "nuxt.config.ts": "" });
-    expect(resolveTaste(root).ids).toEqual(["base", "js", "nuxt4"]);
+  it("stacks the JavaScript tastes", () => {
+    expect(resolveTaste(project({ "package.json": "{}" })).ids).toEqual(["base", "js"]);
+    expect(resolveTaste(project({ "package.json": "{}", "bun.lock": "" })).ids).toEqual(["base", "js", "bun"]);
+    expect(resolveTaste(project({ "package.json": "{}", "wrangler.jsonc": "{}" })).ids).toEqual(["base", "js", "cloudflare"]);
   });
 
   it("tags every rule with the taste that produced it", () => {
-    const { rules } = resolveTaste(project({ "go.mod": "module x\n" }));
-    expect(new Set(rules.map((r) => r.source.taste))).toEqual(new Set(["base", "go"]));
+    const { rules } = resolveTaste(project({ "package.json": "{}" }));
+    expect(new Set(rules.map((r) => r.source.taste))).toEqual(new Set(["base", "js"]));
   });
 });
 
@@ -61,31 +51,6 @@ describe("VFS snapshot", () => {
   });
 });
 
-describe("git", () => {
-  function repo(files: Record<string, string> = {}): string {
-    const dir = mkdtempSync(join(tmpdir(), "chous-git-"));
-    execFileSync("git", ["init", "-q"], { cwd: dir });
-    for (const [name, content] of Object.entries(files)) {
-      mkdirSync(join(dir, name, ".."), { recursive: true });
-      writeFileSync(join(dir, name), content, "utf8");
-    }
-    return dir;
-  }
-
-  it("applies the git taste to a repository root", () => {
-    expect(resolveTaste(repo()).ids).toEqual(["base", "git"]);
-  });
-
-  it("applies the GitHub taste when there are workflows", () => {
-    expect(resolveTaste(repo({ ".github/workflows/ci.yml": "" })).ids).toEqual(["base", "git", "github"]);
-  });
-
-  it("requires a .gitignore", async () => {
-    const result = await lintWorkspace({ root: repo({ "README.md": "" }) });
-    expect(result.issues.map((i) => `${i.displayPath} ${i.message.key}`)).toContain(".gitignore issue.has.mustExist");
-  });
-});
-
 describe("end of life", () => {
   it("reads the version a project actually runs on", () => {
     expect(pinnedVersion("v16.20.0")).toBe("16.20");
@@ -100,8 +65,9 @@ describe("end of life", () => {
     expect(eolDate("node", "18")).toBe("2025-04-30");
     expect(eolDate("node", "8")).toBe("2021-04-30");
     expect(eolDate("node", "22")).toBeUndefined();
-    expect(eolDate("python", "3.6")).toBe("2023-06-27");
-    expect(eolDate("python", "3.10")).toBeUndefined();
+    expect(eolDate("python", "3.6")).toBe("2021-12-23");
+    expect(eolDate("python", "3.10")).toBe("2026-10-01");
+    expect(eolDate("python", "3.11")).toBeUndefined();
     expect(eolDate("nuxt", "3")).toBe("2026-07-31");
   });
 
@@ -137,49 +103,15 @@ describe("obsolete dependency list", () => {
 
 });
 
-describe("rule compiler", () => {
-  it("folds allow into a strict root whitelist", () => {
-    const source = { taste: "test" };
-    const compiled = compileRules(
-      [
-        { kind: "inDirOnly", dir: ".", only: [], mode: "strict", source },
-        { kind: "allow", names: ["LICENSE*", "README.md"], source },
-      ],
-      { packages: [], tool: "root" },
-    );
-    const rootGroup = compiled.inDirGroups.get(".")!;
-    expect(rootGroup.some((r) => r.mode === "permissive" && r.only.includes("README.md"))).toBe(true);
-    expect(rootGroup.some((r) => r.mode === "strict")).toBe(true);
-  });
-
-});
-
-describe("safe autofix", () => {
-  it("renames files when destination is free", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "chous-fix-"));
-    writeFileSync(join(dir, "a.spec.ts"), "export {}", "utf8");
-    const from = join(dir, "a.spec.ts");
-    const to = join(dir, "a.test.ts");
-    const result = await applySafeFixes([
-      {
-        ruleKind: "renameGlob",
-        ruleSource: { taste: "test" },
-        path: from,
-        displayPath: "a.spec.ts",
-        message: { key: "issue.renameGlob.shouldRenameTo", params: { to: "a.test.ts" } },
-        category: "forbidden",
-        severity: "error",
-        fix: { type: "rename", fromPath: from, toPath: to },
-      },
-    ]);
-    expect(result.applied).toBe(1);
-    expect(existsSync(to)).toBe(true);
-    expect(existsSync(from)).toBe(false);
-  });
-
-});
-
 describe("lint pipeline integration", () => {
+  it("lets a committed .env be, as Vite and Next.js document, but not .env.local", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-env-"));
+    writeFileSync(join(dir, ".env"), "PUBLIC_URL=/\n", "utf8");
+    expect((await lintWorkspace({ root: dir })).issues).toEqual([]);
+    writeFileSync(join(dir, ".env.production.local"), "SECRET=1\n", "utf8");
+    expect((await lintWorkspace({ root: dir })).issues.map((i) => i.displayPath)).toEqual([".env.production.local"]);
+  });
+
   it("lets one test directory be, whatever its name, but not two", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-lint-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module" }), "utf8");
@@ -191,7 +123,7 @@ describe("lint pipeline integration", () => {
     writeFileSync(join(dir, "test", "b.test.ts"), "", "utf8");
     const result = await lintWorkspace({ root: dir });
     expect(result.issues.map((i) => i.message)).toEqual([
-      { key: "issue.exclusive.conflict", params: { names: "test/ + tests/" } },
+      { key: "issue.exclusive.conflict" },
     ]);
     expect(result.issues[0]?.ruleSource.taste).toBe("js");
   });

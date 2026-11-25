@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 import { checkWorkspaces } from "./agents/core";
 import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
-import { applySafeFixes } from "./rules/autofix";
 import { renderReport } from "./rules/report";
 import { createColorizer } from "./color";
 import { getLL, isLocale, locales, type TranslationFunctions } from "./i18n";
@@ -28,7 +27,6 @@ type CliOptions = {
   lang?: string;
   color: boolean;
   help: boolean;
-  fix: boolean;
   failOnWarnings: boolean;
   ignoreWarnings: boolean;
   /** File paths from lint-staged or similar tools. */
@@ -58,7 +56,6 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     verbose: false,
     color: Boolean(process.stdout.isTTY) && process.env.NO_COLOR == null,
     help: false,
-    fix: false,
     failOnWarnings: false,
     ignoreWarnings: false,
   };
@@ -82,7 +79,6 @@ function parseArgs(argv: string[], LL: TranslationFunctions): CliOptions {
     else if (a === "--json") opts.json = true;
     else if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
-    else if (a === "--fix") opts.fix = true;
     else if (a === "--fail-on-warnings") opts.failOnWarnings = true;
     else if (a === "--ignore-warnings") opts.ignoreWarnings = true;
     else if (a === "--no-color") opts.color = false;
@@ -120,7 +116,6 @@ ${String(h.commands())}
   claude install       ${String(h.installClaudeHookDesc())}
 
 ${String(h.options())}
-  --fix                ${String(h.fixHint())}
   -v, --verbose        ${String(h.verboseHint())}
   -l, --lang <code>    ${String(h.langHint())}
   --fail-on-warnings   ${String(h.failOnWarningsHint())}
@@ -235,10 +230,6 @@ async function runLint(opts: CliOptions, LL: TranslationFunctions): Promise<numb
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
   let result = await lintWorkspace({ root: opts.cwd, relevantDirs });
 
-  if (opts.fix && result.issues.some((i) => i.fix)) {
-    const fixed = await applySafeFixes(result.issues);
-    result = { ...result, issues: fixed.remaining, fixedCount: fixed.applied };
-  }
   if (opts.ignoreWarnings) {
     result = { ...result, issues: result.issues.filter((i) => i.severity === "error") };
   }
@@ -248,8 +239,6 @@ async function runLint(opts: CliOptions, LL: TranslationFunctions): Promise<numb
       verbose: opts.verbose,
       color: createColorizer({ enabled: opts.color }),
       LL,
-      showHeader: true,
-      showMeta: true,
       version: VERSION,
     }) + "\n",
   );

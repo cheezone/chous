@@ -2,17 +2,13 @@ import { isAbsolute, relative, resolve, sep } from "node:path";
 import { getLL } from "../i18n";
 import { lintWorkspace } from "../rules/lint";
 import { formatIssueMessage } from "../rules/report";
-import type { Resolution, SafeFix } from "../types";
 
 export type AgentIssue = {
   root: string;
   displayPath: string;
   message: string;
-  severity?: "error" | "warn";
+  severity: "error" | "warn";
   reason?: string;
-  fixSummary?: string;
-  resolution?: Resolution;
-  see?: string;
 };
 
 export type AgentCheckResult = {
@@ -60,6 +56,7 @@ export async function checkWorkspaces(opts: {
   const issues: AgentIssue[] = [];
   const relevantDirs = opts.editedFile ? relevantDirsFor(opts.editedFile, opts.workspaceRoots) : undefined;
 
+  const { locale } = getLL(opts.lang);
   for (const root of opts.workspaceRoots) {
     const result = await lintWorkspace({ root, relevantDirs });
     for (const issue of result.issues) {
@@ -68,10 +65,7 @@ export async function checkWorkspaces(opts: {
         displayPath: issue.displayPath,
         message: formatIssueMessage(LL, issue.message),
         severity: issue.severity,
-        reason: issue.reason?.[getLL(opts.lang).locale],
-        fixSummary: issue.fix ? describeFix(issue.fix) : undefined,
-        resolution: issue.resolution ?? (issue.fix ? "auto" : "agent"),
-        see: issue.see,
+        reason: issue.reason?.[locale],
       });
     }
   }
@@ -79,57 +73,25 @@ export async function checkWorkspaces(opts: {
   return { issues, summary: formatAgentSummary(opts.lang, issues) };
 }
 
-function describeFix(fix: SafeFix): string {
-  switch (fix.type) {
-    case "rename":
-      return `rename ${fix.fromPath} → ${fix.toPath}`;
-  }
-}
-
-function formatIssueBlock(
-  LL: ReturnType<typeof getLL>["LL"],
-  issues: AgentIssue[],
-): string[] {
+function formatIssueBlock(LL: ReturnType<typeof getLL>["LL"], issues: AgentIssue[]): string[] {
   const lines: string[] = [];
   for (const issue of issues) {
-    const sev = issue.severity ? `[${issue.severity}] ` : "";
-    lines.push(`- ${sev}${issue.displayPath}: ${issue.message}`);
-    if (issue.reason) lines.push(`  ${String(LL.agent.reason({ reason: issue.reason }))}`);
-    if (issue.see) lines.push(`  ${String(LL.agent.see({ url: issue.see }))}`);
-    if (issue.fixSummary) lines.push(`  ${String(LL.agent.fixHint({ fix: issue.fixSummary }))}`);
+    lines.push(`- ${issue.displayPath}: ${issue.message}`);
+    if (issue.reason) lines.push(`  ${LL.agent.reason({ reason: issue.reason })}`);
   }
   return lines;
 }
 
 export function formatAgentSummary(lang: string, issues: AgentIssue[]): string {
   const { LL } = getLL(lang);
-  const lines = [String(LL.agent.intro()), ""];
-
+  const lines = [LL.agent.intro(), ""];
   const limited = issues.slice(0, SUMMARY_ISSUE_LIMIT);
-  const auto = limited.filter((i) => i.resolution === "auto");
-  const agent = limited.filter((i) => i.resolution === "agent" || !i.resolution);
-  const info = limited.filter((i) => i.resolution === "info");
+  const errors = limited.filter((i) => i.severity === "error");
+  const warnings = limited.filter((i) => i.severity === "warn");
 
-  if (auto.length) {
-    lines.push(String(LL.agent.autoSection()));
-    lines.push(...formatIssueBlock(LL, auto));
-    lines.push("");
-  }
-  if (agent.length) {
-    lines.push(String(LL.agent.agentSection()));
-    lines.push(...formatIssueBlock(LL, agent));
-    lines.push("");
-  }
-  if (info.length) {
-    lines.push(String(LL.agent.infoSection()));
-    lines.push(...formatIssueBlock(LL, info));
-    lines.push("");
-  }
-
-  if (issues.length > SUMMARY_ISSUE_LIMIT) {
-    lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`);
-    lines.push("");
-  }
-  lines.push(String(LL.agent.fix()));
+  if (errors.length) lines.push(LL.agent.errorsSection(), ...formatIssueBlock(LL, errors), "");
+  if (warnings.length) lines.push(LL.agent.warningsSection(), ...formatIssueBlock(LL, warnings), "");
+  if (issues.length > SUMMARY_ISSUE_LIMIT) lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`, "");
+  lines.push(LL.agent.fix());
   return lines.join("\n");
 }

@@ -17,8 +17,7 @@ const en = {
 			installClaudeHookDesc: 'Install Claude Code hooks for automatic linting',
 			options: 'Options:',
 			langHint: 'Set output language (default: auto)',
-			verboseHint: 'Show full filesystem tree',
-			fixHint: 'Apply safe automatic fixes',
+			verboseHint: 'List every finding, with the reason behind it',
 			failOnWarningsHint: 'Exit with error if there are warnings',
 			ignoreWarningsHint: 'Report errors only (hide warnings)',
 			noColorHint: 'Disable colored output',
@@ -45,8 +44,6 @@ const en = {
 	},
 	meta: {
 		taste: 'Taste: {names}',
-		lang: 'Language: English',
-		mode: 'Mode: {mode}',
 		performance: 'Scanned {fileCount} files in {duration}ms',
 		workspacePackages: 'workspace packages: {count}',
 	},
@@ -54,82 +51,24 @@ const en = {
 		intro: 'chous found problems with files and dependencies.',
 		fix: 'Fix the issues below, then run `chous --verbose` and confirm they are gone. Do not claim they are fixed before that command reports no issues.',
 		reason: 'Why: {reason}',
-		fixHint: 'Safe fix: {fix}',
-		see: 'See: {url}',
-		autoSection: 'Safe to run `chous --fix`:',
-		agentSection: 'Needs you (or an agent) to migrate:',
-		infoSection: 'FYI:',
-	},
-	mode: {
-		concise: 'concise',
-		verbose: 'verbose',
+		errorsSection: 'Must fix:',
+		warningsSection: 'Worth fixing:',
 	},
 	report: {
-		foundIssues: 'Found {count} issues',
-		foundErrorsAndWarnings: 'Found {errors} errors, {warnings} warnings',
-		foundIssuesWithHint: 'Found {count} issues (add `--verbose` flag for details)',
+		found: 'Found {errors} errors, {warnings} warnings',
 		noIssues: 'No issues found',
-		fixable: '[fixable]',
+		moreHidden: '… and {count} more (add --verbose to see all)',
 		reason: '({reason})',
-		fixedCount: 'Auto-fixed {count} issue(s)',
 		arrow: '→',
-		foundRequiredDir: 'found required directory: {dir}',
-		foundRequiredFile: 'found required file: {name}',
-		missingRequiredDir: 'missing required directory: {dir}',
-		ellipsis: '...',
-		workspace: 'workspace: {root}',
-		whitelist: 'Whitelist',
-		blacklist: 'Blacklist',
-		listSep: ', ',
-		andMoreItems: 'and {count} more items',
 	},
 	issue: {
-		move: {
-			shouldMoveToDir: 'should be moved to {dir}',
-			destDirMustExist: 'required directory missing (for move {from} to {toDir})',
-			destMustBeDir: 'target must be a directory (for move {from} to {toDir})',
-			unsafeManual: 'should be moved to {dir} (manual action required)',
-		},
-		thoseOnly: {
-			forbiddenOnlyAllowed: 'not in allow list',
-			forbiddenTooMany: 'not in allow list',
-		},
-		renameDir: {
-			shouldRenameTo: 'should be renamed to {to}',
-			shouldMigrateTo: 'should be migrated to {to} (target exists)',
-			removeEmptyDir: '{dir} is empty and can be removed (target {to} exists)',
-		},
-		renameGlob: {
-			shouldRenameTo: 'should be renamed to {to}',
-			targetExistsManual: 'should be renamed to {to} (target exists)',
-			cannotInferTarget: 'should be renamed (cannot infer target)',
-		},
-		inDirOnly: {
-			dirMustExist: 'directory must exist (only {only})',
-			forbiddenOnlyAllowed: 'not in allow list ({dir} allows only {only})',
-			forbiddenTooMany: 'not in allow list',
-		},
 		no: {
-			forbidden: 'hit blacklist ({name})',
 			because: 'not allowed: {reason}',
-		},
-		has: {
-			mustExist: 'file not found (required: {name})',
 		},
 		deps: {
 			forbidden: 'dependency {name} is not allowed',
 			obsolete: 'dependency {name} is obsolete → {use}',
 			native: 'dependency {name} is built in now → {use}',
-		},
-		lifecycle: {
-			expired: '{name} reached end of life on {date}, no more security fixes → {use}',
-			rotten: '{name} reached end of life on {date}, more than two years ago → {use}',
-		},
-		exclusive: {
-			conflict: '{names} at once, they mean the same thing, keep one',
-		},
-		stack: {
-			conflict: '{role}: {tools} at once, they fight over the same job, keep one',
 		},
 		manifest: {
 			expected: '"{field}" should be {expected}',
@@ -137,17 +76,17 @@ const en = {
 			missing: 'add "{field}": {reason}',
 		},
 		workspace: {
-			drift: '{name} has several versions ({versions}), pick one or use a pnpm catalog',
-			protocol: 'depend on workspace package {name} with workspace:* (found {spec})',
+			drift: '{name} is on several major versions ({versions}), so it gets installed twice',
 		},
-		merged: {
-			notInAllowList: 'not in allow list ({labels})',
-			inBlockList: 'hit blacklist ({labels})',
+		lifecycle: {
+			expired: '{name} reached end of life on {date}, no more security fixes → {use}',
+			rotten: '{name} reached end of life on {date}, more than two years ago → {use}',
 		},
-		naming: {
-			invalid: 'should be {style}',
-			invalidPrefix: 'prefix should be {pattern}',
-			invalidSuffix: 'suffix should be {pattern}',
+		exclusive: {
+			conflict: 'one thing under two names, keep one',
+		},
+		stack: {
+			conflict: '{role}: {tools} at once, they fight over the same job, keep one',
 		},
 	},
 } as const

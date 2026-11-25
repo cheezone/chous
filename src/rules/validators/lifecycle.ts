@@ -88,7 +88,6 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
         path: `${resolve(context.root, file)}#eol:${product}`,
         displayPath: `${file} (${name})`,
         message: { key: status === "rotten" ? "issue.lifecycle.rotten" : "issue.lifecycle.expired", params: { name, date: date!, use } },
-        category: "forbidden",
         severity: status === "rotten" ? "error" : "warn",
       }));
     }

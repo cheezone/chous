@@ -1,10 +1,10 @@
 # Samples
 
-Real projects, used to see what chous's taste says about real repositories. Most of them do not share the taste; `test/code/samples.test.ts` locks in what chous reports for each.
+Real projects. None of them is rotten, and chous must say so: `test/code/samples.test.ts` fails if chous ever reports an error on them. Warnings (a missing `"type"`, a dependency the platform now ships) are fine.
 
-| Project | Source | Verdict |
-| --- | --- | --- |
-| `project-layout` | golang-standards/project-layout | Passes |
-| `nuxt.com` | nuxt/nuxt.com | Passes |
-| `ai-chatbot` | vercel/ai-chatbot | Declare `"type"`; replace `dotenv` with the native API |
-| `pythondotorg` | python/pythondotorg | Cluttered root |
+| Project | Source |
+| --- | --- |
+| `project-layout` | golang-standards/project-layout |
+| `nuxt.com` | nuxt/nuxt.com |
+| `ai-chatbot` | vercel/ai-chatbot |
+| `pythondotorg` | python/pythondotorg |

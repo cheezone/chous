@@ -20,30 +20,17 @@ function runCli(cwd: string) {
  * these lock in what chous says about them.
  */
 describe("real-world samples", () => {
-  it("project-layout follows the Go layout", () => {
-    const r = runCli(resolve(SAMPLES, "project-layout"));
-    if (r.code !== 0) console.log(r.stdout, r.stderr);
-    expect(r.code).toBe(0);
-  });
+  for (const name of ["project-layout", "nuxt.com", "pythondotorg", "ai-chatbot"]) {
+    it(`${name} has nothing rotten`, () => {
+      const r = runCli(resolve(SAMPLES, name));
+      if (r.code !== 0) console.log(r.stdout, r.stderr);
+      expect(r.code).toBe(0);
+    });
+  }
 
-  it("nuxt.com has nothing rotten", () => {
-    const r = runCli(resolve(SAMPLES, "nuxt.com"));
-    if (r.code !== 0) console.log(r.stdout, r.stderr);
-    expect(r.code).toBe(0);
-    expect(r.stdout).toContain("Taste: base · github · js · nuxt4");
-  });
-
-  it("ai-chatbot is told to declare its module type and drop dotenv", () => {
+  it("ai-chatbot still hears about what the platform ships", () => {
     const r = runCli(resolve(SAMPLES, "ai-chatbot"));
-    expect(r.code).toBe(1);
-    expect(r.stdout).toContain("Taste: base · github · js · nextjs");
-    expect(r.stdout).toContain('add "type"');
     expect(r.stdout).toContain("dependency dotenv is built in now → process.loadEnvFile()");
-  });
-
-  it("pythondotorg is flagged for root clutter", () => {
-    const r = runCli(resolve(SAMPLES, "pythondotorg"));
-    expect(r.code).toBe(1);
-    expect(r.stdout).toContain("banners → not in allow list");
+    expect(r.stdout).toContain('add "type"');
   });
 });
