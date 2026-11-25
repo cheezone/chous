@@ -136,6 +136,13 @@ export default {
       mypyConfigs: "never read: mypy takes one config per directory, here {{used}}, and does not merge",
       tsconfigDeprecated: "deprecated in TypeScript 6 and unsupported in 7: {{options}}",
       nodeVersions: "Node pinned twice, to different versions: {{versions}}",
+      vitestWorkspace: "a Vitest workspace file: deprecated since Vitest 3.2, replaced by the projects option",
+      viteConfigs: "never read: Vite takes the first config it finds, here {{used}}",
+      oxlintConfigs: "Oxlint allows one config per directory, and this one has several: {{files}}",
+      cargoConfigs: "never read: with {{used}} beside it, Cargo uses the file without the extension",
+      cargoAuthors: "{{count}} Cargo.toml files set authors in [package], a field Cargo has deprecated",
+      cargoReplace: "[replace] is deprecated in Cargo; use [patch]",
+      poetryFields: "fields Poetry deprecated in [tool.poetry]: {{fields}}; move them to the standard [project] table",
     },
     twins: {
       case: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
@@ -149,6 +156,7 @@ export default {
     },
     lifecycle: {
       ended: "{{name}} reached end of life on {{date}} → {{use}}",
+      unsupported: "{{name}} is no longer supported, by its makers' own word → {{use}}",
       declared: "engines.node allows only {{versions}}, all past end of life (the last on {{date}}) → {{use}}",
     },
     stack: {
@@ -221,6 +229,9 @@ export default {
     faker: "Its author deleted the package in January 2022; the community fork lives on.",
   },
   eol: {
+    electron: "one of the three latest stable Electron releases",
+    django: "a supported Django release",
+    angular: "a supported Angular release",
     eslint: "a supported ESLint release",
     node: "a supported LTS release",
     python: "a supported Python 3 release",

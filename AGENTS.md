@@ -12,7 +12,7 @@
   - `review`：事实确定，含义需要上下文（用途、意图）。交给人或 agent 判断，不影响退出码。
   - 这是「chous 知道多少」，不是严重程度。**只凭文件名的猜测永远只能是 review**（工作日志、一次性脚本、找不到原件的备份）；要成为 smell 必须有事实（原件就在旁边、文件内容是 OS 写的、工具写下的标记文件）。
 - **事实错了才是误报，审美不同不是。** 知名项目也会被报，那不是误报；**不为迁就任何项目加豁免**。只维护两种名单：官方位置约定（`ROOT_CONTRACT_DOCS`、框架约定、`NAME_EXEMPT` 里工具起的名字），和已经发生、可核实的历史事实（`eol.ts`、`deps.ts`）。
-- 腐烂没有宽限期：停止维护那天起就是 smell（`hasEnded`）。`eol.ts` 只收官方数据里写着的版本（Node `schedule.json`、PEP `release-cycle.json`、Vue EOL 页、Nuxt 路线图），**表里没有的版本不报，从不推断日期**。`pnpm run sources` 逐个比对每个日期。
+- 腐烂没有宽限期：停止维护那天起就是 smell（`hasEnded`）。`eol.ts` 只收官方数据里写着的版本（Node `schedule.json`、PEP `release-cycle.json`、Vue EOL 页、Nuxt 路线图、ESLint version-support、Electron 发布时间表、Django 下载页、Angular 发布页；Angular 只说「不再支持」不给日期，`date: ""` 报 `issue.lifecycle.unsupported`），**表里没有的版本不报，从不推断日期**。`pnpm run sources` 逐个比对每个日期。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile `FROM`、`volta.node`、框架依赖）。`engines.node` 是兼容承诺：只有声明的范围全部停止维护才报（`issue.lifecycle.declared`），`>=16` 这种开放范围不报。
 - 「平台已自带」（`NATIVE`）是 review：平台自带了什么是事实，能否完全替代要看项目怎么用。
 - 根目录克制：除位置约定文档外最多 `ROOT_DOCS_LIMIT`（3）份文档。这是立场，不是测量。
@@ -20,7 +20,7 @@
 - 文件身份靠内容确认：OS 垃圾、`local.properties` 看文件内容（`KNOWN_BY_CONTENT`）；安装包（apk/ipa/msi/deb/rpm/AppImage，smell）和可执行文件/库（exe/dll/so/dylib，review，可能是构建输入，如 Android `jniLibs`）看文件头签名；构建产物目录必须有工具写下的标记文件。
 - 「作者宣布废弃」只认作者的原话（npm `deprecated` 字段、README、安全公告），登记在 `sources.ts`。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - **优先级：生态约定先于 AI 工具约定。** npm、Node、pnpm、Yarn、TypeScript、ESLint、Prettier、Python 工具的规定多年不变，最符合「三年后依然对」；AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研。
-- **工具契约**（`src/taste/contracts.ts`）：一张声明式的表，每条写明看哪些文件、检查什么、属于哪种品味；文案在 `issue.contract.<id>`，原话在 `sources.ts` 同名 key。只收工具官方文档里写明的位置、命名、上限和旧格式。覆盖哪些工具要先调研再定（用户量、是否还在维护、是否改名）：2026 年 Windsurf 已改名 Devin（`.windsurf*` 是 legacy）、Gemini CLI 只服务企业版（`GEMINI.md` 仍被读，不报）、Cursor 已被 SpaceX 收购（产品照常）。文件大小要现读（`statSync`），快照里的 `size` 恒为 0。
+- **工具契约**（`src/taste/contracts.ts`）：一张声明式的表，每条写明看哪些文件、检查什么、属于哪种品味；文案在 `issue.contract.<id>`，原话在 `sources.ts` 同名 key。只收工具官方文档里写明的位置、命名、上限和旧格式。覆盖哪些工具要先调研再定（用户量、是否还在维护、是否改名）：2026 年 Windsurf 已改名 Devin（`.windsurf*` 是 legacy）、Gemini CLI 只服务企业版（`GEMINI.md` 仍被读，不报）、Cursor 已被 SpaceX 收购（产品照常）。文件大小要现读（`statSync`），快照里的 `size` 恒为 0。调研过但没有可报的：Deno 仍在维护、配置没有废弃格式；esbuild 没有配置文件；Tauri v1 没有官方停止维护声明；Babel 的项目级和文件级配置会合并，同一目录两份同类配置 Babel 自己会报错，没有「静默只读一份」可报。一个仓库里每个包都重复的写法（Cargo 的 `authors`）用 `groupBy` 合并成一条并报数量。
 - 工具并存只说「一件事两个工具」，不声称它们会互相破坏（没验证过行为）。
 - `package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 一致时是必要的兼容重复，不报；不一致才是 smell。
 - 作用域：只有测试数据（`fixtures/`、`testdata/`、`__snapshots__/`）和 `vendor/`/`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 是项目自己的代码，照常检查。工作区里位于这些目录的包不检查。

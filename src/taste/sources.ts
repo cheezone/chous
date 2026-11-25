@@ -337,6 +337,22 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "however, note that TypeScript 7.0 will not support any of these deprecated options.",
     },
   ],
+  "issue.contract.vitestWorkspace": [
+    { url: "https://vitest.dev/guide/projects", check: `${GH}/vitest-dev/vitest/main/docs/guide/projects.md`, quote: "The workspace is deprecated since 3.2 and replaced with the projects configuration." },
+  ],
+  "issue.contract.viteConfigs": [
+    { url: "https://github.com/vitejs/vite/blob/main/packages/vite/src/node/constants.ts", check: `${GH}/vitejs/vite/main/packages/vite/src/node/constants.ts`, quote: "'vite.config.js', 'vite.config.mjs', 'vite.config.ts', 'vite.config.cjs', 'vite.config.mts', 'vite.config.cts'," },
+  ],
+  "issue.contract.oxlintConfigs": [
+    { url: "https://oxc.rs/docs/guide/usage/linter/config.html", quote: "You can use only one config file per directory: JSON and TypeScript configs cannot coexist" },
+  ],
+  "issue.contract.cargoConfigs": [{ url: "https://doc.rust-lang.org/cargo/reference/config.html", quote: "If both files exist, Cargo will use the file without the extension." }],
+  "issue.contract.cargoAuthors": [{ url: "https://doc.rust-lang.org/cargo/reference/manifest.html#the-authors-field", quote: "This field is deprecated." }],
+  "issue.contract.cargoReplace": [{ url: "https://doc.rust-lang.org/cargo/reference/manifest.html", quote: "Override dependencies (deprecated)." }],
+  "issue.contract.poetryFields": [
+    { url: "https://python-poetry.org/docs/pyproject/", check: `${GH}/python-poetry/poetry/main/docs/pyproject.md`, quote: "Deprecated: Use project.name instead." },
+    { url: "https://python-poetry.org/docs/pyproject/", check: `${GH}/python-poetry/poetry/main/docs/pyproject.md`, quote: "Deprecated: Use project.urls instead." },
+  ],
   "issue.twins.copy": [
     { url: "https://code.claude.com/docs/en/memory#agents-md", check: "https://code.claude.com/docs/en/memory.md", quote: "imports AGENTS.md" },
   ],

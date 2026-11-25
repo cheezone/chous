@@ -56,7 +56,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
     const cssLoadsConfig = () =>
       (cssConfig ??= files.some((e) => /\.(css|pcss|postcss)$/.test(e.name) && !NOT_OURS.test(e.relPath) && /@config\b/.test(read(e.absPath))));
 
-    const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; params: Record<string, string | number> }>();
+    const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; first: string; params: Record<string, string | number> }>();
     let hitCount = 0;
 
     for (const entry of files) {
@@ -84,7 +84,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
           const key = `${contract.id}:${contract.groupBy(rel)}`;
           const group = groups.get(key);
           if (group) group.count++;
-          else groups.set(key, { contract, count: 1, params });
+          else groups.set(key, { contract, count: 1, first: rel, params });
           continue;
         }
         hitCount++;
@@ -97,9 +97,10 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
       }
     }
 
-    for (const [key, { contract, count, params }] of groups) {
+    for (const [key, { contract, count, first, params }] of groups) {
       hitCount++;
-      const where = key.slice(contract.id.length + 1);
+      // One file names itself; several are named by what they share.
+      const where = count === 1 ? first : key.slice(contract.id.length + 1);
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(root, where)}#${contract.id}`,
         displayPath: where,

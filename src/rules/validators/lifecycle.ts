@@ -102,9 +102,16 @@ function findVersions(context: RuleValidatorContext): Found[] {
     }
     if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
-    for (const product of ["vue", "nuxt", "eslint"] as const) {
-      if (typeof deps[product] === "string") add(product, deps[product].split(".")[0], "package.json");
+    for (const [product, name] of [["vue", "vue"], ["nuxt", "nuxt"], ["eslint", "eslint"], ["electron", "electron"], ["angular", "@angular/core"]] as const) {
+      if (typeof deps[name] === "string") add(product, deps[name].split(".")[0], "package.json");
     }
+  }
+
+  // Django pinned to one release: `django==4.2.11`, `Django==4.2.*`, `django~=4.2.0` — not ranges.
+  for (const entry of snapshot.listDir(".")) {
+    if (entry.isDir || !/^(requirements[\w.-]*\.txt|pyproject\.toml|Pipfile)$/.test(entry.name)) continue;
+    const m = /(?:^|["'\s])django\s*(?:=\s*["'])?\s*(==|~=)\s*(\d+\.\d+)(\.\d+|\.\*)?/im.exec(read(entry.absPath));
+    if (m && (m[1] === "==" || m[3])) add("django", m[2], entry.name);
   }
   return found;
 }
@@ -126,7 +133,9 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(context.root, file)}#eol:${product}`,
         displayPath: `${file} (${name})`,
-        message: { key: "issue.lifecycle.ended", params: { name, date: date!, use: { t: `eol.${product}` } } },
+        message: date
+          ? { key: "issue.lifecycle.ended", params: { name, date, use: { t: `eol.${product}` } } }
+          : { key: "issue.lifecycle.unsupported", params: { name, use: { t: `eol.${product}` } } },
       }));
     }
 

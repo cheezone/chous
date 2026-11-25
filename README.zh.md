@@ -74,8 +74,8 @@ npx chous
 
 | 品味 | 臭味 | 待审视 |
 | --- | --- | --- |
-| 现代 | 停止维护的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；停止维护的 ESLint 版本；TypeScript 6 废弃的 tsconfig 选项；作者废弃、称为遗留或故意破坏的依赖；死掉的工具留下的配置；旧格式和旧位置（`.cursorrules`、`.windsurfrules`、`.clinerules/`、`.claude/commands/`、`.chatmode.md`、ESLint 9 起的 `.eslintrc`、`docker-compose.yml`、Compose 的 `version`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 平台已经自带同类能力的依赖 |
-| 秩序 | 同一目录里同一个工具的第二份配置（Prettier、ESLint、pytest、Ruff、mypy）；写了两遍又不一样的 Node 版本；一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；一件事两个工具；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
+| 现代 | 停止维护的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；停止维护的 ESLint、Electron、Django 版本；Angular 不再支持的大版本；TypeScript 6 废弃的 tsconfig 选项；作者废弃、称为遗留或故意破坏的依赖；死掉的工具留下的配置；旧格式和旧位置（`.cursorrules`、`.windsurfrules`、`.clinerules/`、`.claude/commands/`、`.chatmode.md`、ESLint 9 起的 `.eslintrc`、Vitest 3.2 起的 `vitest.workspace`、Cargo 的 `authors` 和 `[replace]`、该写进 `[project]` 的 `[tool.poetry]` 字段、`docker-compose.yml`、Compose 的 `version`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 平台已经自带同类能力的依赖 |
+| 秩序 | 同一目录里同一个工具的第二份配置（Prettier、ESLint、Vite、Oxlint、Cargo、pytest、Ruff、mypy）；写了两遍又不一样的 Node 版本；一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；一件事两个工具；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
 | 约定 | 包管理器不再读的文件和字段（npm 12 的 `npm-shrinkwrap.json`，pnpm 11 下 `.npmrc` 里的非认证设置和 `pnpm` 字段，Yarn 2 的 `.yarnrc`）；npm 不接受的包名；框架和工具根本不读的文件（Next.js 的 `src/app`、Nuxt 4 放在 `app/` 外的 `pages/`、不是 `.mdc` 的 Cursor 规则、`.github/workflows/` 外的工作流、Tailwind 4 不加载的 `tailwind.config`）；厂商给出的上限（AGENTS.md 超过 Codex 的 32 KiB、CLAUDE.md 超过 200 行、SKILL.md 超过 500 行、文件超过 GitHub 的 50 MiB）；不符合 Agent Skills 规范的 skill | |
 | 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；`.env*.local`、个人 IDE 和 agent 配置；旁边就有原件的备份；安装包（靠文件头识别） | 可执行文件和库；名字像工作日志的文档；没人提到的一次性脚本；找不到原件的备份；成批的版本说明和工作记录 |
 

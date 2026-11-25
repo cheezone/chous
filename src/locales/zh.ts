@@ -138,6 +138,13 @@ export default {
       mypyConfigs: "永远不会被读：mypy 每个目录只用一份配置，这里是 {{used}}，而且不合并",
       tsconfigDeprecated: "TypeScript 6 已废弃、7 不再支持：{{options}}",
       nodeVersions: "Node 版本写了两遍，而且不一样：{{versions}}",
+      vitestWorkspace: "Vitest 的 workspace 文件：自 Vitest 3.2 起已废弃，改用 projects 配置",
+      viteConfigs: "永远不会被读：Vite 只用找到的第一份配置，这里是 {{used}}",
+      oxlintConfigs: "Oxlint 规定每个目录只能有一份配置，这里有好几份：{{files}}",
+      cargoConfigs: "永远不会被读：旁边有 {{used}} 时，Cargo 用的是不带扩展名的那份",
+      cargoAuthors: "{{count}} 个 Cargo.toml 在 [package] 里写了 authors，这个字段 Cargo 已废弃",
+      cargoReplace: "[replace] 在 Cargo 里已废弃，改用 [patch]",
+      poetryFields: "Poetry 已废弃 [tool.poetry] 里的这些字段：{{fields}}；移到标准的 [project] 表",
     },
     twins: {
       case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
@@ -151,6 +158,7 @@ export default {
     },
     lifecycle: {
       ended: "{{name}} 已于 {{date}} 停止维护 → {{use}}",
+      unsupported: "官方已声明 {{name}} 不再受支持 → {{use}}",
       declared: "engines.node 只允许 {{versions}}，全都已停止维护（最晚一个于 {{date}}）→ {{use}}",
     },
     stack: {
@@ -223,6 +231,9 @@ export default {
     faker: "作者在 2022 年 1 月删掉了这个包；社区分支还在维护。",
   },
   eol: {
+    electron: "最新的三个稳定版 Electron 之一",
+    django: "仍受支持的 Django 版本",
+    angular: "仍受支持的 Angular 版本",
     eslint: "仍在维护的 ESLint 版本",
     node: "仍在维护的 LTS 版本",
     python: "仍在维护的 Python 3 版本",

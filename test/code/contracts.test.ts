@@ -75,10 +75,10 @@ describe("agent instruction contracts", () => {
       }),
     ).toEqual([
       "chatmode .github/chatmodes/plan.chatmode.md",
-      "clinerules .clinerules/",
+      "clinerules .clinerules/one.md",
       "copilotAgentInfer .github/agents/review.agent.md",
       "copilotInstructionsName .github/instructions/vue.md",
-      "cursorRuleExtension .cursor/rules/",
+      "cursorRuleExtension .cursor/rules/role.md",
       "windsurfLegacy .windsurf/rules/",
       "windsurfLegacy .windsurfrules",
     ]);
@@ -192,5 +192,41 @@ describe("ecosystem contracts", () => {
         ".node-version": "22.11.0\n",
       }),
     ).toEqual(["nodeVersions .nvmrc", "tsconfigDeprecated tsconfig.json"]);
+  });
+});
+
+describe("Vite, Vitest, Oxc, Cargo and Poetry contracts", () => {
+  it("knows the files these tools no longer read, or read only one of", async () => {
+    expect(
+      await contracts({
+        "vitest.workspace.ts": "export default []",
+        "vite.config.js": "export default {}",
+        "vite.config.ts": "export default {}",
+        ".oxlintrc.json": "{}",
+        "oxlint.config.ts": "export default {}",
+        "crate/.cargo/config": "[build]",
+        "crate/.cargo/config.toml": "[build]",
+        "crate/Cargo.toml": '[package]\nname = "x"\nauthors = ["a"]\n\n[dependencies]\nauthors = "1"\n\n[replace]\n"foo:0.1.0" = { path = "foo" }\n',
+        "py/pyproject.toml": '[tool.poetry]\nname = "x"\nversion = "1.0.0"\n\n[tool.poetry.urls]\nDocs = "https://x"\n\n[tool.poetry.scripts]\nrun = "x:main"\n',
+      }),
+    ).toEqual([
+      "cargoAuthors crate/Cargo.toml",
+      "cargoConfigs crate/.cargo/config.toml",
+      "cargoReplace crate/Cargo.toml",
+      "oxlintConfigs .oxlintrc.json",
+      "poetryFields py/pyproject.toml",
+      "viteConfigs vite.config.ts",
+      "vitestWorkspace vitest.workspace.ts",
+    ]);
+  });
+
+  it("counts every crate that sets authors, inherited ones too, in one finding", async () => {
+    expect(
+      await contracts({
+        "a/Cargo.toml": '[package]\nname = "a"\nauthors.workspace = true\n',
+        "b/Cargo.toml": '[package]\nname = "b"\nauthors = ["x"]\n',
+        "c/Cargo.toml": '[package]\nname = "c"\nedition.workspace = true\n',
+      }),
+    ).toEqual(["cargoAuthors **/Cargo.toml"]);
   });
 });

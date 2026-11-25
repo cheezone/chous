@@ -105,6 +105,24 @@ describe("end of life", () => {
     expect(issues.map((i) => [i.displayPath, i.message.params?.date])).toEqual([["package.json (ESLint 8)", "2024-10-05"]]);
   });
 
+  it("knows Electron and Angular from dependencies, and a Django pinned in requirements", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-eol-more-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", private: true, dependencies: { "@angular/core": "^17.3.0" }, devDependencies: { electron: "^28.1.0" } }), "utf8");
+    writeFileSync(join(dir, "requirements.txt"), "Django==4.1.13\ndjangorestframework==3.14.0\n", "utf8");
+    const issues = (await lintWorkspace({ root: dir, today: "2026-11-25" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(issues.map((i) => [i.displayPath, i.message.key, i.message.params?.date])).toEqual([
+      ["package.json (Electron 28)", "issue.lifecycle.ended", "2024-06-10"],
+      ["package.json (Angular 17)", "issue.lifecycle.unsupported", undefined],
+      ["requirements.txt (Django 4.1)", "issue.lifecycle.ended", "2023-12-01"],
+    ]);
+  });
+
+  it("leaves a Django range alone", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-django-"));
+    writeFileSync(join(dir, "requirements.txt"), "Django>=4.1,<6\n", "utf8");
+    expect((await lintWorkspace({ root: dir, today: "2026-11-25" })).issues.filter((i) => i.ruleKind === "lifecycle")).toEqual([]);
+  });
+
   it("smells a framework the day after it ends", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-eol-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", dependencies: { nuxt: "^3.12.0" } }), "utf8");

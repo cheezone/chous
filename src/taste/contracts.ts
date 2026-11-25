@@ -82,7 +82,14 @@ export type ContractId =
   | "ruffConfigs"
   | "mypyConfigs"
   | "tsconfigDeprecated"
-  | "nodeVersions";
+  | "nodeVersions"
+  | "vitestWorkspace"
+  | "viteConfigs"
+  | "oxlintConfigs"
+  | "cargoConfigs"
+  | "cargoAuthors"
+  | "cargoReplace"
+  | "poetryFields";
 
 const KiB = 1024;
 const MiB = 1024 * KiB;
@@ -178,6 +185,25 @@ function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
   if (!text) return undefined;
   if (rel.endsWith(".tool-versions")) return major(/^(?:nodejs|node)\s+(\S+)/m.exec(text)?.[1]);
   return major(text.trim().split(/\r?\n/)[0]);
+}
+
+/** [tool.poetry] fields Poetry deprecated in favor of the standard [project] table. */
+// `scripts` is left out: only console and gui scripts moved to project.scripts; file scripts stay.
+const POETRY_DEPRECATED = ["name", "description", "license", "authors", "maintainers", "homepage", "repository", "documentation", "keywords", "extras", "plugins", "urls"];
+
+/** The keys set directly under a TOML table header, up to the next header. */
+export function tomlTableKeys(text: string, table: string): string[] {
+  const lines = text.split(/\r?\n/);
+  const start = lines.findIndex((l) => l.trim() === `[${table}]`);
+  if (start < 0) return [];
+  const keys: string[] = [];
+  for (const line of lines.slice(start + 1)) {
+    if (/^\s*\[/.test(line)) break;
+    // Dotted keys name their first part: `authors.workspace = true` sets authors.
+    const m = /^([A-Za-z0-9_-]+)(?:\s*\.\s*[A-Za-z0-9_-]+)*\s*=/.exec(line);
+    if (m) keys.push(m[1]!);
+  }
+  return keys;
 }
 
 const SKILL = /(^|\/)SKILL\.md$/;
@@ -584,6 +610,70 @@ export const CONTRACTS: Contract[] = [
       if (files[0] !== f.rel) return undefined; // report once, on the first
       const majors = files.map((p) => `${p}: ${nodeMajorIn(f, p)}`);
       return new Set(files.map((p) => nodeMajorIn(f, p))).size > 1 ? { versions: majors.join(", ") } : undefined;
+    },
+  },
+
+  // ── Vite, Vitest, Oxc ────────────────────────────────────────────
+  {
+    // Vitest: "The workspace is deprecated since 3.2 and replaced with the projects configuration."
+    id: "vitestWorkspace",
+    value: "modernity",
+    match: /(^|\/)vitest\.workspace\.(js|mjs|cjs|ts|mts|cts|json)$/,
+    check: () => ({}),
+  },
+  {
+    // Vite reads the first of DEFAULT_CONFIG_FILES it finds: .js, .mjs, .ts, .cjs, .mts, .cts.
+    id: "viteConfigs",
+    value: "order",
+    match: /(^|\/)vite\.config\.(js|mjs|ts|cjs|mts|cts)$/,
+    check: (f) => shadowed(f, ["js", "mjs", "ts", "cjs", "mts", "cts"].map((e) => [`vite.config.${e}`])),
+  },
+  {
+    // Oxlint: "You can use only one config file per directory".
+    id: "oxlintConfigs",
+    value: "order",
+    match: /(^|\/)(\.oxlintrc\.jsonc?|oxlint\.config\.m?ts)$/,
+    check: (f) => {
+      const all = [".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts", "oxlint.config.mts"].filter((n) => f.all.has(sibling(f, n)));
+      return all.length > 1 && all[0] === f.name ? { files: all.join(", ") } : undefined;
+    },
+  },
+
+  // ── Rust, Python packaging ───────────────────────────────────────
+  {
+    // Cargo: "If both files exist, Cargo will use the file without the extension."
+    id: "cargoConfigs",
+    value: "order",
+    match: /(^|\/)\.cargo\/config\.toml$/,
+    check: (f) => (f.all.has(sibling(f, "config")) ? { used: ".cargo/config" } : undefined),
+  },
+  {
+    // Cargo: the authors field — "This field is deprecated."
+    id: "cargoAuthors",
+    value: "modernity",
+    match: /(^|\/)Cargo\.toml$/,
+    // A workspace repeats the field in every crate: one finding, counted.
+    groupBy: () => "**/Cargo.toml",
+    check: (f) => (tomlTableKeys(f.text(), "package").includes("authors") ? {} : undefined),
+  },
+  {
+    // Cargo: "[replace] — Override dependencies (deprecated)."
+    id: "cargoReplace",
+    value: "modernity",
+    match: /(^|\/)Cargo\.toml$/,
+    check: (f) => (/^\[replace\]/m.test(f.text()) ? {} : undefined),
+  },
+  {
+    // Poetry: "Deprecated: Use project.<field> instead."
+    id: "poetryFields",
+    value: "modernity",
+    match: /(^|\/)pyproject\.toml$/,
+    check: (f) => {
+      const text = f.text();
+      const keys = tomlTableKeys(text, "tool.poetry").filter((k) => POETRY_DEPRECATED.includes(k));
+      const tables = POETRY_DEPRECATED.filter((k) => new RegExp(`^\\[tool\\.poetry\\.${k}\\]`, "m").test(text));
+      const all = [...new Set([...keys, ...tables])];
+      return all.length ? { fields: all.join(", ") } : undefined;
     },
   },
 ];

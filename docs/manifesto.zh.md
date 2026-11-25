@@ -11,7 +11,7 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 ### 现代
 
 - 停止维护的技术就是臭的，从停止维护那天起，没有宽限期。它还能跑，和臭不臭无关。
-- 作者宣布废弃的、作者故意破坏的、作者自己称为遗留（legacy）或维护模式的，都是臭的：TypeScript 6 废弃的 tsconfig 选项（`baseUrl`、`moduleResolution: "node"`……）、停止维护的 ESLint 版本、进入维护模式的 Vue CLI。
+- 作者宣布废弃的、作者故意破坏的、作者自己称为遗留（legacy）或维护模式的，都是臭的：TypeScript 6 废弃的 tsconfig 选项（`baseUrl`、`moduleResolution: "node"`……）、停止维护的 ESLint、Electron、Django 版本，Angular 官方不再支持的大版本，进入维护模式的 Vue CLI，Cargo 废弃的 `authors` 字段和 `[replace]`，Poetry 交给 `[project]` 的 `[tool.poetry]` 字段。
 - 健康的旧技术不臭。不追新，不搞技术鄙视链：慢、老、不时髦都不算臭，没人宣布的「没人维护」也不算。
 
 ### 秩序
@@ -23,7 +23,7 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 - 配置尽量集中，但不打破职责边界：一个工具的配置放一处，不同的工具各自一份。
 - 不平铺。一个目录里堆着几百个文件、一个文件塞进所有职责，都是没有组织。但数量本身证明不了什么，所以 chous 不按数量判，交给 agent 判断（见下文）。
 - 一种职责只用一个工具：两个包管理器、两个格式化工具、两套 git hooks、两个发版工具并存，是臭的。chous 不声称它们一定会互相破坏，只说一件事用了两个工具。
-- 一个目录里，同一个工具只放一份配置。Prettier、ESLint、pytest、Ruff、mypy 都按自己的优先级只读其中一份，其余的永远不会被读。
+- 一个目录里，同一个工具只放一份配置。Prettier、ESLint、Vite、Oxlint、pytest、Ruff、mypy 都按自己的优先级只读其中一份，其余的永远不会被读；Cargo 的 `.cargo/config` 和 `.cargo/config.toml` 同时存在时也只读后者。
 - 同一个事实只说一遍：一个依赖跨两个大版本、两份内容一模一样的说明文件、两份内容不一致的 workspace 列表、写了两遍又不一样的 Node 版本，都是臭的。
 - 文件数量和依赖数量本身不是臭味。
 
@@ -33,7 +33,7 @@ chous 检查一个仓库的品味：它整不整洁，有没有秩序，用的�
 - 官方给了明确限制的，照限制来：Codex 只读 AGENTS.md 的前 32 KiB，Claude Code 建议 CLAUDE.md 不超过 200 行，SKILL.md 不超过 500 行，GitHub 对超过 50 MiB 的文件发警告。
 - 包管理器规定了读什么，就照着写：npm 12 不再读 `npm-shrinkwrap.json`，pnpm 11 只从 `.npmrc` 读认证、不再读 `package.json` 的 `pnpm` 字段，Yarn 2 起只读 `.yarnrc.yml`；包名遵守 npm 的规则。
 - 工具规定了文件放在哪、叫什么、用什么格式，就照着放：Copilot 只读 `.github/instructions/` 里的 `*.instructions.md`，Cursor 只把 `.mdc` 当规则，GitHub Actions 只读 `.github/workflows/`。放错地方的文件永远不会被读。
-- 工具自己称为旧格式、旧位置的，就是臭的：`.claude/commands/`（已并入 skills）、`.windsurfrules` 和 `.windsurf/`（Devin 称为 legacy）、`.clinerules/`（Cline 称为旧布局）、`.chatmode.md`、`.eslintrc`（ESLint 9 起）、`docker-compose.yml` 和 Compose 的 `version` 字段。
+- 工具自己称为旧格式、旧位置的，就是臭的：`.claude/commands/`（已并入 skills）、`.windsurfrules` 和 `.windsurf/`（Devin 称为 legacy）、`.clinerules/`（Cline 称为旧布局）、`.chatmode.md`、`.eslintrc`（ESLint 9 起）、`vitest.workspace`（Vitest 3.2 起改用 `projects`）、`docker-compose.yml` 和 Compose 的 `version` 字段。
 - 允许兼容多个运行时，允许必要的重复：`package.json` 的 `workspaces` 和 `pnpm-workspace.yaml` 内容一致时，是为了让 npm、Yarn、Bun 也能读，不算臭；内容不一致才臭。
 - 约定以官方原文为准，每一条都附有来源。
 
@@ -91,7 +91,7 @@ chous 怎样确认事实：
 
 | 规则 | chous 知道的事实 | chous 的主张 | 品味 | 结果 |
 |---|---|---|---|---|
-| 停止维护的运行时、框架 | 实际运行的版本，以及官方数据里的停止维护日期 | 停止维护的就是臭的 | 现代 | 臭味 |
+| 停止维护的运行时、框架（Node、Python、Vue、Nuxt、ESLint、Electron、Django、Angular） | 实际运行的版本，以及官方数据里的停止维护日期；Angular 只说「不再支持」、没给日期的，照原话报 | 停止维护的就是臭的 | 现代 | 臭味 |
 | `engines.node` 只允许已停止维护的版本 | 声明的范围，以及其中每个版本的停止维护日期 | 不要只承诺支持已经死掉的版本 | 现代 | 臭味 |
 | 作者宣布废弃、称为遗留、故意破坏的依赖 | 依赖名，以及作者的公开原话（npm 的 deprecated 字段、README、安全公告） | 不在废弃的东西上继续建造 | 现代 | 臭味 |
 | 死掉的工具留下的配置（`tslint.json`、`.jscsrc`）、旧格式（`.cursorrules`、`bun.lockb`、Next.js 16 的 `middleware.ts`） | 文件存在，作者说过它已废弃或是旧格式 | 换成作者推荐的写法 | 现代 | 臭味 |
@@ -109,7 +109,8 @@ chous 怎样确认事实：
 | GitHub 的体积上限：超过 50 MiB 的文件、超过 500 KiB 的 README、3 MB 及以上的 CODEOWNERS | 文件大小，以及 GitHub 文档的原话 | 照平台的限制来 | 约定 | 臭味 |
 | 工具自己称为旧格式、旧位置的文件 | 文件存在，以及工具文档的原话 | 换成工具推荐的写法 | 现代 | 臭味 |
 | TypeScript 6 废弃的 tsconfig 选项 | tsconfig 的内容，以及 TypeScript 6.0 发布说明 | TypeScript 7 不再支持，现在就换 | 现代 | 臭味 |
-| 同一目录里同一个工具的第二份配置（Prettier、ESLint、pytest、Ruff、mypy） | 哪些配置文件存在，以及工具文档里的优先级 | 一个工具一份配置 | 秩序 | 臭味 |
+| Cargo 废弃的 `authors` 字段（同一仓库合并成一条，报出数量）和 `[replace]`、Poetry 已交给 `[project]` 的字段 | 清单的内容，以及 Cargo、Poetry 文档的原话 | 换成工具推荐的写法 | 现代 | 臭味 |
+| 同一目录里同一个工具的第二份配置（Prettier、ESLint、Vite、Oxlint、Cargo、pytest、Ruff、mypy） | 哪些配置文件存在，以及工具文档里的优先级 | 一个工具一份配置 | 秩序 | 臭味 |
 | 写了两遍又不一样的 Node 版本 | `.nvmrc`、`.node-version`、`.tool-versions` 的内容 | 同一个事实只说一遍 | 秩序 | 臭味 |
 | 包管理器不再读的文件和字段、不合规的包名 | 文件、字段、`packageManager` 的版本，以及 npm、pnpm、Yarn 文档的原话 | 照包管理器的规定写 | 约定 | 臭味 |
 | 构建产物 | 构建工具写下的标记文件，或者有构建脚本 | 不提交构建产物 | 洁净 | 臭味 |

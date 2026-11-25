@@ -11,7 +11,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 ### Modernity
 
 - What has reached end of life stinks, from the day it ends. There is no grace period. That it still runs has nothing to do with it.
-- What its authors deprecated, broke on purpose, or call legacy or in maintenance mode themselves: all of it stinks — tsconfig options TypeScript 6 deprecated (`baseUrl`, `moduleResolution: "node"`, …), ESLint releases past end of life, Vue CLI.
+- What its authors deprecated, broke on purpose, or call legacy or in maintenance mode themselves: all of it stinks — tsconfig options TypeScript 6 deprecated (`baseUrl`, `moduleResolution: "node"`, …), ESLint, Electron and Django releases past end of life, Angular majors no longer supported, Vue CLI, Cargo's deprecated `authors` field and `[replace]`, and the `[tool.poetry]` fields Poetry hands over to `[project]`.
 - A healthy old technology does not stink. No chasing the new, no pecking order: slow, old or unfashionable is not a smell, and neither is silence nobody announced.
 
 ### Order
@@ -23,7 +23,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 - Configuration as gathered as it can be without crossing responsibilities: one tool's config in one place, each tool its own.
 - Nothing laid out flat. Hundreds of files in one directory, every responsibility in one file: neither is organised. But a count proves nothing by itself, so chous does not judge counts; the agent does (see below).
 - One job, one tool: two package managers, two formatters, two git-hook managers or two release tools at once stink. chous does not claim they break each other, only that one job has two tools.
-- One tool, one config per directory. Prettier, ESLint, pytest, Ruff and mypy each read one by their own precedence; the rest are never read.
+- One tool, one config per directory. Prettier, ESLint, Vite, Oxlint, pytest, Ruff and mypy each read one by their own precedence; the rest are never read. With both `.cargo/config` and `.cargo/config.toml`, Cargo reads only the latter.
 - One fact, said once: a dependency on two major versions, two instruction files with the same text, two workspace lists that disagree, Node pinned twice to different versions.
 - How many files or dependencies a project has is not a smell.
 
@@ -33,7 +33,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 - Where the vendor gives a limit, keep to it: Codex reads only the first 32 KiB of AGENTS.md, Claude Code targets under 200 lines per CLAUDE.md and 500 per SKILL.md, GitHub warns on files over 50 MiB.
 - Where a package manager says what it reads, write that: npm 12 no longer reads `npm-shrinkwrap.json`, pnpm 11 reads only auth from `.npmrc` and no longer the `pnpm` field of package.json, Yarn 2 reads only `.yarnrc.yml`; package names follow npm's rules.
 - Where a tool says where a file lives, what it is called or what format it takes, follow it: Copilot reads only `*.instructions.md` from `.github/instructions/`, Cursor takes only `.mdc` files as rules, GitHub Actions reads only `.github/workflows/`. A file in the wrong place is never read.
-- What a tool itself calls an older format or location stinks: `.claude/commands/` (merged into skills), `.windsurfrules` and `.windsurf/` (legacy to Devin), `.clinerules/` (Cline's older layout), `.chatmode.md`, `.eslintrc` from ESLint 9, `docker-compose.yml` and Compose's `version` field.
+- What a tool itself calls an older format or location stinks: `.claude/commands/` (merged into skills), `.windsurfrules` and `.windsurf/` (legacy to Devin), `.clinerules/` (Cline's older layout), `.chatmode.md`, `.eslintrc` from ESLint 9, `vitest.workspace` (replaced by `projects` since Vitest 3.2), `docker-compose.yml` and Compose's `version` field.
 - Supporting several runtimes is fine, and so is the duplication it needs: `workspaces` in package.json alongside `pnpm-workspace.yaml` lets npm, Yarn and Bun read the workspace too. Only when the two disagree does it stink.
 - The convention is what the official docs say, word for word, and every rule cites them.
 
@@ -91,7 +91,7 @@ Some taste needs the code read and understood. That is not written into chous's 
 
 | Rule | What chous knows | What chous claims | Taste | Finding |
 |---|---|---|---|---|
-| Runtimes and frameworks past end of life | The version that runs, and the end-of-life date in the official data | Past end of life stinks | Modernity | Smell |
+| Runtimes and frameworks past end of life (Node, Python, Vue, Nuxt, ESLint, Electron, Django, Angular) | The version that runs, and the end-of-life date in the official data; where Angular says only "no longer supported" with no date, chous quotes that | Past end of life stinks | Modernity | Smell |
 | `engines.node` that allows only ended versions | The declared range, and each of its versions' end-of-life date | Promise nothing only to the dead | Modernity | Smell |
 | Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
 | Config of dead tools (`tslint.json`, `.jscsrc`), legacy formats (`.cursorrules`, `bun.lockb`, `middleware.ts` on Next.js 16) | The file exists; its author deprecated it or called it legacy | Use what the author recommends | Modernity | Smell |
@@ -109,7 +109,8 @@ Some taste needs the code read and understood. That is not written into chous's 
 | GitHub's size limits: files over 50 MiB, a README over 500 KiB, a CODEOWNERS of 3 MB or more | The size, and GitHub's docs | Keep to the platform's limits | Convention | Smell |
 | Files a tool itself calls an older format or location | The file exists, and the tool's own docs | Use what the tool recommends | Modernity | Smell |
 | tsconfig options TypeScript 6 deprecated | The tsconfig, and the TypeScript 6.0 release notes | TypeScript 7 drops them; change now | Modernity | Smell |
-| A second config of one tool in one directory (Prettier, ESLint, pytest, Ruff, mypy) | Which configs exist, and the tool's documented precedence | One tool, one config | Order | Smell |
+| Cargo's deprecated `authors` field (one finding per repository, counted) and `[replace]`; Poetry fields handed over to `[project]` | The manifest's content, and the Cargo and Poetry docs' own words | Use what the tool recommends | Modernity | Smell |
+| A second config of one tool in one directory (Prettier, ESLint, Vite, Oxlint, Cargo, pytest, Ruff, mypy) | Which configs exist, and the tool's documented precedence | One tool, one config | Order | Smell |
 | Node pinned twice to different versions | `.nvmrc`, `.node-version`, `.tool-versions` | One fact, said once | Order | Smell |
 | Files and fields a package manager no longer reads; package names npm refuses | Files, fields, the pinned `packageManager` version, and npm's, pnpm's and Yarn's docs | Write what the package manager reads | Convention | Smell |
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |

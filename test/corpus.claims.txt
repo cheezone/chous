@@ -53,6 +53,7 @@ Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	logo-beeta.png_original	iss
 Beeta-inc/nbheditor.apps.beeta.com	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"API_37_UPDATE.md, BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, …"}
 BrianTran24/screen_record	review	cleanliness	./	issue.leftover.worklogs	{"count":4,"names":"BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, VIDEO_RATIO_FIX.md"}
 BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
+BurntSushi/ripgrep	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":10}
 BurntSushi/ripgrep	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"AI_POLICY.md, FAQ.md, GUIDE.md, RELEASE-CHECKLIST.md"}
 FouadMagdy01/RNCopilot	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
 FouadMagdy01/RNCopilot	smell	modernity	.clinerules	issue.contract.clinerules	{"count":1}
@@ -118,6 +119,8 @@ astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-tram
 astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-i686-gui.exe	issue.leftover.executable	{}
 astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-console.exe	issue.leftover.executable	{}
 astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":91}
+astral-sh/uv	smell	modernity	test/packages/poetry_editable/pyproject.toml	issue.contract.poetryFields	{"fields":"name, description, authors"}
 astral-sh/uv	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×8","examples":"assemble-release-artifacts.py, build_uv_pgo.py"}
 calcom/cal.com	review	modernity	apps/api/v2/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 calcom/cal.com	review	modernity	apps/api/v2/package.json (querystring)	issue.deps.native	{"name":"querystring","use":"URL / URLSearchParams"}
@@ -160,6 +163,7 @@ calcom/cal.com	smell	modernity	packages/testing/tsconfig.json	issue.contract.tsc
 calcom/cal.com	smell	modernity	packages/trpc/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 calcom/cal.com	smell	modernity	packages/trpc/tsconfig.react.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 calcom/cal.com	smell	modernity	packages/trpc/tsconfig.server.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+calcom/cal.com	smell	modernity	vitest.workspace.ts	issue.contract.vitestWorkspace	{}
 calcom/cal.com	smell	order	./	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"i18n-unused.config.js, setupVitest.ts"}
 calcom/cal.com	smell	order	apps/api/v2/src/lib/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"api-versions.ts, filterReqHeaders.ts"}
 calcom/cal.com	smell	order	apps/web/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"getNextjsOrgRewriteConfig.ts, cron-tester.ts"}
@@ -228,6 +232,7 @@ denoland/deno	review	cleanliness	tests/specs/lockfile/out_of_date_npm_info/deno.
 denoland/deno	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":433,"limit":200}
 denoland/deno	smell	convention	tests/registry/npm/@denotest/CAPITALS/1.0.0/package.json	issue.contract.npmName	{"name":"@denotest/CAPITALS"}
 denoland/deno	smell	convention	tests/registry/npm/@denotest/MixedCase/1.0.0/package.json	issue.contract.npmName	{"name":"@denotest/MixedCase"}
+denoland/deno	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":78}
 denoland/deno	smell	modernity	libs/core_testing/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
 denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
@@ -251,6 +256,7 @@ facebook/react	smell	modernity	packages/jest-react/package.json (react-test-rend
 facebook/react	smell	modernity	packages/react-devtools-extensions/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
 facebook/react	smell	modernity	packages/react-devtools-inline/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
 facebook/react	smell	modernity	packages/react-devtools-shell/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
+facebook/react	smell	modernity	packages/react-devtools/package.json (Electron 39)	issue.lifecycle.ended	{"name":"Electron 39","date":"2026-05-05","use":{"t":"eol.electron"}}
 facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/scripts/jest/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×3","examples":"e2e-classic.config.js, makeE2EConfig.js"}
 facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/e2e/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"constant-prop.e2e.js, expectLogs.js"}
 facebook/react	smell	order	compiler/packages/snap/src/sprout/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"shared-runtime-type-provider.ts, useEffectWrapper.ts"}
@@ -533,12 +539,25 @@ oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"keb
 oven-sh/bun	smell	order	test/snapshots/	issue.twins.styles	{"styles":"kebab-case ×105 + snake_case ×4","examples":"array-args-with-default-values.debug.js, spread_with_key.debug.tsx"}
 oven-sh/bun	smell	order	test/snippets/	issue.twins.styles	{"styles":"kebab-case ×30 + snake_case ×1","examples":"array-args-with-default-values.js, spread_with_key.tsx"}
 oxc-project/oxc	review	modernity	tasks/sprout/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
+oxc-project/oxc	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":59}
+oxc-project/oxc	smell	modernity	apps/oxfmt/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	apps/oxlint/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/minify/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/parser/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/playground/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform-react/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform-relay/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	tasks/codegen_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	tasks/e2e/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+oxc-project/oxc	smell	modernity	tasks/sprout/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	tasks/transform_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 pisces19860207/zhengdao	review	cleanliness	.github/release-notes/	issue.leftover.versionNotes	{"count":29,"names":"v2.0.1.md, v2.0.10.md, v2.0.11.md, v2.0.12.md, v2.0.13.md, …"}
 pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	{"count":22,"names":"322-治理中心-交付-2026-11-08.md, 467-租约-交付-2026-11-08.md, 482-目标模式-交付-2026-11-08.md, 482-真机链路验收-2026-11-09.md, 498-能力盘点-交付-2026-11-07.md, …"}
 pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
@@ -753,6 +772,7 @@ theaiautomators/insights-lm-public	smell	modernity	tsconfig.app.json	issue.contr
 theaiautomators/insights-lm-public	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 theaiautomators/insights-lm-public	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 theaiautomators/insights-lm-public	smell	order	src/hooks/	issue.twins.styles	{"styles":"camelCase ×13 + kebab-case ×2","examples":"useAudioOverview.tsx, use-mobile.tsx"}
+tokio-rs/tokio	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":8}
 unocss/unocss	smell	cleanliness	examples/sveltekit-preprocess/dist/	issue.leak.artifact	{}
 unocss/unocss	smell	modernity	examples/quasar/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 unocss/unocss	smell	modernity	examples/remix/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
