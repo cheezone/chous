@@ -4,6 +4,7 @@
  */
 import { SOURCES } from "../src/taste/sources";
 import { EOL } from "../src/taste/eol";
+import { FACT_EOL } from "../src/facts";
 
 /** Text of a page; tags are stripped only from HTML — Markdown keeps a literal `<name>`. */
 const normalize = (text: string) => {
@@ -42,7 +43,6 @@ const python = await json("https://peps.python.org/api/release-cycle.json");
 const raw = async (url: string) => (await fetch(url)).text();
 const vue = await raw("https://raw.githubusercontent.com/vuejs/v2.vuejs.org/master/src/eol/index.md");
 const nuxt = await raw("https://raw.githubusercontent.com/nuxt/nuxt/main/docs/5.community/6.roadmap.md");
-const eslint = await raw("https://raw.githubusercontent.com/eslint/eslint.org/main/src/content/pages/version-support.md");
 const plain = (html: string) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;|\s+/g, " ");
 const electron = plain(await raw("https://releases.electronjs.org/schedule"));
 const django = plain(await raw("https://www.djangoproject.com/download/"));
@@ -54,7 +54,6 @@ const official: Record<string, (version: string) => string | undefined> = {
   node: (v) => node[`v${v}`]?.end,
   python: (v) => python[v]?.end_of_life,
   vue: (v) => (v === "2" && vue.includes("Vue 2 has reached End of Life on December 31st, 2023") ? "2023-12-31" : undefined),
-  eslint: (v) => new RegExp(`^\\| v${v}\\.0\\.0-v${v}\\.[\\d.]+ +\\| EOL +\\|[^|]*\\|[^|]*\\| (\\d{4}-\\d{2}-\\d{2}) `, "m").exec(eslint)?.[1],
   electron: (v) => {
     // Release, Alpha, Beta, Stable, End of Life: the fourth date after "<v>.0.0"; dates marked † are tentative.
     const m = new RegExp(`\\b${v}\\.0\\.0 ((?:(?:[A-Z][a-z]{2} \\d{1,2}, \\d{4})(?: †)? |— ){3})([A-Z][a-z]{2}) (\\d{1,2}), (\\d{4})( †)?`).exec(electron);
@@ -70,9 +69,13 @@ const official: Record<string, (version: string) => string | undefined> = {
   },
   nuxt: (v) => new RegExp(`\\*\\*${v}\\.x\\*\\* \\(\\w+\\) \\|[^|]*\\|[^|]*\\| (\\d{4}-\\d{2}-\\d{2}) `).exec(nuxt)?.[1],
 };
+// Schedules a tool file declares bring their own reader of the official data.
+const declared = new Map(
+  await Promise.all(FACT_EOL.map(async (e) => [e.product as string, new Map(e.parse(await raw(e.data)).map((l) => [l.version, l.date]))] as const)),
+);
 for (const [product, { versions }] of Object.entries(EOL)) {
   for (const { version, date } of versions) {
-    const theirs = official[product]!(version);
+    const theirs = declared.has(product) ? declared.get(product)!.get(version) : official[product]!(version);
     const ok = theirs === date;
     if (!ok) failed++;
     console.log(`${ok ? "✓" : "✗"} eol.${product} ${version} ${date}${ok ? "" : `  official: ${theirs}`}`);

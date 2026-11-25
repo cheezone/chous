@@ -1,4 +1,5 @@
 import type { Messages } from "./types";
+import { eolMessages, factMessages } from "../facts";
 
 /** 简体中文。键与 en.ts 一一对应，缺一个就是类型错误。 */
 export default {
@@ -98,6 +99,7 @@ export default {
       records: "同一处有 {{count}} 份工作记录（{{names}}）：如果事情已经做完，PR 里已经留着来龙去脉",
     },
     contract: {
+      ...factMessages("zh"),
       agentsMdBytes: "{{kib}} KiB：Codex 默认最多读 AGENTS.md 的 {{limit}} KiB，剩下的会被截掉",
       claudeMdLines: "{{lines}} 行：Claude Code 文档建议每个 CLAUDE.md 不超过 {{limit}} 行；越长越占上下文，也越不容易被遵守",
       skillLines: "{{lines}} 行：Claude Code 和 Agent Skills 规范都要求 SKILL.md 不超过 {{limit}} 行",
@@ -122,7 +124,6 @@ export default {
       workflowPlace: "永远不会运行：GitHub Actions 只读 .github/workflows/ 里的工作流",
       composeVersion: "顶层的 version：Docker 称它已过时，用了会警告；删掉这一行",
       composeName: "旧文件名：Docker 首选 compose.yaml，docker-compose.yml 只是为了兼容旧版本",
-      eslintrc: "ESLint {{version}} 下的 eslintrc：ESLint 9 起已废弃、默认不再查找，10 起彻底移除；改用 eslint.config.js",
       tailwindConfig: "Tailwind {{version}} 不再自动加载 tailwind.config，也没有任何样式表用 @config 加载它",
       rustToolchainLegacy: "旧格式的 rust-toolchain：rustup 读的是带 [toolchain] 表的 rust-toolchain.toml",
       npmShrinkwrap: "npm 12 起不再读写 npm-shrinkwrap.json；改名为 package-lock.json",
@@ -132,7 +133,6 @@ export default {
       pnpmField: "pnpm 11 不再读 package.json 的 pnpm 字段；移到 pnpm-workspace.yaml",
       yarnrc: "Yarn 2 起只读 .yarnrc.yml；这个文件会被忽略",
       prettierConfigs: "永远不会被读：Prettier 每个目录只用一份配置，这里是 {{used}}",
-      eslintConfigs: "永远不会被读：ESLint 每个目录只用一份配置，这里是 {{used}}",
       pytestConfigs: "永远不会被读：pytest 每个目录只用一份配置，这里是 {{used}}",
       ruffConfigs: "永远不会被读：Ruff 每个目录只用一份配置，这里是 {{used}}",
       mypyConfigs: "永远不会被读：mypy 每个目录只用一份配置，这里是 {{used}}，而且不合并",
@@ -141,9 +141,6 @@ export default {
       vitestWorkspace: "Vitest 的 workspace 文件：自 Vitest 3.2 起已废弃，改用 projects 配置",
       viteConfigs: "永远不会被读：Vite 只用找到的第一份配置，这里是 {{used}}",
       oxlintConfigs: "Oxlint 规定每个目录只能有一份配置，这里有好几份：{{files}}",
-      cargoConfigs: "永远不会被读：旁边有 {{used}} 时，Cargo 用的是不带扩展名的那份",
-      cargoAuthors: "{{count}} 个 Cargo.toml 在 [package] 里写了 authors，这个字段 Cargo 已废弃",
-      cargoReplace: "[replace] 在 Cargo 里已废弃，改用 [patch]",
       poetryFields: "Poetry 已废弃 [tool.poetry] 里的这些字段：{{fields}}；移到标准的 [project] 表",
     },
     twins: {
@@ -231,10 +228,10 @@ export default {
     faker: "作者在 2022 年 1 月删掉了这个包；社区分支还在维护。",
   },
   eol: {
+    ...eolMessages("zh"),
     electron: "最新的三个稳定版 Electron 之一",
     django: "仍受支持的 Django 版本",
     angular: "仍受支持的 Angular 版本",
-    eslint: "仍在维护的 ESLint 版本",
     node: "仍在维护的 LTS 版本",
     python: "仍在维护的 Python 3 版本",
     vue: "Vue 3",

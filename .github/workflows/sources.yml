@@ -1,0 +1,38 @@
+name: Sources
+
+# Once a week, ask the makers again: are the quoted words still on their pages,
+# and has any version reached its end since the last sync? A failed run means
+# the world moved; read the log, then fix the fact or run `pnpm run sync`.
+on:
+  schedule:
+    - cron: "17 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  sources:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: End-of-life data
+        run: pnpm run sync --check
+
+      - name: Quotes and dates
+        if: always()
+        run: pnpm run sources

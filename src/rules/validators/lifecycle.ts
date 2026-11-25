@@ -5,6 +5,7 @@ import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
 import { EOL, eolDate, hasEnded, lineOf, type Product } from "../../taste/eol";
+import { FACT_EOL } from "../../facts";
 
 type Found = { product: Product; version: string; file: string };
 
@@ -102,7 +103,8 @@ function findVersions(context: RuleValidatorContext): Found[] {
     }
     if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
-    for (const [product, name] of [["vue", "vue"], ["nuxt", "nuxt"], ["eslint", "eslint"], ["electron", "electron"], ["angular", "@angular/core"]] as const) {
+    const byDep: Array<readonly [Product, string]> = [["vue", "vue"], ["nuxt", "nuxt"], ["electron", "electron"], ["angular", "@angular/core"], ...FACT_EOL.flatMap((e) => (e.dep ? [[e.product, e.dep] as const] : []))];
+    for (const [product, name] of byDep) {
       if (typeof deps[name] === "string") add(product, deps[name].split(".")[0], "package.json");
     }
   }

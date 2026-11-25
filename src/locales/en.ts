@@ -1,3 +1,5 @@
+import { eolMessages, factMessages } from "../facts";
+
 /** English messages. The source of truth: every other locale mirrors these keys. */
 export default {
   app: {
@@ -96,6 +98,7 @@ export default {
       records: "{{count}} records of work in one place ({{names}}): if the work is done, the pull requests keep the story",
     },
     contract: {
+      ...factMessages("en"),
       agentsMdBytes: "{{kib}} KiB: Codex reads at most {{limit}} KiB of AGENTS.md by default and cuts the rest",
       claudeMdLines: "{{lines}} lines: Claude Code's docs target under {{limit}} per CLAUDE.md; longer files consume more context and reduce adherence",
       skillLines: "{{lines}} lines: Claude Code and the Agent Skills spec say to keep SKILL.md under {{limit}}",
@@ -120,7 +123,6 @@ export default {
       workflowPlace: "never run: GitHub Actions only reads workflows from .github/workflows/",
       composeVersion: "a top-level version: Docker calls it obsolete and warns about it; delete the line",
       composeName: "the old name: Docker prefers compose.yaml and keeps docker-compose.yml for earlier versions",
-      eslintrc: "eslintrc with ESLint {{version}}: deprecated since ESLint 9, no longer looked for, and gone in 10; use eslint.config.js",
       tailwindConfig: "Tailwind {{version}} no longer loads tailwind.config by itself, and no stylesheet loads it with @config",
       rustToolchainLegacy: "the legacy rust-toolchain format: rustup reads rust-toolchain.toml with a [toolchain] table",
       npmShrinkwrap: "npm 12 no longer reads or writes npm-shrinkwrap.json; rename it to package-lock.json",
@@ -130,7 +132,6 @@ export default {
       pnpmField: "pnpm 11 no longer reads the pnpm field in package.json; move it to pnpm-workspace.yaml",
       yarnrc: "Yarn 2 and later read only .yarnrc.yml; this file is ignored",
       prettierConfigs: "never read: Prettier takes one config per directory, here {{used}}",
-      eslintConfigs: "never read: ESLint takes one config per directory, here {{used}}",
       pytestConfigs: "never read: pytest takes one config per directory, here {{used}}",
       ruffConfigs: "never read: Ruff takes one config per directory, here {{used}}",
       mypyConfigs: "never read: mypy takes one config per directory, here {{used}}, and does not merge",
@@ -139,9 +140,6 @@ export default {
       vitestWorkspace: "a Vitest workspace file: deprecated since Vitest 3.2, replaced by the projects option",
       viteConfigs: "never read: Vite takes the first config it finds, here {{used}}",
       oxlintConfigs: "Oxlint allows one config per directory, and this one has several: {{files}}",
-      cargoConfigs: "never read: with {{used}} beside it, Cargo uses the file without the extension",
-      cargoAuthors: "{{count}} Cargo.toml files set authors in [package], a field Cargo has deprecated",
-      cargoReplace: "[replace] is deprecated in Cargo; use [patch]",
       poetryFields: "fields Poetry deprecated in [tool.poetry]: {{fields}}; move them to the standard [project] table",
     },
     twins: {
@@ -229,10 +227,10 @@ export default {
     faker: "Its author deleted the package in January 2022; the community fork lives on.",
   },
   eol: {
+    ...eolMessages("en"),
     electron: "one of the three latest stable Electron releases",
     django: "a supported Django release",
     angular: "a supported Angular release",
-    eslint: "a supported ESLint release",
     node: "a supported LTS release",
     python: "a supported Python 3 release",
     vue: "Vue 3",

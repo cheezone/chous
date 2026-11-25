@@ -10,6 +10,7 @@
  */
 import type { MessageKey } from "../i18n";
 import { EOL } from "./eol";
+import { FACT_SOURCES } from "../facts";
 
 export type Source = {
   /** The page a person reads. */
@@ -23,6 +24,7 @@ export type Source = {
 const GH = "https://raw.githubusercontent.com";
 
 export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
+  ...FACT_SOURCES,
   "reason.envLocal": [
     { url: "https://vite.dev/guide/env-and-mode", check: `${GH}/vitejs/vite/main/docs/guide/env-and-mode.md`, quote: "loaded in all cases, ignored by git" },
     {
@@ -268,14 +270,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "Compose also supports docker-compose.yaml and docker-compose.yml for backwards compatibility of earlier versions.",
     },
   ],
-  "issue.contract.eslintrc": [
-    {
-      url: "https://eslint.org/docs/latest/use/migrate-to-9.0.0",
-      check: `${GH}/eslint/eslint/main/docs/src/use/migrate-to-9.0.0.md`,
-      quote: "The previous format, eslintrc, is now deprecated and will not automatically be searched for.",
-    },
-    { url: "https://eslint.org/docs/latest/use/migrate-to-10.0.0", check: `${GH}/eslint/eslint/main/docs/src/use/migrate-to-10.0.0.md`, quote: "Old config format no longer supported" },
-  ],
   "issue.contract.tailwindConfig": [
     {
       url: "https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file",
@@ -310,13 +304,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
     },
   ],
   "issue.contract.prettierConfigs": [{ url: "https://prettier.io/docs/configuration", check: `${GH}/prettier/prettier/main/docs/configuration.md`, quote: "You can configure Prettier via (in order of precedence):" }],
-  "issue.contract.eslintConfigs": [
-    {
-      url: "https://eslint.org/docs/latest/use/configure/configuration-files#configuration-file-precedence",
-      check: `${GH}/eslint/eslint/main/docs/src/use/configure/configuration-files.md`,
-      quote: "If you have multiple ESLint configuration files, ESLint prioritizes JavaScript files over TypeScript files.",
-    },
-  ],
   "issue.contract.pytestConfigs": [
     { url: "https://docs.pytest.org/en/stable/reference/customize.html", check: `${GH}/pytest-dev/pytest/main/doc/en/reference/customize.rst`, quote: "pytest.ini files take precedence over other files (except pytest.toml and .pytest.toml), even when empty." },
   ],
@@ -346,9 +333,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   "issue.contract.oxlintConfigs": [
     { url: "https://oxc.rs/docs/guide/usage/linter/config.html", quote: "You can use only one config file per directory: JSON and TypeScript configs cannot coexist" },
   ],
-  "issue.contract.cargoConfigs": [{ url: "https://doc.rust-lang.org/cargo/reference/config.html", quote: "If both files exist, Cargo will use the file without the extension." }],
-  "issue.contract.cargoAuthors": [{ url: "https://doc.rust-lang.org/cargo/reference/manifest.html#the-authors-field", quote: "This field is deprecated." }],
-  "issue.contract.cargoReplace": [{ url: "https://doc.rust-lang.org/cargo/reference/manifest.html", quote: "Override dependencies (deprecated)." }],
   "issue.contract.poetryFields": [
     { url: "https://python-poetry.org/docs/pyproject/", check: `${GH}/python-poetry/poetry/main/docs/pyproject.md`, quote: "Deprecated: Use project.name instead." },
     { url: "https://python-poetry.org/docs/pyproject/", check: `${GH}/python-poetry/poetry/main/docs/pyproject.md`, quote: "Deprecated: Use project.urls instead." },

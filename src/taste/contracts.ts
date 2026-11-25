@@ -8,26 +8,12 @@
  * versions — nothing that needs the code to be understood.
  */
 import type { Value } from "../types";
+import { FACTS, type FactId } from "../facts";
+import { type ContractFile, depMajor, field, frontmatter, lines, major, parseJsonc, pinnedManager, shadowed, sibling, tomlTableKeys } from "../facts/kit";
 
-/** What a contract can see of one file. */
-export type ContractFile = {
-  rel: string;
-  name: string;
-  dir: string;
-  /** Size on disk, read when asked. */
-  bytes(): number;
-  text(): string;
-  /** Every file of the project, relative. */
-  all: Set<string>;
-  /** The nearest package.json at or above this file, parsed. */
-  pkg(): Record<string, any> | undefined;
-  /** Some stylesheet of the project loads a config with `@config`. */
-  cssLoadsConfig(): boolean;
-  /** Text of another file of the project, by relative path ("" when absent). */
-  read(rel: string): string;
-  /** The package.json at the root of the project, parsed. */
-  rootPkg(): Record<string, any> | undefined;
-};
+export type { ContractFile };
+export { field, frontmatter, parseJsonc, tomlTableKeys };
+
 
 export type Contract = {
   id: ContractId;
@@ -67,7 +53,6 @@ export type ContractId =
   | "workflowPlace"
   | "composeVersion"
   | "composeName"
-  | "eslintrc"
   | "tailwindConfig"
   | "rustToolchainLegacy"
   | "npmShrinkwrap"
@@ -77,7 +62,6 @@ export type ContractId =
   | "pnpmField"
   | "yarnrc"
   | "prettierConfigs"
-  | "eslintConfigs"
   | "pytestConfigs"
   | "ruffConfigs"
   | "mypyConfigs"
@@ -86,82 +70,12 @@ export type ContractId =
   | "vitestWorkspace"
   | "viteConfigs"
   | "oxlintConfigs"
-  | "cargoConfigs"
-  | "cargoAuthors"
-  | "cargoReplace"
-  | "poetryFields";
+  | "poetryFields"
+  | FactId;
 
 const KiB = 1024;
 const MiB = 1024 * KiB;
 
-const lines = (text: string) => text.split(/\r?\n/).length - (text.endsWith("\n") ? 1 : 0);
-
-/** YAML frontmatter as raw text, and the body after it. */
-export function frontmatter(text: string): { front: string; body: string } {
-  const m = /^---\r?\n([\s\S]*?)\r?\n---\r?\n?([\s\S]*)$/.exec(text);
-  return m ? { front: m[1]!, body: m[2]! } : { front: "", body: text };
-}
-
-/** A top-level scalar from frontmatter, folded scalars joined. Enough for name and description. */
-export function field(front: string, key: string): string | undefined {
-  const m = new RegExp(`^${key}:[ \\t]*(?:[>|][-+]?)?[ \\t]*(.*(?:\\r?\\n[ \\t]+.*)*)`, "m").exec(front);
-  if (!m) return undefined;
-  return m[1]!.split(/\r?\n/).map((l) => l.trim()).filter(Boolean).join(" ").replace(/^(['"])(.*)\1$/, "$2");
-}
-
-function major(spec: unknown): number | undefined {
-  const m = typeof spec === "string" ? /^[\^~>=v\s]*(\d+)/.exec(spec) : null;
-  return m ? Number(m[1]) : undefined;
-}
-
-function depMajor(file: ContractFile, name: string): number | undefined {
-  const pkg = file.pkg();
-  return major({ ...pkg?.devDependencies, ...pkg?.dependencies }[name]);
-}
-
-/** `pnpm@11.2.0` → 11, for the package manager the project pins. */
-function pinnedManager(file: ContractFile, name: string): number | undefined {
-  const pm = file.rootPkg()?.packageManager;
-  return typeof pm === "string" && pm.startsWith(`${name}@`) ? major(pm.slice(name.length + 1)) : undefined;
-}
-
-/** A sibling path in the same directory. */
-const sibling = (file: ContractFile, name: string) => (file.dir ? `${file.dir}/${name}` : name);
-
-/**
- * Of several config files in one directory, the one the tool reads: the first
- * of `order` that is present. Each entry is a file name, optionally with a test
- * of its text (a pyproject.toml only counts with its tool's section).
- */
-type Counts = RegExp | ((text: string) => boolean);
-const counts = (test: Counts | undefined, text: string) => !test || (typeof test === "function" ? test(text) : test.test(text));
-
-function winner(file: ContractFile, order: Array<[string, Counts?]>): string | undefined {
-  return order.find(([name, test]) => {
-    const rel = sibling(file, name);
-    return file.all.has(rel) && counts(test, file.read(rel));
-  })?.[0];
-}
-
-/** The findings of a precedence contract: this file is present, counts, and is not the winner. */
-function shadowed(file: ContractFile, order: Array<[string, Counts?]>): Record<string, string> | undefined {
-  const mine = order.find(([name]) => name === file.name);
-  if (!mine || !counts(mine[1], file.text())) return undefined;
-  const used = winner(file, order);
-  return used && used !== file.name ? { used } : undefined;
-}
-
-/** JSON with comments and trailing commas, as tsconfig allows. */
-export function parseJsonc(text: string): any {
-  const stripped = text
-    .replace(/("(?:\\.|[^"\\])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (_, str: string | undefined) => str ?? "")
-    .replace(/,(\s*[}\]])/g, "$1");
-  try {
-    return JSON.parse(stripped);
-  } catch {
-    return undefined;
-  }
-}
 
 /** tsconfig options TypeScript 6.0 deprecated, and TypeScript 7.0 does not support. */
 const TS6_DEPRECATED: Array<[string, (v: unknown) => boolean]> = [
@@ -191,26 +105,15 @@ function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
 // `scripts` is left out: only console and gui scripts moved to project.scripts; file scripts stay.
 const POETRY_DEPRECATED = ["name", "description", "license", "authors", "maintainers", "homepage", "repository", "documentation", "keywords", "extras", "plugins", "urls"];
 
-/** The keys set directly under a TOML table header, up to the next header. */
-export function tomlTableKeys(text: string, table: string): string[] {
-  const lines = text.split(/\r?\n/);
-  const start = lines.findIndex((l) => l.trim() === `[${table}]`);
-  if (start < 0) return [];
-  const keys: string[] = [];
-  for (const line of lines.slice(start + 1)) {
-    if (/^\s*\[/.test(line)) break;
-    // Dotted keys name their first part: `authors.workspace = true` sets authors.
-    const m = /^([A-Za-z0-9_-]+)(?:\s*\.\s*[A-Za-z0-9_-]+)*\s*=/.exec(line);
-    if (m) keys.push(m[1]!);
-  }
-  return keys;
-}
 
 const SKILL = /(^|\/)SKILL\.md$/;
 /** Agent Skills spec: 1-64 of a-z, 0-9 and single hyphens, not at either end. */
 const SKILL_NAME = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 
 export const CONTRACTS: Contract[] = [
+  // Tools declared as facts: src/facts/tools/.
+  ...FACTS,
+
   // ── Agent instructions ───────────────────────────────────────────
   {
     // Codex: project_doc_max_bytes = 32768; past it the instructions are cut.
@@ -428,16 +331,6 @@ export const CONTRACTS: Contract[] = [
     check: () => ({}),
   },
   {
-    // ESLint 9: eslintrc "is now deprecated and will not automatically be searched for"; ESLint 10 drops it.
-    id: "eslintrc",
-    value: "modernity",
-    match: /(^|\/)\.eslintrc(\.(js|cjs|yaml|yml|json))?$/,
-    check: (f) => {
-      const eslint = depMajor(f, "eslint");
-      return eslint !== undefined && eslint >= 9 ? { version: eslint } : undefined;
-    },
-  },
-  {
     // Tailwind v4: JavaScript config files "are no longer detected automatically" — only with @config.
     id: "tailwindConfig",
     value: "convention",
@@ -551,13 +444,6 @@ export const CONTRACTS: Contract[] = [
       ]),
   },
   {
-    // ESLint: "The order of precedence is as follows" — .js, .mjs, .cjs, .ts, .mts, .cts.
-    id: "eslintConfigs",
-    value: "order",
-    match: /(^|\/)eslint\.config\.(js|mjs|cjs|ts|mts|cts)$/,
-    check: (f) => shadowed(f, ["js", "mjs", "cjs", "ts", "mts", "cts"].map((e) => [`eslint.config.${e}`])),
-  },
-  {
     // pytest: pytest.toml, then pytest.ini, "take precedence over other files, even when empty".
     id: "pytestConfigs",
     value: "order",
@@ -640,29 +526,6 @@ export const CONTRACTS: Contract[] = [
   },
 
   // ── Rust, Python packaging ───────────────────────────────────────
-  {
-    // Cargo: "If both files exist, Cargo will use the file without the extension."
-    id: "cargoConfigs",
-    value: "order",
-    match: /(^|\/)\.cargo\/config\.toml$/,
-    check: (f) => (f.all.has(sibling(f, "config")) ? { used: ".cargo/config" } : undefined),
-  },
-  {
-    // Cargo: the authors field — "This field is deprecated."
-    id: "cargoAuthors",
-    value: "modernity",
-    match: /(^|\/)Cargo\.toml$/,
-    // A workspace repeats the field in every crate: one finding, counted.
-    groupBy: () => "**/Cargo.toml",
-    check: (f) => (tomlTableKeys(f.text(), "package").includes("authors") ? {} : undefined),
-  },
-  {
-    // Cargo: "[replace] — Override dependencies (deprecated)."
-    id: "cargoReplace",
-    value: "modernity",
-    match: /(^|\/)Cargo\.toml$/,
-    check: (f) => (/^\[replace\]/m.test(f.text()) ? {} : undefined),
-  },
   {
     // Poetry: "Deprecated: Use project.<field> instead."
     id: "poetryFields",

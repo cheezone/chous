@@ -17,6 +17,7 @@
     "prepare": "simple-git-hooks",
     "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog",
     "sources": "tsx scripts/sources.ts",
+    "sync": "tsx scripts/sync.ts",
     "corpus": "tsx scripts/corpus.ts"
   },
   "simple-git-hooks": {
