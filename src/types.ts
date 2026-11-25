@@ -22,11 +22,10 @@ export type Rule =
   | NoFilesRule
   | DepsRule
   | StackRule
-  | ExclusiveRule
   | LifecycleRule
   | ArtifactsRule
-  | WorklogRule
-  | CaseRule
+  | LeftoverRule
+  | TwinsRule
   | ManifestRule
   | WorkspaceRule;
 
@@ -67,20 +66,16 @@ export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
 };
 
-/** Paths that differ only in case. */
-export type CaseRule = RuleBase & {
-  kind: "case";
+/** One name written two ways (see `TwinsRuleValidator`). */
+export type TwinsRule = RuleBase & {
+  kind: "twins";
 };
 
-/** Agent work logs left at the root (see `taste/hygiene.ts`). */
-export type WorklogRule = RuleBase & {
-  kind: "worklog";
-};
-
-/** At most one of these root-level names may exist: one name per concept. */
-export type ExclusiveRule = RuleBase & {
-  kind: "exclusive";
-  names: string[];
+/** Work logs, one-off scripts, backups, release binaries (see `taste/hygiene.ts`). */
+export type LeftoverRule = RuleBase & {
+  kind: "leftover";
+  /** Look for one-off scripts (repository root only: a package root is part of a bigger build). */
+  scripts: boolean;
 };
 
 /** Monorepo root: one major version per dependency across packages. */

@@ -78,11 +78,17 @@ export default {
     workspace: {
       drift: "{{name}} 同时用了不同的大版本（{{versions}}），会被装两份",
     },
-    worklog: {
-      found: "看起来是一份工作日志：它只描述某个时刻，提交当天就开始过时；长期有用的写进 README 或 docs/，其余写进提交信息",
+    leftover: {
+      worklog: "看起来是一份工作日志：它只描述某个时刻，提交当天就开始过时；长期有用的写进 README 或 docs/，其余写进 PR 描述",
+      script: "根目录的一次性脚本：测试放进测试目录，其余跑完就删",
+      backup: "手动备份：git 本来就保留了旧版本，删掉它",
+      binary: "发布用的二进制：git 会永远保留每一个版本，请发布到 GitHub Releases（docs.github.com，大文件说明）",
+      docs: "根目录除标准文档外还有 {{count}} 份手写文档；移进 docs/",
     },
-    case: {
-      collision: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
+    twins: {
+      case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
+      plural: "{{other}} 也存在：同一个概念两个名字，合并它们",
+      synonyms: "同一个意思用了两个名字，只留一个",
     },
     leak: {
       artifact: "构建产物没有被 gitignore，会被提交上去",
@@ -90,9 +96,6 @@ export default {
     lifecycle: {
       expired: "{{name}} 已于 {{date}} 停止维护，不再有安全修复 → {{use}}",
       rotten: "{{name}} 已于 {{date}} 停止维护，超过两年了 → {{use}}",
-    },
-    exclusive: {
-      conflict: "同一个意思用了两个名字，只留一个",
     },
     stack: {
       conflict: "{{role}}同时用了 {{tools}}，它们会互相打架，只留一个",
@@ -114,6 +117,8 @@ export default {
     bunRunsTs: "Bun 直接运行 TypeScript。",
     devVars: "Worker 密钥，加进 .gitignore，改为提交 .dev.vars.example",
     wranglerState: "Wrangler 本地状态，加进 .gitignore",
+    claudeLocal: "Claude Code 的个人文件；官方文档要求不提交（code.claude.com/docs/en/memory、/settings）",
+    localProperties: "本机的 Android SDK 路径；文件自带的注释就写着「绝不能提交」",
     nextSrcIgnored: "根目录有 app/ 或 pages/ 时，Next.js 会忽略 src/app 和 src/pages（nextjs.org/docs/app/api-reference/file-conventions/src-folder）",
     nextCase: "Next.js 只认小写的 app/、pages/、public/；在 macOS 上能跑，到了 Linux 就找不到（nextjs.org/docs/app/getting-started/project-structure）",
     nextProxy: "Next.js 16 已废弃，改名为 proxy（nextjs.org/docs/app/api-reference/file-conventions/proxy）",

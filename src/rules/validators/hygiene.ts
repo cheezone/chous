@@ -1,10 +1,11 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
-import type { ArtifactsRule, CaseRule, Rule, WorklogRule } from "../../types";
+import type { ArtifactsRule, LeftoverRule, Rule, TwinsRule } from "../../types";
+import type { MessageKey } from "../../i18n";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, STANDARD_DOCS, WORKLOG } from "../../taste/hygiene";
+import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, FIXTURE_DIR, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -40,51 +41,99 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   }
 }
 
-/** Agent work logs at the root, e.g. `IMPLEMENTATION_COMPLETE.md`. */
-export class WorklogRuleValidator extends BaseRuleValidator<WorklogRule> {
-  canHandle(rule: Rule): rule is WorklogRule {
-    return rule.kind === "worklog";
+/** Text of the root's own files (package.json, configs, scripts), small ones only. */
+function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
+  return snapshot.listDir(".")
+    .filter((e) => !e.isDir && !/\.md$/i.test(e.name) && !ONE_OFF_SCRIPT.test(e.name))
+    .map((e) => {
+      try {
+        return statSync(e.absPath).size < 256_000 ? readFileSync(e.absPath, "utf8") : "";
+      } catch {
+        return "";
+      }
+    })
+    .join("\n");
+}
+
+/** Work logs, one-off scripts, hand-made backups and release binaries. */
+export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
+  canHandle(rule: Rule): rule is LeftoverRule {
+    return rule.kind === "leftover";
   }
 
-  protected async validateInternal(rule: WorklogRule, context: RuleValidatorContext) {
-    const docs = context.snapshot.listDir(".").filter((e) => !e.isDir && /\.md$/i.test(e.name));
-    for (const doc of docs) {
-      const stem = doc.name.replace(/\.md$/i, "");
-      if (STANDARD_DOCS.test(stem) || !WORKLOG.test(stem)) continue;
-      context.rawIssues.push(issueFromRule(rule, {
-        path: doc.absPath,
-        displayPath: doc.name,
-        message: { key: "issue.worklog.found" },
-      }));
+  protected async validateInternal(rule: LeftoverRule, context: RuleValidatorContext) {
+    const { snapshot, rawIssues } = context;
+    let hitCount = 0;
+    const report = (rel: string, key: MessageKey, params?: Record<string, number>, severity?: "warn") => {
+      hitCount++;
+      rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message: { key, params }, severity }));
+    };
+    let rootDocs = 0;
+    // A script that package.json or a config file names is part of the build, not a leftover.
+    const referenced = rule.scripts ? rootText(snapshot) : "";
+
+    for (const [rel, entry] of snapshot.byRel) {
+      if (entry.isDir || FIXTURE_DIR.test(rel)) continue;
+      const atRoot = !rel.includes("/");
+      const name = entry.name;
+      const doc = /\.md$/i.exec(name) ? name.slice(0, -3) : undefined;
+
+      if (doc !== undefined && !STANDARD_DOCS.test(doc) && !DECISION_RECORD.test(rel) && (atRoot || /^[A-Z0-9_-]+$/.test(doc)) && WORKLOG.test(doc)) {
+        report(rel, "issue.leftover.worklog");
+      } else if (doc !== undefined && atRoot && !STANDARD_DOCS.test(doc)) {
+        rootDocs++;
+      } else if (rule.scripts && atRoot && ONE_OFF_SCRIPT.test(name) && !referenced.includes(name)) {
+        report(rel, "issue.leftover.script");
+      } else if (BACKUP.test(name)) {
+        report(rel, "issue.leftover.backup");
+      } else if (RELEASE_BINARY.test(name)) {
+        report(rel, "issue.leftover.binary");
+      }
     }
-    return { hitCount: docs.length };
+    if (rootDocs > ROOT_DOCS_LIMIT) report("*.md", "issue.leftover.docs", { count: rootDocs }, "warn");
+    return { hitCount };
   }
 }
 
-/** `README.md` next to `Readme.md`: case-insensitive file systems keep one. */
-export class CaseRuleValidator extends BaseRuleValidator<CaseRule> {
-  canHandle(rule: Rule): rule is CaseRule {
-    return rule.kind === "case";
+/**
+ * One concept, two names: `README.md` next to `Readme.md` (case-insensitive
+ * file systems keep one), `test/` next to `tests/`, `plugin/` next to `plugins/`.
+ */
+export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
+  canHandle(rule: Rule): rule is TwinsRule {
+    return rule.kind === "twins";
   }
 
-  protected async validateInternal(rule: CaseRule, context: RuleValidatorContext) {
-    const seen = new Map<string, string>();
+  protected async validateInternal(rule: TwinsRule, context: RuleValidatorContext) {
+    const { snapshot } = context;
     let hitCount = 0;
-    for (const rel of [...context.snapshot.byRel.keys()].sort()) {
-      // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
-      const slash = rel.lastIndexOf("/");
-      const key = `${rel.slice(0, slash + 1)}${rel.slice(slash + 1).toLowerCase()}`;
-      const other = seen.get(key);
-      if (other === undefined) {
-        seen.set(key, rel);
-        continue;
-      }
+    const report = (rel: string, key: MessageKey, other: string) => {
       hitCount++;
       context.rawIssues.push(issueFromRule(rule, {
         path: resolve(context.root, rel),
         displayPath: rel,
-        message: { key: "issue.case.collision", params: { other } },
+        message: { key, params: other ? { other } : undefined },
       }));
+    };
+
+    const seen = new Map<string, string>();
+    for (const rel of [...snapshot.byRel.keys()].sort()) {
+      // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
+      const slash = rel.lastIndexOf("/");
+      const key = `${rel.slice(0, slash + 1)}${rel.slice(slash + 1).toLowerCase()}`;
+      const other = seen.get(key);
+      if (other === undefined) seen.set(key, rel);
+      else report(rel, "issue.twins.case", other);
+    }
+
+    const rootDirs = new Set(snapshot.listDir(".").filter((e) => e.isDir).map((e) => e.name));
+    for (const group of SYNONYM_DIRS) {
+      const present = group.filter((d) => rootDirs.has(d));
+      if (present.length > 1) report(present.map((d) => `${d}/`).join(" + "), "issue.twins.synonyms", "");
+    }
+    for (const dir of rootDirs) {
+      if (SYNONYM_DIRS.some((g) => g.includes(dir))) continue;
+      if (rootDirs.has(`${dir}s`)) report(`${dir}/`, "issue.twins.plural", `${dir}s/`);
     }
     return { hitCount };
   }

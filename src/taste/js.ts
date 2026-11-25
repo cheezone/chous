@@ -29,10 +29,6 @@ export function js(project: JsProject = {}) {
   // Node's own docs: always declare it, even for CommonJS packages.
   t.requireField("type", "reason.moduleType", { severity: "warn" });
 
-  // One name per concept. Which name is up to you; two of them is a mess.
-  t.oneOf(["test", "tests", "__tests__", "spec", "specs"]);
-  t.oneOf(["scripts", "script"]);
-
   t.oneToolPer(FIGHTING_ROLES);
 
   if (project.workspacePackage) {

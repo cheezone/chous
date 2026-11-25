@@ -62,7 +62,7 @@ describe("Nuxt", () => {
   });
 });
 
-describe.skipIf(process.platform !== "linux")("case collisions", () => {
+describe.skipIf(process.platform !== "linux")("case twins", () => {
   it("flags names that differ only in case, once per directory", async () => {
     expect(await findings({ "README.md": "", "Readme.md": "", "Docs/a.md": "", "docs/a.md": "" })).toEqual(["Readme.md", "docs"]);
   });

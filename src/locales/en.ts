@@ -76,11 +76,17 @@ export default {
     workspace: {
       drift: "{{name}} is on several major versions ({{versions}}), so it gets installed twice",
     },
-    worklog: {
-      found: "looks like a work log: it describes one moment and goes stale; keep what lasts in README or docs/, the rest in commit messages",
+    leftover: {
+      worklog: "looks like a work log: it describes one moment and goes stale; keep what lasts in README or docs/, the rest in the pull request",
+      script: "one-off script at the root: put tests in the test folder, delete the rest once it has run",
+      backup: "hand-made backup: git already keeps the old version, delete it",
+      binary: "release binary: git keeps every version forever, publish it in GitHub Releases instead (docs.github.com, about large files)",
+      docs: "{{count}} hand-written docs at the root besides the standard ones; move them into docs/",
     },
-    case: {
-      collision: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
+    twins: {
+      case: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
+      plural: "{{other}} also exists: one concept, two names; merge them",
+      synonyms: "one thing under two names, keep one",
     },
     leak: {
       artifact: "build output that is not gitignored, so it gets committed",
@@ -88,9 +94,6 @@ export default {
     lifecycle: {
       expired: "{{name}} reached end of life on {{date}}, no more security fixes → {{use}}",
       rotten: "{{name}} reached end of life on {{date}}, more than two years ago → {{use}}",
-    },
-    exclusive: {
-      conflict: "one thing under two names, keep one",
     },
     stack: {
       conflict: "{{role}}: {{tools}} at once, they fight over the same job, keep one",
@@ -112,6 +115,8 @@ export default {
     bunRunsTs: "Bun runs TypeScript directly.",
     devVars: "Worker secrets, gitignore it and commit .dev.vars.example instead",
     wranglerState: "local Wrangler state, gitignore it",
+    claudeLocal: "personal Claude Code file; its docs say to keep it out of git (code.claude.com/docs/en/memory, /settings)",
+    localProperties: "machine-specific Android SDK path; the file's own header says it must NOT be checked in",
     nextSrcIgnored: "Next.js ignores src/app and src/pages when app/ or pages/ is at the root (nextjs.org/docs/app/api-reference/file-conventions/src-folder)",
     nextCase: "Next.js looks for lowercase app/, pages/ and public/; this name works on macOS and vanishes on Linux (nextjs.org/docs/app/getting-started/project-structure)",
     nextProxy: "deprecated in Next.js 16, rename it to proxy (nextjs.org/docs/app/api-reference/file-conventions/proxy)",

@@ -43,8 +43,8 @@ describe("committed build output", () => {
   });
 });
 
-describe("agent work logs", () => {
-  it("flags root docs named after an event, and nothing else", async () => {
+describe("leftovers", () => {
+  it("flags docs named after an event: any name at the root, SCREAMING_CASE deeper", async () => {
     expect(
       await findings({
         "README.md": "",
@@ -54,7 +54,50 @@ describe("agent work logs", () => {
         "IMPLEMENTATION_COMPLETE.md": "",
         "FIXES_SUMMARY.md": "",
         "docs/BUGFIX_LOGIN.md": "",
+        "docs/report-format.md": "",
+        "docs/adr/ADR-001-IMPLEMENTATION.md": "",
       }),
-    ).toEqual(["FIXES_SUMMARY.md", "IMPLEMENTATION_COMPLETE.md"]);
+    ).toEqual(["FIXES_SUMMARY.md", "IMPLEMENTATION_COMPLETE.md", "docs/BUGFIX_LOGIN.md"]);
+  });
+
+  it("flags one-off scripts at the root, unless something names them", async () => {
+    expect(
+      await findings({
+        "package.json": JSON.stringify({ type: "module", files: ["test-utils.js"] }),
+        "test-utils.js": "",
+        "fix_login.sh": "",
+        "scripts/fix_login.sh": "",
+      }),
+    ).toEqual(["fix_login.sh"]);
+  });
+
+  it("flags hand-made backups and release binaries, but not fixtures or vendored code", async () => {
+    expect(
+      await findings({
+        "package.json.bak": "",
+        "public/logo (1).png": "",
+        "app-release.apk": "",
+        "vendor/serde/Cargo.toml.orig": "",
+        "test/fixtures/setup.exe": "",
+      }),
+    ).toEqual(["app-release.apk", "package.json.bak", "public/logo (1).png"]);
+  });
+
+  it("warns once when the root fills up with hand-written docs", async () => {
+    const docs = Object.fromEntries(["A", "B", "C", "D", "E", "F"].map((n) => [`GUIDE_${n}.md`, ""]));
+    expect(await findings(docs)).toEqual(["*.md"]);
+    delete docs["GUIDE_F.md"];
+    expect(await findings(docs)).toEqual([]);
+  });
+
+  it("flags personal files their tools say to keep out of git", async () => {
+    expect(await findings({ "CLAUDE.local.md": "", ".claude/settings.local.json": "{}", ".claude/settings.json": "{}", "android/local.properties": "" }))
+      .toEqual([".claude/settings.local.json", "CLAUDE.local.md", "android/local.properties"]);
+  });
+});
+
+describe("twins", () => {
+  it("flags a plural next to its singular", async () => {
+    expect(await findings({ "plugin/a.ts": "", "plugins/b.ts": "", "src/a.ts": "" })).toEqual(["plugin/"]);
   });
 });

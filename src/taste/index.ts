@@ -48,7 +48,7 @@ function detectRuntime(root: string): Runtime {
  */
 export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
   const runtime = opts.runtime ?? detectRuntime(root);
-  const tastes: Array<[string, Rule[]]> = [["base", base()]];
+  const tastes: Array<[string, Rule[]]> = [["base", base({ workspacePackage: opts.workspacePackage })]];
 
   if (anyExists(root, ["package.json"])) {
     tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);

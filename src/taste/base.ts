@@ -2,17 +2,17 @@ import { taste } from "./define";
 
 /**
  * Applies to every repository. Only facts: things that leak, things that rot,
- * leftovers of chous's old config. Where files live is each ecosystem's own
+ * leftovers. Where files live is each ecosystem's own
  * business — SQLite, React and Vue all lay out their roots differently, and
  * all of them are right.
  */
-export function base() {
+export function base(opts: { workspacePackage?: boolean } = {}) {
   const t = taste("base");
 
   t.lifecycle();
   t.artifacts();
-  t.worklogs();
-  t.caseCollisions();
+  t.leftovers({ scripts: !opts.workspacePackage });
+  t.twins();
 
   t.no([".chous", ".chousignore"], { reason: "reason.chousConfig" });
 
@@ -22,6 +22,10 @@ export function base() {
     reason: "reason.envLocal",
   });
   t.no(["**/*.log"], { reason: "reason.logs" });
+
+  // Files their own tools call personal. Each source says "not checked in".
+  t.no(["**/CLAUDE.local.md", "**/.claude/settings.local.json"], { reason: "reason.claudeLocal" });
+  t.no(["**/local.properties"], { reason: "reason.localProperties" });
 
   return t.rules;
 }

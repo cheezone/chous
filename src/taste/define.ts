@@ -26,11 +26,6 @@ export function taste(id: string) {
       push({ kind: "no", names, ...extra });
     },
 
-    /** At most one of these root-level names may exist. */
-    oneOf(names: string[]) {
-      push({ kind: "exclusive", names });
-    },
-
     /** In these roles, a second tool is a bug. */
     oneToolPer(roles: string[]) {
       push({ kind: "stack", roles });
@@ -71,14 +66,14 @@ export function taste(id: string) {
       push({ kind: "artifacts" });
     },
 
-    /** Agent work logs left at the root. */
-    worklogs() {
-      push({ kind: "worklog" });
+    /** Work logs, one-off scripts, hand-made backups, release binaries. */
+    leftovers(opts: { scripts: boolean }) {
+      push({ kind: "leftover", ...opts });
     },
 
-    /** Two paths that differ only in case. */
-    caseCollisions() {
-      push({ kind: "case" });
+    /** One name written two ways: only case differs, or singular next to plural. */
+    twins() {
+      push({ kind: "twins" });
     },
   };
 }

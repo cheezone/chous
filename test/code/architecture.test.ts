@@ -123,8 +123,8 @@ describe("lint pipeline integration", () => {
     writeFileSync(join(dir, "test", "b.test.ts"), "", "utf8");
     const result = await lintWorkspace({ root: dir });
     expect(result.issues.map((i) => i.message)).toEqual([
-      { key: "issue.exclusive.conflict" },
+      { key: "issue.twins.synonyms" },
     ]);
-    expect(result.issues[0]?.ruleSource.taste).toBe("js");
+    expect(result.issues[0]?.ruleSource.taste).toBe("base");
   });
 });

@@ -13,7 +13,7 @@
   - 过期（警告）：官方停止维护日期已过，不满两年（`eol.ts`）。
   - 腐烂（错误）：停止维护满两年（`ROT_AFTER_YEARS`）；作者宣布废弃（`DEPRECATED`）；作者故意破坏（`SABOTAGED`）。
 - `src/taste/eol.ts` 只收**已经过去**并查证过的日期（计划中的日期会变，Node 16 就提前了五个月），条目只增不改；附上官方来源链接。
-- 命名类规则只管「同一概念出现两个名字」（`oneOf`），不规定叫哪个名字。
+- 命名类规则只管「同一概念出现两个名字」（`twins`：只差大小写、`SYNONYM_DIRS` 里的同义目录、根目录单复数并存），不规定叫哪个名字。
 - 引用官方文档时以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason`，报错就是这个原因。
@@ -22,7 +22,7 @@
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导，写错就是类型错误。品味里的原因只存 key（`reason: "reason.xxx"`、`dep.<包名>`、`eol.<产品>`、`role.<角色>`），不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。
-- AI 工作日志（根目录 `*_COMPLETE.md`、`*_SUMMARY.md` 这类）是错误。
+- 残留物（`leftover`）都是错误：工作日志、根目录没被引用的一次性脚本、手动备份、发布二进制；`fixtures`/`vendor` 目录和 ADR 不查（`cargo vendor` 自己会写 `Cargo.toml.orig`）。根目录手写文档超过 `ROOT_DOCS_LIMIT` 份是警告。
 - 包管理：**pnpm**（不是 bun）。`package.json` 中的 `packageManager` 字段（`pnpm@12.x`）是 pnpm 版本的唯一来源。
 - Node 要求：`engines.node >= 22`；CI 矩阵测试 node 22 与 24。
 - 构建：tsdown（基于 rolldown）；测试：vitest。
