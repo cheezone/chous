@@ -5,7 +5,7 @@ import type { MessageKey } from "../../i18n";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, LICENSE_FILE, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
+import { ARTIFACT_DIRS, BACKUP, DECISION_RECORD, LICENSE_FILE, NAME_EXEMPT, SOURCE_FILE, nameStyle, NOT_OURS, ONE_OFF_SCRIPT, RELEASE_BINARY, ROOT_DOCS_LIMIT, STANDARD_DOCS, SYNONYM_DIRS, WORKLOG } from "../../taste/hygiene";
 
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
@@ -143,6 +143,8 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
     const claude = resolve(context.root, "CLAUDE.md");
     if (sameRegularFile(agents, claude)) report("CLAUDE.md", "issue.twins.copy", "AGENTS.md", "warn");
 
+    hitCount += mixedStyles(rule, context);
+
     for (const dir of rootDirs) {
       if (SYNONYM_DIRS.some((g) => g.includes(dir))) continue;
       if (rootDirs.has(`${dir}s`)) report(`${dir}/`, "issue.twins.plural", `${dir}s/`);
@@ -215,4 +217,43 @@ export class LicenseRuleValidator extends BaseRuleValidator<LicenseRule> {
     }
     return { hitCount: 0 };
   }
+}
+
+/**
+ * One directory, one way of naming. Multi-word source files sharing a
+ * directory should agree: `asyncData.ts` beside `lazy-hydration.ts` (Nuxt) is
+ * two conventions in one place. Which one is up to you. PascalCase (components,
+ * classes) and one-word names fit any convention; names a tool chose
+ * (`vite-env.d.ts`, `not-found.tsx`) are not the project's choice.
+ */
+function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
+  const byDir = new Map<string, Map<string, string[]>>();
+  for (const [rel, entry] of context.snapshot.byRel) {
+    if (entry.isDir || NOT_OURS.test(rel) || !SOURCE_FILE.test(entry.name) || NAME_EXEMPT.test(entry.name)) continue;
+    const style = nameStyle(entry.name.split(".")[0]!);
+    if (!style) continue;
+    const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
+    const styles = byDir.get(dir) ?? new Map<string, string[]>();
+    styles.set(style, [...(styles.get(style) ?? []), entry.name]);
+    byDir.set(dir, styles);
+  }
+  let hits = 0;
+  for (const [dir, styles] of byDir) {
+    if (styles.size < 2) continue;
+    hits++;
+    const ordered = [...styles].sort((a, b) => b[1].length - a[1].length);
+    context.rawIssues.push(issueFromRule(rule, {
+      path: `${resolve(context.root, dir)}#styles`,
+      displayPath: dir === "." ? "./" : `${dir}/`,
+      message: {
+        key: "issue.twins.styles",
+        params: {
+          styles: ordered.map(([s, names]) => `${s} ×${names.length}`).join(" + "),
+          examples: ordered.map(([, names]) => names.sort()[0]).join(", "),
+        },
+      },
+      severity: "warn",
+    }));
+  }
+  return hits;
 }

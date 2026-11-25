@@ -13,12 +13,13 @@
   - 过期（警告）：官方停止维护日期已过，不满两年（`eol.ts`）。
   - 腐烂（错误）：停止维护满两年（`ROT_AFTER_YEARS`）；作者宣布废弃（`DEPRECATED`）；作者故意破坏（`SABOTAGED`）。
 - `src/taste/eol.ts` 只收**已经过去**并查证过的日期（计划中的日期会变，Node 16 就提前了五个月），条目只增不改；附上官方来源链接。
-- 命名类规则只管「同一概念出现两个名字」（`twins`：只差大小写、`SYNONYM_DIRS` 里的同义目录、根目录单复数并存），不规定叫哪个名字。
+- 命名类规则（`twins`）：只差大小写、`SYNONYM_DIRS` 里的同义目录、根目录单复数并存、**同一目录里多单词文件名混用 kebab/snake/camel（警告）**。不规定用哪种风格，只要求一致；PascalCase、单词名、工具起的名字（`*.d.ts`、`*.gen.*`、Next.js 的 `not-found.tsx` 等）、Rust（交给 rustc 的 `non_snake_case`）不算。官方仓库也会被报（Nuxt、Vite、React、Bun、cal.com），那是真的混用。
 - 引用官方文档时以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。
 - Monorepo：`lintWorkspace` 先查根目录，再把每个工作区包当成独立项目查（`subSnapshot` 复用根快照，根 `.gitignore` 照样生效）。
 - `no` 规则必须带 `reason`，报错就是这个原因。
+- **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 时显示来源。文案里不写 URL。`pnpm run sources` 逐条抓取页面核对原话还在不在（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
 - 卫生检查（`src/taste/hygiene.ts`）：**不查明文密钥**，那是安全扫描器的事，不是品味。构建产物要靠旁边的文件（`when`）或工具写入的标记文件（`marker`）确认，不能只看目录名（Vite 有手写的 `node_modules` 夹具，Oxc 有叫 `coverage` 的 crate）。
-- 结构类规则要靠数据：只收「在官方仓库里一个没有、在 vibe 项目里很常见」的模式（例如根目录的 AI 工作日志），先在 Vue/Vite/React/Oxc/SQLite 和 `test/samples` 上验证零命中。
+- 结构类规则要拿真实仓库校准：在 Vue/Vite/React/Oxc/SQLite、antfu/sindresorhus/Bun/Deno/Zig/Rust 等仓库和 `test/samples` 上跑一遍，**每一条命中都要人工看**：是真臭味就留着（官方仓库也会臭），是误伤就改规则（例如 ripgrep 的 `RELEASE-CHECKLIST.md`、mdBook 的 `SUMMARY.md`）。官方仓库零命中**不是**目标。
 - 工具冲突（`stack` 规则）只查会互相覆盖的角色：包管理器、格式化、git hooks、发版；只看强信号（配置文件、lockfile、package.json 字段、scripts）。
 - **不要**重新引入 `.chous` 配置、DSL、预设（preset）、人设（persona）或任何让用户自定义规则的入口。改品味就改 `src/taste/`。
 - i18n 用 i18next，只有 `en` 和 `zh`。文案在 `src/locales/{en,zh}.ts`（i18next 打包进 dist，是 devDependency）（TS 模块，不是 JSON：tsdown 的 dts 不支持 JSON）；`zh` 用 `satisfies Messages` 对齐 `en`，key 由 `ParseKeys` 推导，写错就是类型错误。品味里的原因只存 key（`reason: "reason.xxx"`、`dep.<包名>`、`eol.<产品>`、`role.<角色>`），不要在 `src/taste/` 里写文案。不要再引入 typesafe-i18n（它不支持 TS 7）。

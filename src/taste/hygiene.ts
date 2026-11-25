@@ -45,6 +45,24 @@ export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status
  */
 export const SYNONYM_DIRS = [["test", "tests", "__tests__", "spec", "specs"]];
 
+/**
+ * Naming styles of multi-word file names. One word (`index`) fits every style;
+ * PascalCase is left out on purpose: components and classes are PascalCase in
+ * projects whose other files are kebab or camel (React, Vue, Svelte).
+ */
+export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCase" | undefined {
+  if (/^[a-z][a-z0-9]*(-[a-z0-9]+)+$/.test(stem)) return "kebab-case";
+  if (/^[a-z][a-z0-9]*(_[a-z0-9]+)+$/.test(stem)) return "snake_case";
+  if (/^[a-z][a-z0-9]*([A-Z][a-z0-9]*)+$/.test(stem)) return "camelCase";
+  return undefined;
+}
+
+/** Source files whose names follow a convention. Rust is left to rustc's own `non_snake_case`. */
+export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro|py|go|zig|rb|kt|swift|dart)$/;
+
+/** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
+export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client)\./;
+
 /** Decision records keep their history on purpose: `docs/adr/ADR-003-…`, `rfcs/0001-…`. */
 export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[-_]?\d/i;
 
@@ -69,7 +87,7 @@ export const RELEASE_BINARY = /\.(apk|aab|ipa|dmg|msi|msix|appimage|deb|rpm)$/i;
  * anything. Deno commits `dist/` packages for its npm registry tests, Zig a
  * `desktop.ini` test case, `cargo vendor` writes `Cargo.toml.orig` itself.
  */
-export const NOT_OURS = /(^|\/)(tests?|__tests__|specs?|fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?|vendor|third_party)\//i;
+export const NOT_OURS = /(^|\/)(tests?|__tests__|specs?|fixtures?|__fixtures__|testdata|test-data|__snapshots__|examples?|playgrounds?|vendor|third_party)\//i;
 
 /** Where a project keeps its license text: `LICENSE`, `LICENSE.md`, `LICENSE-MIT`, `COPYING`. */
 export const LICENSE_FILE = /^(licen[cs]e|copying|unlicense)([.\-_].*)?$/i;

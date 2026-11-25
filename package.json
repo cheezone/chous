@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "oxlint ./src",
     "prepare": "simple-git-hooks",
-    "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog"
+    "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog",
+    "sources": "tsx scripts/sources.ts"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm run typecheck",

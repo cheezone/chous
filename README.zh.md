@@ -77,14 +77,16 @@ Chous 只嗅臭味，不追时髦。它只看项目的作者或平台自己说�
   停止维护日期写在 [`src/taste/eol.ts`](src/taste/eol.ts)，抄自各项目的官方时间表，只收已经过去的日期。版本取自项目实际运行的：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile 的 `FROM`、锁定版本的 `engines.node`、`vue` / `nuxt` 依赖。满两年后，"过期"会自己变成"腐烂"。
 - **互相打架的工具。** 同时用两个包管理器、两个格式化工具、两套 git hook、两个发版工具。留哪个你自己定。
 - **框架根本不读的文件。** 只收框架官方文档写明的情况，每条提示都附上文档链接：根目录有 `app/` 时的 `src/app`（Next.js 会忽略它）；Next.js 16 的 `middleware.ts`（已改名为 `proxy`）；Nuxt 4 里放在 `app/` 外面的 `pages/`、`layouts/`；没有小写路由目录时的 `App/`、`Pages/`，在 macOS 上能跑，到 Linux 就消失。规则在 [`src/taste/frameworks.ts`](src/taste/frameworks.ts)。
-- **同一个概念两个名字。** `README.md` 旁边还有 `Readme.md`（在 macOS 和 Windows 上检出只会留下一个）；`test/` 和 `tests/` 并存；`plugin/` 和 `plugins/` 并存；`CLAUDE.md` 和 `AGENTS.md` 内容一模一样（Bun 和 cal.com 都是一份文件加一个软链接）。
+- **同一个概念两个名字。** 同一个目录里文件名混用两种风格（`asyncData.ts` 和 `lazy-hydration.ts` 并排，警告：用哪种都行，只用一种）；`README.md` 旁边还有 `Readme.md`（在 macOS 和 Windows 上检出只会留下一个）；`test/` 和 `tests/` 并存；`plugin/` 和 `plugins/` 并存；`CLAUDE.md` 和 `AGENTS.md` 内容一模一样（Bun 和 cal.com 都是一份文件加一个软链接）。
 - **说了有、实际没有的许可证。** `package.json` 写了 `"license": "MIT"`（或 Cargo 的 `license`），却没有许可证全文：MIT、ISC、BSD、Apache 2.0 都要求每份拷贝带上全文。可发布的包完全没有许可证是警告：按 GitHub 文档，别人不能用它。
 - **重复。** monorepo 里同一个依赖用了两个大版本（会装两份）；工作区包里有自己的 lockfile。
-- **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。工具自己说是「个人」的文件：`.env*.local`、`.dev.vars`、`CLAUDE.local.md` 和 `.claude/settings.local.json`（Claude Code 文档），Android 的 `local.properties`（文件头写着「绝不能提交」）。以及 `.DS_Store`、`*.log`。
+- **不该提交的东西。** 没被 gitignore 的构建产物（`node_modules`、`.next`、`dist`、Cargo/Maven 的 `target`、`__pycache__` 等，靠工具写下的标记识别，不只看目录名）。工具自己说是「个人」的文件：`.env*.local`、`.dev.vars`、`CLAUDE.local.md` 和 `.claude/settings.local.json`（Claude Code 文档），Android 的 `local.properties`（文件头写着「绝不能提交」）、JetBrains 的 `.idea/workspace.xml`；以及 Cursor 称为旧格式的 `.cursorrules`。以及 `.DS_Store`、`*.log`。
 - **残留物。** 一次工作留下的东西：以事件或状态命名的 Markdown（`IMPLEMENTATION_COMPLETE.md`、`PHASE_4_PLAN.md`；根目录任何写法，子目录只查全大写，决策记录 ADR 除外）；根目录里没被任何文件引用的一次性脚本（`fix_login.sh`、`test_api.py`）；手动备份（`package.json.bak`、`logo (1).png`）；安装包（`.apk`、`.dmg`、`.msi`，应该放到 Releases）；根目录手写文档超过五份时给一个警告。规则在 [`src/taste/hygiene.ts`](src/taste/hygiene.ts)。实测：Vue、Vite、React、Oxc、SQLite、cal.com、Next.js Commerce、nuxt.com，以及 antfu、sindresorhus、Hono、Bun、Deno、Zig、Rust、ripgrep、tokio、uv 的仓库零命中；28 个 vibe coding 项目里 25 个命中。
 - **声明模块类型。** 每个 package.json 都写 `"type": "module"` 或 `"commonjs"`，这是 Node 官方文档的建议（警告）。
 
-Chous 在 Vite 和 SQLite 上没有任何报错，在 React、Vue、Oxc 上只报出真问题。
+每一条引用别人说法的原因都附有来源：加 `--verbose` 就会在每条结果下面显示出处。原话登记在 [`src/taste/sources.ts`](src/taste/sources.ts)，`pnpm run sources` 会逐条核对原话还在不在页面上。
+
+Chous 在 React、Vue、Vite、Oxc 上也能报出真问题：名气大的项目也有臭的地方。
 
 ### 命令
 

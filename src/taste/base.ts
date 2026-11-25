@@ -27,6 +27,8 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
   // Files their own tools call personal. Each source says "not checked in".
   t.no(["**/CLAUDE.local.md", "**/.claude/settings.local.json"], { reason: "reason.claudeLocal" });
   t.no(["**/local.properties"], { reason: "reason.localProperties" });
+  t.no(["**/.idea/workspace.xml"], { reason: "reason.ideaWorkspace" });
+  t.no(["**/.cursorrules"], { reason: "reason.cursorrules", severity: "warn" });
 
   return t.rules;
 }

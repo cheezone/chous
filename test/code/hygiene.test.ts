@@ -97,6 +97,27 @@ describe("leftovers", () => {
 });
 
 describe("twins", () => {
+  it("warns when one directory names files two ways, not for PascalCase or tool-chosen names", async () => {
+    expect(
+      await findings({
+        "src/composables/asyncData.ts": "",
+        "src/composables/lazy-hydration.ts": "",
+        "src/composables/index.ts": "",
+        "src/components/UserCard.vue": "",
+        "src/components/user-list.vue": "",
+        "src/vite-env.d.ts": "",
+        "src/routeTree.gen.ts": "",
+        "src/main-entry.ts": "",
+        "test/fixtures/fooBar.ts": "",
+        "test/fixtures/foo-baz.ts": "",
+      }),
+    ).toEqual(["src/composables/"]);
+  });
+
+  it("flags editor files their makers call personal or legacy", async () => {
+    expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
+  });
+
   it("flags a plural next to its singular", async () => {
     expect(await findings({ "plugin/a.ts": "", "plugins/b.ts": "", "src/a.ts": "" })).toEqual(["plugin/"]);
   });

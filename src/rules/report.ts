@@ -2,6 +2,7 @@ import type { Issue, IssueMessage, LintResult } from "../types";
 import type { Colorizer } from "../color";
 import type { TFunction } from "../i18n";
 import { APP_NAME } from "../constants";
+import { sourcesFor } from "../taste/sources";
 
 /** Issues shown without `--verbose`; the rest are counted. */
 const CONCISE_LIMIT = 30;
@@ -47,6 +48,9 @@ export function renderReport(
     const icon = issue.severity === "error" ? c.red("✖") : c.yellow("⚠");
     const reason = verbose && issue.reason ? ` ${c.dim(t("report.reason", { reason: t(issue.reason) }))}` : "";
     lines.push(`${icon} ${issue.displayPath.padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
+    if (verbose) {
+      for (const { url } of sourcesFor(issue.reason, issue.message.key)) lines.push(c.dim(`  ${t("report.source", { url })}`));
+    }
   }
   if (shown.length < issues.length) lines.push(c.dim(t("report.moreHidden", { count: issues.length - shown.length })));
   if (shown.length > 0) lines.push("");
