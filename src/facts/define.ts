@@ -95,3 +95,20 @@ export type Tool = {
 export function tool<const T extends Tool>(def: T): T {
   return def;
 }
+
+/** An npm package, and what is wrong with it. Reported as `issue.deps.*`, with `dep.<first name>` as the reason. */
+export type PackageFact = {
+  kind: "native" | "deprecated" | "sabotaged";
+  /** One package, or several doing the same job; the first names the reason. */
+  names: readonly string[];
+  /** What to use instead. */
+  use: string;
+  why: Text;
+  /** The authors' own words. Native entries rest on the platform's docs instead. */
+  sources?: Source[];
+};
+
+/** Declare packages; `const` keeps the first names literal, so `dep.<name>` stays a typed key. */
+export function packages<const T extends readonly PackageFact[]>(list: T): T {
+  return list;
+}

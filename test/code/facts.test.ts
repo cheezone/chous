@@ -9,7 +9,7 @@ import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { lintWorkspace } from "../../src/rules/lint";
-import { FACT_EOL, TOOLS } from "../../src/facts";
+import { FACT_EOL, PACKAGES, TOOLS } from "../../src/facts";
 import type { Example, Text } from "../../src/facts/define";
 import { CONTRACTS } from "../../src/taste/contracts";
 
@@ -101,3 +101,23 @@ for (const eol of FACT_EOL) {
     });
   });
 }
+
+describe("npm packages", () => {
+  it("lists each package once", () => {
+    const names = PACKAGES.flatMap((p) => p.names);
+    expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
+  });
+
+  for (const pkg of PACKAGES) {
+    it(`${pkg.names[0]}: says why in both languages, and quotes its authors unless the platform replaced it`, () => {
+      complete(pkg.why);
+      expect(pkg.use.trim()).not.toBe("");
+      if (pkg.kind === "native") return;
+      expect(pkg.sources?.length).toBeGreaterThan(0);
+      for (const source of pkg.sources ?? []) {
+        expect(source.url).toMatch(/^https:\/\//);
+        expect(source.quote?.trim()).toBeTruthy();
+      }
+    });
+  }
+});

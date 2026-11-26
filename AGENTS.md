@@ -18,7 +18,7 @@
 - 根目录克制：除位置约定文档外最多 `ROOT_DOCS_LIMIT`（3）份文档。这是立场，不是测量。
 - **不按行数、体积、文件数量判**（实测：知名仓库的大文件比 vibe 项目还多，行数证明不了职责过多）。只有官方文档给了具体限制才写规则，例如 `CLAUDE.md` 200 行（Claude Code 文档原话）。巨型文件、平铺目录、多语言混用写进宣言交给 agent，并要求 agent 不得为了行数机械拆分文件。
 - 文件身份靠内容确认：OS 垃圾、`local.properties` 看文件内容（`KNOWN_BY_CONTENT`）；安装包（apk/ipa/msi/deb/rpm/AppImage，smell）和可执行文件/库（exe/dll/so/dylib，review，可能是构建输入，如 Android `jniLibs`）看文件头签名；构建产物目录必须有工具写下的标记文件。
-- 「作者宣布废弃」只认作者的原话（npm `deprecated` 字段、README、安全公告），登记在 `sources.ts`。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
+- 「作者宣布废弃」只认作者的原话（npm `deprecated` 字段、README、安全公告），和包一起登记在 `src/facts/packages/npm.ts`。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - **优先级：生态约定先于 AI 工具约定。** npm、Node、pnpm、Yarn、TypeScript、ESLint、Prettier、Python 工具的规定多年不变，最符合「三年后依然对」；AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研。
 - **工具契约**（`src/taste/contracts.ts`）：一张声明式的表，每条写明看哪些文件、检查什么、属于哪种品味；文案在 `issue.contract.<id>`，原话在 `sources.ts` 同名 key。只收工具官方文档里写明的位置、命名、上限和旧格式。覆盖哪些工具要先调研再定（用户量、是否还在维护、是否改名）：2026 年 Windsurf 已改名 Devin（`.windsurf*` 是 legacy）、Gemini CLI 只服务企业版（`GEMINI.md` 仍被读，不报）、Cursor 已被 SpaceX 收购（产品照常）。文件大小要现读（`statSync`），快照里的 `size` 恒为 0。调研过但没有可报的：Deno 仍在维护、配置没有废弃格式；esbuild 没有配置文件；Tauri v1 没有官方停止维护声明；Babel 的项目级和文件级配置会合并，同一目录两份同类配置 Babel 自己会报错，没有「静默只读一份」可报。一个仓库里每个包都重复的写法（Cargo 的 `authors`）用 `groupBy` 合并成一条并报数量。
 - 工具并存只说「一件事两个工具」，不声称它们会互相破坏（没验证过行为）。
@@ -32,7 +32,7 @@
   - `test/code/facts.test.ts` 对每个工具跑同一套检查：每条事实有原话、中英文都有且占位符一致、正例必报、反例必不报。加工具不用另写测试。
   - 停止维护日期不手写：工具的 `eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `src/facts/data/eol/`（禁止手改）。已记录的日期和官方数据不一致时只报告、不覆盖，交给人判断。
   - `.github/workflows/sources.yml` 每周跑 `pnpm run sync --check` 和 `pnpm run sources`，失败就说明官方文档变了。
-  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose、AI 工具（Agent Skills、Codex、Claude Code、Copilot、Cursor、Devin、Cline）。`contracts.ts` 只剩 chous 自己的观察 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。停止维护时间表已全部迁入（Node、Python、Vue、Nuxt、Angular、Electron、Django、ESLint，各自带读取官方数据的 `parse`，`eol.ts` 只剩查询函数）。其余仍在 `deps.ts`、`sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
+  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose、AI 工具（Agent Skills、Codex、Claude Code、Copilot、Cursor、Devin、Cline）。`contracts.ts` 只剩 chous 自己的观察 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。停止维护时间表已全部迁入（Node、Python、Vue、Nuxt、Angular、Electron、Django、ESLint，各自带读取官方数据的 `parse`，`eol.ts` 只剩查询函数）。npm 包（平台自带、作者废弃、作者破坏）在 `src/facts/packages/npm.ts`，每条带原因的中英文和作者原话。其余仍在 `sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
 - 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
 - **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 显示。文案里不写 URL。`pnpm run sources` 逐条核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
 - 引用官方文档以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。

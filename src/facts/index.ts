@@ -2,7 +2,8 @@
  * Every tool chous knows, and what the rest of chous reads from them. To add
  * a tool: write `tools/<ecosystem>/<tool>.ts`, list it here, run the tests.
  */
-import type { EolDef, Fact, Source, Tool } from "./define";
+import type { EolDef, Fact, PackageFact, Source, Tool } from "./define";
+import npmPackages from "./packages/npm";
 import angular from "./tools/js/angular";
 import electron from "./tools/js/electron";
 import eslint from "./tools/js/eslint";
@@ -102,3 +103,13 @@ export const FACT_SOURCES = Object.fromEntries(FACTS.map((f) => [`issue.contract
 /** Each declared end-of-life schedule, by product. */
 export const FACT_SCHEDULES = {} as Record<FactProduct, EolDef<FactProduct>>;
 for (const e of FACT_EOL) FACT_SCHEDULES[e.product] = e;
+
+/** npm packages the platform replaced, or their authors deprecated or broke. */
+export const PACKAGES: readonly PackageFact[] = npmPackages;
+type DepKey = (typeof npmPackages)[number]["names"][0];
+
+/** `dep.<first name>`: why a package is listed, per language. */
+export const depMessages = (lang: Lang) => byLang(npmPackages.map((p) => [p.names[0], p.why] as [DepKey, PackageFact["why"]]), lang);
+
+/** `dep.<first name>` → the authors' own words. */
+export const DEP_SOURCES = Object.fromEntries(npmPackages.flatMap((p) => ("sources" in p && p.sources ? [[`dep.${p.names[0]}`, p.sources]] : []))) as Partial<Record<`dep.${DepKey}`, Source[]>>;

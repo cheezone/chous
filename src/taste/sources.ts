@@ -10,7 +10,7 @@
  */
 import type { MessageKey } from "../i18n";
 import { EOL } from "./eol";
-import { FACT_SOURCES } from "../facts";
+import { DEP_SOURCES, FACT_SOURCES } from "../facts";
 
 export type Source = {
   /** The page a person reads. */
@@ -25,6 +25,7 @@ const GH = "https://raw.githubusercontent.com";
 
 export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ...FACT_SOURCES,
+  ...DEP_SOURCES,
   "reason.envLocal": [
     { url: "https://vite.dev/guide/env-and-mode", check: `${GH}/vitejs/vite/main/docs/guide/env-and-mode.md`, quote: "loaded in all cases, ignored by git" },
     {
@@ -83,26 +84,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
     },
   ],
   // Dependencies their authors deprecated, called legacy or broke (taste/deps.ts).
-  "dep.request": [{ url: "https://github.com/request/request/issues/3142", check: "https://registry.npmjs.org/request", quote: "request has been deprecated" }],
-  "dep.moment": [{ url: "https://momentjs.com/docs/#/-project-status/", check: `${GH}/moment/moment/develop/README.md`, quote: "Moment.js is a legacy project, now in maintenance mode" }],
-  "dep.node-sass": [{ url: "https://www.npmjs.com/package/node-sass", check: "https://registry.npmjs.org/node-sass", quote: "Node Sass is no longer supported" }],
-  "dep.babel-eslint": [{ url: "https://www.npmjs.com/package/babel-eslint", check: "https://registry.npmjs.org/babel-eslint", quote: "babel-eslint is now @babel/eslint-parser. This package will no longer receive updates." }],
-  "dep.tslint": [{ url: "https://github.com/palantir/tslint/issues/4534", check: "https://registry.npmjs.org/tslint", quote: "TSLint has been deprecated in favor of ESLint" }],
-  "dep.babel-polyfill": [{ url: "https://babeljs.io/docs/babel-polyfill", check: `${GH}/babel/website/main/docs/polyfill.md`, quote: "As of Babel 7.4.0, this package has been deprecated" }],
-  "dep.karma": [{ url: "https://github.com/karma-runner/karma#readme", check: `${GH}/karma-runner/karma/master/README.md`, quote: "Karma is deprecated and is not accepting new features or general bug fixes." }],
-  "dep.react-scripts": [{ url: "https://github.com/facebook/create-react-app#readme", check: `${GH}/facebook/create-react-app/main/README.md`, quote: "## Deprecated" }],
-  "dep.@vue/cli-service": [{ url: "https://github.com/vuejs/vue-cli#readme", check: `${GH}/vuejs/vue-cli/dev/README.md`, quote: "Vue CLI is now in maintenance mode." }],
-  "dep.react-test-renderer": [
-    { url: "https://www.npmjs.com/package/react-test-renderer", check: `${GH}/facebook/react/main/packages/react-test-renderer/README.md`, quote: "react-test-renderer is deprecated and no longer maintained." },
-  ],
-  "dep.colors": [
-    {
-      url: "https://github.com/advisories/GHSA-5rqg-jm4f-cqx7",
-      check: `${GH}/github/advisory-database/main/advisories/github-reviewed/2022/01/GHSA-5rqg-jm4f-cqx7/GHSA-5rqg-jm4f-cqx7.json`,
-      quote: "were published including malicious code that caused a Denial of Service due to an infinite loop",
-    },
-  ],
-  "dep.faker": [{ url: "https://fakerjs.dev/about/announcements/2022-01-14", check: `${GH}/faker-js/faker/next/docs/about/announcements/2022-01-14.md`, quote: "when the main package was deleted" }],
   "reason.deadToolConfig": [
     { url: "https://github.com/palantir/tslint/issues/4534", check: "https://registry.npmjs.org/tslint", quote: "TSLint has been deprecated in favor of ESLint" },
     { url: "https://www.npmjs.com/package/jscs", check: "https://registry.npmjs.org/jscs", quote: "JSCS has merged with ESLint!" },
