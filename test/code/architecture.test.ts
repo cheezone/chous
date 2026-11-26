@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { resolveTaste } from "../../src/taste";
-import { DEPRECATED, NATIVE, SABOTAGED } from "../../src/taste/deps";
+import { DEPRECATED, SABOTAGED } from "../../src/taste/deps";
 import { EOL, eolDate, hasEnded } from "../../src/taste/eol";
 import { pinnedVersion } from "../../src/rules/validators/lifecycle";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
@@ -22,8 +22,6 @@ describe("taste resolution", () => {
 
   it("stacks the JavaScript tastes", () => {
     expect(resolveTaste(project({ "package.json": "{}" })).ids).toEqual(["base", "js"]);
-    expect(resolveTaste(project({ "package.json": "{}", "bun.lock": "" })).ids).toEqual(["base", "js", "bun"]);
-    expect(resolveTaste(project({ "package.json": "{}", "wrangler.jsonc": "{}" })).ids).toEqual(["base", "js", "cloudflare"]);
   });
 
   it("tags every rule with the taste that produced it", () => {
@@ -175,7 +173,7 @@ describe("end of life", () => {
 
 describe("obsolete dependency list", () => {
   it("names each package once", () => {
-    const names = [...NATIVE, ...DEPRECATED, ...SABOTAGED].flatMap((d) => d.names);
+    const names = [...DEPRECATED, ...SABOTAGED].flatMap((d) => d.names);
     expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
   });
 

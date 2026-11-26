@@ -1,10 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`real-world samples > ai-chatbot 1`] = `
-[
-  "review modernity package.json (dotenv) issue.deps.native {"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}",
-]
-`;
+exports[`real-world samples > ai-chatbot 1`] = `[]`;
 
 exports[`real-world samples > nuxt.com 1`] = `
 [
@@ -14,8 +10,4 @@ exports[`real-world samples > nuxt.com 1`] = `
 
 exports[`real-world samples > project-layout 1`] = `[]`;
 
-exports[`real-world samples > pythondotorg 1`] = `
-[
-  "smell modernity docker-compose.yml issue.contract.composeName {}",
-]
-`;
+exports[`real-world samples > pythondotorg 1`] = `[]`;

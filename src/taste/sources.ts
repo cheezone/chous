@@ -18,34 +18,10 @@ const GH = "https://raw.githubusercontent.com";
 export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ...FACT_SOURCES,
   ...DEP_SOURCES,
-  // Framework directories (taste/frameworks.ts).
-  "reason.nextSrcIgnored": [
-    {
-      url: "https://nextjs.org/docs/app/api-reference/file-conventions/src-folder",
-      check: `${GH}/vercel/next.js/canary/docs/01-app/03-api-reference/03-file-conventions/src-folder.mdx`,
-      quote: "will be ignored if app or pages are present in the root directory.",
-    },
-  ],
-  "reason.nextProxy": [
-    {
-      url: "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
-      check: `${GH}/vercel/next.js/canary/docs/01-app/03-api-reference/03-file-conventions/proxy.mdx`,
-      quote: "Middleware is deprecated and renamed to Proxy.",
-    },
-  ],
-  "reason.nuxtSrcDir": [
-    {
-      url: "https://nuxt.com/docs/4.x/getting-started/upgrade#new-directory-structure",
-      check: `${GH}/nuxt/nuxt/4.x/docs/1.getting-started/20.upgrade.md`,
-      quote: "the new Nuxt default srcDir is app/ by default",
-    },
-  ],
   // Two workspace lists (taste/js.ts, monorepo).
   "issue.workspace.listsDiffer": [
     { url: "https://pnpm.io/workspaces", check: `${GH}/pnpm/pnpm.io/main/docs/workspaces.md`, quote: "If the workspaces field later lists different patterns than packages in pnpm-workspace.yaml, pnpm prints a warning, since only pnpm-workspace.yaml is read." },
   ],
-  // Bun runs TypeScript itself (taste/js.ts, bun).
-  "reason.bunRunsTs": [{ url: "https://bun.com/docs/runtime", check: `${GH}/oven-sh/bun/main/docs/runtime/index.mdx`, quote: "Bun supports TypeScript and JSX with no configuration." }],
   // Files with a claim to the root, and where releases belong (taste/hygiene.ts). Build output is
   // known by the marker its tool writes: a fact, not someone's word.
   "issue.leak.venv": [

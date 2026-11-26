@@ -14,12 +14,12 @@ describe("nested projects", () => {
       };
       write("package.json", JSON.stringify({ name: "root", private: true, packageManager: "pnpm@11.0.0" }));
       write("pnpm-lock.yaml", "lockfileVersion: '9.0'\n");
-      write("frontend/package.json", JSON.stringify({ name: "frontend", private: true, dependencies: { request: "^2.88.0" } }));
+      write("frontend/package.json", JSON.stringify({ name: "frontend", private: true, dependencies: { moment: "^2.30.0" } }));
       write("frontend/package-lock.json", "{}");
       write("backend/package.json", JSON.stringify({ name: "backend", private: true }));
       write("backend/yarn.lock", "");
       const issues = (await lintWorkspace({ root })).issues;
-      expect(issues.map((i) => i.displayPath)).toContain("frontend/package.json (request)");
+      expect(issues.map((i) => i.displayPath)).toContain("frontend/package.json (moment)");
       expect(JSON.stringify(issues)).not.toContain("nestedLockfile");
     } finally {
       rmSync(root, { recursive: true, force: true });

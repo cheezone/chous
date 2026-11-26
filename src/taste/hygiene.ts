@@ -65,11 +65,10 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
  * one language: PEP 8's `snake_case.py` beside a kebab TypeScript config is two
  * languages' habits, not a mix. Languages that prescribe the style themselves
  * are held to it by their facts instead (src/facts/tools/: Rust, Dart, Kotlin,
- * Elixir, Vue), and so are camelCase Python modules (PEP 8) and an Angular
- * app's TypeScript.
+ * Elixir), and so are camelCase Python modules (PEP 8).
  */
 const LANGUAGES: Array<[string, RegExp]> = [
-  ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|svelte|astro)$/],
+  ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro)$/],
   ["py", /\.py$/],
   ["go", /\.go$/],
   ["zig", /\.zig$/],

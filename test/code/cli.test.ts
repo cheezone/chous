@@ -31,8 +31,8 @@ describe("cli", () => {
     const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
     const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
     const en = runCli(["-l", "en", "-v"], garbage).stdout;
-    expect(zh).toContain("平台已经自带 fetch：能否完全替代 node-fetch，取决于你怎么用它 （fetch 在 Node 18+ 和所有浏览器里都是全局的。）");
-    expect(en).toContain("the platform ships fetch: whether it fully replaces node-fetch depends on how you use it (fetch is global in Node 18+ and every browser.)");
+    expect(zh).toContain("moment：维护者称它为处于维护模式的遗留项目。 → dayjs / date-fns / Temporal");
+    expect(en).toContain("moment: Its maintainers call it a legacy project in maintenance mode. → dayjs / date-fns / Temporal");
   });
 
   it("speaks JSON to agents: every finding with its verdict, taste and sources", () => {

@@ -54,7 +54,7 @@ export async function lintWorkspace(opts: {
   // A fixture package is a test input, not the project's own code.
   for (const pkg of snapshot.workspace.packages.filter((p) => !snapshot.notOurs.test(`${p}/`))) {
     const pkgRoot = resolve(root, pkg);
-    const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true, runtime: taste.runtime });
+    const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true });
     for (const issue of await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg), today)) {
       // The same finding reached from the root and from a package is reported once.
       if (seen.has(issueKey(issue))) continue;

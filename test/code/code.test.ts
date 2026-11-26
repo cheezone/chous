@@ -26,10 +26,6 @@ function fixtures(kind: "pass" | "fail"): string[] {
 
 /** What each failing fixture must report — failing for the wrong reason is a bug. */
 const EXPECTED: Record<string, string[]> = {
-  bun: [
-    "bun.lockb → not allowed: binary lockfile",
-  ],
-  cloudflare: [".dev.vars → not allowed: Worker secrets"],
   eol: [
     ".nvmrc (Node 16) → Node 16 reached end of life on 2023-09-11",
     "Dockerfile (Python 2.7) → Python 2.7 reached end of life on 2020-01-01",
@@ -37,7 +33,7 @@ const EXPECTED: Record<string, string[]> = {
   ],
   garbage: [
     "moment: Its maintainers call it a legacy project in maintenance mode. → dayjs",
-    "node-sass: Its authors: Node Sass is no longer supported. → sass",
+    "node-sass 9.0.0, deprecated by its authors on npm: “Node Sass is no longer supported. Please use `sass` or `sass-embedded` instead.”",
   ],
   js: ["src/ → mixes camelCase ×1 + kebab-case ×1 names"],
   monorepo: [

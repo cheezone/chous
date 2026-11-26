@@ -259,12 +259,10 @@ function sameRegularFile(a: string, b: string): boolean {
  * the project's choice.
  */
 function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
-  const angular = context.snapshot.manifest.deps.has("@angular/core");
   const byDir = new Map<string, Map<string, string[]>>();
   for (const [rel, entry] of context.snapshot.byRel) {
     const language = entry.isDir ? undefined : languageOf(entry.name);
     if (!language || context.snapshot.notOurs.test(rel) || NAME_EXEMPT.test(entry.name)) continue;
-    if (angular && entry.name.endsWith(".ts")) continue; // Angular's style guide: hyphens
     // A leading `_` or `$` marks private or special files; the name after it is the style.
     const style = nameStyle((language === "go" ? goStem(entry.name) : entry.name.split(".")[0]!).replace(/^[_$]+/, ""));
     if (!style || (style === "camelCase" && language === "py")) continue; // PEP 8: no capitals

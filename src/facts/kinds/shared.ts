@@ -8,8 +8,6 @@ export type Common<Id extends string> = {
   examples: Examples;
   value?: Value;
   groupBy?(rel: string, file: ContractFile): string;
-  /** Also look inside fixtures and vendored code (a platform limit applies to every file). */
-  everywhere?: boolean;
 };
 
 /** Which files a fact looks at: by name, anywhere or only in `dir`, or only at the project root. */
@@ -39,7 +37,6 @@ export function build<Id extends string>(
     match,
     check,
     groupBy: spec.groupBy,
-    everywhere: spec.everywhere,
     message,
     sources: spec.sources,
     examples: spec.examples,

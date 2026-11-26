@@ -37,12 +37,9 @@ export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
         context.rawIssues.push(issueFromRule(rule, {
           path: `${manifest.path}#forbidden:${name}`,
           displayPath: `package.json (${safeLabel(name)})`,
-          message: rule.native
-            ? { key: "issue.deps.native", params: { name, use: rule.use } }
-            : { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
-          verdict: rule.native ? "review" : "smell",
+          message: { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
           // The authors' own words are in the message already.
-          ...(rule.native ? {} : { reason: false as const }),
+          reason: false,
         }));
       }
     }

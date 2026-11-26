@@ -32,11 +32,3 @@ export function deprecatedKeys<const Id extends string>(
     spec.message,
   );
 }
-
-/** A table a tool deprecated, e.g. Cargo's `[replace]`. */
-export function deprecatedTable<const Id extends string>(
-  spec: Common<Id> & { file: string; table: string; message: Text },
-): Fact<Id> {
-  const header = new RegExp(`^[ \\t]*\\[${escape(spec.table)}\\][ \\t]*(#.*)?$`, "m");
-  return build(spec, "modernity", named([spec.file]), (f) => (header.test(f.text()) ? {} : undefined), spec.message);
-}

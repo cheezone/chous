@@ -48,9 +48,9 @@ export function taste(id: string) {
       push({ kind: "deprecated", value: "modernity" });
     },
 
-    /** Dependencies their authors ended (a smell), or with `native` ones the platform now ships (for review). */
-    obsolete(names: string[], use: string, why: MessageKey, opts?: { native?: boolean }) {
-      push({ kind: "deps", names, use, reason: why, value: "modernity", ...opts });
+    /** Dependencies their authors ended. */
+    obsolete(names: string[], use: string, why: MessageKey) {
+      push({ kind: "deps", names, use, reason: why, value: "modernity" });
     },
 
     /** Runtimes and frameworks past their published end of life. */

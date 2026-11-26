@@ -138,11 +138,11 @@ describe("leftovers", () => {
 
   it("sees a deprecated package behind an npm alias, and a style behind a leading underscore", async () => {
     const found = await claims({
-      "package.json": JSON.stringify({ name: "a", private: true, dependencies: { http: "npm:request@2", dates: "npm:moment@2.30.1" } }),
+      "package.json": JSON.stringify({ name: "a", private: true, dependencies: { dates: "npm:moment@2.30.1" } }),
       "src/_fooBar.ts": "",
       "src/_foo-bar.ts": "",
     });
-    expect(found).toEqual(expect.arrayContaining(["smell package.json (request)", "smell package.json (moment)", "smell src/"]));
+    expect(found).toEqual(expect.arrayContaining(["smell package.json (moment)", "smell src/"]));
   });
 
   it("knows a built executable without an extension, and more installers, by their headers", async () => {
@@ -182,18 +182,14 @@ describe("leftovers", () => {
 
   it("flags personal files their tools say to keep out of git", async () => {
     const header = "## This file must *NOT* be checked into Version Control Systems,\nsdk.dir=/x\n";
-    expect(await findings({ "CLAUDE.local.md": "", ".claude/settings.local.json": "{}", ".claude/settings.json": "{}", "android/local.properties": header, "config/local.properties": "port=1" }))
-      .toEqual([".claude/settings.local.json", "CLAUDE.local.md", "android/local.properties"]);
-  });
-
-  it("smells a CLAUDE.md past the 200 lines Claude Code's docs target", async () => {
-    expect(await claims({ "CLAUDE.md": "x\n".repeat(200), "packages/a/CLAUDE.md": "x\n".repeat(201) })).toEqual(["smell packages/a/CLAUDE.md"]);
+    expect(await findings({ ".env.local": "A=1", ".env": "A=1", "android/local.properties": header, "config/local.properties": "port=1" }))
+      .toEqual([".env.local", "android/local.properties"]);
   });
 
 });
 
 describe("twins", () => {
-  it("warns when one directory names files two ways, not for PascalCase or tool-chosen names; Vue's own rule takes .vue files", async () => {
+  it("warns when one directory names files two ways, not for PascalCase or tool-chosen names", async () => {
     expect(
       await findings({
         "src/composables/asyncData.ts": "",
@@ -201,13 +197,15 @@ describe("twins", () => {
         "src/composables/index.ts": "",
         "src/components/UserCard.vue": "",
         "src/components/user-list.vue": "",
+        "src/views/userProfile.vue": "",
+        "src/views/order-list.vue": "",
         "src/vite-env.d.ts": "",
         "src/routeTree.gen.ts": "",
         "src/main-entry.ts": "",
         "test/fixtures/fooBar.ts": "",
         "test/fixtures/foo-baz.ts": "",
       }),
-    ).toEqual(["src/components/UserCard.vue", "src/composables/"]);
+    ).toEqual(["src/composables/", "src/views/"]);
   });
 
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
@@ -224,8 +222,8 @@ describe("twins", () => {
     ).toEqual(["relay/aws/"]);
   });
 
-  it("flags editor files their makers call personal or legacy", async () => {
-    expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
+  it("flags editor files their makers call personal", async () => {
+    expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "" })).toEqual([".idea/workspace.xml"]);
   });
 
   it("finds names that differ only by case, never names that differ by meaning", async () => {

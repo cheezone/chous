@@ -61,7 +61,7 @@ describe("manifests built to crash a parser", () => {
     for (const body of ["null", "[]", '"x"', "1"]) await expect(lintWorkspace({ root: project({ "package.json": body }) })).resolves.toBeTruthy();
   });
 
-  it("does not recurse into a deeply nested tsconfig value or dependency", async () => {
+  it("does not recurse into a deeply nested manifest value or dependency", async () => {
     const deep = (n: number) => `${"[".repeat(n)}${"]".repeat(n)}`;
     const root = project({
       "tsconfig.json": `{"compilerOptions":{"baseUrl":${deep(5000)}}}`,
@@ -69,8 +69,8 @@ describe("manifests built to crash a parser", () => {
       "pnpm-workspace.yaml": "packages:\n  - a\n",
       "a/package.json": JSON.stringify({ name: "a", dependencies: { x: "^1.0.0" } }),
     });
-    const { result } = await timed(root);
-    expect(result.issues.find((i) => i.message.key === "issue.contract.tsconfigDeprecated")?.message.params).toEqual({ options: "baseUrl: […]" });
+    const { ms } = await timed(root);
+    expect(ms).toBeLessThan(5_000);
   });
 
   it("expands Dockerfile ARGs only where an image is named, and only short ones", async () => {

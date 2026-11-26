@@ -105,11 +105,12 @@ describe("lockfiles", () => {
       mkdirSync(dirname(join(root, path)), { recursive: true });
       writeFileSync(join(root, path), content);
     };
-    write("package.json", JSON.stringify({ name: "a", private: true, dependencies: { "vue-i18n": "9.14.5", request: "^2" }, devDependencies: { eslint: "8.57.0" } }));
+    write("package.json", JSON.stringify({ name: "a", private: true, dependencies: { "vue-i18n": "9.14.5", request: "^2", moment: "2.30.1" }, devDependencies: { eslint: "8.57.0" } }));
     write("package-lock.json", JSON.stringify({
       lockfileVersion: 3,
       packages: {
-        "": { dependencies: { "vue-i18n": "9.14.5", request: "^2" }, devDependencies: { eslint: "8.57.0" } },
+        "": { dependencies: { "vue-i18n": "9.14.5", request: "^2", moment: "2.30.1" }, devDependencies: { eslint: "8.57.0" } },
+        "node_modules/moment": { version: "2.30.1", deprecated: "known to chous by its README" },
         "node_modules/vue-i18n": { version: "9.14.5", deprecated: "v9 and v10 no longer supported. please migrate to v11." },
         "node_modules/request": { version: "2.88.2", deprecated: "request has been deprecated" },
         "node_modules/eslint": { version: "8.57.0", deprecated: "This version is no longer supported." },
@@ -118,6 +119,7 @@ describe("lockfiles", () => {
     }));
     const found = (await lintWorkspace({ root, today: "2026-11-25" })).issues.filter((i) => i.ruleKind === "deprecated");
     expect(found.map((i) => [i.displayPath, i.message.params])).toEqual([
+      ["package.json (request)", { name: "request", version: "2.88.2", message: "request has been deprecated" }],
       ["package.json (vue-i18n)", { name: "vue-i18n", version: "9.14.5", message: "v9 and v10 no longer supported. please migrate to v11." }],
     ]);
   });

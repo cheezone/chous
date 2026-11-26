@@ -59,7 +59,6 @@ export type DepsRule = RuleBase & {
   /** What to use instead. */
   use: string;
   /** The platform ships something similar: whether it fully replaces the package is for review. */
-  native?: boolean;
 };
 
 /** A package.json field that must not exist. */

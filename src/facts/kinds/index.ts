@@ -3,9 +3,6 @@
  * the words are the same for every tool, its message — and every tool uses it
  * as data. A new tool should need no new code; a new kind is a decision.
  */
-export { exclusive, precedence } from "./precedence";
-export { custom, legacy, misplaced, unread } from "./legacy";
-export { limit, measure } from "./limit";
-export { byDirectory, folder, naming, oneStyle, stem, STYLE } from "./naming";
-export { searchOrder } from "./search";
-export { deprecatedKeys, deprecatedTable } from "./toml";
+export { custom } from "./custom";
+export { byDirectory, folder, naming, stem, STYLE } from "./naming";
+export { deprecatedKeys } from "./toml";

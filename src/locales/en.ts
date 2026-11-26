@@ -70,7 +70,6 @@ export default {
     },
     deps: {
       obsolete: "{{name}}: {{why}} → {{use}}",
-      native: "the platform ships {{use}}: whether it fully replaces {{name}} depends on how you use it",
       deprecated: "{{name}} {{version}}, deprecated by its authors on npm: “{{message}}”",
     },
     manifest: {
@@ -88,7 +87,6 @@ export default {
     },
     contract: {
       ...factMessages("en"),
-      nodeVersions: "Node pinned twice, to different versions: {{versions}}",
     },
     twins: {
       case: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
@@ -116,13 +114,7 @@ export default {
     coreDump: "a crash dump the operating system wrote (ELF core file); delete it",
     nestedLockfile: "one lockfile, at the workspace root",
     nestedPackageManager: "set it once, in the workspace root",
-    bunRunsTs: "Bun runs TypeScript directly.",
     localProperties: "machine-specific Android SDK path; the file's own header says it must NOT be checked in",
-    nextSrcIgnored: "Next.js ignores src/app and src/pages when app/ or pages/ is at the root",
-    nextCase: "Next.js looks for lowercase app/, pages/ and public/; this name works on macOS and vanishes on Linux",
-    nextProxy: "deprecated in Next.js 16, rename it to proxy",
-    nuxtSrcDir: "Nuxt 4 reads these from app/, so this one is never loaded; move it into app/",
-    nuxtCase: "Nuxt scans lowercase directories only; this name works on macOS and vanishes on Linux",
   },
   dep: depMessages("en"),
   eol: eolMessages("en"),

@@ -1,70 +1,35 @@
 /**
- * Every tool chous knows, and what the rest of chous reads from them. To add
- * a tool: write `tools/<ecosystem>/<tool>.ts`, list it here, run the tests.
+ * The few things chous knows about named software, and what the rest of chous
+ * reads from them. Only what holds for years without upkeep: end-of-life
+ * schedules, deprecations that happened, a language's own naming rules, files
+ * a tool says never to commit. Version-specific config, read orders, defaults
+ * and limits are not collected (AGENTS.md: what gets in).
  */
 import type { AbsentFact, EolDef, Fact, PackageFact, Scope, Source, Tool } from "./define";
 import npmPackages from "./packages/npm";
 import angular from "./tools/js/angular";
-import bun from "./tools/js/bun";
 import electron from "./tools/js/electron";
 import envFiles from "./tools/js/env-files";
 import eslint from "./tools/js/eslint";
 import node from "./tools/js/node";
-import npm from "./tools/js/npm";
 import nuxt from "./tools/js/nuxt";
-import oxlint from "./tools/js/oxlint";
-import pnpm from "./tools/js/pnpm";
-import prettier from "./tools/js/prettier";
-import retiredLinters from "./tools/js/retired-linters";
-import tailwind from "./tools/js/tailwind";
-import typescript from "./tools/js/typescript";
-import vite from "./tools/js/vite";
-import vitest from "./tools/js/vitest";
 import vue from "./tools/js/vue";
-import yarn from "./tools/js/yarn";
 import cargo from "./tools/rust/cargo";
 import rust from "./tools/rust/rust";
-import rustup from "./tools/rust/rustup";
 import django from "./tools/python/django";
-import mypy from "./tools/python/mypy";
-import poetry from "./tools/python/poetry";
-import pytest from "./tools/python/pytest";
 import python from "./tools/python/python";
-import ruff from "./tools/python/ruff";
 import go from "./tools/go/go";
 import dart from "./tools/dart/dart";
 import kotlin from "./tools/kotlin/kotlin";
 import elixir from "./tools/elixir/elixir";
 import composer from "./tools/php/composer";
-import rails from "./tools/ruby/rails";
-import github from "./tools/github/github";
-import compose from "./tools/docker/compose";
-import wrangler from "./tools/cloudflare/wrangler";
 import jetbrains from "./tools/ide/jetbrains";
-import agentSkills from "./tools/ai/agent-skills";
-import claudeCode from "./tools/ai/claude-code";
-import cline from "./tools/ai/cline";
-import codex from "./tools/ai/codex";
-import copilot from "./tools/ai/copilot";
-import cursor from "./tools/ai/cursor";
-import devin from "./tools/ai/devin";
 
 export const TOOLS = [
   // JavaScript and TypeScript
   node,
-  bun,
-  npm,
-  pnpm,
-  yarn,
-  typescript,
   eslint,
-  retiredLinters,
-  oxlint,
-  prettier,
   envFiles,
-  vite,
-  vitest,
-  tailwind,
   vue,
   nuxt,
   angular,
@@ -72,35 +37,18 @@ export const TOOLS = [
   // Rust
   rust,
   cargo,
-  rustup,
   // Python
   python,
   django,
-  poetry,
-  pytest,
-  ruff,
-  mypy,
   // Go, Dart, Kotlin, Elixir
   go,
   dart,
   kotlin,
   elixir,
-  // PHP, Ruby
+  // PHP
   composer,
-  rails,
-  // Platforms
-  github,
-  compose,
-  wrangler,
+  // Editors
   jetbrains,
-  // AI tools: researched again before each change, since they rename and move fast.
-  agentSkills,
-  codex,
-  claudeCode,
-  copilot,
-  cursor,
-  devin,
-  cline,
 ] as const satisfies readonly Tool[];
 
 type Facts = (typeof TOOLS)[number]["facts"][number];

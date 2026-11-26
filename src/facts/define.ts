@@ -54,8 +54,6 @@ export type Fact<Id extends string = string> = {
   groupBy?(rel: string, file: ContractFile): string;
   /** The group itself is what the fact is about (a directory's name): name it even when it holds one file. */
   aboutGroup?: boolean;
-  /** Also look inside fixtures and vendored code. */
-  everywhere?: boolean;
   message: Text;
   /** The tool's own words. Every fact has at least one. */
   sources: Source[];
@@ -91,7 +89,7 @@ export type EolDef<P extends string = string> = {
 };
 
 /** Which projects an absent fact applies to: every one, JavaScript ones, those on Bun, or on Cloudflare Workers. */
-export type Scope = "base" | "js" | "bun" | "cloudflare";
+export type Scope = "base";
 
 /**
  * A path the tool says should not be in the repository: personal, local or
@@ -135,7 +133,7 @@ export function tool<const T extends Tool>(def: T): T {
 
 /** An npm package, and what is wrong with it. Reported as `issue.deps.*`, with `dep.<first name>` as the reason. */
 export type PackageFact = {
-  kind: "native" | "deprecated" | "sabotaged";
+  kind: "deprecated" | "sabotaged";
   /** One package, or several doing the same job; the first names the reason. */
   names: readonly string[];
   /** What to use instead. */

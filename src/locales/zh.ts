@@ -72,7 +72,6 @@ export default {
     deps: {
       deprecated: "{{name}} {{version}}，作者已在 npm 上宣布废弃：「{{message}}」",
       obsolete: "{{name}}：{{why}} → {{use}}",
-      native: "平台已经自带 {{use}}：能否完全替代 {{name}}，取决于你怎么用它",
     },
     manifest: {
       remove: "删除 \"{{field}}\"：{{reason}}",
@@ -89,7 +88,6 @@ export default {
     },
     contract: {
       ...factMessages("zh"),
-      nodeVersions: "Node 版本写了两遍，而且不一样：{{versions}}",
     },
     twins: {
       case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
@@ -117,13 +115,7 @@ export default {
     coreDump: "操作系统写下的崩溃转储（ELF core 文件），删掉",
     nestedLockfile: "只能有一个 lockfile，放在工作区根目录",
     nestedPackageManager: "只在工作区根目录设置一次",
-    bunRunsTs: "Bun 直接运行 TypeScript。",
     localProperties: "本机的 Android SDK 路径；文件自带的注释就写着「绝不能提交」",
-    nextSrcIgnored: "根目录有 app/ 或 pages/ 时，Next.js 会忽略 src/app 和 src/pages",
-    nextCase: "Next.js 只认小写的 app/、pages/、public/；在 macOS 上能跑，到了 Linux 就找不到",
-    nextProxy: "Next.js 16 已废弃，改名为 proxy",
-    nuxtSrcDir: "Nuxt 4 从 app/ 读取这些目录，这里的永远不会被加载；移进 app/",
-    nuxtCase: "Nuxt 只扫描小写目录；在 macOS 上能跑，到了 Linux 就找不到",
   },
   dep: depMessages("zh"),
   eol: eolMessages("zh"),

@@ -1,4 +1,3 @@
-import { statSync } from "node:fs";
 import { readText } from "../../fsutil";
 import { resolve } from "node:path";
 import type { ContractsRule, Rule } from "../../types";
@@ -10,15 +9,7 @@ import { CONTRACTS, type ContractFile } from "../../taste/contracts";
 
 const read = (path: string) => readText(path);
 
-function statSize(path: string): number {
-  try {
-    return statSync(path).size;
-  } catch {
-    return 0;
-  }
-}
-
-/** Runs every contract over each file: the facts in src/facts/ and chous's own (taste/contracts.ts). */
+/** Runs every contract over each file: the facts in src/facts/. */
 export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
   canHandle(rule: Rule): rule is ContractsRule {
     return rule.kind === "contracts";
@@ -29,27 +20,6 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
     const files = [...snapshot.byRel.values()].filter((e) => !e.isDir);
     const all = new Set(files.map((e) => e.relPath));
 
-    const pkgs = new Map<string, Record<string, any> | undefined>();
-    const pkgFor = (dir: string): Record<string, any> | undefined => {
-      for (let d = dir; ; d = d.includes("/") ? d.slice(0, d.lastIndexOf("/")) : "") {
-        if (!pkgs.has(d)) {
-          const path = d ? `${d}/package.json` : "package.json";
-          let pkg: Record<string, any> | undefined;
-          try {
-            pkg = all.has(path) ? JSON.parse(read(resolve(root, path))) : undefined;
-          } catch {
-            pkg = undefined;
-          }
-          pkgs.set(d, pkg);
-        }
-        if (pkgs.get(d)) return pkgs.get(d);
-        if (!d) return undefined;
-      }
-    };
-    let cssConfig: boolean | undefined;
-    const cssLoadsConfig = () =>
-      (cssConfig ??= files.some((e) => /\.(css|pcss|postcss)$/.test(e.name) && !context.snapshot.notOurs.test(e.relPath) && /@config\b/.test(read(e.absPath))));
-
     const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; first: string; params: Record<string, string | number> }>();
     let hitCount = 0;
 
@@ -57,22 +27,17 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
       const rel = entry.relPath;
       const ours = !context.snapshot.notOurs.test(rel);
       let text: string | undefined;
-      let size: number | undefined;
       const file: ContractFile = {
         rel,
         name: entry.name,
         dir: rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "",
-        bytes: () => (size ??= statSize(entry.absPath)),
         text: () => (text ??= read(entry.absPath)),
         all,
         ours: (other) => !context.snapshot.notOurs.test(other),
-        pkg: () => pkgFor(rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ""),
-        cssLoadsConfig,
         read: (other) => (all.has(other) ? read(resolve(root, other)) : ""),
-        rootPkg: () => pkgFor(""),
       };
       for (const contract of CONTRACTS) {
-        if ((!ours && !contract.everywhere) || !contract.match.test(rel)) continue;
+        if (!ours || !contract.match.test(rel)) continue;
         let params: ReturnType<typeof contract.check>;
         try {
           params = contract.check(file);
