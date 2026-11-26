@@ -14,7 +14,7 @@
 
 调研于 2026-11。
 
-停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +2
+停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +3
 
 ### Bun
 
@@ -22,7 +22,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 现代 | 不该提交：`bun.lockb` — 二进制 lockfile，运行 `bun install --save-text-lockfile`，改为提交 bun.lock | bun.com | eryngordon/quiz-lead-magnet-maker, ruvnet/symbolic-scribe, SankrityaT/InstaCare +2 |
+| 现代 | 不该提交：`bun.lockb` — 二进制 lockfile，运行 `bun install --save-text-lockfile`，改为提交 bun.lock | bun.com | oven-sh/bun, eryngordon/quiz-lead-magnet-maker, honojs/hono +4 |
 
 ### npm
 
@@ -68,7 +68,7 @@
 | 秩序 | 永远不会被读：ESLint 每个目录只用一份配置，这里是 … | eslint.org | 尚未见到 |
 | 现代 | ESLint … 下的 eslintrc：ESLint 9 起已废弃、默认不再查找，10 起彻底移除；改用 eslint.config.js | eslint.org | oven-sh/bun |
 
-停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +20
+停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals, AdekunleBamz/stackhub +24
 
 ### TSLint, JSCS
 
@@ -157,7 +157,7 @@
 
 调研于 2026-11。
 
-停止维护：Electron 的 41 个版本，从 2 到 42；最近一个在 2026-10-20 停止维护。来源：releases.electronjs.org；真实命中：facebook/react
+停止维护：Electron 的 41 个版本，从 2 到 42；最近一个在 2026-10-20 停止维护。来源：releases.electronjs.org；真实命中：facebook/react, QuantumNous/new-api
 
 ### Rust
 

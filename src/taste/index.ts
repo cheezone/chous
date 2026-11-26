@@ -17,6 +17,8 @@ export type TasteOptions = {
   monorepo?: boolean;
   /** A package inside a monorepo. */
   workspacePackage?: boolean;
+  /** A project of its own inside the repository, outside any workspace: its own package.json and lockfile. */
+  nestedProject?: boolean;
   /** Runtime inherited from the workspace root. */
   runtime?: Runtime;
 };
@@ -48,10 +50,11 @@ function detectRuntime(root: string): Runtime {
  */
 export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
   const runtime = opts.runtime ?? detectRuntime(root);
-  const tastes: Array<[string, Rule[]]> = [["base", base({ workspacePackage: opts.workspacePackage })]];
+  const inner = opts.workspacePackage || opts.nestedProject;
+  const tastes: Array<[string, Rule[]]> = [["base", base({ workspacePackage: inner })]];
 
   if (anyExists(root, ["package.json"])) {
-    tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);
+    tastes.push(["js", js({ workspacePackage: opts.workspacePackage, repositoryRoot: !inner })]);
     if (opts.monorepo) tastes.push(["monorepo", monorepo()]);
     if (runtime === "bun") tastes.push(["bun", bun()]);
     const pkg = readJson(resolve(root, "package.json"));

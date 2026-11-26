@@ -103,8 +103,10 @@ export type WorkspaceRule = RuleBase & {
  */
 export type StackRule = RuleBase & {
   kind: "stack";
-  /** Roles where a second tool is always a bug, e.g. `package-manager`. */
+  /** Roles where one job takes one tool, e.g. `package-manager`. */
   roles: string[];
+  /** At a repository's root: package managers are also counted in the projects nested in it (`frontend/` on npm, `backend/` on Yarn). */
+  acrossProjects?: boolean;
 };
 
 /** A param that is itself a message: translated, then interpolated. */

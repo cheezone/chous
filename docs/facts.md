@@ -14,7 +14,7 @@ Each line is something a tool, platform or package author states about itself, w
 
 Researched 2026-11.
 
-End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +2
+End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +3
 
 ### Bun
 
@@ -22,7 +22,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | Should not be committed: `bun.lockb` — binary lockfile, run `bun install --save-text-lockfile` and commit bun.lock | bun.com | eryngordon/quiz-lead-magnet-maker, ruvnet/symbolic-scribe, SankrityaT/InstaCare +2 |
+| Modernity | Should not be committed: `bun.lockb` — binary lockfile, run `bun install --save-text-lockfile` and commit bun.lock | bun.com | oven-sh/bun, eryngordon/quiz-lead-magnet-maker, honojs/hono +4 |
 
 ### npm
 
@@ -68,7 +68,7 @@ Researched 2026-11.
 | Order | never read: ESLint takes one config per directory, here … | eslint.org | not yet |
 | Modernity | eslintrc with ESLint …: deprecated since ESLint 9, no longer looked for, and gone in 10; use eslint.config.js | eslint.org | oven-sh/bun |
 
-End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +20
+End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals, AdekunleBamz/stackhub +24
 
 ### TSLint, JSCS
 
@@ -157,7 +157,7 @@ End of life: Angular 2 to 19 are no longer supported (no date given). Source: an
 
 Researched 2026-11.
 
-End of life: 41 versions of Electron, from 2 to 42; the latest ended on 2026-10-20. Source: releases.electronjs.org · Seen in real projects: facebook/react
+End of life: 41 versions of Electron, from 2 to 42; the latest ended on 2026-10-20. Source: releases.electronjs.org · Seen in real projects: facebook/react, QuantumNous/new-api
 
 ### Rust
 

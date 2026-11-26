@@ -102,7 +102,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Singular and plural directories side by side deeper down (`language/` and `languages/`) | Both names exist | One kind of thing, one name; they may also be two things | Order | Review |
 | Mixed naming styles in one directory | Each name's style | One directory, one style | Order | Smell |
 | A crowded root | How many docs without a claim to the root it holds | The root is an entrance | Order | Smell |
-| Tools that share a job | Both tools' config, lockfile or scripts | One job, one tool | Order | Smell |
+| Tools that share a job (package managers counted across the repository: `frontend/` on npm and `backend/` on Yarn count) | Both tools' config, lockfile or scripts | One job, one tool | Order | Smell |
 | A second config of one tool in one directory | Which configs exist, and the order in which the tool's docs say it reads them | One tool, one config | Order | Smell |
 | One fact said twice, disagreeing: Node pinned to two versions; in a monorepo, major-version drift, nested lockfiles, workspace lists that differ | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | `CLAUDE.md` identical to `AGENTS.md` | Both files have the same text | Keep one; symlink the other or import it with `@AGENTS.md` | Order | Smell |

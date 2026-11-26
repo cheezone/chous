@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { buildWorkspaceSnapshot } from "../../src/vfs/snapshot";
 import {
@@ -64,6 +64,28 @@ describe("knowledge / roles", () => {
       const result = await lintWorkspace({ root });
       const conflict = result.issues.find((i) => i.message.key === "issue.stack.conflict");
       expect(conflict?.message.params).toEqual({ role: { t: "role.package-manager" }, tools: "npm + yarn" });
+    } finally {
+      rmSync(root, { recursive: true, force: true });
+    }
+  });
+
+  it("lints a nested project with its own lockfile as a project, and counts package managers across the repository", async () => {
+    const root = mkdtempSync(join(tmpdir(), "chous-nested-"));
+    try {
+      const write = (path: string, content: string) => {
+        mkdirSync(dirname(join(root, path)), { recursive: true });
+        writeFileSync(join(root, path), content);
+      };
+      write("package.json", JSON.stringify({ name: "root", private: true, packageManager: "pnpm@11.0.0" }));
+      write("pnpm-lock.yaml", "lockfileVersion: '9.0'\n");
+      write("frontend/package.json", JSON.stringify({ name: "frontend", private: true, dependencies: { request: "^2.88.0" } }));
+      write("frontend/package-lock.json", "{}");
+      write("backend/package.json", JSON.stringify({ name: "backend", private: true }));
+      write("backend/yarn.lock", "");
+      const issues = (await lintWorkspace({ root })).issues;
+      expect(issues.find((i) => i.message.key === "issue.stack.conflict")?.message.params?.tools).toBe("npm (frontend/) + pnpm + yarn (backend/)");
+      expect(issues.map((i) => i.displayPath)).toContain("frontend/package.json (request)");
+      expect(issues.some((i) => i.message.params?.reason && JSON.stringify(i.message.params).includes("nestedLockfile"))).toBe(false);
     } finally {
       rmSync(root, { recursive: true, force: true });
     }

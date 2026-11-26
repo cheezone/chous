@@ -1,4 +1,6 @@
 AdekunleBamz/stackhub	review	cleanliness	./	issue.leftover.worklogs	{"count":4,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
+AdekunleBamz/stackhub	review	modernity	stackhub-contracts/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+AdekunleBamz/stackhub	smell	modernity	frontend/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 AdekunleBamz/stackhub	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 AdekunleBamz/stackhub	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
 Albertsun6/ontology-builder	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
@@ -124,6 +126,7 @@ QuantumNous/new-api	smell	convention	setting/task_pricing_setting/	issue.contrac
 QuantumNous/new-api	smell	modernity	docker-compose.dev.yml	issue.contract.composeName	{}
 QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
+QuantumNous/new-api	smell	modernity	electron/package.json (Electron 42)	issue.lifecycle.ended	{"name":"Electron 42","date":"2026-10-20","use":{"t":"eol.electron"}}
 QuantumNous/new-api	smell	order	common/	issue.twins.styles	{"styles":"snake_case ×35 + kebab-case ×7","examples":"account_password.go, custom-event.go"}
 QuantumNous/new-api	smell	order	controller/	issue.twins.styles	{"styles":"snake_case ×106 + kebab-case ×2","examples":"access_token.go, channel-billing.go"}
 QuantumNous/new-api	smell	order	middleware/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×6","examples":"access_token_routes.go, disable-cache.go"}
@@ -136,8 +139,14 @@ QuantumNous/new-api	smell	order	router/	issue.twins.styles	{"styles":"snake_case
 QuantumNous/new-api	smell	order	service/	issue.twins.styles	{"styles":"snake_case ×88 + kebab-case ×1","examples":"access_token_scope.go, notify-limit.go"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	./	issue.leftover.worklogs	{"count":16,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, DEPLOYMENT_FIX.md, …"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.leftover.script	{}
+RoniAbravaya/ai-stock-summary-app	review	modernity	backend/node/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+RoniAbravaya/ai-stock-summary-app	review	modernity	backend/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 RoniAbravaya/ai-stock-summary-app	smell	cleanliness	core	issue.no.because	{"reason":{"t":"reason.coreDump"}}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/node/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (engines.node)	issue.lifecycle.declared	{"versions":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
 SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
@@ -207,6 +216,8 @@ anomalyco/opencode	review	modernity	packages/tui/package.json (strip-ansi)	issue
 anomalyco/opencode	review	order	packages/core/test/fixture/	issue.twins.pluralMaybe	{"other":"packages/core/test/fixtures/"}
 anomalyco/opencode	review	order	packages/plugin/	issue.twins.pluralMaybe	{"other":"packages/plugins/"}
 anomalyco/opencode	smell	convention	packages/plugins/figma/skills/figma-code-connect/SKILL.md	issue.contract.skillLines	{"lines":528,"limit":500}
+anomalyco/opencode	smell	modernity	sdks/vscode/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+anomalyco/opencode	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm (.github/release/cf/, .github/release/wrangler/)"}
 anomalyco/opencode	smell	order	package.json (vite)	issue.workspace.drift	{"name":"vite","versions":"packages/app: 8.2.4; packages/data/app: 8.2.4; packages/desktop: 8.2.4; services/site: 8.2.4; packages/stories: 7.3.7"}
 anomalyco/opencode	smell	order	services/site/test/	issue.twins.styles	{"styles":"kebab-case ×28 + camelCase ×4","examples":"changelog-highlights.test.ts, consoleMarketing.test.ts"}
 antfu/ni	smell	order	test/programmatic/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"catalog-interactive.spec.ts, runCli.spec.ts"}
@@ -343,8 +354,10 @@ curtmorgan3/quest-bound	review	order	cypress/component/	issue.twins.pluralMaybe	
 curtmorgan3/quest-bound	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 curtmorgan3/quest-bound	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 curtmorgan3/quest-bound	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/	issue.leftover.worklogs	{"count":2,"names":"DEPLOYMENT_FIXES.md, WAR_ROOM_IMPLEMENTATION.md"}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/DEPLOYMENT_FIXES.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Backstage/WAR_ROOM_IMPLEMENTATION.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/	issue.leftover.worklogs	{"count":9,"names":"API_IMPLEMENTATION_SUMMARY.md, AUTH_FIXES_SUMMARY.md, DEPLOYMENT_FIXES.md, EMAILJS_FIX.md, FIXES_SUMMARY.md, …"}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/API_IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/AUTH_FIXES_SUMMARY.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/DEPLOYMENT_FIXES.md	issue.leftover.worklog	{}
@@ -355,9 +368,13 @@ dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ISSUE_FI
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/PAGE_MERGE_SUMMARY.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	Frontend/ROUTING_FIXES.md	issue.leftover.worklog	{}
 dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", baseUrl: \".\""}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Frontend/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+dennislee928/Carbon_Trading_For_Individuals	smell	order	Frontend/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + yarn"}
+dennislee928/Carbon_Trading_For_Individuals	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + yarn (Frontend/)"}
 denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-aarch64	issue.leftover.executable	{}
 denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-x86_64	issue.leftover.executable	{}
 denoland/deno	review	cleanliness	tests/specs/compile/cross_compile_intel_mac/denort_intel	issue.leftover.executable	{}
@@ -386,11 +403,16 @@ eryngordon/quiz-lead-magnet-maker	smell	modernity	package.json (ESLint 9)	issue.
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 eryngordon/quiz-lead-magnet-maker	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+facebook/react	review	modernity	compiler/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
+facebook/react	review	modernity	compiler/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	review	modernity	package.json (mkdirp)	issue.deps.native	{"name":"mkdirp","use":"fs.mkdir(path, { recursive: true })"}
 facebook/react	review	modernity	package.json (ncp)	issue.deps.native	{"name":"ncp","use":"fs.cp(src, dest, { recursive: true })"}
 facebook/react	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	review	modernity	packages/react-devtools-extensions/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+facebook/react	review	modernity	scripts/bench/package.json (ncp)	issue.deps.native	{"name":"ncp","use":"fs.cp(src, dest, { recursive: true })"}
+facebook/react	review	modernity	scripts/bench/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	smell	convention	compiler/CLAUDE.md	issue.contract.claudeMdLines	{"lines":276,"limit":200}
+facebook/react	smell	modernity	compiler/apps/playground/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 facebook/react	smell	modernity	compiler/apps/playground/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 facebook/react	smell	modernity	compiler/packages/babel-plugin-react-compiler-rust/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 facebook/react	smell	modernity	package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
@@ -456,6 +478,11 @@ ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.yml	issue.contract.c
 ghostfolio/ghostfolio	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 ghostfolio/ghostfolio	smell	modernity	tools/tsconfig.tools.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
 hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+honojs/hono	review	modernity	benchmarks/query-param/package.json (tsx)	issue.deps.native	{"name":"tsx","use":"bun"}
+honojs/hono	review	modernity	benchmarks/routers/package.json (tsx)	issue.deps.native	{"name":"tsx","use":"bun"}
+honojs/hono	smell	modernity	benchmarks/query-param/bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+honojs/hono	smell	order	benchmarks/query-param/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
+honojs/hono	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun (benchmarks/query-param/, benchmarks/routers/) + npm (benchmarks/query-param/) + pnpm + yarn (benchmarks/jsx/)"}
 immich-app/immich	review	modernity	e2e/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 immich-app/immich	review	modernity	web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 immich-app/immich	review	order	web/src/routes/(user)/memory/	issue.twins.pluralMaybe	{"other":"web/src/routes/(user)/memories/"}
@@ -574,6 +601,8 @@ ollama/ollama	smell	convention	mlxrunner/model/nemotron_h/	issue.contract.goPack
 ollama/ollama	smell	convention	mlxrunner/model/qwen3_5/	issue.contract.goPackageName	{"name":"qwen3_5","count":11}
 ollama/ollama	smell	convention	mlxrunner/model/qwen3_5_moe/qwen3_5_moe.go	issue.contract.goPackageName	{"name":"qwen3_5_moe","count":1}
 ollama/ollama	smell	convention	mlxrunner/model/qwen4_exp/	issue.contract.goPackageName	{"name":"qwen4_exp","count":21}
+ollama/ollama	smell	modernity	app/ui/app/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ollama/ollama	smell	modernity	app/ui/app/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
 ollama/ollama	smell	modernity	app/ui/app/tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ollama/ollama	smell	order	app/ui/app/src/lib/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×1","examples":"chatPreload.test.ts, ollama-client.ts"}
 open-webui/open-webui	smell	modernity	docker-compose.a1111-test.yaml	issue.contract.composeName	{}
@@ -586,6 +615,7 @@ open-webui/open-webui	smell	modernity	docker-compose.playwright.yaml	issue.contr
 open-webui/open-webui	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
 open-webui/open-webui	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 open-webui/open-webui	smell	order	src/lib/utils/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×10","examples":"channelMentions.ts, google-drive-picker.ts"}
+oven-sh/bun	review	modernity	bench/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
 oven-sh/bun	review	order	test/aot/parallel/key-order/	issue.twins.pluralMaybe	{"other":"test/aot/parallel/key-orders/"}
 oven-sh/bun	review	order	test/aot/parallel/regexp/	issue.twins.pluralMaybe	{"other":"test/aot/parallel/regexps/"}
 oven-sh/bun	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
@@ -606,6 +636,8 @@ oven-sh/bun	smell	convention	test/cli/install/registry/packages/@url/encoding.3/
 oven-sh/bun	smell	modernity	.claude/commands/	issue.contract.claudeCommands	{"count":5}
 oven-sh/bun	smell	modernity	bench/bundle/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
 oven-sh/bun	smell	modernity	bench/expect-to-equal/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
+oven-sh/bun	smell	modernity	bench/express/bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+oven-sh/bun	smell	modernity	bench/postgres/bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 oven-sh/bun	smell	modernity	packages/bun-debug-adapter-protocol/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
 oven-sh/bun	smell	modernity	packages/bun-error/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 oven-sh/bun	smell	modernity	packages/bun-inspector-frontend/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
@@ -874,17 +906,21 @@ pisces19860207/zhengdao	review	order	app/src/main/java/com/example/zhengdao/baop
 pisces19860207/zhengdao	review	order	app/src/test/java/com/example/zhengdao/baopu/card/	issue.twins.pluralMaybe	{"other":"app/src/test/java/com/example/zhengdao/baopu/cards/"}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+plausible/analytics	review	modernity	assets/package.json (url-search-params-polyfill)	issue.deps.native	{"name":"url-search-params-polyfill","use":"URL / URLSearchParams"}
 plausible/analytics	review	order	lib/plausible/site/	issue.twins.pluralMaybe	{"other":"lib/plausible/sites/"}
 plausible/analytics	review	order	test/plausible/shield/	issue.twins.pluralMaybe	{"other":"test/plausible/shields/"}
 plausible/analytics	review	order	test/plausible/site/	issue.twins.pluralMaybe	{"other":"test/plausible/sites/"}
 plausible/analytics	smell	convention	priv/repo/migrations/20230406110926_associate-goals-with-sites.exs	issue.contract.elixirFileName	{"name":"20230406110926_associate-goals-with-sites","count":1}
+plausible/analytics	smell	modernity	assets/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 plausible/analytics	smell	order	assets/js/liveview/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"combo-box.js, live_socket.js"}
+rust-lang/rust	review	cleanliness	src/tools/rust-analyzer/editors/code/	issue.leftover.worklogs	{"count":2,"names":"walkthrough-create-project.md, walkthrough-setup-tips.md"}
 rust-lang/rust	review	order	library/std/src/sys/path/	issue.twins.pluralMaybe	{"other":"library/std/src/sys/paths/"}
 rust-lang/rust	review	order	src/tools/rustfmt/tests/source/reorder_modules/v0/	issue.twins.pluralMaybe	{"other":"src/tools/rustfmt/tests/source/reorder_modules/v0s/"}
 rust-lang/rust	review	order	src/tools/rustfmt/tests/target/reorder_modules/v0/	issue.twins.pluralMaybe	{"other":"src/tools/rustfmt/tests/target/reorder_modules/v0s/"}
 rust-lang/rust	review	order	tests/ui/static/	issue.twins.pluralMaybe	{"other":"tests/ui/statics/"}
 rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+rust-lang/rust	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm (src/tools/clippy/.github/, src/tools/rust-analyzer/editors/code/) + yarn"}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
 ruvnet/ruflo	review	cleanliness	.claude-plugin/docs/PLUGIN_SUMMARY.md	issue.leftover.worklog	{}
@@ -912,6 +948,11 @@ ruvnet/ruflo	review	cleanliness	v3/implementation/security/SECURITY_SUMMARY.md	i
 ruvnet/ruflo	review	cleanliness	v3/implementation/v3-migration/CAPABILITY-GAP-ANALYSIS.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/mcp/tools/IMPLEMENTATION.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/plugins/SECURITY-AUDIT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	modernity	ruflo/src/ruvocal/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+ruvnet/ruflo	review	modernity	v3/plugins/cognitive-kernel/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+ruvnet/ruflo	review	modernity	v3/plugins/neural-coordination/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+ruvnet/ruflo	review	modernity	v3/plugins/perf-optimizer/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+ruvnet/ruflo	review	modernity	v3/plugins/test-intelligence/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 ruvnet/ruflo	review	order	docs/dream-cycle/	issue.twins.pluralMaybe	{"other":"docs/dream-cycles/"}
 ruvnet/ruflo	review	order	ruflo/src/ruvocal/src/routes/api/conversation/	issue.twins.pluralMaybe	{"other":"ruflo/src/ruvocal/src/routes/api/conversations/"}
 ruvnet/ruflo	smell	cleanliness	.claude/settings.json.bak	issue.leftover.backup	{"original":"settings.json"}
@@ -1056,6 +1097,7 @@ ruvnet/ruflo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"nam
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.public.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/src/ruvocal/docker-compose.yml	issue.contract.composeName	{}
+ruvnet/ruflo	smell	modernity	ruflo/src/ruvocal/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeVersion	{}
@@ -1072,8 +1114,10 @@ ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/tsconfig.mod-guidance.json	issu
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/codex/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/mcp/.claude/commands/	issue.contract.claudeCommands	{"count":88}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/plugins/examples/ruvector/docker-compose.yml	issue.contract.composeName	{}
+ruvnet/ruflo	smell	modernity	v3/goal_ui/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	v3/goal_ui/tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ruvnet/ruflo	smell	modernity	v3/goal_ui/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ruvnet/ruflo	smell	modernity	v3/plugins/teammate-plugin/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	v3/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ruvnet/ruflo	smell	modernity	v3/tsconfig.vitest-temp.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 ruvnet/ruflo	smell	order	docs/assets/readme/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"generate-learning-cosmos.py, theme_artwork.py"}
@@ -1088,6 +1132,7 @@ ruvnet/ruflo	smell	order	ruflo/src/ruvocal/scripts/	issue.twins.styles	{"styles"
 ruvnet/ruflo	smell	order	ruflo/src/ruvocal/src/lib/server/api/__tests__/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"conversations-id.spec.ts, testHelpers.ts"}
 ruvnet/ruflo	smell	order	v3/@claude-flow/claims/tests/ + __tests__/	issue.twins.synonyms	{}
 ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+ruvnet/ruflo	smell	order	v3/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
 ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/symbolic-scribe	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 ruvnet/symbolic-scribe	smell	modernity	harness/.claude/commands/	issue.contract.claudeCommands	{"count":3}
@@ -1130,6 +1175,7 @@ vbenjs/vue-vben-admin	review	modernity	internal/vite-config/package.json (dotenv
 vbenjs/vue-vben-admin	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 vbenjs/vue-vben-admin	smell	order	packages/@core/ui-kit/shadcn-ui/**/*.vue	issue.contract.vueFileStyles	{"style":"kebab-case","majority":"PascalCase","count":27}
 vercel/commerce	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true, moduleResolution: \"node\", baseUrl: \".\""}
+vercel/next-learn	smell	modernity	basics/learn-starter/.nvmrc (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 vercel/next-learn	smell	modernity	basics/typescript-final/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\""}
 vercel/next-learn	smell	modernity	dashboard/final-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 vercel/next-learn	smell	modernity	dashboard/starter-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}

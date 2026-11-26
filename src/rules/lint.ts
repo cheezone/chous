@@ -3,6 +3,7 @@ import { relative, resolve, sep } from "node:path";
 import type { Issue, LintResult, Rule } from "../types";
 import { buildWorkspaceSnapshot, subSnapshot, type WorkspaceSnapshot } from "../vfs/snapshot";
 import { resolveTaste } from "../taste";
+import { IN_TESTS, LOCKFILE_MANAGER } from "../taste/js";
 import { findValidator, type RuleValidatorContext } from "./validators";
 
 /** Validate one root (the repo, or one workspace package) against its rules. */
@@ -49,7 +50,24 @@ export async function lintWorkspace(opts: {
       // The same finding reached from the root and from a package is reported once.
       if (seen.has(issueKey(issue))) continue;
       seen.add(issueKey(issue));
-      issues.push({ ...issue, displayPath: `${pkg}/${issue.displayPath}` });
+      issues.push({ ...issue, displayPath: within(pkg, issue.displayPath) });
+    }
+  }
+
+  // Projects of their own inside the repository, outside the workspace: a package.json with its own lockfile.
+  const packages = snapshot.workspace.packages;
+  const nested = [...snapshot.byRel.values()]
+    .filter((e) => !e.isDir && e.name === "package.json" && e.relPath.includes("/") && !NOT_OURS.test(e.relPath) && !IN_TESTS.test(e.relPath))
+    .map((e) => e.relPath.slice(0, e.relPath.lastIndexOf("/")))
+    .filter((dir) => [...LOCKFILE_MANAGER.keys()].some((lock) => snapshot.byRel.has(`${dir}/${lock}`)))
+    .filter((dir) => !packages.some((p) => dir === p || dir.startsWith(`${p}/`)));
+  for (const dir of nested) {
+    const projectRoot = resolve(root, dir);
+    const projectTaste = resolveTaste(projectRoot, { nestedProject: true });
+    for (const issue of await checkRoot(projectRoot, projectTaste.rules, subSnapshot(snapshot, dir), today)) {
+      if (seen.has(issueKey(issue))) continue;
+      seen.add(issueKey(issue));
+      issues.push({ ...issue, displayPath: within(dir, issue.displayPath) });
     }
   }
 
@@ -62,6 +80,9 @@ export async function lintWorkspace(opts: {
     duration: Math.round(performance.now() - startTime),
   };
 }
+
+/** A path inside a package or nested project, as seen from the repository: its own root `./` is `pkg/`. */
+const within = (dir: string, path: string) => (path === "./" ? `${dir}/` : `${dir}/${path}`);
 
 function issueKey(issue: Issue): string {
   return `${issue.path}:${issue.message.key}`;

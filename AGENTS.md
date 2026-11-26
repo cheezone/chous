@@ -30,6 +30,7 @@
   - 别处需要工具的文件列表时（如 `src/knowledge/tools/eslint.ts`）从工具文件引用，不要抄一份。
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
 - **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单；`frameworks.ts` 是 Next.js、Nuxt 的目录规则；`sources.ts` 是这些规则的原话。`contracts.ts` 只剩 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。
+- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；测试目录里的子项目是测试输入，不检查。包管理器按整个仓库计数。
 - `src/rules/validators/`：每种规则的执行；`src/knowledge/`：识别项目用了哪些工具（「一件事两个工具」用）。
 - 文案：i18next，只有 `en` 和 `zh`，在 `src/locales/{en,zh}.ts`（TS 模块，tsdown 的 dts 不支持 JSON）。工具的文案写在工具文件里，由注册表并入。不要再引入 typesafe-i18n（不支持 TS 7）。
 
