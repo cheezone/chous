@@ -1,4 +1,5 @@
-import { closeSync, existsSync, lstatSync, openSync, readdirSync, readFileSync, readSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, statSync } from "node:fs";
+import { readBytes, readText } from "../../fsutil";
 import { join, resolve } from "node:path";
 import type { ArtifactsRule, IssueMessage, LeftoverRule, Rule, TwinsRule, Verdict } from "../../types";
 import type { MessageKey } from "../../i18n";
@@ -42,7 +43,7 @@ function safeList(dir: string): string[] {
 /** A `build` script in package.json, or a bundler config beside it. */
 function buildsSomething(dir: string): boolean {
   try {
-    const pkg = JSON.parse(readFileSync(join(dir, "package.json"), "utf8"));
+    const pkg = JSON.parse(readText(join(dir, "package.json")));
     if (pkg?.scripts && Object.keys(pkg.scripts).some((s) => /^build\b/.test(s))) return true;
   } catch {
     // no readable package.json
@@ -97,7 +98,7 @@ function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
     .filter((e) => !e.isDir && !ONE_OFF_SCRIPT.test(e.name))
     .map((e) => {
       try {
-        return statSync(e.absPath).size < 256_000 ? readFileSync(e.absPath, "utf8") : "";
+        return readText(e.absPath, 256_000);
       } catch {
         return "";
       }
@@ -113,16 +114,8 @@ function list(names: string[], max = 5): string {
 
 /** The first bytes of a file, as latin1; NULs dropped for text (desktop.ini is often UTF-16), kept for signatures. */
 function head(path: string, bytes = 512, keepNul = false): string {
-  try {
-    const fd = openSync(path, "r");
-    const buf = Buffer.alloc(bytes);
-    const n = readSync(fd, buf, 0, bytes, 0);
-    closeSync(fd);
-    const text = buf.subarray(0, n).toString("latin1");
-    return keepNul ? text : text.replaceAll("\0", "");
-  } catch {
-    return "";
-  }
+  const text = readBytes(path, bytes).toString("latin1");
+  return keepNul ? text : text.replaceAll("\0", "");
 }
 
 /**
@@ -146,7 +139,11 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     const extraDocs: string[] = [];
     const versionSeries = new Map<string, string[]>();
     const recordDirs = new Map<string, string[]>();
-    const push = (map: Map<string, string[]>, key: string, name: string) => map.set(key, [...(map.get(key) ?? []), name]);
+    const push = (map: Map<string, string[]>, key: string, name: string) => {
+      const names = map.get(key);
+      if (names) names.push(name);
+      else map.set(key, [name]);
+    };
     const rootLogs: string[] = [];
     // Named in package.json, a config or the README: someone runs it.
     const referenced = rule.scripts ? rootText(snapshot) : "";
@@ -316,7 +313,7 @@ function sameBytes(a: string, b: string): boolean {
   try {
     const size = statSync(a).size;
     if (size !== statSync(b).size || size > 16 * 1024 * 1024) return false;
-    return readFileSync(a).equals(readFileSync(b));
+    return readBytes(a).equals(readBytes(b));
   } catch {
     return false;
   }
@@ -326,7 +323,7 @@ function sameBytes(a: string, b: string): boolean {
 function sameRegularFile(a: string, b: string): boolean {
   try {
     if (lstatSync(a).isSymbolicLink() || lstatSync(b).isSymbolicLink()) return false;
-    return readFileSync(a, "utf8").trim() === readFileSync(b, "utf8").trim();
+    return readText(a).trim() === readText(b).trim();
   } catch {
     return false;
   }
@@ -353,7 +350,9 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     // One finding per directory; languages are compared apart within it.
     const dir = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000${language}`;
     const styles = byDir.get(dir) ?? new Map<string, string[]>();
-    styles.set(style, [...(styles.get(style) ?? []), entry.name]);
+    const names = styles.get(style);
+    if (names) names.push(entry.name);
+    else styles.set(style, [entry.name]);
     byDir.set(dir, styles);
   }
   let hits = 0;

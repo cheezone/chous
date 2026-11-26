@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readText } from "../../fsutil";
 import { NOT_OURS } from "../../taste/hygiene";
 import { resolve } from "node:path";
 import type { ManifestRule, Rule, WorkspaceRule } from "../../types";
@@ -12,7 +12,7 @@ const DEP_FIELDS = ["dependencies", "devDependencies", "peerDependencies", "opti
 
 function readManifest(path: string): Manifest | undefined {
   try {
-    return JSON.parse(readFileSync(path, "utf8")) as Manifest;
+    return JSON.parse(readText(path)) as Manifest;
   } catch {
     return undefined;
   }
@@ -42,7 +42,7 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
 function pnpmWorkspaceList(path: string): string[] | undefined {
   let text: string;
   try {
-    text = readFileSync(path, "utf8");
+    text = readText(path);
   } catch {
     return undefined;
   }
@@ -101,11 +101,14 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
         if (!deps || typeof deps !== "object") continue;
         for (const [name, raw] of Object.entries(deps as Record<string, unknown>)) {
           if (internal.has(name)) continue;
-          const spec = String(raw);
+          if (typeof raw !== "string") continue; // a version is a string; anything else pins nothing
+          const spec = raw;
           const major = majorOf(spec);
           if (major === undefined) continue;
           const byMajor = majors.get(name) ?? new Map<string, string[]>();
-          byMajor.set(major, [...(byMajor.get(major) ?? []), `${dir}: ${spec}`]);
+          const specs = byMajor.get(major) ?? [];
+          specs.push(`${dir}: ${spec}`);
+          byMajor.set(major, specs);
           majors.set(name, byMajor);
         }
       }

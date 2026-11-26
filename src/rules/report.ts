@@ -11,9 +11,13 @@ const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
 const visibleLength = (s: string) => s.replace(ANSI_RE, "").length;
 
 /** Translate a message; params that are messages themselves are translated first. */
+/** File names can hold terminal control sequences that erase or hide lines: show them, escaped. */
+// eslint-disable-next-line no-control-regex -- matching control characters is the point
+const visible = (s: string) => s.replace(/[\u0000-\u001f\u007f-\u009f]/g, (ch) => `\\x${ch.charCodeAt(0).toString(16).padStart(2, "0")}`);
+
 export function formatIssueMessage(t: TFunction, msg: IssueMessage): string {
   const params = Object.fromEntries(
-    Object.entries(msg.params ?? {}).map(([k, v]) => [k, typeof v === "object" ? t(v.t) : v]),
+    Object.entries(msg.params ?? {}).map(([k, v]) => [k, typeof v === "object" ? t(v.t) : typeof v === "string" ? visible(v) : v]),
   );
   return t(msg.key, params);
 }
@@ -48,10 +52,10 @@ export function renderReport(
     const shown = issues.slice(0, Math.max(0, budget));
     budget -= shown.length;
     hidden += issues.length - shown.length;
-    const width = Math.max(0, ...shown.map((i) => visibleLength(i.displayPath)));
+    const width = Math.max(0, ...shown.map((i) => visibleLength(visible(i.displayPath))));
     for (const issue of shown) {
       const reason = verbose && issue.reason ? ` ${c.dim(t("report.reason", { reason: t(issue.reason) }))}` : "";
-      lines.push(`  ${mark} ${issue.displayPath.padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
+      lines.push(`  ${mark} ${visible(issue.displayPath).padEnd(width)} ${c.dim(t("report.arrow"))} ${formatIssueMessage(t, issue.message)}${reason}`);
       if (verbose) {
         const nested = Object.values(issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
         for (const { url } of sourcesFor([issue.reason, issue.message.key, ...nested])) lines.push(c.dim(`      ${t("report.source", { url })}`));

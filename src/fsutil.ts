@@ -1,5 +1,5 @@
 import { stat, readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
+import { closeSync, constants, existsSync, fstatSync, openSync, readSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 
@@ -8,6 +8,39 @@ export const DEFAULT_IGNORE_DIRS = new Set([
   "dist",
   "build",
 ]);
+
+/** What chous reads of any one file. The checks need a file's start, or a manifest; nothing needs more. */
+export const READ_LIMIT = 16 * 1024 * 1024;
+
+/**
+ * The first `limit` bytes of a regular file, or nothing. A device, FIFO or
+ * socket is never read: a committed symlink to /dev/zero would never end, and
+ * /dev/tty would wait for a keypress. Opened non-blocking, checked after open.
+ */
+export function readBytes(path: string, limit = READ_LIMIT): Buffer {
+  let fd: number | undefined;
+  try {
+    fd = openSync(path, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
+    const stat = fstatSync(fd);
+    if (!stat.isFile()) return Buffer.alloc(0);
+    const size = Math.min(stat.size, limit);
+    const buf = Buffer.alloc(size);
+    let read = 0;
+    while (read < size) {
+      const n = readSync(fd, buf, read, size - read, read);
+      if (n === 0) break;
+      read += n;
+    }
+    return buf.subarray(0, read);
+  } catch {
+    return Buffer.alloc(0);
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
+
+/** A regular file's text (UTF-8), up to `limit` bytes; "" when it cannot be read as one. */
+export const readText = (path: string, limit = READ_LIMIT) => readBytes(path, limit).toString("utf8");
 
 export function toDisplayPath(absPath: string, root: string): string {
   const rel = relative(root, absPath) || ".";
@@ -78,6 +111,7 @@ export async function loadGitIgnorePatterns(
       cwd: root,
       dot: true,
       ignore: ["**/node_modules/**", "**/.git/**"],
+      followSymbolicLinks: false,
     });
 
     for (const relFile of gitignoreFiles) {

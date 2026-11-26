@@ -1,4 +1,5 @@
-import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
+import { existsSync, readdirSync, statSync } from "node:fs";
+import { readText } from "./fsutil";
 import { join, relative, resolve } from "node:path";
 import { detectKinds, detectRoleOccupancy, knowledgeToJSON, roleLabel, type RoleId } from "./knowledge";
 import { lintWorkspace } from "./rules/lint";
@@ -86,11 +87,8 @@ export function createVfsProvider(snapshot: WorkspaceSnapshot) {
         return snapshot.manifest.raw ?? "";
       }
       const abs = resolve(snapshot.root, rel);
-      try {
-        return readFileSync(abs, "utf8");
-      } catch {
-        throw new Error(`not found "${pathRelative}"`);
-      }
+      if (!existsSync(abs)) throw new Error(`not found "${pathRelative}"`);
+      return readText(abs);
     },
     async stat(pathRelative: string) {
       const rel = pathRelative.replace(/^\.\//, "");

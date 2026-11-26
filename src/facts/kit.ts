@@ -116,11 +116,27 @@ export function shadowed(file: ContractFile, order: Array<[string, Counts?]>): R
 
 /** JSON with comments and trailing commas, as tsconfig allows. */
 export function parseJsonc(text: string): any {
-  const stripped = text
-    .replace(/("(?:\\.|[^"\\])*")|\/\/[^\n]*|\/\*[\s\S]*?\*\//g, (_, str: string | undefined) => str ?? "")
-    .replace(/,(\s*[}\]])/g, "$1");
   try {
-    return JSON.parse(stripped);
+    return JSON.parse(text);
+  } catch {
+    // Comments or trailing commas: strip them in one pass, then try again.
+  }
+  const kept: string[] = [];
+  let from = 0;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (c === '"') {
+      while (++i < text.length && text[i] !== '"') if (text[i] === "\\") i++;
+    } else if (c === "/" && (text[i + 1] === "/" || text[i + 1] === "*")) {
+      kept.push(text.slice(from, i));
+      const end = text[i + 1] === "/" ? text.indexOf("\n", i) : text.indexOf("*/", i + 2);
+      i = end < 0 ? text.length : text[i + 1] === "/" ? end - 1 : end + 1;
+      from = i + 1;
+    }
+  }
+  kept.push(text.slice(from));
+  try {
+    return JSON.parse(kept.join("").replace(/,(\s*[}\]])/g, "$1"));
   } catch {
     return undefined;
   }

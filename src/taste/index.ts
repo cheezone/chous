@@ -1,4 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync } from "node:fs";
+import { readText } from "../fsutil";
 import { resolve } from "node:path";
 import type { Rule } from "../types";
 import { base } from "./base";
@@ -25,7 +26,7 @@ export type TasteOptions = {
 
 function readJson(path: string): Record<string, any> | undefined {
   try {
-    return JSON.parse(readFileSync(path, "utf8"));
+    return JSON.parse(readText(path));
   } catch {
     return undefined;
   }

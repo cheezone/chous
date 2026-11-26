@@ -2,21 +2,27 @@ import { tool } from "../../define";
 import { byDirectory, custom } from "../../kinds";
 import { type ContractFile, nearest, parseJsonc } from "../../kit";
 
-/** The directories `autoload.psr-4` and `autoload-dev.psr-4` map namespaces to, from the nearest composer.json. */
+/** The directories `autoload.psr-4` and `autoload-dev.psr-4` map namespaces to, from the nearest composer.json; read once per project. */
+const read = new WeakMap<Set<string>, Map<string, string[]>>();
 function psr4Dirs(f: ContractFile): { root: string; dirs: string[] } | undefined {
   const root = nearest(f, "composer.json");
   if (root === undefined) return undefined;
+  const byRoot = read.get(f.all) ?? new Map<string, string[]>();
+  read.set(f.all, byRoot);
+  const known = byRoot.get(root);
+  if (known) return { root, dirs: known };
   const composer = parseJsonc(f.read(`${root}composer.json`));
   const dirs = [composer?.autoload?.["psr-4"], composer?.["autoload-dev"]?.["psr-4"]]
     .flatMap((map) => Object.values(map ?? {}))
     .flatMap((dir) => (Array.isArray(dir) ? dir : [dir]))
     .filter((dir): dir is string => typeof dir === "string")
     .map((dir) => dir.replace(/^\.\//, "").replace(/\/*$/, "/").replace(/^\/$/, ""));
+  byRoot.set(root, dirs);
   return { root, dirs };
 }
 
 /** The classes, interfaces, traits and enums a file declares, by name. */
-const DECLARES = /^\s*(?:(?:abstract|final|readonly)\s+)*(?:class|interface|trait|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
+const DECLARES = /^[ \t]*(?:(?:abstract|final|readonly)[ \t]+)*(?:class|interface|trait|enum)\s+([A-Za-z_][A-Za-z0-9_]*)/gm;
 
 export default tool({
   id: "composer",

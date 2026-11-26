@@ -56,7 +56,9 @@ function nestedManagers(context: RuleValidatorContext): Map<string, string[]> {
     if (!pm || !rel.includes("/") || NOT_OURS.test(rel) || IN_TESTS.test(rel)) continue;
     const dir = rel.slice(0, rel.lastIndexOf("/"));
     if (packages.some((p) => dir === p || dir.startsWith(`${p}/`))) continue;
-    found.set(pm, [...(found.get(pm) ?? []), `${dir}/`]);
+    const dirs = found.get(pm);
+    if (dirs) dirs.push(`${dir}/`);
+    else found.set(pm, [`${dir}/`]);
   }
   return found;
 }

@@ -27,7 +27,9 @@ export default tool({
       check: (f) => {
         const options = parseJsonc(f.text())?.compilerOptions;
         if (!options || typeof options !== "object") return undefined;
-        const found = TS6_DEPRECATED.filter(([key, bad]) => key in options && bad(options[key])).map(([key]) => `${key}: ${JSON.stringify(options[key])}`);
+        // A value is shown as written when it is a plain one; anything else by its kind (a nested array prints nothing useful).
+        const shown = (v: unknown) => (v === null || ["string", "number", "boolean"].includes(typeof v) ? JSON.stringify(v).slice(0, 80) : Array.isArray(v) ? "[…]" : "{…}");
+        const found = TS6_DEPRECATED.filter(([key, bad]) => key in options && bad(options[key])).map(([key]) => `${key}: ${shown(options[key])}`);
         return found.length ? { options: found.join(", ") } : undefined;
       },
       message: { en: "deprecated in TypeScript 6 and unsupported in 7: {{options}}", zh: "TypeScript 6 已废弃、7 不再支持：{{options}}" },

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { execFileSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { trackedPaths } from "../../src/vfs/git-index";
@@ -47,5 +47,24 @@ describe("what git tracks", () => {
 
   it("has nothing to say outside a repository", () => {
     expect(trackedPaths(mkdtempSync(join(tmpdir(), "chous-nogit-")))).toBeUndefined();
+  });
+
+  it.runIf(process.platform !== "win32")("follows a tracked symlink that points inside the repository, never one that points out", async () => {
+    const outside = mkdtempSync(join(tmpdir(), "chous-outside-"));
+    writeFileSync(join(outside, ".DS_Store"), "\u0000\u0000\u0000\u0001Bud1");
+    const root = mkdtempSync(join(tmpdir(), "chous-links-"));
+    writeFileSync(join(root, "AGENTS.md"), "x\n".repeat(250));
+    mkdirSync(join(root, "agents/rules"), { recursive: true });
+    writeFileSync(join(root, "agents/rules/style.md"), "Use tabs.");
+    symlinkSync("AGENTS.md", join(root, "CLAUDE.md"));
+    mkdirSync(join(root, ".cursor"));
+    symlinkSync("../agents/rules", join(root, ".cursor/rules"));
+    symlinkSync(outside, join(root, "elsewhere"));
+    execFileSync("git", ["init", "-q"], { cwd: root });
+    execFileSync("git", ["add", "-A"], { cwd: root });
+    const keys = (await lintWorkspace({ root })).issues.map((i) => `${i.message.key.replace("issue.contract.", "")} ${i.displayPath}`);
+    expect(keys).toContain("claudeMdLines CLAUDE.md");
+    expect(keys).toContain("cursorRuleExtension .cursor/rules/style.md");
+    expect(keys.some((k) => k.includes("elsewhere"))).toBe(false);
   });
 });

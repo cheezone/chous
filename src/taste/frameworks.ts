@@ -3,7 +3,8 @@
  * is a file the framework silently never reads — dead code that looks alive —
  * and cites the page that says so. Which framework you pick is not our call.
  */
-import { readdirSync, readFileSync } from "node:fs";
+import { readdirSync } from "node:fs";
+import { readText } from "../fsutil";
 import { resolve } from "node:path";
 import { taste } from "./define";
 
@@ -69,7 +70,7 @@ const NUXT_SRC_FILES = ["app.vue", "error.vue", "app.config.ts"];
 function nuxtUsesAppDir(root: string): boolean {
   for (const name of ["nuxt.config.ts", "nuxt.config.js", "nuxt.config.mjs"]) {
     try {
-      if (readFileSync(resolve(root, name), "utf8").includes("srcDir")) return false;
+      if (readText(resolve(root, name)).includes("srcDir")) return false;
     } catch {
       // no such config
     }

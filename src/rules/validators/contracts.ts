@@ -1,4 +1,5 @@
-import { readFileSync, statSync } from "node:fs";
+import { statSync } from "node:fs";
+import { readText } from "../../fsutil";
 import { resolve } from "node:path";
 import type { ContractsRule, Rule } from "../../types";
 import type { MessageKey } from "../../i18n";
@@ -8,13 +9,7 @@ import { BaseRuleValidator } from "./base";
 import { CONTRACTS, type ContractFile } from "../../taste/contracts";
 import { NOT_OURS } from "../../taste/hygiene";
 
-function read(path: string): string {
-  try {
-    return readFileSync(path, "utf8");
-  } catch {
-    return "";
-  }
-}
+const read = (path: string) => readText(path);
 
 function statSize(path: string): number {
   try {
@@ -78,7 +73,12 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
       };
       for (const contract of CONTRACTS) {
         if ((!ours && !contract.everywhere) || !contract.match.test(rel)) continue;
-        const params = contract.check(file);
+        let params: ReturnType<typeof contract.check>;
+        try {
+          params = contract.check(file);
+        } catch {
+          continue; // a file no fact can read (a malformed manifest) says nothing about the others
+        }
         if (!params) continue;
         if (contract.groupBy) {
           const key = `${contract.id}:${contract.groupBy(rel, file)}`;

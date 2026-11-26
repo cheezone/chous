@@ -2,7 +2,7 @@ import { tool } from "../../define";
 import { naming, stem, STYLE } from "../../kinds";
 
 /** Kotlin source declares something; a `.kt` holding only a comment is a template (Spotless's license header). */
-const DECLARES = /^\s*(package|import|((public|private|internal|protected|data|sealed|abstract|open|enum|annotation|value|inline|expect|actual)\s+)*(class|interface|object|fun|val|var|typealias))\b/m;
+const DECLARES = /^[ \t]*(package|import|((public|private|internal|protected|data|sealed|abstract|open|enum|annotation|value|inline|expect|actual)\s+)*(class|interface|object|fun|val|var|typealias))\b/m;
 
 const CONVENTIONS = { url: "https://kotlinlang.org/docs/coding-conventions.html#source-file-names", check: "https://raw.githubusercontent.com/JetBrains/kotlin-web-site/master/docs/topics/coding-conventions.md" };
 

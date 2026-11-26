@@ -1,11 +1,11 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, realpathSync, statSync } from "node:fs";
 import { basename, dirname, join, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
 import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
-import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, toDisplayPath } from "../fsutil";
-import { trackedPaths } from "./git-index";
+import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
+import { tracked as gitTracked } from "./git-index";
 import type { PackageManagerName } from "../types";
 
 /** Always skip VCS / dependency trees even if a project gitignore forgets them. */
@@ -165,7 +165,7 @@ export function readPackageManifestSnapshot(root: string): PackageManifestSnapsh
     return { exists: false, path: pkgPath, manager: managerFromLockfile(root), deps: new Set(), depSections: new Map() };
   }
   try {
-    const raw = readFileSync(pkgPath, "utf8");
+    const raw = readText(pkgPath);
     const pkg = JSON.parse(raw) as Record<string, unknown>;
     const deps = new Set<string>();
     const depSections = new Map<string, "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies">();
@@ -196,7 +196,7 @@ export function looksLikeMonorepo(root: string): boolean {
   if (existsSync(resolve(root, "nx.json"))) return true;
   if (existsSync(resolve(root, "turbo.json"))) return true;
   try {
-    const raw = readFileSync(resolve(root, "package.json"), "utf8");
+    const raw = readText(resolve(root, "package.json"));
     const pkg = JSON.parse(raw) as { workspaces?: unknown };
     return pkg.workspaces != null;
   } catch {
@@ -211,7 +211,8 @@ async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
     if (resolve(result.rootDir) !== resolve(root)) return { packages: [], tool: result.tool.type };
     const packages = result.packages
       .map((p) => p.relativeDir.split(sep).join("/"))
-      .filter((rel) => Boolean(rel) && rel !== ".")
+      // `packages: ['../*']` lists projects outside the root: not this repository's to lint.
+      .filter((rel) => Boolean(rel) && rel !== "." && !rel.startsWith("../") && !rel.startsWith("/"))
       .sort();
     return { packages, tool: result.tool.type };
   } catch {
@@ -219,8 +220,9 @@ async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
   }
 }
 
+/** A path relative to the root, with `/`. A backslash is a separator only on Windows; elsewhere `a\\b` is one name. */
 function normalizeRel(rel: string): string {
-  return rel.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/+$/, "") || ".";
+  return (sep === "\\" ? rel.replace(/\\/g, "/") : rel).replace(/^\.\//, "").replace(/\/+$/, "") || ".";
 }
 
 function toAbs(root: string, relOrAbs: string): string {
@@ -378,6 +380,8 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   // Walker ignores must stay tiny — same idea as the old engine (3 hard dirs).
   // Pushing the full gitignore (100+ rules) into tinyglobby makes every path
   // pay micromatch×N during the walk and was a major remaining regression.
+  // Every walk below passes `followSymbolicLinks: false`: a symlink is committed as a link, so chous
+  // never walks into what it points to (`/`, `~`, `../secret`).
   const walkIgnore = [
     ...HARD_IGNORE,
     ...Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`),
@@ -412,6 +416,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
       dot: true,
       onlyFiles: true,
       ignore: walkIgnore,
+      followSymbolicLinks: false,
     }),
     shallow
       ? glob(rootOnly ? "*" : globPattern, {
@@ -420,14 +425,17 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
           dot: true,
           onlyDirectories: true,
           ignore: walkIgnore,
+          followSymbolicLinks: false,
         })
       : Promise.resolve([] as string[]),
     // looksLikeMonorepo short-circuits @manypkg on single-package repos
     listWorkspacePackages(root),
   ]);
-  const gitignore = ignore().add(patterns);
+  // A pattern stacking `**/` segments makes the matcher backtrack for every deep path; git users never need more than a few.
+  const gitignore = ignore().add(patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3));
   // What git tracks is committed, whatever .gitignore says: a force-added file counts.
-  const tracked = shallow || rootOnly ? undefined : trackedPaths(root);
+  const index = shallow || rootOnly ? undefined : gitTracked(root);
+  const tracked = index?.files;
   const trackedDirs = new Set<string>();
   for (const rel of tracked ?? []) {
     for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
@@ -499,6 +507,27 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     const abs = resolve(root, rel);
     if (existsSync(abs)) addFile(abs);
   }
+  // Tracked symlinks pointing inside the repository: tools read through them (CLAUDE.md -> AGENTS.md,
+  // .cursor/rules -> ../agents/rules), so chous does too. Anything else (/, ~, a device) is never followed.
+  if (index?.links.size) {
+    const realRoot = realpathSync(root);
+    for (const rel of index.links) {
+      const abs = resolve(root, rel);
+      let real: string;
+      try {
+        real = realpathSync(abs);
+      } catch {
+        continue; // dangling
+      }
+      if (!real.startsWith(realRoot + sep)) continue;
+      const stat = statSync(real);
+      if (stat.isFile()) addFile(abs);
+      else if (stat.isDirectory()) {
+        const inside = await glob("**/*", { cwd: real, dot: true, onlyFiles: true, ignore: walkIgnore, followSymbolicLinks: false });
+        for (const file of inside) addFile(join(abs, file));
+      }
+    }
+  }
 
   if (workspace.packages.length > 0) {
     for (const pkg of workspace.packages) {
@@ -514,6 +543,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
             dot: true,
             onlyFiles: true,
             ignore: walkIgnore,
+            followSymbolicLinks: false,
           });
           for (const raw of pkgFiles) addFile(resolve(String(raw)));
           // Also surface empty package-root subdirs (shallow) for allow/has rules
@@ -523,6 +553,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
             dot: true,
             onlyDirectories: true,
             ignore: walkIgnore,
+            followSymbolicLinks: false,
           });
           for (const raw of pkgDirs) {
             const abs = resolve(String(raw));

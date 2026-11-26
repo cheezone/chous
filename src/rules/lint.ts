@@ -9,12 +9,22 @@ import { findValidator, type RuleValidatorContext } from "./validators";
 /** Validate one root (the repo, or one workspace package) against its rules. */
 async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapshot, today?: string): Promise<Issue[]> {
   const context: RuleValidatorContext = { root, snapshot, rawIssues: [], today };
-  for (const rule of rules) await findValidator(rule)?.validate(rule, context);
+  for (const rule of rules) {
+    try {
+      await findValidator(rule)?.validate(rule, context);
+    } catch (error) {
+      // One check failing on a strange file must not take the others down; say so, and go on.
+      process.stderr.write(`chous: the ${rule.kind} check stopped on ${root}: ${error instanceof Error ? error.message : String(error)}\n`);
+    }
+  }
 
   // Drop findings on gitignored paths and exact duplicates.
   const seen = new Set<string>();
   return context.rawIssues.filter((issue) => {
-    const rel = relative(root, issue.path.split("#")[0]!).split(sep).join("/");
+    // `path#contract` marks a finding about a file; a `#` may also be part of a real name (`foo#bar/`).
+    const full = relative(root, issue.path).split(sep).join("/");
+    const hash = issue.path.lastIndexOf("#");
+    const rel = snapshot.byRel.has(full) || hash < 0 ? full : relative(root, issue.path.slice(0, hash)).split(sep).join("/");
     if (rel && !rel.startsWith("..") && snapshot.ig.ignores(rel)) return false;
     const key = issueKey(issue);
     if (seen.has(key)) return false;

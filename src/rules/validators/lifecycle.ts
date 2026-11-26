@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readText } from "../../fsutil";
 import { resolve } from "node:path";
 import type { LifecycleRule, Rule } from "../../types";
 import type { RuleValidatorContext } from "./types";
@@ -10,13 +10,7 @@ import { FACT_EOL } from "../../facts";
 
 type Found = { product: Product; version: string; file: string };
 
-function read(path: string): string {
-  try {
-    return readFileSync(path, "utf8");
-  } catch {
-    return "";
-  }
-}
+const read = (path: string) => readText(path);
 
 /** `18`, `v18.1.0`, `^18`, `~18.2`, `18.x`, `3.8` → the pinned version; ranges like `>=18` say nothing. */
 export function pinnedVersion(spec: string): string | undefined {
@@ -32,11 +26,14 @@ export function pinnedVersion(spec: string): string | undefined {
  * Handles `16`, `^16.2`, `~16`, `16.x`, `=16`, `<18`, `>=14 <18`, `14 - 16`, `a || b`.
  */
 export function enginesMajors(spec: string): number[] | undefined {
+  // Node majors stay far below this; a wider range reaches versions still supported, so says nothing.
+  const SPAN = 100;
   const majors = new Set<number>();
   for (const alt of spec.split("||").map((s) => s.trim())) {
     if (!alt) return undefined;
     const hyphen = /^v?(\d+)(?:\.[\dx*]+)*\s+-\s+v?(\d+)(?:\.[\dx*]+)*$/.exec(alt);
     if (hyphen) {
+      if (Number(hyphen[2]) - Number(hyphen[1]) > SPAN) return undefined;
       for (let m = Number(hyphen[1]); m <= Number(hyphen[2]); m++) majors.add(m);
       continue;
     }
@@ -56,7 +53,7 @@ export function enginesMajors(spec: string): number[] | undefined {
       else if (m[1] === "<=") hi = n;
       else hi = m[3] && Number(m[3]) > 0 ? n : n - 1;
     }
-    if (hi === undefined) return undefined;
+    if (hi === undefined || hi - lo > SPAN) return undefined;
     for (let m = lo; m <= hi; m++) majors.add(m);
   }
   return majors.size ? [...majors].sort((a, b) => a - b) : undefined;
@@ -71,9 +68,16 @@ const DOCKERFILE = /^(Docker|Container)file(\..+)?$|\.(docker|container)file$/i;
  */
 function baseImages(text: string): Array<[Product, string]> {
   const args = new Map<string, string>();
-  for (const m of text.matchAll(/^\s*ARG\s+(\w+)=["']?([^\s"']+)/gim)) args.set(m[1]!, m[2]!);
-  const expanded = text.replace(/\$\{(\w+)(?::?-([^}]*))?\}|\$(\w+)/g, (all, braced, fallback, bare) => args.get(braced ?? bare) ?? fallback ?? all);
-  return [...expanded.matchAll(/^\s*FROM\s+(?:--\S+\s+)*(?:[\w.-]+(?::\d+)?\/)*(node|python):([\w.-]+)/gim)].map((m) => [m[1]!.toLowerCase() as Product, m[2]!]);
+  for (const m of text.matchAll(/^[ \t]*ARG[ \t]+(\w+)=["']?([^\s"']{1,128})/gim)) args.set(m[1]!, m[2]!);
+  const images: Array<[Product, string]> = [];
+  for (const line of text.split("\n")) {
+    if (!/^[ \t]*FROM[ \t]/i.test(line)) continue;
+    // ARG defaults filled into this line only, and only short ones: an image reference is never long.
+    const from = line.slice(0, 1024).replace(/\$\{(\w+)(?::?-([^}]*))?\}|\$(\w+)/g, (all, braced, fallback, bare) => args.get(braced ?? bare) ?? fallback ?? all);
+    const m = /^[ \t]*FROM[ \t]+(?:--\S+[ \t]+)*(?:[\w.-]+(?::\d+)?\/)*(node|python):([\w.-]+)/i.exec(from);
+    if (m) images.push([m[1]!.toLowerCase() as Product, m[2]!]);
+  }
+  return images;
 }
 
 /** `lts/gallium`, `gallium`, `fermium-alpine`: the version a codename stands for, from its makers' schedule. */
@@ -117,9 +121,10 @@ function findVersions(context: RuleValidatorContext): Found[] {
   if (manifest.exists) {
     let pkg: Record<string, any> = {};
     try {
-      pkg = JSON.parse(read(manifest.path));
+      const parsed = JSON.parse(read(manifest.path));
+      if (parsed && typeof parsed === "object") pkg = parsed; // `null`, `[]` and `"x"` hold nothing
     } catch {
-      // ignore
+      // not JSON
     }
     if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
@@ -132,7 +137,7 @@ function findVersions(context: RuleValidatorContext): Found[] {
   // Django pinned to one release: `django==4.2.11`, `Django==4.2.*`, `django~=4.2.0` — not ranges.
   for (const entry of snapshot.listDir(".")) {
     if (entry.isDir || !/^(requirements[\w.-]*\.txt|pyproject\.toml|Pipfile)$/.test(entry.name)) continue;
-    const m = /(?:^|["'\s])django\s*(?:=\s*["'])?\s*(==|~=)\s*(\d+\.\d+)(\.\d+|\.\*)?/im.exec(read(entry.absPath));
+    const m = /(?:^|["'\s])django[ \t]*(?:=[ \t]*["'][ \t]*)?(==|~=)[ \t]*(\d+\.\d+)(\.\d+|\.\*)?/im.exec(read(entry.absPath));
     if (m && (m[1] === "==" || m[3])) add("django", m[2], entry.name);
   }
   return found;
