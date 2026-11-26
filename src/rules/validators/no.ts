@@ -4,7 +4,6 @@ import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
-import { NOT_OURS } from "../../taste/hygiene";
 
 /** Paths that must not exist. The message is the rule's reason. */
 export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
@@ -19,7 +18,7 @@ export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
     for (const match of snapshot.match(rule.names, { onlyFiles: false })) {
       const abs = resolve(root, match);
       // Test inputs may hold anything, even a `desktop.ini` (Zig tests one).
-      if (anywhere && NOT_OURS.test(toDisplayPath(abs, root))) continue;
+      if (anywhere && context.snapshot.notOurs.test(toDisplayPath(abs, root))) continue;
       hitCount++;
       rawIssues.push(issueFromRule(rule, {
         path: abs,

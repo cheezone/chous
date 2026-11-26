@@ -117,4 +117,4 @@ chous 怎样确认事实：
 | 安装包（`.apk`、`.ipa`、`.msi`、`.deb`、`.dmg`……） | 文件签名确认了格式 | 交给用户的东西属于 Releases | 洁净 | 臭味 |
 | 可执行文件和库（`.exe`、`.dll`、`.so`、`.dylib`，以及没有扩展名的 ELF、Mach-O） | 文件头确认了格式 | 本项目构建出来的属于 Releases；构建要读的输入可以留 | 洁净 | 待审视 |
 
-测试夹具（`fixtures/`、`testdata/`、`__snapshots__/`）是数据，`vendor/`、`third_party/`、`upstream/` 是别人的代码，这两类不检查。`tests/`、`examples/`、`playground/` 是你自己的代码，照常检查。
+不检查的只有两类，名字都由放它们进来的工具规定：npm 的 `node_modules/`；`vendor/`（Go 规定的目录名，GitHub Linguist 的 vendor.yml 也认 `vendors?/`）；Go 的 `testdata/`（"The go tool will ignore a directory named "testdata""）；Jest、Vitest 写的 `__snapshots__/`；Linguist 认定的测试夹具 `tests/fixtures/`、`specs/fixtures/`。其他名字，chous 不猜，由仓库自己在 `.gitattributes` 里用 GitHub 的写法声明：`测试数据/** linguist-vendored`、`upstream/** linguist-vendored`，`linguist-generated` 同样生效，`-linguist-vendored` 把路径要回来。`tests/`、`examples/`、`playground/` 是你自己的代码，照常检查。

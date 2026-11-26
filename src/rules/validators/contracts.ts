@@ -7,7 +7,6 @@ import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
 import { CONTRACTS, type ContractFile } from "../../taste/contracts";
-import { NOT_OURS } from "../../taste/hygiene";
 
 const read = (path: string) => readText(path);
 
@@ -49,14 +48,14 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
     };
     let cssConfig: boolean | undefined;
     const cssLoadsConfig = () =>
-      (cssConfig ??= files.some((e) => /\.(css|pcss|postcss)$/.test(e.name) && !NOT_OURS.test(e.relPath) && /@config\b/.test(read(e.absPath))));
+      (cssConfig ??= files.some((e) => /\.(css|pcss|postcss)$/.test(e.name) && !context.snapshot.notOurs.test(e.relPath) && /@config\b/.test(read(e.absPath))));
 
     const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; first: string; params: Record<string, string | number> }>();
     let hitCount = 0;
 
     for (const entry of files) {
       const rel = entry.relPath;
-      const ours = !NOT_OURS.test(rel);
+      const ours = !context.snapshot.notOurs.test(rel);
       let text: string | undefined;
       let size: number | undefined;
       const file: ContractFile = {
@@ -66,6 +65,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         bytes: () => (size ??= statSize(entry.absPath)),
         text: () => (text ??= read(entry.absPath)),
         all,
+        ours: (other) => !context.snapshot.notOurs.test(other),
         pkg: () => pkgFor(rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ""),
         cssLoadsConfig,
         read: (other) => (all.has(other) ? read(resolve(root, other)) : ""),

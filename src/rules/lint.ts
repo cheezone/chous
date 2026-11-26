@@ -1,4 +1,3 @@
-import { NOT_OURS } from "../taste/hygiene";
 import { relative, resolve, sep } from "node:path";
 import type { Issue, LintResult, Rule } from "../types";
 import { buildWorkspaceSnapshot, subSnapshot, type WorkspaceSnapshot } from "../vfs/snapshot";
@@ -53,7 +52,7 @@ export async function lintWorkspace(opts: {
 
   const seen = new Set(issues.map(issueKey));
   // A fixture package is a test input, not the project's own code.
-  for (const pkg of snapshot.workspace.packages.filter((p) => !NOT_OURS.test(`${p}/`))) {
+  for (const pkg of snapshot.workspace.packages.filter((p) => !snapshot.notOurs.test(`${p}/`))) {
     const pkgRoot = resolve(root, pkg);
     const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true, runtime: taste.runtime });
     for (const issue of await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg), today)) {
@@ -67,7 +66,7 @@ export async function lintWorkspace(opts: {
   // Projects of their own inside the repository, outside the workspace: a package.json with its own lockfile.
   const packages = snapshot.workspace.packages;
   const nested = [...snapshot.byRel.values()]
-    .filter((e) => !e.isDir && e.name === "package.json" && e.relPath.includes("/") && !NOT_OURS.test(e.relPath) && !IN_TESTS.test(e.relPath))
+    .filter((e) => !e.isDir && e.name === "package.json" && e.relPath.includes("/") && !snapshot.notOurs.test(e.relPath) && !IN_TESTS.test(e.relPath))
     .map((e) => e.relPath.slice(0, e.relPath.lastIndexOf("/")))
     .filter((dir) => LOCKFILES.some((lock) => snapshot.byRel.has(`${dir}/${lock}`)))
     .filter((dir) => !packages.some((p) => dir === p || dir.startsWith(`${p}/`)));

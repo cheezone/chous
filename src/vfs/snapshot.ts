@@ -7,6 +7,8 @@ import { getPackages } from "@manypkg/get-packages";
 import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
 import { tracked as gitTracked } from "./git-index";
 import { gitignoreMatcher } from "./gitignore";
+import { declaredNotOurs } from "./gitattributes";
+import { NOT_OURS } from "../taste/hygiene";
 import type { PackageManagerName } from "../types";
 
 /** Always skip VCS / dependency trees even if a project gitignore forgets them. */
@@ -76,6 +78,15 @@ function sizeOf(path: string): number | undefined {
   }
 }
 
+/** NOT_OURS, refined by what the repository declares in its .gitattributes files. */
+function notOursOf(byRel: Map<string, VfsEntry>): { test(rel: string): boolean } {
+  const files = new Map<string, string>();
+  for (const [rel, entry] of byRel) if (!entry.isDir && entry.name === ".gitattributes") files.set(rel, readText(entry.absPath, 1024 * 1024));
+  const declared = declaredNotOurs(files);
+  // A directory is not ours when a file directly in it would not be.
+  return { test: (rel) => declared(rel.endsWith("/") ? `${rel}\u0001` : rel) ?? NOT_OURS.test(rel) };
+}
+
 export type WorkspaceSnapshot = {
   root: string;
   /** Absolute paths of all visible entries (files + dirs) */
@@ -87,6 +98,12 @@ export type WorkspaceSnapshot = {
   fileCount: number;
   /** Gitignore matcher for paths relative to `root`. */
   ig: { ignores(relPath: string): boolean };
+  /**
+   * Code and data that are not the project's: the names their tools define
+   * (`NOT_OURS`), and what the repository's .gitattributes marks
+   * `linguist-vendored` or `linguist-generated`. A directory ends in `/`.
+   */
+  notOurs: { test(rel: string): boolean };
   /**
    * What git tracks although the repository's own .gitignore ignores it (a
    * repository root only): an ignored directory once (`dist/`, with its file
@@ -616,6 +633,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     byAbs,
     fileCount,
     ig,
+    notOurs: notOursOf(byRel),
     ignoredTracked: [...ignoredTracked].sort().map(([path, files]) => ({ path, files })),
     manifest,
     workspace,
@@ -650,6 +668,7 @@ export function subSnapshot(parent: WorkspaceSnapshot, pkgRel: string): Workspac
     byAbs,
     fileCount,
     ig,
+    notOurs: { test: (rel: string) => parent.notOurs.test(prefix + rel) },
     manifest: readPackageManifestSnapshot(root),
     workspace: { packages: [], tool: "root" },
     ...buildMatchers(root, byRel, byAbs),
@@ -713,6 +732,7 @@ export function createMemorySnapshot(
     byAbs,
     fileCount,
     ig,
+    notOurs: notOursOf(byRel),
     manifest,
     workspace: opts?.workspace ?? { packages: [], tool: "root" },
     ...api,

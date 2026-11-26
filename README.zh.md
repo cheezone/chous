@@ -80,7 +80,7 @@ npx chous
 
 具体哪些工具、哪些文件、哪句原话：见 [chous 知道什么](docs/facts.zh.md)，由注册表生成，不会列出 chous 实际不查的工具。
 
-不检查缺失（没有测试、没有 CI、没有许可证都不报）；不按行数、体积、文件数量判，除非官方文档给了具体限制；也不检查正确性和安全；不读名字里的词，`FIXES_SUMMARY.md`、`index.ts.bak` 交给你的 agent 判断。测试夹具和别人的代码（`vendor/`、`third_party/`、`upstream/`）不查，`tests/`、`examples/` 是你自己的代码，照常检查。
+不检查缺失（没有测试、没有 CI、没有许可证都不报）；不按行数、体积、文件数量判，除非官方文档给了具体限制；也不检查正确性和安全；不读名字里的词，`FIXES_SUMMARY.md`、`index.ts.bak` 交给你的 agent 判断。别人的代码和测试数据不查：工具规定的名字（`node_modules/`、`vendor/`、`testdata/`、`__snapshots__/`、`tests/fixtures/`），以及 `.gitattributes` 里标了 `linguist-vendored` 或 `linguist-generated` 的路径，什么语言的目录名都行；`tests/`、`examples/` 是你自己的代码，照常检查。
 
 每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。每周有一个任务核对每句原话还在不在页面上、每个停止维护日期和官方数据是否一致；`pnpm run corpus` 会把 chous 对 85 个真实仓库说的每一句话和[已记录的结论](test/corpus.claims.txt)比对。
 

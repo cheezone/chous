@@ -11,8 +11,12 @@ export type JsProject = {
 /** Lockfiles: a directory with its own is a project of its own (`frontend/`, `backend/`). */
 export const LOCKFILES = ["package-lock.json", "npm-shrinkwrap.json", "pnpm-lock.yaml", "yarn.lock", "bun.lock", "bun.lockb"];
 
-/** A project inside a test directory is a test's input (bun keeps other tools' repos to migrate), not a project of the repository. */
-export const IN_TESTS = /(^|\/)(tests?|__tests__|spec|e2e)\//;
+/**
+ * A project inside a test directory is a test's input (bun keeps other tools'
+ * repos to migrate), not a project of the repository. The directories the test
+ * runners themselves read: Node's `**\/test/**`, Jest's `**\/__tests__/**`.
+ */
+export const IN_TESTS = /(^|\/)(test|__tests__)\//;
 
 /**
  * JavaScript / TypeScript projects (package.json, tsconfig.json or jsconfig.json).

@@ -14,7 +14,7 @@ Each line is something a tool, platform or package author states about itself, w
 
 Researched 2026-11.
 
-End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: ruvnet/ruflo, Neve77/comandaflow, ollama/ollama +10
+End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: ruvnet/ruflo, facebook/react, Neve77/comandaflow +10
 
 ### Bun
 
@@ -49,7 +49,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Order | two lockfiles that do not sync (…): Yarn itself advises not to mix package managers | github.com | dennislee928/Carbon_Trading_For_Individuals |
+| Order | two lockfiles that do not sync (…): Yarn itself advises not to mix package managers | github.com | dennislee928/Carbon_Trading_For_Individuals, facebook/react |
 | Convention | Yarn 2 and later read only .yarnrc.yml; this file is ignored | yarnpkg.com | not yet |
 
 ### TypeScript
@@ -58,7 +58,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | deprecated in TypeScript 6 and unsupported in 7: … | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +19 |
+| Modernity | deprecated in TypeScript 6 and unsupported in 7: … | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +20 |
 
 ### ESLint
 
@@ -69,7 +69,7 @@ Researched 2026-11.
 | Order | never read: ESLint takes one config per directory, here … | eslint.org | not yet |
 | Modernity | eslintrc with ESLint …: deprecated since ESLint 9, no longer looked for, and gone in 10; use eslint.config.js | eslint.org | oven-sh/bun |
 
-End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals, AdekunleBamz/stackhub +24
+End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: facebook/react, ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals +24
 
 ### TSLint, JSCS
 
@@ -133,8 +133,8 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | components named in neither PascalCase nor kebab-case (…, e.g. …): Vue's style guide allows only those two | vuejs.org | chatwoot/chatwoot, element-plus/element-plus |
-| Order | components named in … (…), while the rest use …: Vue's style guide says always one or the other | vuejs.org | vbenjs/vue-vben-admin |
+| Convention | components named in neither PascalCase nor kebab-case (…, e.g. …): Vue's style guide allows only those two | vuejs.org | chatwoot/chatwoot, element-plus/element-plus, oxc-project/oxc |
+| Order | components named in … (…), while the rest use …: Vue's style guide says always one or the other | vuejs.org | nuxt/nuxt, vbenjs/vue-vben-admin |
 
 End of life: 1 versions of Vue, from 2 to 2; the latest ended on 2023-12-31. Source: v2.vuejs.org · Seen in real projects: not yet
 
@@ -158,7 +158,7 @@ End of life: Angular 2 to 19 are no longer supported (no date given). Source: an
 
 Researched 2026-11.
 
-End of life: 41 versions of Electron, from 2 to 42; the latest ended on 2026-10-20. Source: releases.electronjs.org · Seen in real projects: facebook/react, QuantumNous/new-api
+End of life: 41 versions of Electron, from 2 to 42; the latest ended on 2026-10-20. Source: releases.electronjs.org · Seen in real projects: facebook/react
 
 ### Rust
 
@@ -192,7 +192,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org | zopefoundation/ZODB |
+| Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org | zopefoundation/ZODB, wilsonzlin/fastrender |
 | Convention | package … has capitals in its name: PEP 8 gives packages all-lowercase names | peps.python.org | zopefoundation/ZODB, Ayato-kosaka/nanitabeyo |
 
 End of life: 13 versions of Python, from 2.6 to 3.10; the latest ended on 2026-10-01. Source: peps.python.org · Seen in real projects: comfyanonymous/ComfyUI, astral-sh/uv, MUKUL-PRASAD-SIGH/AetherSentrix
@@ -258,7 +258,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | Kotlin files not in upper camel case (…, e.g. …): Kotlin's coding conventions name files like ProcessDeclarations.kt | kotlinlang.org | ktorio/ktor |
+| Convention | Kotlin files not in upper camel case (…, e.g. …): Kotlin's coding conventions name files like ProcessDeclarations.kt | kotlinlang.org | ktorio/ktor, longbridge/gpui-component |
 
 ### Elixir
 
@@ -274,7 +274,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | files named unlike the class they declare (…, e.g. ….php declares …): PSR-4 says the file name matches the class name, case included | php-fig.org | filamentphp/filament, matomo-org/matomo |
+| Convention | files named unlike the class they declare (…, e.g. ….php declares …): PSR-4 says the file name matches the class name, case included | php-fig.org | filamentphp/filament, matomo-org/matomo, laravel/framework |
 
 ### Rails
 

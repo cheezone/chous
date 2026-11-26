@@ -15,7 +15,6 @@ import {
   isCoreDump,
   DOC_FILE,
   NAME_EXEMPT,
-  NOT_OURS,
   KNOWN_BY_CONTENT,
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
@@ -65,7 +64,7 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
     const within = (rel: string) => reported.some((dir) => rel === dir || rel.startsWith(`${dir}/`));
 
     for (const parent of parents) {
-      if (NOT_OURS.test(`${parent}/`)) continue;
+      if (context.snapshot.notOurs.test(`${parent}/`)) continue;
       // An artifact's own contents are not candidates for more artifacts.
       if (ARTIFACT_DIRS.some(({ dir }) => parent === dir || parent.endsWith(`/${dir}`) || parent.includes(`/${dir}/`) || parent.startsWith(`${dir}/`))) continue;
       const parentAbs = resolve(root, parent);
@@ -91,7 +90,7 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
     const files = [...snapshot.byRel.values()].filter((e) => !e.isDir).sort((a, b) => a.relPath.split("/").length - b.relPath.split("/").length);
     for (const entry of files) {
       const marked = MARKED_OUTPUT.find((m) => m.name.test(entry.name));
-      if (!marked || NOT_OURS.test(entry.relPath)) continue;
+      if (!marked || context.snapshot.notOurs.test(entry.relPath)) continue;
       const rel = marked.dir ? entry.relPath.slice(0, -entry.name.length - 1) : entry.relPath;
       if (!rel || within(rel) || !marked.content.test(head(entry.absPath, 4096))) continue;
       // Matomo commits `tmp/CACHEDIR.TAG` beside a `.gitkeep` to tag the directory: the cache itself is not committed.
@@ -141,7 +140,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     const extraDocs: string[] = [];
 
     for (const [rel, entry] of snapshot.byRel) {
-      if (entry.isDir || NOT_OURS.test(rel)) continue;
+      if (entry.isDir || context.snapshot.notOurs.test(rel)) continue;
       const atRoot = !rel.includes("/");
       const name = entry.name;
 
@@ -174,7 +173,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
 
     // The repository says two things: .gitignore keeps it out, the index has it in.
     for (const { path, files } of snapshot.ignoredTracked ?? []) {
-      if (NOT_OURS.test(path)) continue;
+      if (context.snapshot.notOurs.test(path)) continue;
       report(path, { key: "issue.leftover.ignoredTracked", params: { count: files } });
     }
 
@@ -217,7 +216,7 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
 
     const seen = new Map<string, string>();
     for (const rel of [...snapshot.byRel.keys()].sort()) {
-      if (NOT_OURS.test(rel)) continue;
+      if (context.snapshot.notOurs.test(rel)) continue;
       // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
       const slash = rel.lastIndexOf("/");
       const parent = rel.slice(0, slash + 1);
@@ -264,7 +263,7 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
   const byDir = new Map<string, Map<string, string[]>>();
   for (const [rel, entry] of context.snapshot.byRel) {
     const language = entry.isDir ? undefined : languageOf(entry.name);
-    if (!language || NOT_OURS.test(rel) || NAME_EXEMPT.test(entry.name)) continue;
+    if (!language || context.snapshot.notOurs.test(rel) || NAME_EXEMPT.test(entry.name)) continue;
     if (angular && entry.name.endsWith(".ts")) continue; // Angular's style guide: hyphens
     // A leading `_` or `$` marks private or special files; the name after it is the style.
     const style = nameStyle((language === "go" ? goStem(entry.name) : entry.name.split(".")[0]!).replace(/^[_$]+/, ""));

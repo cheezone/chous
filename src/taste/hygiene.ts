@@ -167,12 +167,16 @@ export function isCoreDump(header: string): boolean {
 }
 
 /**
- * Data, and other people's code: test fixtures may hold anything (`fixtures/`,
- * and, inside a test directory, named ones like Nuxt's `test/components-fixture/`); `vendor/`, `third_party/`,
- * `upstream/` and a committed `node_modules/` hold someone else's code, and their taste. Tests and examples are the project's own code and are checked
- * like the rest.
+ * Data, and other people's code, by the names the tools that put them there
+ * define: npm's `node_modules/`; `vendor/` (Go: "a vendor directory named
+ * "vendor"", and GitHub Linguist's vendor.yml, `vendors?/`); Go's `testdata/`
+ * ("The go tool will ignore a directory named "testdata""); the
+ * `__snapshots__/` Jest and Vitest write; Linguist's test fixtures,
+ * `tests/fixtures/` and `specs/fixtures/`. Any other name is the repository's
+ * to declare: `linguist-vendored` or `linguist-generated` in .gitattributes
+ * (src/vfs/gitattributes.ts). Tests and examples are the project's own code.
  */
-export const NOT_OURS = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party|upstream|node_modules)\/|(^|\/)(tests?|__tests__|spec|e2e)\/(.+\/)?[\w.-]+-fixtures?\//i;
+export const NOT_OURS = /(^|\/)(node_modules|vendors?|testdata|__snapshots__)\/|(^|\/)([Tt]ests?|[Ss]pecs?)\/fixtures\//;
 
 /**
  * Files known by what their maker writes into them, not by name alone: a file

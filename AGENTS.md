@@ -20,7 +20,7 @@
 - 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - **优先级：生态约定先于 AI 工具约定。** AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研（用户量、是否还在维护、是否改名）。
-- 作用域：只有测试数据（`fixtures/`、`components-fixture/` 这类命名的夹具目录、`testdata/`、`__snapshots__/`）和别人的代码 `vendor/`、`third_party/`、`upstream/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 照常检查。
+- 作用域（`snapshot.notOurs`）：名单只收工具规定的名字（`NOT_OURS`：npm 的 `node_modules/`、Go 和 Linguist 的 `vendor/`、Go 的 `testdata/`、Jest/Vitest 写的 `__snapshots__/`、Linguist 的 `tests/fixtures/`、`specs/fixtures/`），其余由仓库在 `.gitattributes` 里用 `linguist-vendored` / `linguist-generated` 声明（`src/vfs/gitattributes.ts`，按 git 的属性规则：后写的赢，深层文件赢，`-linguist-vendored` 要回）。`third_party/`、`upstream/`、`__fixtures__` 这类没有出处的名字不收。测试目录里的子项目只认测试工具读的目录：Node 的 `test/`、Jest 的 `__tests__/`。`tests/`、`examples/`、`playground/` 照常检查。
 - **不要**重新引入 `.chous` 配置、DSL、预设、开关规则的选项或任何让用户自定义规则的入口。运行时离线：不联网、不调用 AI、不需要 key。
 
 ## 代码在哪
@@ -30,7 +30,7 @@
   - 别处需要工具的文件列表时从工具文件引用（`configs`），不要抄一份。
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
 - **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单；`frameworks.ts` 是 Next.js、Nuxt 的目录规则；`sources.ts` 是这些规则的原话。`contracts.ts` 只剩 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。
-- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；测试目录里的子项目是测试输入，不检查。
+- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；`test/`、`__tests__/` 里的子项目是测试输入，不检查。
 - 读文件一律用 `readText` / `readBytes`（`src/fsutil.ts`）：只读普通文件，最多 16 MiB，非阻塞打开。仓库是不可信的输入：软链接可以指向 `/dev/zero`、`/`、`../secret`，文件名可以带 `..\\`、`#`、终端控制字符，manifest 可以是 `null` 或嵌套上万层。遍历不跟随软链接，只有 git 跟踪的、指向仓库内部的软链接才跟随。多行正则不要用 `^\\s*`（在空行上是平方复杂度），用 `^[ \\t]*`。`.gitignore` 规则按词建索引（`src/vfs/gitignore.ts`），两万行规则也不会让每个路径都试一遍；结果和 `ignore` 库逐条比对一致（`test/code/gitignore.test.ts`）。`test/code/robustness.test.ts` 锁住了这些攻击。
 - `src/rules/validators/`：每种规则的执行。
 - 文案：i18next，只有 `en` 和 `zh`，在 `src/locales/{en,zh}.ts`（TS 模块，tsdown 的 dts 不支持 JSON）。工具的文案写在工具文件里，由注册表并入。不要再引入 typesafe-i18n（不支持 TS 7）。

@@ -126,7 +126,6 @@ QuantumNous/new-api	smell	convention	setting/task_pricing_setting/	issue.contrac
 QuantumNous/new-api	smell	modernity	docker-compose.dev.yml	issue.contract.composeName	{}
 QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
-QuantumNous/new-api	smell	modernity	electron/package.json (Electron 42)	issue.lifecycle.ended	{"name":"Electron 42","date":"2026-10-20","use":{"t":"eol.electron"}}
 QuantumNous/new-api	smell	order	common/	issue.twins.styles	{"styles":"snake_case ×35 + kebab-case ×7","examples":"account_password.go, custom-event.go"}
 QuantumNous/new-api	smell	order	controller/	issue.twins.styles	{"styles":"snake_case ×106 + kebab-case ×2","examples":"access_token.go, channel-billing.go"}
 QuantumNous/new-api	smell	order	middleware/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×6","examples":"access_token_routes.go, disable-cache.go"}
@@ -209,6 +208,7 @@ TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/url_text/customU
 Walbrkt/HackBerlin_Solar	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 Walbrkt/HackBerlin_Solar	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"limit":3,"names":"AGENT_PROMPTS.md, API_DOCUMENTATION.md, DATA_QUALITY_REPORT.md, END_TO_END_PHILOSOPHY.md, INFERENCE_SERVER_SUMMARY.md, …"}
+ai-assist-org/ai-assist	smell	cleanliness	eval/dataset/cases/report-read/fixtures/reports/	issue.leftover.ignoredTracked	{"count":1}
 android/nowinandroid	smell	cleanliness	.idea/	issue.leftover.ignoredTracked	{"count":2}
 anomalyco/opencode	review	modernity	packages/tui/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
 anomalyco/opencode	smell	cleanliness	.opencode/skills/opencode-dev/	issue.leftover.ignoredTracked	{"count":1}
@@ -318,6 +318,7 @@ calcom/cal.com	smell	order	packages/features/form-builder/	issue.twins.styles	{"
 calcom/cal.com	smell	order	packages/lib/	issue.twins.styles	{"styles":"camelCase ×99 + kebab-case ×10","examples":"buildCalEventFromBooking.ts, default-cookies.ts"}
 calcom/cal.com	smell	order	packages/lib/schedules/transformers/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"for-atom.ts, getScheduleListItemData.ts"}
 calcom/cal.com	smell	order	packages/trpc/server/routers/viewer/apiKeys/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"findKeyOfType.handler.ts, _auth-middleware.ts"}
+chatwoot/chatwoot	review	modernity	tests/playwright/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 chatwoot/chatwoot	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":2}
 chatwoot/chatwoot	smell	cleanliness	public/assets/administrate/	issue.leftover.ignoredTracked	{"count":2}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/WootWriter/keyboardEmojiSelector.vue	issue.contract.vueFileName	{"name":"keyboardEmojiSelector","count":1}
@@ -338,6 +339,7 @@ chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeName
 chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeVersion	{}
 chatwoot/chatwoot	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 chatwoot/chatwoot	smell	modernity	package.json (vue-i18n)	issue.deps.deprecated	{"name":"vue-i18n","version":"9.14.5","message":"v9 and v10 no longer supported. please migrate to v11. about maintenance status, see https://vue-i18n.intlify.dev/guide/maintenance.html"}
+chatwoot/chatwoot	smell	modernity	tests/playwright/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 chatwoot/chatwoot	smell	modernity	tests/playwright/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\", baseUrl: \".\""}
 chatwoot/chatwoot	smell	order	app/javascript/dashboard/api/	issue.twins.styles	{"styles":"camelCase ×25 + snake_case ×1","examples":"accountActions.js, notion_auth.js"}
 chatwoot/chatwoot	smell	order	app/javascript/dashboard/store/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"storeFactory.js, mutation-types.js"}
@@ -391,6 +393,10 @@ eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.app.json	issue.contra
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 facebook/react	review	modernity	compiler/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
 facebook/react	review	modernity	compiler/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+facebook/react	review	modernity	fixtures/fizz/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+facebook/react	review	modernity	fixtures/flight/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+facebook/react	review	modernity	fixtures/ssr/package.json (node-fetch)	issue.deps.native	{"name":"node-fetch","use":"fetch"}
+facebook/react	review	modernity	fixtures/ssr2/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	review	modernity	package.json (mkdirp)	issue.deps.native	{"name":"mkdirp","use":"fs.mkdir(path, { recursive: true })"}
 facebook/react	review	modernity	package.json (ncp)	issue.deps.native	{"name":"ncp","use":"fs.cp(src, dest, { recursive: true })"}
 facebook/react	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
@@ -403,6 +409,22 @@ facebook/react	smell	modernity	.github/workflows/runtime_build_and_test.yml (Nod
 facebook/react	smell	modernity	compiler/apps/playground/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 facebook/react	smell	modernity	compiler/apps/playground/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
 facebook/react	smell	modernity	compiler/packages/babel-plugin-react-compiler-rust/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+facebook/react	smell	modernity	compiler/packages/babel-plugin-react-compiler/src/__tests__/fixtures/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+facebook/react	smell	modernity	fixtures/attribute-behavior/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/concurrent/time-slicing/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/dom/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/eslint-v6/package.json (ESLint 6)	issue.lifecycle.ended	{"name":"ESLint 6","date":"2020-11-08","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v7/package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v8/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v9/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/expiration/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/fiber-debugger/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/flight-esm/.nvmrc (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+facebook/react	smell	modernity	fixtures/flight-parcel/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\""}
+facebook/react	smell	modernity	fixtures/flight/.nvmrc (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+facebook/react	smell	modernity	fixtures/owner-stacks/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/ssr/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/view-transition/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
 facebook/react	smell	modernity	package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
 facebook/react	smell	modernity	packages/eslint-plugin-react-hooks/package.json (babel-eslint)	issue.deps.obsolete	{"name":"babel-eslint","why":{"t":"dep.babel-eslint"},"use":"@babel/eslint-parser"}
 facebook/react	smell	modernity	packages/eslint-plugin-react-hooks/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true, baseUrl: \".\""}
@@ -413,7 +435,10 @@ facebook/react	smell	modernity	packages/react-devtools-shell/package.json (babel
 facebook/react	smell	modernity	packages/react-devtools/package.json (Electron 39)	issue.lifecycle.ended	{"name":"Electron 39","date":"2026-05-05","use":{"t":"eol.electron"}}
 facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/scripts/jest/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×3","examples":"e2e-classic.config.js, makeE2EConfig.js"}
 facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/e2e/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"constant-prop.e2e.js, expectLogs.js"}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/fixtures/compiler/	issue.twins.styles	{"styles":"kebab-case ×1012 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
 facebook/react	smell	order	compiler/packages/snap/src/sprout/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"shared-runtime-type-provider.ts, useEffectWrapper.ts"}
+facebook/react	smell	order	fixtures/legacy-jsx-runtimes/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"lint-runtimes.js, setupTests.js"}
+facebook/react	smell	order	fixtures/ssr2/yarn.lock	issue.contract.yarnNpmLock	{"files":"yarn.lock, package-lock.json"}
 facebook/react	smell	order	package.json (babel-eslint)	issue.workspace.drift	{"name":"babel-eslint","versions":"packages/eslint-plugin-react-hooks: ^10.0.3; packages/react-devtools-extensions: ^9.0.0; packages/react-devtools-inline: ^9.0.0; packages/react-devtools-shell: ^9.0.0"}
 facebook/react	smell	order	package.json (chalk)	issue.workspace.drift	{"name":"chalk","versions":".: ^3.0.0; packages/react-devtools-extensions: ^4.1.1"}
 facebook/react	smell	order	package.json (rimraf)	issue.workspace.drift	{"name":"rimraf","versions":".: ^3.0.0; packages/react-devtools-extensions: ^6.1.4"}
@@ -440,6 +465,7 @@ filamentphp/filament	smell	convention	tests/src/Infolists/LivewireTest.php	issue
 filamentphp/filament	smell	convention	tests/src/Notifications/NotificationTest.php	issue.contract.psr4FileName	{"name":"NotificationTest","className":"NotificationWithLazyIconSize","count":1}
 filamentphp/filament	smell	convention	tests/src/Panels/Auth/MultiFactor/MultiFactorChallengeTest.php	issue.contract.psr4FileName	{"name":"MultiFactorChallengeTest","className":"AlternateMultiFactorChallengeUser","count":1}
 filamentphp/filament	smell	convention	tests/src/Panels/Auth/Pages/EditProfileTest.php	issue.contract.psr4FileName	{"name":"EditProfileTest","className":"EditProfileWithCustomEmailField","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Commands/Fixtures/MakeThemeCommandTest/panel-provider/standard.php	issue.contract.psr4FileName	{"name":"standard","className":"StandardPanelProvider","count":1}
 filamentphp/filament	smell	convention	tests/src/Panels/Navigation/NavigationTest.php	issue.contract.psr4FileName	{"name":"NavigationTest","className":"CollapsibleNavigationGroupEnum","count":1}
 filamentphp/filament	smell	convention	tests/src/Panels/Pages/Tenancy/RegisterTenantTest.php	issue.contract.psr4FileName	{"name":"RegisterTenantTest","className":"AuthorizableRegisterTeam","count":1}
 filamentphp/filament	smell	convention	tests/src/Panels/Panel/Concerns/HasMiddlewareTest.php	issue.contract.psr4FileName	{"name":"HasMiddlewareTest","className":"HasMiddlewareTestCase","count":1}
@@ -521,6 +547,10 @@ ktorio/ktor	smell	convention	ktor-network/web/src/io/ktor/network/sockets/nodejs
 ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/runTestWithData.kt	issue.contract.kotlinFileName	{"name":"runTestWithData","count":1}
 laravel/framework	review	cleanliness	bin/splitsh-lite	issue.leftover.executable	{}
 laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
+laravel/framework	smell	convention	tests/Auth/Fixtures/Enums.php	issue.contract.psr4FileName	{"name":"Enums","className":"AbilitiesEnum","count":1}
+laravel/framework	smell	convention	tests/Broadcasting/Fixtures/PusherStub.php	issue.contract.psr4FileName	{"name":"PusherStub","className":"Pusher","count":1}
+laravel/framework	smell	convention	tests/Foundation/Fixtures/PailServiceProviderStub.php	issue.contract.psr4FileName	{"name":"PailServiceProviderStub","className":"PailServiceProvider","count":1}
+laravel/framework	smell	convention	tests/Routing/Fixtures/app.php	issue.contract.psr4FileName	{"name":"app","className":"AppCache","count":1}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
 localsend/localsend	review	cleanliness	support/build/windows/x64/msvcp140.dll	issue.leftover.executable	{}
@@ -530,6 +560,7 @@ lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/linux.yml	
 lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/macos.yml	issue.contract.workflowCommands	{"command":"set-output"}
 lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/windows.yml	issue.contract.workflowCommands	{"command":"set-output"}
 longbridge/gpui-component	smell	cleanliness	docs/superpowers/	issue.leftover.ignoredTracked	{"count":6}
+longbridge/gpui-component	smell	convention	examples/fixtures/test.kt	issue.contract.kotlinFileName	{"name":"test","count":1}
 longbridge/gpui-component	smell	modernity	.claude/commands/release-notes.md	issue.contract.claudeCommands	{"count":1}
 longbridge/gpui-component	smell	modernity	website/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":284,"limit":200}
@@ -570,6 +601,7 @@ nuxt/nuxt	review	modernity	packages/kit/package.json (dotenv)	issue.deps.native	
 nuxt/nuxt	smell	cleanliness	.idea/	issue.leftover.ignoredTracked	{"count":3}
 nuxt/nuxt	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":1}
 nuxt/nuxt	smell	cleanliness	packages/ui-templates/README.md	issue.leftover.ignoredTracked	{"count":1}
+nuxt/nuxt	smell	order	packages/nuxt/**/*.vue	issue.contract.vueFileStyles	{"style":"kebab-case","majority":"PascalCase","count":7}
 nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
 nuxt/nuxt.com	smell	modernity	package.json (evalite)	issue.deps.deprecated	{"name":"evalite","version":"1.0.0-beta.16","message":"No longer maintained. Recommended replacement: Langfuse. Migration notes: https://github.com/mattpocock/evalite#migrating-to-langfuse"}
 nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
@@ -649,8 +681,9 @@ oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-through-inher
 oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-through-the-base-url/app/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"../imports/app/src\""}
 oven-sh/bun	smell	modernity	test/docker/docker-compose.yml	issue.contract.composeName	{}
 oven-sh/bun	smell	modernity	test/integration/next-pages/.eslintrc.json	issue.contract.eslintrc	{"version":9}
+oven-sh/bun	smell	modernity	test/js/third_party/es-module-lexer/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true"}
 oven-sh/bun	smell	order	bench/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×2","examples":"aes-gcm-throughput.mjs, asymmetricCipher.js"}
-oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×123 + camelCase ×3","examples":"_transpiler-fixture.jsx, byteLength.mjs"}
+oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×122 + camelCase ×3","examples":"abort-signal.mjs, byteLength.mjs"}
 oven-sh/bun	smell	order	scripts/build/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×4","examples":"aot-paths.ts, buildOptionsRs.ts"}
 oven-sh/bun	smell	order	src/js/ahead-of-time/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"end-of-stream.ts, load_all.ts"}
 oven-sh/bun	smell	order	src/js/internal/fs/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"cp-sync.ts, file_handles.ts"}
@@ -836,45 +869,51 @@ oven-sh/bun	smell	order	test/aot/parallel/packages/commonjs-interop/many-1/	issu
 oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×118 + snake_case ×2","examples":"draw-names-handed-on-by-stars.py, exact_counts.py"}
 oven-sh/bun	smell	order	test/bundler/	issue.twins.styles	{"styles":"kebab-case ×58 + snake_case ×42 + camelCase ×2","examples":"bun-build-api-dts.test.ts, bundler_allow_unresolved.test.ts, buildNoThrow.ts"}
 oven-sh/bun	smell	order	test/bundler/css/wpt/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"background-computed.test.ts, relative_color_out_of_gamut.test.ts"}
+oven-sh/bun	smell	order	test/bundler/transpiler/react-compiler-fixtures/	issue.twins.styles	{"styles":"kebab-case ×990 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
 oven-sh/bun	smell	order	test/cli/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×3","examples":"aot-builtin-modules-and-computed-paths.test.ts, update_interactive_formatting.test.ts"}
-oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×63 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
+oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×49 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
+oven-sh/bun	smell	order	test/integration/bun-types/fixture/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"array-buffer.ts, perf_hooks.ts"}
 oven-sh/bun	smell	order	test/internal/	issue.twins.styles	{"styles":"kebab-case ×50 + snake_case ×1","examples":"address-sanitizer-sees-wtf-allocations.test.ts, int_from_float.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"cipheriv-decipheriv.test.ts, webcryptoTestHelpers.ts"}
 oven-sh/bun	smell	order	test/js/bun/css/	issue.twins.styles	{"styles":"kebab-case ×17 + snake_case ×1","examples":"angle-serialization-hang.test.ts, doesnt_crash.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/http/	issue.twins.styles	{"styles":"kebab-case ×118 + camelCase ×2","examples":"async-iterator-stream.test.ts, decodeURIComponentSIMD.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/http/	issue.twins.styles	{"styles":"kebab-case ×79 + camelCase ×2","examples":"async-iterator-stream.test.ts, decodeURIComponentSIMD.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/jsc-stress/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"jsc-stress.test.ts, testFFI.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/json5/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_json5_test_suite.ts, json5-test-suite.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/resolve/	issue.twins.styles	{"styles":"kebab-case ×50 + camelCase ×2","examples":"build-error.test.ts, esModule.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/shell/	issue.twins.styles	{"styles":"kebab-case ×22 + snake_case ×2","examples":"assignments-in-pipeline.test.ts, pipeline_stack.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/spawn/	issue.twins.styles	{"styles":"kebab-case ×55 + camelCase ×1 + snake_case ×1","examples":"bad-fixture.js, spawnSync.test.ts, spawn_waiter_thread.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/test/	issue.twins.styles	{"styles":"kebab-case ×73 + snake_case ×7 + camelCase ×1","examples":"bun-jest-arguments.test.ts, bun_test.fixture.ts, spyMatchers.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/resolve/	issue.twins.styles	{"styles":"kebab-case ×48 + camelCase ×2","examples":"build-error.test.ts, esModule.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/shell/	issue.twins.styles	{"styles":"kebab-case ×18 + snake_case ×2","examples":"assignments-in-pipeline.test.ts, pipeline_stack.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/spawn/	issue.twins.styles	{"styles":"kebab-case ×52 + camelCase ×1 + snake_case ×1","examples":"bun-ipc-child-respond.js, spawnSync.test.ts, spawn_waiter_thread.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/test/	issue.twins.styles	{"styles":"kebab-case ×53 + snake_case ×7 + camelCase ×1","examples":"bun-jest-arguments.test.ts, bun_test.fixture.ts, spyMatchers.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/test/expect/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"huge-failure-message.test.ts, toHaveReturnedWith.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/toml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_toml_test_suite.ts, toml-test-suite.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/udp/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×2","examples":"dgram-cluster-disconnect-fixture.ts, udp_socket.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/util/	issue.twins.styles	{"styles":"kebab-case ×55 + camelCase ×14 + snake_case ×1","examples":"base64-url-safe-encode.test.ts, escapeHTML.test.js, filesystem_router.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/util/	issue.twins.styles	{"styles":"kebab-case ×40 + camelCase ×14 + snake_case ×1","examples":"base64-url-safe-encode.test.ts, escapeHTML.test.js, filesystem_router.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/xml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_xml_test_suite.ts, xml-test-suite.test.ts"}
 oven-sh/bun	smell	order	test/js/node/async_hooks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"async-local-storage-thenable.test.ts, async_hooks.node.test.ts"}
 oven-sh/bun	smell	order	test/js/node/child_process/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×5","examples":"child-process-exec.test.ts, child_process.test.ts"}
+oven-sh/bun	smell	order	test/js/node/child_process/fixtures/	issue.twins.styles	{"styles":"kebab-case ×9 + snake_case ×1","examples":"child-process-echo-argv.js, ipc_fixture.js"}
 oven-sh/bun	smell	order	test/js/node/module/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2 + snake_case ×1","examples":"esm-registry-concurrent-gc.test.ts, modulePrototypeOverwrite.cjs, esm_to_cjs_interop.mjs"}
-oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×5 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
+oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×4 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
 oven-sh/bun	smell	order	test/js/node/test/common/	issue.twins.styles	{"styles":"kebab-case ×7 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
 oven-sh/bun	smell	order	test/js/node/url/	issue.twins.styles	{"styles":"kebab-case ×15 + camelCase ×1","examples":"url-domain-ascii-unicode.test.js, pathToFileURL.test.ts"}
-oven-sh/bun	smell	order	test/js/node/worker_threads/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×4","examples":"a-message-listener-throws-behind-the-end-of-the-thread-fixture.ts, worker_destruction.test.ts"}
-oven-sh/bun	smell	order	test/js/node/zlib/	issue.twins.styles	{"styles":"kebab-case ×9 + camelCase ×1","examples":"deflate-streaming.test.ts, bytesWritten.test.ts"}
-oven-sh/bun	smell	order	test/js/web/fetch/	issue.twins.styles	{"styles":"kebab-case ×80 + snake_case ×1","examples":"abort-signal-leak.test.ts, fetch_headers.test.js"}
-oven-sh/bun	smell	order	test/js/web/timers/	issue.twins.styles	{"styles":"kebab-case ×8 + camelCase ×4","examples":"performance-entries.test.ts, setImmediate.test.js"}
-oven-sh/bun	smell	order	test/js/web/workers/	issue.twins.styles	{"styles":"kebab-case ×29 + snake_case ×1","examples":"a-read-of-a-file-descriptor-is-the-last-thing-pending.test.ts, worker_blob.test.ts"}
+oven-sh/bun	smell	order	test/js/node/worker_threads/	issue.twins.styles	{"styles":"kebab-case ×14 + snake_case ×4","examples":"fixture-argv.js, worker_destruction.test.ts"}
+oven-sh/bun	smell	order	test/js/node/zlib/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×1","examples":"deflate-streaming.test.ts, bytesWritten.test.ts"}
+oven-sh/bun	smell	order	test/js/third_party/jsonwebtoken/	issue.twins.styles	{"styles":"kebab-case ×13 + snake_case ×9 + camelCase ×2","examples":"claim-aud.test.js, async_sign.test.js, noTimestamp.test.js"}
+oven-sh/bun	smell	order	test/js/web/fetch/	issue.twins.styles	{"styles":"kebab-case ×57 + snake_case ×1","examples":"abort-signal-leak.test.ts, fetch_headers.test.js"}
+oven-sh/bun	smell	order	test/js/web/timers/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"setImmediate.test.js, performance-entries.test.ts"}
+oven-sh/bun	smell	order	test/js/web/workers/	issue.twins.styles	{"styles":"kebab-case ×16 + snake_case ×1","examples":"a-read-of-a-file-descriptor-is-the-last-thing-pending.test.ts, worker_blob.test.ts"}
 oven-sh/bun	smell	order	test/napi/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"addon-allocations.test.ts, uv_stub.test.ts"}
-oven-sh/bun	smell	order	test/napi/napi-app/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×2","examples":"external-buffer-worker.js, test_experimental_crash.js"}
+oven-sh/bun	smell	order	test/napi/napi-app/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"external-buffer-worker.js, test_experimental_crash.js"}
 oven-sh/bun	smell	order	test/napi/node-napi-tests/test/common/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
 oven-sh/bun	smell	order	test/napi/node-napi-tests/test/node-api/test_buffer/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"test-external-buffer.js, test_finalizer.js"}
-oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"kebab-case ×42 + snake_case ×1","examples":"abort-controller-fixture.js, test_env_loader_threading.test.ts"}
+oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"kebab-case ×41 + snake_case ×1","examples":"atomics-waitasync-wtftimer-uaf.test.ts, test_env_loader_threading.test.ts"}
 oven-sh/bun	smell	order	test/snapshots/	issue.twins.styles	{"styles":"kebab-case ×105 + snake_case ×4","examples":"array-args-with-default-values.debug.js, spread_with_key.debug.tsx"}
 oven-sh/bun	smell	order	test/snippets/	issue.twins.styles	{"styles":"kebab-case ×30 + snake_case ×1","examples":"array-args-with-default-values.js, spread_with_key.tsx"}
 oxc-project/oxc	review	modernity	tasks/sprout/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
+oxc-project/oxc	smell	convention	apps/oxlint/fixtures/cli/fix_argument/	issue.contract.vueFileName	{"name":"skip_suggestion","count":4}
 oxc-project/oxc	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":48}
 oxc-project/oxc	smell	modernity	apps/oxfmt/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	apps/oxlint/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	apps/oxlint/fixtures/cli/tsgolint_config_error/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+oxc-project/oxc	smell	modernity	apps/oxlint/fixtures/cli/tsgolint_tsconfig_extends_config_err/tsconfig.base.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 oxc-project/oxc	smell	modernity	napi/minify/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	napi/parser/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	napi/playground/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
@@ -889,6 +928,9 @@ oxc-project/oxc	smell	order	apps/oxfmt/conformance/	issue.twins.styles	{"styles"
 oxc-project/oxc	smell	order	apps/oxfmt/src-js/cli/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, worker-proxy.ts"}
 oxc-project/oxc	smell	order	apps/oxlint/src-js/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, plugins-dev.ts"}
 oxc-project/oxc	smell	order	apps/oxlint/test/	issue.twins.styles	{"styles":"snake_case ×4 + camelCase ×1","examples":"compile_visitor.test.ts, isSpaceBetween.test.ts"}
+oxc-project/oxc	smell	order	crates/oxc_formatter/tests/jsdoc/fixtures/files/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×2","examples":"typeScript.js, create-ignorer.js"}
+oxc-project/oxc	smell	order	crates/oxc_linter/fixtures/import/no-unused-modules/	issue.twins.styles	{"styles":"kebab-case ×44 + snake_case ×2","examples":"arbitrary-module-namespace-identifier-name-a.js, empty_file.js"}
+oxc-project/oxc	smell	order	crates/oxc_react_compiler/fixtures/	issue.twins.styles	{"styles":"kebab-case ×1192 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
 oxc-project/oxc	smell	order	tasks/sprout/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"compiler-runtime.ts, useEffectWrapper.ts"}
 phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.ports.yml	issue.contract.composeName	{}
 phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.yml	issue.contract.composeName	{}
@@ -914,6 +956,11 @@ rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cubinonly	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cuda128	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cuda128-all	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-default	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-multiarch	issue.leftover.executable	{}
 ruvnet/ruflo	review	modernity	ruflo/src/ruvocal/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 ruvnet/ruflo	review	modernity	v3/plugins/cognitive-kernel/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 ruvnet/ruflo	review	modernity	v3/plugins/neural-coordination/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
@@ -1155,6 +1202,8 @@ vercel/next-learn	smell	modernity	basics/typescript-final/tsconfig.json	issue.co
 vercel/next-learn	smell	modernity	dashboard/final-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 vercel/next-learn	smell	modernity	dashboard/starter-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 vercel/next-learn	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+vitejs/vite	smell	cleanliness	packages/vite/src/node/__tests__/optimizer/fixtures/lockfile-hash/yarn-patches/node_modules/	issue.leak.artifact	{}
+vitejs/vite	smell	cleanliness	packages/vite/src/node/__tests__/optimizer/fixtures/lockfile-hash/yarn-state/node_modules/	issue.leak.artifact	{}
 vitejs/vite	smell	order	packages/vite/src/node/server/__tests__/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"htmlSafeModulePaths.spec.ts, search-root.spec.ts"}
 vitejs/vite	smell	order	packages/vite/src/shared/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"bundledDevHmr.ts, pretty-format.ts"}
 vitejs/vite	smell	order	packages/vite/src/shared/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"forwardConsole.spec.ts, pretty-format.spec.ts"}
@@ -1171,6 +1220,8 @@ vuejs/core	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rim
 vuejs/core	smell	modernity	package.json (esbuild-plugin-polyfill-node)	issue.deps.deprecated	{"name":"esbuild-plugin-polyfill-node","version":"0.3.0","message":"Package no longer supported. Contact Support at https://www.npmjs.com/support for more info."}
 vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
 vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/MotionEST/	issue.contract.pythonModuleName	{"name":"Anandan","count":7}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/genY4M/genY4M.py	issue.contract.pythonModuleName	{"name":"genY4M","count":1}
 wilsonzlin/fastrender	smell	modernity	.github/workflows/typecheck_ts_conformance_upstream.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/resources/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×2","examples":"eventtarget_shim.js, testdriver-actions.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/	issue.twins.styles	{"styles":"snake_case ×59 + kebab-case ×11 + camelCase ×1","examples":"assert_throws_dom_legacy_domexception_names.window.js, cross-document-appendchild-adopts.window.js, getDomExceptionName.window.js"}

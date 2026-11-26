@@ -14,6 +14,8 @@ export type ContractFile = {
   text(): string;
   /** Every file of the project, relative. */
   all: Set<string>;
+  /** False for fixtures and vendored code: what the tools that put it there, or .gitattributes, say is not the project's. */
+  ours(rel: string): boolean;
   /** The nearest package.json at or above this file, parsed. */
   pkg(): Record<string, any> | undefined;
   /** Some stylesheet of the project loads a config with `@config`. */

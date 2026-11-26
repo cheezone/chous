@@ -14,7 +14,7 @@
 
 调研于 2026-11。
 
-停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：ruvnet/ruflo, Neve77/comandaflow, ollama/ollama +10
+停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：ruvnet/ruflo, facebook/react, Neve77/comandaflow +10
 
 ### Bun
 
@@ -49,7 +49,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 秩序 | 两份互不同步的 lockfile（…）：Yarn 自己建议不要混用包管理器 | github.com | dennislee928/Carbon_Trading_For_Individuals |
+| 秩序 | 两份互不同步的 lockfile（…）：Yarn 自己建议不要混用包管理器 | github.com | dennislee928/Carbon_Trading_For_Individuals, facebook/react |
 | 约定 | Yarn 2 起只读 .yarnrc.yml；这个文件会被忽略 | yarnpkg.com | 尚未见到 |
 
 ### TypeScript
@@ -58,7 +58,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 现代 | TypeScript 6 已废弃、7 不再支持：… | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +19 |
+| 现代 | TypeScript 6 已废弃、7 不再支持：… | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +20 |
 
 ### ESLint
 
@@ -69,7 +69,7 @@
 | 秩序 | 永远不会被读：ESLint 每个目录只用一份配置，这里是 … | eslint.org | 尚未见到 |
 | 现代 | ESLint … 下的 eslintrc：ESLint 9 起已废弃、默认不再查找，10 起彻底移除；改用 eslint.config.js | eslint.org | oven-sh/bun |
 
-停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals, AdekunleBamz/stackhub +24
+停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：facebook/react, ruvnet/ruflo, dennislee928/Carbon_Trading_For_Individuals +24
 
 ### TSLint, JSCS
 
@@ -133,8 +133,8 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | 既不是 PascalCase 也不是 kebab-case 的组件（… 个，如 …）：Vue 风格指南只允许这两种 | vuejs.org | chatwoot/chatwoot, element-plus/element-plus |
-| 秩序 | 用 … 命名的组件（… 个），其余都用 …：Vue 风格指南要求始终只用一种 | vuejs.org | vbenjs/vue-vben-admin |
+| 约定 | 既不是 PascalCase 也不是 kebab-case 的组件（… 个，如 …）：Vue 风格指南只允许这两种 | vuejs.org | chatwoot/chatwoot, element-plus/element-plus, oxc-project/oxc |
+| 秩序 | 用 … 命名的组件（… 个），其余都用 …：Vue 风格指南要求始终只用一种 | vuejs.org | nuxt/nuxt, vbenjs/vue-vben-admin |
 
 停止维护：Vue 的 1 个版本，从 2 到 2；最近一个在 2023-12-31 停止维护。来源：v2.vuejs.org；真实命中：尚未见到
 
@@ -158,7 +158,7 @@
 
 调研于 2026-11。
 
-停止维护：Electron 的 41 个版本，从 2 到 42；最近一个在 2026-10-20 停止维护。来源：releases.electronjs.org；真实命中：facebook/react, QuantumNous/new-api
+停止维护：Electron 的 41 个版本，从 2 到 42；最近一个在 2026-10-20 停止维护。来源：releases.electronjs.org；真实命中：facebook/react
 
 ### Rust
 
@@ -192,7 +192,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | 名字带大写字母的 Python 文件（… 个，如 …）：PEP 8 规定模块名全小写 | peps.python.org | zopefoundation/ZODB |
+| 约定 | 名字带大写字母的 Python 文件（… 个，如 …）：PEP 8 规定模块名全小写 | peps.python.org | zopefoundation/ZODB, wilsonzlin/fastrender |
 | 约定 | 包 … 的名字带大写字母：PEP 8 规定包名全小写 | peps.python.org | zopefoundation/ZODB, Ayato-kosaka/nanitabeyo |
 
 停止维护：Python 的 13 个版本，从 2.6 到 3.10；最近一个在 2026-10-01 停止维护。来源：peps.python.org；真实命中：comfyanonymous/ComfyUI, astral-sh/uv, MUKUL-PRASAD-SIGH/AetherSentrix
@@ -258,7 +258,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | 不是大驼峰的 Kotlin 文件（… 个，如 …）：Kotlin 编码规范要求文件名像 ProcessDeclarations.kt 这样 | kotlinlang.org | ktorio/ktor |
+| 约定 | 不是大驼峰的 Kotlin 文件（… 个，如 …）：Kotlin 编码规范要求文件名像 ProcessDeclarations.kt 这样 | kotlinlang.org | ktorio/ktor, longbridge/gpui-component |
 
 ### Elixir
 
@@ -274,7 +274,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | 文件名和所声明的类名不一致（… 个，如 ….php 声明的是 …）：PSR-4 规定文件名与类名一致，大小写也要一致 | php-fig.org | filamentphp/filament, matomo-org/matomo |
+| 约定 | 文件名和所声明的类名不一致（… 个，如 ….php 声明的是 …）：PSR-4 规定文件名与类名一致，大小写也要一致 | php-fig.org | filamentphp/filament, matomo-org/matomo, laravel/framework |
 
 ### Rails
 

@@ -114,6 +114,14 @@ describe("inputs built to make a regex backtrack", () => {
   });
 });
 
+describe(".gitattributes", () => {
+  it("reads a hostile attributes file in bounded time", async () => {
+    const lines = Array.from({ length: 50_000 }, (_, i) => `${"{a,b}".repeat(20)}${i}/** linguist-vendored`).join("\n");
+    const { ms } = await timed(project({ ".gitattributes": lines, "src/a.ts": "", "src/b.ts": "" }));
+    expect(ms).toBeLessThan(5_000);
+  });
+});
+
 describe("names", () => {
   it("does not mistake a # in a directory name for a finding's marker", async () => {
     const { result } = await timed(project({ ".gitignore": "foo\n", "foo#bar/.DS_Store": "\u0000\u0000\u0000\u0001Bud1" }));

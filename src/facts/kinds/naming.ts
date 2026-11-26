@@ -1,5 +1,4 @@
 import { type ContractFile, generated, projectOf } from "../kit";
-import { NOT_OURS } from "../../taste/hygiene";
 import type { Fact, Text } from "./types";
 import { build, type Common, target, type Target } from "./shared";
 
@@ -86,7 +85,7 @@ export function oneStyle<const Id extends string>(
     if (!counts) {
       counts = new Map();
       for (const rel of f.all) {
-        if (!rel.startsWith(project) || NOT_OURS.test(rel) || !match.test(rel)) continue;
+        if (!rel.startsWith(project) || !f.ours(rel) || !match.test(rel)) continue;
         const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "";
         if (projectOf({ ...f, dir }) !== project) continue; // a nested project counts for itself
         const style = named(rel);

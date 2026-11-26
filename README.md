@@ -80,7 +80,7 @@ There are no errors, warnings or hints, and no score. Smells make chous exit non
 
 Which tools, which files and which words: [the catalogue of what chous knows](docs/facts.md), generated from the registry so it never lists a tool chous does not check.
 
-Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, neither correctness nor security is checked, and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Test fixtures and other people's code (`vendor/`, `third_party/`, `upstream/`) are skipped; `tests/` and `examples/` are your own code and are checked.
+Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, neither correctness nor security is checked, and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Other people's code and test data are skipped under the names their tools define (`node_modules/`, `vendor/`, `testdata/`, `__snapshots__/`, `tests/fixtures/`) or wherever `.gitattributes` says `linguist-vendored` or `linguist-generated`, in any language; `tests/` and `examples/` are your own code and are checked.
 
 Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
 

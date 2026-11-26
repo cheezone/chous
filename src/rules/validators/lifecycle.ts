@@ -5,7 +5,6 @@ import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
 import { EOL, eolDate, hasEnded, lineOf, type Product } from "../../taste/eol";
-import { NOT_OURS } from "../../taste/hygiene";
 import { FACT_EOL } from "../../facts";
 
 type Found = { product: Product; version: string; file: string };
@@ -162,11 +161,11 @@ function findVersions(context: RuleValidatorContext, workflows: boolean): Found[
   }
   // Every Dockerfile of the project (`docker/Dockerfile`, `api.Dockerfile`): what each image runs.
   for (const [rel, entry] of snapshot.byRel) {
-    if (entry.isDir || !DOCKERFILE.test(entry.name) || NOT_OURS.test(rel)) continue;
+    if (entry.isDir || !DOCKERFILE.test(entry.name) || context.snapshot.notOurs.test(rel)) continue;
     for (const [image, tag] of baseImages(read(entry.absPath))) add(image, tag, rel);
   }
   for (const [rel, entry] of snapshot.byRel) {
-    if (entry.isDir || NOT_OURS.test(rel)) continue;
+    if (entry.isDir || context.snapshot.notOurs.test(rel)) continue;
     if (workflows && WORKFLOW.test(rel)) for (const [product, version] of workflowRuntimes(read(entry.absPath))) add(product, version, rel);
     else if (DEVCONTAINER.test(rel)) for (const [product, version] of devcontainerRuntimes(read(entry.absPath))) add(product, version, rel);
   }
