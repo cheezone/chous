@@ -32,7 +32,7 @@
   - `test/code/facts.test.ts` 对每个工具跑同一套检查：每条事实有原话、中英文都有且占位符一致、正例必报、反例必不报。加工具不用另写测试。
   - 停止维护日期不手写：工具的 `eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `src/facts/data/eol/`（禁止手改）。已记录的日期和官方数据不一致时只报告、不覆盖，交给人判断。
   - `.github/workflows/sources.yml` 每周跑 `pnpm run sync --check` 和 `pnpm run sources`，失败就说明官方文档变了。
-  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose；其余仍在 `src/taste/contracts.ts`、`eol.ts`、`deps.ts`、`sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
+  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose、AI 工具（Agent Skills、Codex、Claude Code、Copilot、Cursor、Devin、Cline）。`contracts.ts` 只剩 chous 自己的观察 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。其余仍在 `eol.ts`、`deps.ts`、`sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
 - 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
 - **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 显示。文案里不写 URL。`pnpm run sources` 逐条核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
 - 引用官方文档以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。

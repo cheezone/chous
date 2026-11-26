@@ -146,69 +146,7 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "the latter are transient files Gradle uses to support features like incremental builds",
     },
   ],
-  "issue.contract.claudeMdLines": [{ url: "https://code.claude.com/docs/en/memory", check: "https://code.claude.com/docs/en/memory.md", quote: "target under 200 lines per CLAUDE.md file. Longer files consume more context and reduce adherence." }],
   // Contracts: rules tools state for the files they read (taste/contracts.ts).
-  "issue.contract.agentsMdBytes": [
-    { url: "https://developers.openai.com/codex/guides/agents-md", check: `${GH}/openai/codex/main/codex-rs/config/defaults.toml`, quote: "project_doc_max_bytes = 32768" },
-  ],
-  "issue.contract.skillLines": [
-    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "Keep SKILL.md under 500 lines." },
-    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Keep your main SKILL.md under 500 lines." },
-  ],
-  "issue.contract.skillName": [
-    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 64 characters. Lowercase letters, numbers, and hyphens only." },
-    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Must match the parent directory name" },
-  ],
-  "issue.contract.skillDescription": [
-    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 1024 characters. Non-empty." },
-  ],
-  "issue.contract.skillCompatibility": [
-    { url: "https://agentskills.io/specification", check: `${GH}/agentskills/agentskills/main/docs/specification.mdx`, quote: "Max 500 characters. Indicates environment requirements" },
-  ],
-  "issue.contract.claudeCommands": [
-    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "Custom commands have been merged into skills." },
-    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "is the older format and still works" },
-  ],
-  "issue.contract.commandShadowed": [
-    { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md", quote: "| A skill and a file in .claude/commands/ | The skill |" },
-  ],
-  "issue.contract.cursorRuleExtension": [{ url: "https://cursor.com/docs/context/rules", quote: "Project rules must use the .mdc extension." }],
-  "issue.contract.cursorRuleLines": [{ url: "https://cursor.com/docs/context/rules", quote: "Keep rules under 500 lines" }],
-  "issue.contract.copilotAgentPrompt": [
-    { url: "https://docs.github.com/en/copilot/reference/custom-agents-configuration", check: `${GH}/github/docs/main/content/copilot/reference/custom-agents-configuration.md`, quote: "The prompt can be a maximum of 30,000 characters." },
-  ],
-  "issue.contract.copilotAgentInfer": [
-    { url: "https://docs.github.com/en/copilot/reference/custom-agents-configuration", check: `${GH}/github/docs/main/content/copilot/reference/custom-agents-configuration.md`, quote: "Use disable-model-invocation and user-invocable instead." },
-  ],
-  "issue.contract.chatmode": [
-    {
-      url: "https://github.com/microsoft/vscode-docs/blob/main/docs/agents/reference/custom-agent-file-reference.md",
-      check: `${GH}/microsoft/vscode-docs/main/docs/agents/reference/custom-agent-file-reference.md`,
-      quote: "Custom agents were previously known as custom chat modes. If you have .chatmode.md files, rename them to .agent.md",
-    },
-  ],
-  "issue.contract.copilotInstructionsName": [
-    {
-      url: "https://docs.github.com/en/copilot/tutorials/cloud-agent/get-the-best-results",
-      check: `${GH}/github/docs/main/content/copilot/tutorials/cloud-agent/get-the-best-results.md`,
-      quote: "create one or more .github/instructions/**/*.instructions.md files",
-    },
-  ],
-  "issue.contract.windsurfLegacy": [
-    {
-      url: "https://docs.devin.ai/desktop/cascade/memories",
-      check: "https://docs.devin.ai/desktop/cascade/memories.md",
-      quote: "The legacy .windsurf/rules/*.md, .windsurf/global_rules.md, and .windsurfrules files are imported by default.",
-    },
-    { url: "https://docs.devin.ai/desktop/devin-desktop-faq", check: "https://docs.devin.ai/desktop/devin-desktop-faq.md", quote: "Legacy (read, fallback)" },
-  ],
-  "issue.contract.clinerules": [
-    {
-      url: "https://github.com/cline/cline/blob/main/docs/getting-started/config.mdx",
-      check: `${GH}/cline/cline/main/docs/getting-started/config.mdx`,
-      quote: "In a project, Cline also reads the older .clinerules/ layout",
-    },
-  ],
   "issue.twins.copy": [
     { url: "https://code.claude.com/docs/en/memory#agents-md", check: "https://code.claude.com/docs/en/memory.md", quote: "imports AGENTS.md" },
   ],

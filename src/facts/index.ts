@@ -21,6 +21,13 @@ import pytest from "./tools/python/pytest";
 import ruff from "./tools/python/ruff";
 import github from "./tools/github/github";
 import compose from "./tools/docker/compose";
+import agentSkills from "./tools/ai/agent-skills";
+import claudeCode from "./tools/ai/claude-code";
+import cline from "./tools/ai/cline";
+import codex from "./tools/ai/codex";
+import copilot from "./tools/ai/copilot";
+import cursor from "./tools/ai/cursor";
+import devin from "./tools/ai/devin";
 
 export const TOOLS = [
   // JavaScript and TypeScript
@@ -45,6 +52,14 @@ export const TOOLS = [
   // Platforms
   github,
   compose,
+  // AI tools: researched again before each change, since they rename and move fast.
+  agentSkills,
+  codex,
+  claudeCode,
+  copilot,
+  cursor,
+  devin,
+  cline,
 ] as const satisfies readonly Tool[];
 
 type Facts = (typeof TOOLS)[number]["facts"][number];

@@ -1,5 +1,5 @@
 import type { ContractFile } from "../kit";
-import { lines } from "../kit";
+import { field, frontmatter, lines } from "../kit";
 import type { Fact, Params, Text } from "./types";
 import { build, type Common, target, type Target } from "./shared";
 
@@ -7,6 +7,10 @@ import { build, type Common, target, type Target } from "./shared";
 export const measure = {
   bytes: (f: ContractFile) => f.bytes(),
   lines: (f: ContractFile) => lines(f.text()),
+  /** Characters of a frontmatter field; 0 when absent. */
+  field: (name: string) => (f: ContractFile) => field(frontmatter(f.text()).front, name)?.length ?? 0,
+  /** Characters after the frontmatter. */
+  body: (f: ContractFile) => frontmatter(f.text()).body.length,
 };
 
 /**
