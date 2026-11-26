@@ -221,6 +221,7 @@ calcom/cal.com	smell	convention	.cursor/skills/vercel-react-best-practices/AGENT
 calcom/cal.com	smell	convention	.opencode/skill/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
 calcom/cal.com	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
 calcom/cal.com	smell	convention	agents/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
+calcom/cal.com	smell	modernity	.github/workflows/nextjs-bundle-analysis-annotation.yml	issue.contract.workflowCommands	{"command":"set-output"}
 calcom/cal.com	smell	modernity	apps/api/v2/docker-compose.yaml	issue.contract.composeName	{}
 calcom/cal.com	smell	modernity	apps/api/v2/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 calcom/cal.com	smell	modernity	apps/web/test/docker-compose.yml	issue.contract.composeName	{}
@@ -295,6 +296,7 @@ calcom/cal.com	smell	order	packages/lib/test/ + __tests__/	issue.twins.synonyms	
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/WootWriter/keyboardEmojiSelector.vue	issue.contract.vueFileName	{"name":"keyboardEmojiSelector","count":1}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/conversation/contextMenu/	issue.contract.vueFileName	{"name":"agentLoadingPlaceholder","count":3}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/routes/dashboard/settings/inbox/channels/360DialogWhatsapp.vue	issue.contract.vueFileName	{"name":"360DialogWhatsapp","count":1}
+chatwoot/chatwoot	smell	convention	config/secrets.yml	issue.contract.railsSecrets	{"version":"8.0"}
 chatwoot/chatwoot	smell	convention	vendor/db/sentiment-analysis.onnx	issue.contract.largeFile	{"mib":66}
 chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.base.yml	issue.contract.composeName	{}
 chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.base.yml	issue.contract.composeVersion	{}
@@ -448,6 +450,10 @@ kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 kartikramachandrula/thynk	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+koel/koel	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":36,"limit":32}
+koel/koel	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":377,"limit":200}
+koel/koel	smell	modernity	.github/workflows/release.yml	issue.contract.workflowCommands	{"command":"set-output"}
+koel/koel	smell	order	resources/assets/js/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"service-worker.spec.ts, registerHooks.ts"}
 ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/common/src/io/ktor/client/engine/cio/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
 ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/jvm/src/io/ktor/client/plugins/websocket/cio/buildersCio.kt	issue.contract.kotlinFileName	{"name":"buildersCio","count":1}
 ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
@@ -471,6 +477,9 @@ ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/
 laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
+lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/linux.yml	issue.contract.workflowCommands	{"command":"set-output"}
+lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/macos.yml	issue.contract.workflowCommands	{"command":"set-output"}
+lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/windows.yml	issue.contract.workflowCommands	{"command":"set-output"}
 longbridge/gpui-component	smell	modernity	.claude/commands/release-notes.md	issue.contract.claudeCommands	{"count":1}
 longbridge/gpui-component	smell	modernity	website/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":284,"limit":200}

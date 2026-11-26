@@ -413,5 +413,15 @@
     "repo": "matomo-org/matomo",
     "commit": "d632b5c4fa476cfc58555e71a691e6ec2079a549",
     "group": "php"
+  },
+  {
+    "repo": "koel/koel",
+    "commit": "f0d5bc79d3083c6cdb335ae8a30ee565cca02a5d",
+    "group": "php"
+  },
+  {
+    "repo": "lohanidamodar/flutter_ui_challenges",
+    "commit": "ceb75ee00d097990fab747d1ce650874f90769f5",
+    "group": "dart"
   }
 ]

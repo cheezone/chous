@@ -4,7 +4,7 @@
 
 每一行都是工具、平台或包作者对自己的说法，背后有他们的原话（`chous --verbose` 会显示）。项目违背它时，chous 就报出来。
 
-43 个工具 · 58 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
+44 个工具 · 60 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
 
 「真实命中」统计回归语料（`test/corpus.json`：锁定 commit 的真实仓库，每条结论都人工核对过）里的结论。「尚未见到」表示那里还没有仓库违反它：这条事实已对照工具原话和正反例检验，还没有在真实项目里遇到过。
 
@@ -275,6 +275,14 @@
 |---|---|---|---|
 | 约定 | 文件名和所声明的类名不一致（… 个，如 ….php 声明的是 …）：PSR-4 规定文件名与类名一致，大小写也要一致 | php-fig.org | filamentphp/filament, matomo-org/matomo |
 
+### Rails
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 | 真实命中 |
+|---|---|---|---|
+| 约定 | Rails … 不再读 config/secrets.yml：Rails 7.2 已移除 Rails.application.secrets；改用 credentials | guides.rubyonrails.org | chatwoot/chatwoot |
+
 ### GitHub
 
 调研于 2026-11。
@@ -286,6 +294,7 @@
 | 约定 | 永远不会被读：GitHub 只用找到的第一个 CODEOWNERS，这里是 … | docs.github.com | 尚未见到 |
 | 约定 | … MB：GitHub 不加载 3 MB 及以上的 CODEOWNERS | docs.github.com | 尚未见到 |
 | 约定 | 永远不会被读：Dependabot 只读 .github/dependabot.yml | docs.github.com | AppFlowy-IO/AppFlowy |
+| 现代 | 用了 ::…：GitHub 的 runner 说它已废弃、即将停用；改为写入环境文件（$GITHUB_OUTPUT、$GITHUB_STATE） | github.com | lohanidamodar/flutter_ui_challenges, calcom/cal.com, koel/koel |
 | 约定 | 永远不会运行：GitHub Actions 只读 .github/workflows/ 里的工作流 | docs.github.com | 尚未见到 |
 
 ### Docker Compose
@@ -331,7 +340,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | … KiB：Codex 默认最多读 AGENTS.md 的 … KiB，剩下的会被截掉 | developers.openai.com | calcom/cal.com, ghostfolio/ghostfolio, v833/q-code |
+| 约定 | … KiB：Codex 默认最多读 AGENTS.md 的 … KiB，剩下的会被截掉 | developers.openai.com | calcom/cal.com, ghostfolio/ghostfolio, koel/koel +1 |
 
 ### Claude Code
 
@@ -339,7 +348,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | … 行：Claude Code 文档建议每个 CLAUDE.md 不超过 … 行；越长越占上下文，也越不容易被遵守 | code.claude.com | oven-sh/bun, ruvnet/ruflo, Ayato-kosaka/nanitabeyo +5 |
+| 约定 | … 行：Claude Code 文档建议每个 CLAUDE.md 不超过 … 行；越长越占上下文，也越不容易被遵守 | code.claude.com | oven-sh/bun, ruvnet/ruflo, Ayato-kosaka/nanitabeyo +6 |
 | 现代 | … 个旧格式的命令：Claude Code 已把自定义命令并入 skills（.claude/skills/<名字>/SKILL.md） | code.claude.com | ruvnet/ruflo, longbridge/gpui-component, oven-sh/bun +1 |
 | 约定 | 还有一个同名的 skill（…），skill 优先：Claude Code 永远不会运行这个命令 | code.claude.com | 尚未见到 |
 | 洁净 | 不该提交：`**/CLAUDE.local.md`, `**/.claude/settings.local.json` — Claude Code 的个人文件；官方文档要求不提交 | code.claude.com | FouadMagdy01/RNCopilot, MohammadShamchi/ai-bookmark-enhancer, ruvnet/ruflo |

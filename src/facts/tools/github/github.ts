@@ -1,5 +1,5 @@
 import { tool } from "../../define";
-import { limit, measure, misplaced, searchOrder } from "../../kinds";
+import { legacy, limit, measure, misplaced, searchOrder } from "../../kinds";
 
 const DOCS = "https://raw.githubusercontent.com/github/docs/main";
 const PAGE = "https://docs.github.com/en";
@@ -85,6 +85,29 @@ export default tool({
         },
       ],
       examples: { smell: [{ "dependabot.yml": "version: 2" }], clean: [{ ".github/dependabot.yml": "version: 2" }] },
+    }),
+    legacy({
+      id: "workflowCommands",
+      match: /^\.github\/workflows\/.+\.ya?ml$|(^|\/)action\.ya?ml$/,
+      when: (f) => {
+        const command = /::(set-output|save-state)\b/.exec(f.text())?.[1];
+        return command ? { command } : undefined;
+      },
+      message: {
+        en: "uses ::{{command}}: GitHub's runner calls it deprecated and to be disabled; write to the environment files ($GITHUB_OUTPUT, $GITHUB_STATE)",
+        zh: "用了 ::{{command}}：GitHub 的 runner 说它已废弃、即将停用；改为写入环境文件（$GITHUB_OUTPUT、$GITHUB_STATE）",
+      },
+      sources: [
+        {
+          url: "https://github.com/actions/runner/blob/main/src/Runner.Common/Constants.cs",
+          check: "https://raw.githubusercontent.com/actions/runner/main/src/Runner.Common/Constants.cs",
+          quote: "command is deprecated and will be disabled soon. Please upgrade to using Environment Files.",
+        },
+      ],
+      examples: {
+        smell: [{ ".github/workflows/ci.yml": 'on: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - id: v\n        run: echo "::set-output name=version::1.0"\n' }],
+        clean: [{ ".github/workflows/ci.yml": 'on: push\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps:\n      - id: v\n        run: echo "version=1.0" >> "$GITHUB_OUTPUT"\n' }],
+      },
     }),
     misplaced({
       id: "workflowPlace",

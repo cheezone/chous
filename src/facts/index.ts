@@ -36,6 +36,7 @@ import dart from "./tools/dart/dart";
 import kotlin from "./tools/kotlin/kotlin";
 import elixir from "./tools/elixir/elixir";
 import composer from "./tools/php/composer";
+import rails from "./tools/ruby/rails";
 import github from "./tools/github/github";
 import compose from "./tools/docker/compose";
 import wrangler from "./tools/cloudflare/wrangler";
@@ -84,8 +85,9 @@ export const TOOLS = [
   dart,
   kotlin,
   elixir,
-  // PHP
+  // PHP, Ruby
   composer,
+  rails,
   // Platforms
   github,
   compose,

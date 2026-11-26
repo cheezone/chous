@@ -39,7 +39,7 @@
 - `pnpm run sources`：逐条去页面核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）。新增或修改来源后必须跑。
 - `pnpm run sync --check`：停止维护日期和官方数据比对。
 - **没有真实实例，就不算支持。** 新规则（尤其是新语言、新框架）要找到真实项目里的违例和守规的例子，锁定 commit 加进 `test/corpus.json`，逐条核对。`docs/facts*.md` 的「真实命中」一列由语料结论生成，「尚未见到」的规则要如实标出。
-- `pnpm run corpus`（联网，不在 CI 里，缓存目录用 `CHOUS_CORPUS_DIR`）：`test/corpus.json` 锁定 83 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行核对事实，确认正确才 `pnpm run corpus --update`。
+- `pnpm run corpus`（联网，不在 CI 里，缓存目录用 `CHOUS_CORPUS_DIR`）：`test/corpus.json` 锁定 85 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行核对事实，确认正确才 `pnpm run corpus --update`。
 - `.github/workflows/sources.yml` 每周跑 `sync --check` 和 `sources`，失败说明官方文档变了。
 - `node dist/cli.mjs`：用 chous 检查本仓库，必须没有臭味。
 

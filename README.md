@@ -83,7 +83,7 @@ Which tools, which files and which words: [the catalogue of what chous knows](do
 
 Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, and neither correctness nor security is checked. Test fixtures and other people's code (`vendor/`, `third_party/`, `upstream/`) are skipped; `tests/` and `examples/` are your own code and are checked.
 
-Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 83 real repositories against [the recorded claims](test/corpus.claims.txt).
+Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
 
 Everything chous knows about a tool lives in one file under [`src/facts/tools/`](src/facts/tools/): its files, its words, what chous says in each language, and examples it must and must not report.
 

@@ -4,7 +4,7 @@
 
 Each line is something a tool, platform or package author states about itself, with their own words behind it (`chous --verbose` shows them). chous reports it when a project goes against it.
 
-43 tools · 58 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
+44 tools · 60 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
 
 “Seen in real projects” counts findings in the regression corpus (`test/corpus.json`: real repositories at pinned commits, every finding checked by hand). “not yet” means no repository there breaks it: the fact is checked against the tool's own words and examples, not yet against the wild.
 
@@ -275,6 +275,14 @@ Researched 2026-11.
 |---|---|---|---|
 | Convention | files named unlike the class they declare (…, e.g. ….php declares …): PSR-4 says the file name matches the class name, case included | php-fig.org | filamentphp/filament, matomo-org/matomo |
 
+### Rails
+
+Researched 2026-11.
+
+| Taste | chous says | Source | Seen in real projects |
+|---|---|---|---|
+| Convention | Rails … no longer reads config/secrets.yml: Rails 7.2 removed Rails.application.secrets; use credentials | guides.rubyonrails.org | chatwoot/chatwoot |
+
 ### GitHub
 
 Researched 2026-11.
@@ -286,6 +294,7 @@ Researched 2026-11.
 | Convention | never read: GitHub uses the first CODEOWNERS it finds, here … | docs.github.com | not yet |
 | Convention | … MB: GitHub does not load a CODEOWNERS file of 3 MB or more | docs.github.com | not yet |
 | Convention | never read: Dependabot reads only .github/dependabot.yml | docs.github.com | AppFlowy-IO/AppFlowy |
+| Modernity | uses ::…: GitHub's runner calls it deprecated and to be disabled; write to the environment files ($GITHUB_OUTPUT, $GITHUB_STATE) | github.com | lohanidamodar/flutter_ui_challenges, calcom/cal.com, koel/koel |
 | Convention | never run: GitHub Actions only reads workflows from .github/workflows/ | docs.github.com | not yet |
 
 ### Docker Compose
@@ -331,7 +340,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | … KiB: Codex reads at most … KiB of AGENTS.md by default and cuts the rest | developers.openai.com | calcom/cal.com, ghostfolio/ghostfolio, v833/q-code |
+| Convention | … KiB: Codex reads at most … KiB of AGENTS.md by default and cuts the rest | developers.openai.com | calcom/cal.com, ghostfolio/ghostfolio, koel/koel +1 |
 
 ### Claude Code
 
@@ -339,7 +348,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | … lines: Claude Code's docs target under … per CLAUDE.md; longer files consume more context and reduce adherence | code.claude.com | oven-sh/bun, ruvnet/ruflo, Ayato-kosaka/nanitabeyo +5 |
+| Convention | … lines: Claude Code's docs target under … per CLAUDE.md; longer files consume more context and reduce adherence | code.claude.com | oven-sh/bun, ruvnet/ruflo, Ayato-kosaka/nanitabeyo +6 |
 | Modernity | … commands in the older format: Claude Code merged custom commands into skills (.claude/skills/<name>/SKILL.md) | code.claude.com | ruvnet/ruflo, longbridge/gpui-component, oven-sh/bun +1 |
 | Convention | a skill named … exists too, and the skill wins: Claude Code never runs this command | code.claude.com | not yet |
 | Cleanliness | Should not be committed: `**/CLAUDE.local.md`, `**/.claude/settings.local.json` — personal Claude Code file; its docs say to keep it out of git | code.claude.com | FouadMagdy01/RNCopilot, MohammadShamchi/ai-bookmark-enhancer, ruvnet/ruflo |
