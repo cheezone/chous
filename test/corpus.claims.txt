@@ -20,6 +20,7 @@ Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (base-64)	issue.d
 Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-mobile/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+Ayato-kosaka/nanitabeyo	review	order	app-expo/features/map/	issue.twins.pluralMaybe	{"other":"app-expo/features/maps/"}
 Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":712,"limit":200}
 Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
@@ -40,6 +41,7 @@ Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	./	issue.leftover.worklogs
 Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	.kotlin/errors/errors-1777453046994.log	issue.no.because	{"reason":{"t":"reason.logs"}}
 Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	fix-signin.sh	issue.leftover.script	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.gradle/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.idea/workspace.xml	issue.no.because	{"reason":{"t":"reason.ideaWorkspace"}}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0-release.apk	issue.leftover.installer	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0.1-release.apk	issue.leftover.installer	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.0.1-release.apk	issue.leftover.installer	{}
@@ -60,9 +62,11 @@ BrianTran24/screen_record	review	cleanliness	./	issue.leftover.worklogs	{"count"
 BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
 BurntSushi/ripgrep	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":10}
 BurntSushi/ripgrep	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"AI_POLICY.md, FAQ.md, GUIDE.md, RELEASE-CHECKLIST.md"}
+CarGuo/gsy_github_app_flutter	review	cleanliness	debug-issue-timeline-flash.md	issue.leftover.worklog	{}
 CarGuo/gsy_github_app_flutter	smell	convention	lib/db/provider/repos/repository_commitInfo_detail_db_provider.dart	issue.contract.dartFileName	{"name":"repository_commitInfo_detail_db_provider","count":1}
 CarGuo/gsy_github_app_flutter	smell	convention	lib/model/commitFile.dart	issue.contract.dartFileName	{"name":"commitFile","count":1}
 CarGuo/gsy_github_app_flutter	smell	convention	lib/page/issue/issue_edit_dIalog.dart	issue.contract.dartFileName	{"name":"issue_edit_dIalog","count":1}
+CarGuo/gsy_github_app_flutter	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"RECORD.md, UISCENE_PLUGIN_RISK.md, VERSION.md, debug-issue-timeline-flash.md"}
 FouadMagdy01/RNCopilot	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
 FouadMagdy01/RNCopilot	smell	modernity	.clinerules	issue.contract.clinerules	{"count":1}
 FouadMagdy01/RNCopilot	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
@@ -84,8 +88,8 @@ MohammadShamchi/ai-bookmark-enhancer	review	cleanliness	./	issue.leftover.worklo
 MohammadShamchi/ai-bookmark-enhancer	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
 MohammadShamchi/ai-bookmark-enhancer	smell	cleanliness	background.js.backup	issue.leftover.backup	{"original":"background.js"}
 MohammadShamchi/ai-bookmark-enhancer	smell	convention	.cursor/rules/	issue.contract.cursorRuleExtension	{"count":2}
-MohammadShamchi/ai-bookmark-enhancer	smell	order	./	issue.leftover.rootDocs	{"count":20,"limit":3,"names":"AI_PROMPTS.md, AUDIT_REPORT.md, BOOKMARK_AI_PLAN.md, BOOKMARK_PROCESSING_ANALYSIS.md, CLEANUP_REPORT.md, …"}
-Monisha-JR/Task_Management_With_AI	review	cleanliness	./	issue.leftover.worklogs	{"count":2,"names":"REGISTRATION_FIXES.md, VALIDATION_IMPROVEMENTS.md"}
+MohammadShamchi/ai-bookmark-enhancer	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"AI_PROMPTS.md, AUDIT_REPORT.md, BOOKMARK_AI_PLAN.md, BOOKMARK_PROCESSING_ANALYSIS.md, CLAUDE_INSTRUCTIONS.md, …"}
+Monisha-JR/Task_Management_With_AI	review	cleanliness	./	issue.leftover.worklogs	{"count":3,"names":"README-IMPROVEMENTS.md, REGISTRATION_FIXES.md, VALIDATION_IMPROVEMENTS.md"}
 Monisha-JR/Task_Management_With_AI	review	cleanliness	test_registration_fix.sh	issue.leftover.script	{}
 Monisha-JR/Task_Management_With_AI	review	cleanliness	test_validation.sh	issue.leftover.script	{}
 Monisha-JR/Task_Management_With_AI	smell	cleanliness	.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
@@ -196,6 +200,8 @@ Walbrkt/HackBerlin_Solar	smell	order	package.json (package-manager)	issue.stack.
 ai-assist-org/ai-assist	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 ai-assist-org/ai-assist	review	cleanliness	docs/SELF_IMPROVEMENT.md	issue.leftover.worklog	{}
 anomalyco/opencode	review	modernity	packages/tui/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
+anomalyco/opencode	review	order	packages/core/test/fixture/	issue.twins.pluralMaybe	{"other":"packages/core/test/fixtures/"}
+anomalyco/opencode	review	order	packages/plugin/	issue.twins.pluralMaybe	{"other":"packages/plugins/"}
 anomalyco/opencode	smell	convention	packages/plugins/figma/skills/figma-code-connect/SKILL.md	issue.contract.skillLines	{"lines":528,"limit":500}
 anomalyco/opencode	smell	order	package.json (vite)	issue.workspace.drift	{"name":"vite","versions":"packages/app: 8.2.4; packages/data/app: 8.2.4; packages/desktop: 8.2.4; services/site: 8.2.4; packages/stories: 7.3.7"}
 anomalyco/opencode	smell	order	services/site/test/	issue.twins.styles	{"styles":"kebab-case ×28 + camelCase ×4","examples":"changelog-highlights.test.ts, consoleMarketing.test.ts"}
@@ -215,6 +221,8 @@ calcom/cal.com	review	modernity	apps/api/v2/package.json (dotenv)	issue.deps.nat
 calcom/cal.com	review	modernity	apps/api/v2/package.json (querystring)	issue.deps.native	{"name":"querystring","use":"URL / URLSearchParams"}
 calcom/cal.com	review	modernity	example-apps/credential-sync/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 calcom/cal.com	review	modernity	packages/platform/examples/base/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+calcom/cal.com	review	order	apps/web/app/(use-page-wrapper)/(main-nav)/booking/	issue.twins.pluralMaybe	{"other":"apps/web/app/(use-page-wrapper)/(main-nav)/bookings/"}
+calcom/cal.com	review	order	apps/web/app/api/webhook/	issue.twins.pluralMaybe	{"other":"apps/web/app/api/webhooks/"}
 calcom/cal.com	smell	convention	.claude/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
 calcom/cal.com	smell	convention	.cursor/rules/	issue.contract.cursorRuleExtension	{"count":45}
 calcom/cal.com	smell	convention	.cursor/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
@@ -274,7 +282,7 @@ calcom/cal.com	smell	order	package.json (stripe)	issue.workspace.drift	{"name":"
 calcom/cal.com	smell	order	package.json (tailwind-merge)	issue.workspace.drift	{"name":"tailwind-merge","versions":"packages/coss-ui: 3.4.0; packages/platform/atoms: 1.13.2; packages/ui: 1.13.2"}
 calcom/cal.com	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"apps/web: 4.1.17; packages/embeds/embed-core: 4.1.17; packages/platform/atoms: 4.1.17; packages/platform/examples/base: 4.1.17; example-apps/credential-sync: 3.4.1"}
 calcom/cal.com	smell	order	package.json (uuid)	issue.workspace.drift	{"name":"uuid","versions":"apps/api/v2: 8.3.2; apps/web: 8.3.2; packages/app-store/stripepayment: 8.3.2; packages/lib: 8.3.2; packages/prisma: 8.3.2; packages/trpc: 8.3.2; packages/ui: 11.1.0"}
-calcom/cal.com	smell	order	packages/app-store/	issue.twins.styles	{"styles":"camelCase ×8 + kebab-case ×3","examples":"appStoreMetaData.ts, redirect-apps.generated.ts"}
+calcom/cal.com	smell	order	packages/app-store/	issue.twins.styles	{"styles":"camelCase ×9 + kebab-case ×3","examples":"_appRegistry.ts, redirect-apps.generated.ts"}
 calcom/cal.com	smell	order	packages/app-store/_utils/	issue.twins.styles	{"styles":"camelCase ×31 + kebab-case ×1","examples":"bulkUpdateEventsToDefaultLocation.test.ts, paid-apps.ts"}
 calcom/cal.com	smell	order	packages/app-store/googlecalendar/tests/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"google-calendar.e2e.ts, testUtils.ts"}
 calcom/cal.com	smell	order	packages/app-store/stripepayment/lib/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"currencyOptions.ts, team-billing.ts"}
@@ -290,9 +298,16 @@ calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/	issu
 calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/test/	issue.twins.styles	{"styles":"kebab-case ×13 + camelCase ×4","examples":"booking-flags.test.ts, buildDryRunBooking.test.ts"}
 calcom/cal.com	smell	order	packages/features/calendars/lib/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×2","examples":"getAvailableDatesInMonth.timezone.test.ts, timezone-conversion.test.ts"}
 calcom/cal.com	smell	order	packages/features/form-builder/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"fieldTypes.ts, widget-types.ts"}
+calcom/cal.com	smell	order	packages/features/webhooks/lib/test/ + __tests__/	issue.twins.synonyms	{}
 calcom/cal.com	smell	order	packages/lib/	issue.twins.styles	{"styles":"camelCase ×99 + kebab-case ×10","examples":"buildCalEventFromBooking.ts, default-cookies.ts"}
 calcom/cal.com	smell	order	packages/lib/schedules/transformers/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"for-atom.ts, getScheduleListItemData.ts"}
 calcom/cal.com	smell	order	packages/lib/test/ + __tests__/	issue.twins.synonyms	{}
+calcom/cal.com	smell	order	packages/trpc/server/routers/viewer/apiKeys/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"findKeyOfType.handler.ts, _auth-middleware.ts"}
+chatwoot/chatwoot	review	order	app/javascript/dashboard/components-next/call/	issue.twins.pluralMaybe	{"other":"app/javascript/dashboard/components-next/Calls/"}
+chatwoot/chatwoot	review	order	app/javascript/dashboard/store/	issue.twins.pluralMaybe	{"other":"app/javascript/dashboard/stores/"}
+chatwoot/chatwoot	review	order	app/services/data_import/	issue.twins.pluralMaybe	{"other":"app/services/data_imports/"}
+chatwoot/chatwoot	review	order	app/views/api/v1/profile/	issue.twins.pluralMaybe	{"other":"app/views/api/v1/profiles/"}
+chatwoot/chatwoot	review	order	spec/config/	issue.twins.pluralMaybe	{"other":"spec/configs/"}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/WootWriter/keyboardEmojiSelector.vue	issue.contract.vueFileName	{"name":"keyboardEmojiSelector","count":1}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/conversation/contextMenu/	issue.contract.vueFileName	{"name":"agentLoadingPlaceholder","count":3}
 chatwoot/chatwoot	smell	convention	app/javascript/dashboard/routes/dashboard/settings/inbox/channels/360DialogWhatsapp.vue	issue.contract.vueFileName	{"name":"360DialogWhatsapp","count":1}
@@ -320,6 +335,7 @@ coyvalyss1/model-matchmaker	review	cleanliness	test-mode-switch.sh	issue.leftove
 coyvalyss1/model-matchmaker	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 curtmorgan3/quest-bound	review	cleanliness	cypress/SELECTOR-FIXES-SUMMARY.md	issue.leftover.worklog	{}
 curtmorgan3/quest-bound	review	cleanliness	cypress/TEST-RESULTS-SUMMARY.md	issue.leftover.worklog	{}
+curtmorgan3/quest-bound	review	order	cypress/component/	issue.twins.pluralMaybe	{"other":"cypress/components/"}
 curtmorgan3/quest-bound	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 curtmorgan3/quest-bound	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 curtmorgan3/quest-bound	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
@@ -345,9 +361,11 @@ denoland/deno	smell	convention	tests/registry/npm/@denotest/MixedCase/1.0.0/pack
 denoland/deno	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":78}
 denoland/deno	smell	modernity	libs/core_testing/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
+denoland/deno	smell	order	ext/node/polyfills/internal_binding/	issue.twins.styles	{"styles":"snake_case ×15 + camelCase ×1","examples":"_libuv_winerror.ts, _timingSafeEqual.ts"}
 denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
 denoland/deno	smell	order	tests/specs/node/node_test_mock_module/	issue.twins.styles	{"styles":"snake_case ×7 + kebab-case ×3","examples":"main_cache.mjs, basic-cjs.cjs"}
 element-plus/element-plus	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+element-plus/element-plus	review	order	packages/components/step/	issue.twins.pluralMaybe	{"other":"packages/components/steps/"}
 element-plus/element-plus	smell	convention	docs/examples/select-v2/use-valueKey.vue	issue.contract.vueFileName	{"name":"use-valueKey","count":1}
 element-plus/element-plus	smell	convention	docs/examples/splitter/disableDrag.vue	issue.contract.vueFileName	{"name":"disableDrag","count":1}
 element-plus/element-plus	smell	order	docs/.vitepress/vitepress/composables/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×1","examples":"back-top.ts, useDynamicClass.ts"}
@@ -421,6 +439,7 @@ filamentphp/filament	smell	convention	tests/src/Support/Services/RelationshipOrd
 filamentphp/filament	smell	convention	tests/src/Tables/Columns/	issue.contract.psr4FileName	{"name":"BadgeColumnTest","className":"TestTableWithBadgeColumn","count":5}
 filamentphp/filament	smell	convention	tests/src/Tables/RecordTest.php	issue.contract.psr4FileName	{"name":"RecordTest","className":"AggregateRecordTable","count":1}
 ghostfolio/ghostfolio	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+ghostfolio/ghostfolio	review	order	apps/client/src/app/components/rule/	issue.twins.pluralMaybe	{"other":"apps/client/src/app/components/rules/"}
 ghostfolio/ghostfolio	smell	convention	.agents/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
 ghostfolio/ghostfolio	smell	convention	.claude/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
 ghostfolio/ghostfolio	smell	convention	libs/ui/src/lib/mocks/httpClient.mock.ts	issue.contract.angularFileName	{"name":"httpClient","count":1}
@@ -432,6 +451,8 @@ ghostfolio/ghostfolio	smell	modernity	tools/tsconfig.tools.json	issue.contract.t
 hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 immich-app/immich	review	modernity	e2e/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 immich-app/immich	review	modernity	web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+immich-app/immich	review	order	web/src/routes/(user)/memory/	issue.twins.pluralMaybe	{"other":"web/src/routes/(user)/memories/"}
+immich-app/immich	smell	cleanliness	design/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
 immich-app/immich	smell	convention	server/.npmignore	issue.contract.npmignoreWithFiles	{}
 immich-app/immich	smell	modernity	docker/docker-compose.dev.yml	issue.contract.composeName	{}
 immich-app/immich	smell	modernity	docker/docker-compose.prod.yml	issue.contract.composeName	{}
@@ -450,6 +471,7 @@ kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 kartikramachandrula/thynk	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+kartikramachandrula/thynk	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 koel/koel	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":36,"limit":32}
 koel/koel	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":377,"limit":200}
 koel/koel	smell	modernity	.github/workflows/release.yml	issue.contract.workflowCommands	{"command":"set-output"}
@@ -477,6 +499,9 @@ ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/
 laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
+localsend/localsend	review	cleanliness	support/build/windows/x64/msvcp140.dll	issue.leftover.executable	{}
+localsend/localsend	review	cleanliness	support/build/windows/x64/vcruntime140.dll	issue.leftover.executable	{}
+localsend/localsend	review	cleanliness	support/build/windows/x64/vcruntime140_1.dll	issue.leftover.executable	{}
 lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/linux.yml	issue.contract.workflowCommands	{"command":"set-output"}
 lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/macos.yml	issue.contract.workflowCommands	{"command":"set-output"}
 lohanidamodar/flutter_ui_challenges	smell	modernity	.github/workflows/windows.yml	issue.contract.workflowCommands	{"command":"set-output"}
@@ -501,6 +526,9 @@ matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_visit
 matomo-org/matomo	review	cleanliness	tests/resources/access-logs/filter_exclude_logs.log	issue.no.because	{"reason":{"t":"reason.logs"}}
 matomo-org/matomo	review	cleanliness	tests/resources/access-logs/filter_include_logs.log	issue.no.because	{"reason":{"t":"reason.logs"}}
 matomo-org/matomo	review	cleanliness	tests/resources/access-logs/windows-1252.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	order	plugins/CoreAdminHome/tests/Fixture/	issue.twins.pluralMaybe	{"other":"plugins/CoreAdminHome/tests/Fixtures/"}
+matomo-org/matomo	review	order	plugins/CoreHome/tests/Integration/Column/	issue.twins.pluralMaybe	{"other":"plugins/CoreHome/tests/Integration/Columns/"}
+matomo-org/matomo	review	order	plugins/CoreHome/vue/src/ReportingPage/	issue.twins.pluralMaybe	{"other":"plugins/CoreHome/vue/src/ReportingPages/"}
 matomo-org/matomo	smell	convention	core/Policy/Exceptions/CompliancyPolicyNotFoundException.php	issue.contract.psr4FileName	{"name":"CompliancyPolicyNotFoundException","className":"CompliancePolicyNotFoundException","count":1}
 matomo-org/matomo	smell	convention	plugins/Actions/tests/Unit/ArchiverTest.php	issue.contract.psr4FileName	{"name":"ArchiverTest","className":"ArchiverTests","count":1}
 matomo-org/matomo	smell	convention	plugins/FeatureFlags/tests/Integration/FeatureFlagManagerTest.php	issue.contract.psr4FileName	{"name":"FeatureFlagManagerTest","className":"FeatureFlagManagerTests","count":1}
@@ -530,6 +558,7 @@ nisrulz/flutter-examples	smell	convention	view_pdf_file/lib/viewPDF.dart	issue.c
 nuxt/nuxt	review	modernity	packages/kit/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
 nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
+ollama/ollama	review	order	app/ui/app/src/util/	issue.twins.pluralMaybe	{"other":"app/ui/app/src/utils/"}
 ollama/ollama	smell	convention	app/ui/app/tailwind.config.js	issue.contract.tailwindConfig	{"version":4}
 ollama/ollama	smell	convention	mlxrunner/model/cohere2_moe/	issue.contract.goPackageName	{"name":"cohere2_moe","count":2}
 ollama/ollama	smell	convention	mlxrunner/model/glm4_moe_lite/	issue.contract.goPackageName	{"name":"glm4_moe_lite","count":6}
@@ -549,7 +578,10 @@ open-webui/open-webui	smell	modernity	docker-compose.playwright.yaml	issue.contr
 open-webui/open-webui	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
 open-webui/open-webui	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 open-webui/open-webui	smell	order	src/lib/utils/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×10","examples":"channelMentions.ts, google-drive-picker.ts"}
+oven-sh/bun	review	order	test/aot/parallel/key-order/	issue.twins.pluralMaybe	{"other":"test/aot/parallel/key-orders/"}
+oven-sh/bun	review	order	test/aot/parallel/regexp/	issue.twins.pluralMaybe	{"other":"test/aot/parallel/regexps/"}
 oven-sh/bun	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
+oven-sh/bun	smell	convention	scripts/build/CLAUDE.md	issue.contract.claudeMdLines	{"lines":338,"limit":200}
 oven-sh/bun	smell	convention	scripts/verify-baseline-static/CLAUDE.md	issue.contract.claudeMdLines	{"lines":288,"limit":200}
 oven-sh/bun	smell	convention	src/CLAUDE.md	issue.contract.claudeMdLines	{"lines":526,"limit":200}
 oven-sh/bun	smell	convention	src/bun_core/Global.rs	issue.contract.rustModuleName	{"name":"Global","count":1}
@@ -585,7 +617,8 @@ oven-sh/bun	smell	modernity	test/aot/ir/lower/projects/type-import-through-the-b
 oven-sh/bun	smell	modernity	test/docker/docker-compose.yml	issue.contract.composeName	{}
 oven-sh/bun	smell	modernity	test/integration/next-pages/.eslintrc.json	issue.contract.eslintrc	{"version":9}
 oven-sh/bun	smell	order	bench/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×2","examples":"aes-gcm-throughput.mjs, asymmetricCipher.js"}
-oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×122 + camelCase ×3","examples":"abort-signal.mjs, byteLength.mjs"}
+oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×123 + camelCase ×3","examples":"_transpiler-fixture.jsx, byteLength.mjs"}
+oven-sh/bun	smell	order	scripts/build/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×4","examples":"aot-paths.ts, buildOptionsRs.ts"}
 oven-sh/bun	smell	order	src/js/ahead-of-time/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"end-of-stream.ts, load_all.ts"}
 oven-sh/bun	smell	order	src/js/internal/fs/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"cp-sync.ts, file_handles.ts"}
 oven-sh/bun	smell	order	src/js/internal/net/	issue.twins.styles	{"styles":"camelCase ×1 + snake_case ×1","examples":"isIP.ts, server_abort_signal.ts"}
@@ -819,16 +852,30 @@ oxc-project/oxc	smell	modernity	tasks/codegen_conformance/Cargo.toml	issue.contr
 oxc-project/oxc	smell	modernity	tasks/e2e/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
 oxc-project/oxc	smell	modernity	tasks/sprout/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	tasks/transform_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	order	apps/oxfmt/conformance/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×1","examples":"live_worker.ts, download-externals.ts"}
+oxc-project/oxc	smell	order	apps/oxfmt/src-js/cli/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, worker-proxy.ts"}
+oxc-project/oxc	smell	order	apps/oxlint/src-js/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, plugins-dev.ts"}
+oxc-project/oxc	smell	order	apps/oxlint/test/	issue.twins.styles	{"styles":"snake_case ×4 + camelCase ×1","examples":"compile_visitor.test.ts, isSpaceBetween.test.ts"}
+oxc-project/oxc	smell	order	tasks/sprout/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"compiler-runtime.ts, useEffectWrapper.ts"}
 phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.ports.yml	issue.contract.composeName	{}
 phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.yml	issue.contract.composeName	{}
 pisces19860207/zhengdao	review	cleanliness	.github/release-notes/	issue.leftover.versionNotes	{"count":29,"names":"v2.0.1.md, v2.0.10.md, v2.0.11.md, v2.0.12.md, v2.0.13.md, …"}
 pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	{"count":22,"names":"322-治理中心-交付-2026-11-08.md, 467-租约-交付-2026-11-08.md, 482-目标模式-交付-2026-11-08.md, 482-真机链路验收-2026-11-09.md, 498-能力盘点-交付-2026-11-07.md, …"}
 pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
+pisces19860207/zhengdao	review	order	app/src/main/java/com/example/zhengdao/baopu/card/	issue.twins.pluralMaybe	{"other":"app/src/main/java/com/example/zhengdao/baopu/cards/"}
+pisces19860207/zhengdao	review	order	app/src/test/java/com/example/zhengdao/baopu/card/	issue.twins.pluralMaybe	{"other":"app/src/test/java/com/example/zhengdao/baopu/cards/"}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+plausible/analytics	review	order	lib/plausible/site/	issue.twins.pluralMaybe	{"other":"lib/plausible/sites/"}
+plausible/analytics	review	order	test/plausible/shield/	issue.twins.pluralMaybe	{"other":"test/plausible/shields/"}
+plausible/analytics	review	order	test/plausible/site/	issue.twins.pluralMaybe	{"other":"test/plausible/sites/"}
 plausible/analytics	smell	convention	priv/repo/migrations/20230406110926_associate-goals-with-sites.exs	issue.contract.elixirFileName	{"name":"20230406110926_associate-goals-with-sites","count":1}
 plausible/analytics	smell	order	assets/js/liveview/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"combo-box.js, live_socket.js"}
-rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":64}
+rust-lang/rust	review	order	library/std/src/sys/path/	issue.twins.pluralMaybe	{"other":"library/std/src/sys/paths/"}
+rust-lang/rust	review	order	src/tools/rustfmt/tests/source/reorder_modules/v0/	issue.twins.pluralMaybe	{"other":"src/tools/rustfmt/tests/source/reorder_modules/v0s/"}
+rust-lang/rust	review	order	src/tools/rustfmt/tests/target/reorder_modules/v0/	issue.twins.pluralMaybe	{"other":"src/tools/rustfmt/tests/target/reorder_modules/v0s/"}
+rust-lang/rust	review	order	tests/ui/static/	issue.twins.pluralMaybe	{"other":"tests/ui/statics/"}
+rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
@@ -839,6 +886,7 @@ ruvnet/ruflo	review	cleanliness	docs/IMPROVEMENT-ROADMAP.md	issue.leftover.workl
 ruvnet/ruflo	review	cleanliness	docs/STATUS.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	plugin/agents/MIGRATION_SUMMARY.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	plugin/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/browser/docs/SECURITY_AUDIT.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/.claude/commands/analysis/COMMAND_COMPLIANCE_REPORT.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/TEST_SUMMARY.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/docs/IMPLEMENTATION_COMPLETE.md	issue.leftover.worklog	{}
@@ -850,8 +898,14 @@ ruvnet/ruflo	review	cleanliness	v3/docs/releases/	issue.leftover.versionNotes	{"
 ruvnet/ruflo	review	cleanliness	v3/implementation/architecture/AGENTIC-FLOW-INTEGRATION-ANALYSIS.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/implementation/architecture/SDK-ARCHITECTURE-ANALYSIS.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/implementation/reports/V2-COMPATIBILITY-REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/security/SECURITY_AUDIT_REPORT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/security/SECURITY_FIXES_CHECKLIST.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/implementation/security/SECURITY_SUMMARY.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/implementation/v3-migration/CAPABILITY-GAP-ANALYSIS.md	issue.leftover.worklog	{}
 ruvnet/ruflo	review	cleanliness	v3/mcp/tools/IMPLEMENTATION.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	cleanliness	v3/plugins/SECURITY-AUDIT.md	issue.leftover.worklog	{}
+ruvnet/ruflo	review	order	docs/dream-cycle/	issue.twins.pluralMaybe	{"other":"docs/dream-cycles/"}
+ruvnet/ruflo	review	order	ruflo/src/ruvocal/src/routes/api/conversation/	issue.twins.pluralMaybe	{"other":"ruflo/src/ruvocal/src/routes/api/conversations/"}
 ruvnet/ruflo	smell	cleanliness	.claude/settings.json.bak	issue.leftover.backup	{"original":"settings.json"}
 ruvnet/ruflo	smell	cleanliness	CLAUDE.local.md	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
 ruvnet/ruflo	smell	convention	.agents/skills/agent-agent/SKILL.md	issue.contract.skillLines	{"lines":821,"limit":500}
@@ -989,7 +1043,7 @@ ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/.claude/skills/verification-qu
 ruvnet/ruflo	smell	convention	v3/@claude-flow/cli/CLAUDE.md	issue.contract.claudeMdLines	{"lines":731,"limit":200}
 ruvnet/ruflo	smell	convention	v3/@claude-flow/mcp/CLAUDE.md	issue.contract.claudeMdLines	{"lines":711,"limit":200}
 ruvnet/ruflo	smell	convention	v3/@claude-flow/security/.npmignore	issue.contract.npmignoreWithFiles	{}
-ruvnet/ruflo	smell	modernity	.claude/commands/	issue.contract.claudeCommands	{"count":156}
+ruvnet/ruflo	smell	modernity	.claude/commands/	issue.contract.claudeCommands	{"count":168}
 ruvnet/ruflo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.public.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.yml	issue.contract.composeName	{}
@@ -1000,7 +1054,7 @@ ruvnet/ruflo	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"o
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/browser/docker/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/browser/docker/docker-compose.yml	issue.contract.composeVersion	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli-core/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"Node\""}
-ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/.claude/commands/	issue.contract.claudeCommands	{"count":155}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/.claude/commands/	issue.contract.claudeCommands	{"count":167}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.workers.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.workers.yml	issue.contract.composeVersion	{}
 ruvnet/ruflo	smell	modernity	v3/@claude-flow/cli/docker/docker-compose.yml	issue.contract.composeName	{}
@@ -1018,8 +1072,12 @@ ruvnet/ruflo	smell	order	package.json (agentic-flow)	issue.workspace.drift	{"nam
 ruvnet/ruflo	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
 ruvnet/ruflo	smell	order	package.json (vitest)	issue.workspace.drift	{"name":"vitest","versions":".: ^3.2.6; v3/@claude-flow/codex: ^4.1.0; v3/@claude-flow/mcp: ^4.1.0; v3/@claude-flow/plugin-agent-federation: ^4.1.0; v3/@claude-flow/security: ^4.1.0"}
 ruvnet/ruflo	smell	order	plugin/	issue.twins.plural	{"other":"plugins/"}
+ruvnet/ruflo	smell	order	plugins/ruflo-ai-team/test/ + tests/	issue.twins.synonyms	{}
+ruvnet/ruflo	smell	order	plugins/ruflo-chatgpt-federation/test/ + tests/	issue.twins.synonyms	{}
+ruvnet/ruflo	smell	order	plugins/ruflo-x-gateway/test/ + tests/	issue.twins.synonyms	{}
 ruvnet/ruflo	smell	order	ruflo/src/ruvocal/scripts/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"generate-welcome.mjs, updateLocalEnv.ts"}
 ruvnet/ruflo	smell	order	ruflo/src/ruvocal/src/lib/server/api/__tests__/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"conversations-id.spec.ts, testHelpers.ts"}
+ruvnet/ruflo	smell	order	v3/@claude-flow/claims/tests/ + __tests__/	issue.twins.synonyms	{}
 ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
 ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/symbolic-scribe	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
@@ -1055,6 +1113,7 @@ unocss/unocss	smell	modernity	examples/vite-svelte/tsconfig.json	issue.contract.
 unocss/unocss	smell	modernity	examples/vite-watch-mode/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"esModuleInterop: false"}
 unocss/unocss	smell	order	packages-integrations/svelte-scoped/src/_vite/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"createCssTransformerPlugins.ts, config-hmr.ts"}
 v833/q-code	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+v833/q-code	review	order	src/agent/	issue.twins.pluralMaybe	{"other":"src/agents/"}
 v833/q-code	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":37,"limit":32}
 vbenjs/vue-vben-admin	review	modernity	internal/node-utils/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 vbenjs/vue-vben-admin	review	modernity	internal/vite-config/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
@@ -1086,6 +1145,9 @@ wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/collections/	issue.twi
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/domparsing/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"domparser_parsefromstring_html.window.js, innerhtml-comments.window.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/html_integration/resources/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×3","examples":"defer-1.js, import_meta_resolve_foo.js"}
 zed-industries/zed	review	cleanliness	crates/zed/resources/windows/bin/x64/OpenConsole.exe	issue.leftover.executable	{}
+zed-industries/zed	review	order	crates/language/	issue.twins.pluralMaybe	{"other":"crates/languages/"}
+zed-industries/zed	review	order	crates/language_model/	issue.twins.pluralMaybe	{"other":"crates/language_models/"}
+zed-industries/zed	review	order	crates/path/	issue.twins.pluralMaybe	{"other":"crates/paths/"}
 zed-industries/zed	smell	order	script/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×2","examples":"github-assign-contributor-issue.py, github_helpers.py"}
 ziglang/zig	smell	cleanliness	test/cases/compile_errors/zon/desktop.ini	issue.no.because	{"reason":{"t":"reason.osJunk"}}
 ziglang/zig	smell	order	lib/compiler/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"build_runner.zig, std-docs.zig"}

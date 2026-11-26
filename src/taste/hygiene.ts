@@ -101,7 +101,19 @@ export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[
  * coding agents read. Everything else is a doc like any other, and docs
  * belong together.
  */
-export const ROOT_CONTRACT_DOCS = /^(readme|licen[cs]e|copying|unlicense|notice|changelog|contributing|security|code_of_conduct|support|governance|accessibility|agents|claude|gemini)([.\-_].*)?$/i;
+const LANGUAGE_TAG = "[a-z]{2}(?:[-_][a-z]{2,4})?|zh[a-z]"; // zh-CN, ja_JP, en, zht
+const LICENSE_PART = "mit|apache(?:-?2(?:\\.0)?)?|bsd(?:-\\d-clause)?|[al]?gpl[\\w.-]*|mpl[\\w.-]*|isc|cc0[\\w.-]*|cc-by[\\w.-]*|ofl|notice|history|third[-_]?party|thirdparty|dependencies";
+/**
+ * The name exactly, in another language (`README.zh-CN.md`, `README_EN.md`),
+ * or a license's companion (`LICENSE-MIT`, `LICENSE_NOTICE`). Any other suffix
+ * is a name of its own: no host looks for `README_IMPLEMENTATION_COMPLETE.md`.
+ */
+export const ROOT_CONTRACT_DOCS = new RegExp(
+  `^(?:(?:readme|changelog|contributing|security|code_of_conduct|support|governance|accessibility|agents|claude|gemini)(?:[._-](?:${LANGUAGE_TAG}))?` +
+    `|(?:licen[cs]e|copying|unlicense|notice)(?:[._-](?:${LICENSE_PART}|${LANGUAGE_TAG}))?)` +
+    "(?:\\.(?:md|mdx|markdown|txt|rst|adoc|asciidoc|org))?$",
+  "i",
+);
 
 /** Prose, as opposed to config: what counts as a doc at the root. */
 export const DOC_FILE = /\.(md|mdx|markdown|rst|adoc|asciidoc|org)$/i;
@@ -121,14 +133,27 @@ export const ONE_OFF_SCRIPT = /^(fix|test|debug|check|verify|temp|tmp|quick|try)
  */
 export function backupOf(name: string): string | undefined {
   const forms: Array<[RegExp, string]> = [
-    [/^(.+)\.(bak|backup|orig|old)$/i, "$1"],
+    [/^(.+)\.(bak|backup|orig|old|save|rej)\d*$/i, "$1"], // index.ts.bak, .bak2; nano's .save; patch's .rej
     [/^(.+)_original$/i, "$1"],
     [/^(.+)~$/, "$1"],
+    [/^(.+) - copy( \(\d+\))?(\.\w+)?$/i, "$1$3"], // Windows Explorer: "index - Copy.ts"
+    [/^copy of (.+)$/i, "$1"],
     [/^(.+) \(\d+\)(\.\w+)?$/, "$1$2"],
-    [/^(.+) copy(\.\w+)?$/i, "$1$2"],
+    [/^(.+) copy( \d+)?(\.\w+)?$/i, "$1$3"], // macOS Finder: "index copy.ts", "index copy 2.ts"
   ];
   for (const [re, to] of forms) if (re.test(name)) return name.replace(re, to);
   return undefined;
+}
+
+/**
+ * Names that say "old" or "backup" inside them: `index.old.ts`, `index_backup.ts`.
+ * Common in names that are nothing of the kind (rustc's `*.old.stderr`, an icon
+ * named `cloud-backup.svg`, SQLite's `sqlite3_backup.java`), so only the same
+ * bytes as the original beside them make them a backup.
+ */
+export function backupOnlyBeside(name: string): string | undefined {
+  const m = /^(.+)[._-](bak|backup|old|orig)(\.\w+)$/i.exec(name);
+  return m ? `${m[1]}${m[3]}` : undefined;
 }
 
 /** File signatures, as latin1 strings: the format is read from the bytes, never from the extension. */
@@ -163,23 +188,26 @@ export const EXECUTABLES: Array<{ ext: RegExp; magic: string[] }> = [
 
 /**
  * Data, and other people's code: test fixtures may hold anything (`fixtures/`,
- * and named ones like Nuxt's `components-fixture/`); `vendor/`, `third_party/`
- * and `upstream/` hold someone else's code, and their taste. Tests and examples are the project's own code and are checked
+ * and, inside a test directory, named ones like Nuxt's `test/components-fixture/`); `vendor/`, `third_party/`,
+ * `upstream/` and a committed `node_modules/` hold someone else's code, and their taste. Tests and examples are the project's own code and are checked
  * like the rest.
  */
-export const NOT_OURS = /(^|\/)([\w.-]+-)?(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party|upstream)\//i;
+export const NOT_OURS = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party|upstream|node_modules)\/|(^|\/)(tests?|__tests__|spec|e2e)\/(.+\/)?[\w.-]+-fixtures?\//i;
 
 /**
  * Files known by what their maker writes into them, not by name alone: a file
  * by the same name that lacks it is something else.
  */
-export const KNOWN_BY_CONTENT: Array<{ name: string; content: RegExp; reason: "reason.osJunk" | "reason.localProperties" }> = [
-  { name: ".DS_Store", content: /Bud1/, reason: "reason.osJunk" },
+/** Files their makers write, known by what is in them; names are compared without case (`Desktop.ini`, `thumbs.db`). */
+export const KNOWN_BY_CONTENT: Array<{ name: RegExp; content: RegExp; reason: "reason.osJunk" | "reason.localProperties"; binary?: boolean }> = [
+  { name: /^\.ds_store$/i, content: /Bud1/, reason: "reason.osJunk" },
+  // macOS AppleDouble resource forks (`._name`), written when copying to other file systems: 00 05 16 07.
+  { name: /^\._./, content: new RegExp(`^${String.fromCharCode(0, 5, 0x16, 7)}`), reason: "reason.osJunk", binary: true },
   // An OLE compound file: D0 CF 11 E0.
-  { name: "Thumbs.db", content: new RegExp(`^${String.fromCharCode(0xd0, 0xcf, 0x11, 0xe0)}`), reason: "reason.osJunk" },
-  { name: "desktop.ini", content: /ShellClassInfo|LocalizedFileNames|ViewState/i, reason: "reason.osJunk" },
+  { name: /^(eh)?thumbs\.db$/i, content: new RegExp(`^${String.fromCharCode(0xd0, 0xcf, 0x11, 0xe0)}`), reason: "reason.osJunk" },
+  { name: /^desktop\.ini$/i, content: /ShellClassInfo|LocalizedFileNames|ViewState/i, reason: "reason.osJunk" },
   // Android Studio's own header: "This file must *NOT* be checked into Version Control Systems".
-  { name: "local.properties", content: /must \*NOT\* be checked into Version Control/i, reason: "reason.localProperties" },
+  { name: /^local\.properties$/, content: /must \*NOT\* be checked into Version Control/i, reason: "reason.localProperties" },
 ];
 
 /** Release notes kept one file per version: `v2.0.1.md`, `1.4.0.md`. */

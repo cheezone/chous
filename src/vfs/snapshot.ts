@@ -5,6 +5,7 @@ import ignore from "ignore";
 import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
 import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, toDisplayPath } from "../fsutil";
+import { trackedPaths } from "./git-index";
 import type { PackageManagerName } from "../types";
 
 /** Always skip VCS / dependency trees even if a project gitignore forgets them. */
@@ -118,10 +119,14 @@ function collectDepNames(
   key: "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies",
 ): void {
   if (!section || typeof section !== "object") return;
-  for (const name of Object.keys(section as Record<string, unknown>)) {
-    if (!name) continue;
-    into.add(name);
-    if (!sections.has(name)) sections.set(name, key);
+  for (const [alias, spec] of Object.entries(section as Record<string, unknown>)) {
+    if (!alias) continue;
+    // `"http": "npm:request@2"` installs request under another name: the package is request.
+    const target = typeof spec === "string" ? /^npm:((?:@[^/@]+\/)?[^@]+)/.exec(spec)?.[1] : undefined;
+    for (const name of target ? [alias, target] : [alias]) {
+      into.add(name);
+      if (!sections.has(name)) sections.set(name, key);
+    }
   }
 }
 
@@ -420,7 +425,14 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     // looksLikeMonorepo short-circuits @manypkg on single-package repos
     listWorkspacePackages(root),
   ]);
-  const ig = ignore().add(patterns);
+  const gitignore = ignore().add(patterns);
+  // What git tracks is committed, whatever .gitignore says: a force-added file counts.
+  const tracked = shallow || rootOnly ? undefined : trackedPaths(root);
+  const trackedDirs = new Set<string>();
+  for (const rel of tracked ?? []) {
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
+  }
+  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && gitignore.ignores(rel) };
 
   const byRel = new Map<string, VfsEntry>();
   const byAbs = new Map<string, VfsEntry>();
@@ -481,6 +493,12 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     ensureDir(abs, normalizeRel(toDisplayPath(abs, root)));
   }
   for (const raw of fileMatches) addFile(resolve(String(raw)));
+  // Tracked files the walk skipped: under node_modules/, dist/ or build/ (never walked, for speed).
+  for (const rel of tracked ?? []) {
+    if (byRel.has(rel)) continue;
+    const abs = resolve(root, rel);
+    if (existsSync(abs)) addFile(abs);
+  }
 
   if (workspace.packages.length > 0) {
     for (const pkg of workspace.packages) {

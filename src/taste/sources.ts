@@ -46,7 +46,8 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ],
   // Bun runs TypeScript itself (taste/js.ts, bun).
   "reason.bunRunsTs": [{ url: "https://bun.com/docs/runtime", check: `${GH}/oven-sh/bun/main/docs/runtime/index.mdx`, quote: "Bun supports TypeScript and JSX with no configuration." }],
-  // Files with a claim to the root, and where builds and releases belong (taste/hygiene.ts).
+  // Files with a claim to the root, and where releases belong (taste/hygiene.ts). Build output is
+  // known by the marker its tool writes: a fact, not someone's word.
   "issue.leftover.rootDocs": [
     {
       url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
@@ -68,13 +69,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       url: "https://docs.github.com/en/repositories/working-with-files/managing-large-files/about-large-files-on-github#distributing-large-binaries",
       check: `${GH}/github/docs/main/content/repositories/working-with-files/managing-large-files/about-large-files-on-github.md`,
       quote: "If you need to distribute large files within your repository, you can create releases",
-    },
-  ],
-  "issue.leak.artifact": [
-    {
-      url: "https://docs.gradle.org/current/userguide/directory_layout.html",
-      check: `${GH}/gradle/gradle/master/platforms/documentation/docs/src/docs/userguide/reference/runtime-configuration/directory_layout.adoc`,
-      quote: "the latter are transient files Gradle uses to support features like incremental builds",
     },
   ],
   // CLAUDE.md can import AGENTS.md instead of copying it (the twins rule).

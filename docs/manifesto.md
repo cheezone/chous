@@ -98,7 +98,8 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
 | Files, fields and options a tool itself calls deprecated, obsolete or legacy (an old config format, a retired linter's config, a deprecated manifest field or tsconfig option) | The file or field, the version in use, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Dependencies the platform now ships | The version from which the platform ships it | Whether it fully replaces the package depends on how the project uses it | Modernity | Review |
-| Directories that differ only in case, plural, or synonym | Both names exist | One thing, one name | Order | Smell |
+| Names that differ only in case or Unicode form; singular and plural directories at the root; synonym directories anywhere (`test/`, `tests/`, `__tests__/`) | Both names exist | One thing, one name | Order | Smell |
+| Singular and plural directories side by side deeper down (`language/` and `languages/`) | Both names exist | One kind of thing, one name; they may also be two things | Order | Review |
 | Mixed naming styles in one directory | Each name's style | One directory, one style | Order | Smell |
 | A crowded root | How many docs without a claim to the root it holds | The root is an entrance | Order | Smell |
 | Tools that share a job | Both tools' config, lockfile or scripts | One job, one tool | Order | Smell |
@@ -113,7 +114,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
 | OS junk, `local.properties` | The content the OS or Android Studio writes | No OS junk or machine settings committed | Cleanliness | Smell |
 | Files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets) | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |
-| A backup next to its original (`package.json.bak`) | The original is right there | Git already keeps the old version | Cleanliness | Smell |
+| A backup next to its original (`package.json.bak`, `index - Copy.ts`, `src copy/`; a name that only says old or backup must have the original's exact bytes) | The original is right there | Git already keeps the old version | Cleanliness | Smell |
 | Installers (`.apk`, `.ipa`, `.msi`, `.deb`, …) | The file's signature confirms the format | What users get belongs in releases | Cleanliness | Smell |
 | Executables and libraries (`.exe`, `.dll`, `.so`, `.dylib`) | The file's signature confirms the format | Built by this project: releases. Read by a build: keep it | Cleanliness | Review |
 | Docs named like work logs | The name | The record of one session belongs in its pull request | Cleanliness | Review |

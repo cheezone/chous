@@ -87,6 +87,62 @@ describe("leftovers", () => {
     ]);
   });
 
+  it("does not let a contract name's prefix carry any doc to the root", async () => {
+    const docs = ["README.md", "README.zh-CN.md", "README_EN.md", "LICENSE-MIT", "LICENSE_NOTICE", "CHANGELOG.en-US.md"];
+    const prefixed = ["README_IMPLEMENTATION_COMPLETE.md", "AGENTS-handoff.md", "CLAUDE_SESSION_NOTES.md", "SECURITY_AUDIT_REPORT.md"];
+    const found = await claims(Object.fromEntries([...docs, ...prefixed].map((n) => [n, "# x"])));
+    expect(found).toContain("smell ./");
+    expect(found.filter((c) => /README\.zh|README_EN|LICENSE|CHANGELOG/.test(c))).toEqual([]);
+  });
+
+  it("knows a copy beside its original in the ways systems name them, docs and folders too", async () => {
+    expect(
+      await claims({
+        "src/index.ts": "x",
+        "src/index - Copy.ts": "x",
+        "src/Copy of index.ts": "x",
+        "src/index.old.ts": "x",
+        "src/index_backup.ts": "x",
+        "icons/cloud.svg": "<svg>cloud</svg>",
+        "icons/cloud-backup.svg": "<svg>cloud with an arrow</svg>",
+        "src/index.ts.bak2": "x",
+        "src/index copy 2.ts": "x",
+        "docs/guide.md": "# g",
+        "docs/guide copy.md": "# g",
+        "lib/a.ts": "x",
+        "lib copy/a.ts": "x",
+      }),
+    ).toEqual([
+      "smell docs/guide copy.md",
+      "smell lib copy/",
+      "smell src/Copy of index.ts",
+      "smell src/index - Copy.ts",
+      "smell src/index copy 2.ts",
+      "smell src/index.old.ts",
+      "smell src/index.ts.bak2",
+      "smell src/index_backup.ts",
+    ]);
+  });
+
+  it("knows OS junk by content whatever the case of its name, and macOS AppleDouble files", async () => {
+    expect(
+      await claims({
+        "Desktop.ini": "[.ShellClassInfo]\r\nIconResource=x\r\n",
+        "._README.md": "\u0000\u0005\u0016\u0007\u0000\u0002\u0000\u0000Mac OS X",
+        "._config.ts": "export const notAppleDouble = 1;\n",
+      }),
+    ).toEqual(["smell ._README.md", "smell Desktop.ini"]);
+  });
+
+  it("sees a deprecated package behind an npm alias, and a style behind a leading underscore", async () => {
+    const found = await claims({
+      "package.json": JSON.stringify({ name: "a", private: true, dependencies: { http: "npm:request@2", dates: "npm:moment@2.30.1" } }),
+      "src/_fooBar.ts": "",
+      "src/_foo-bar.ts": "",
+    });
+    expect(found).toEqual(expect.arrayContaining(["smell package.json (request)", "smell package.json (moment)", "smell src/"]));
+  });
+
   it("merges root work logs into one review", async () => {
     expect(await claims({ "FIXES_SUMMARY.md": "", "IMPLEMENTATION_COMPLETE.md": "" })).toEqual(["review ./"]);
   });
@@ -189,6 +245,21 @@ describe("twins", () => {
 
   it("flags editor files their makers call personal or legacy", async () => {
     expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
+  });
+
+  it("finds one concept under two names in any directory, whatever the case, and the two Unicode forms of one name", async () => {
+    expect(
+      await findings({
+        "src/test/a.ts": "",
+        "src/Tests/b.ts": "",
+        "lib/category/a.ts": "",
+        "lib/categories/b.ts": "",
+        "lib/box/a.ts": "",
+        "lib/boxes/b.ts": "",
+        "docs/caf\u00e9.md": "# a",
+        "docs/cafe\u0301.md": "# b",
+      }),
+    ).toEqual(expect.arrayContaining(["src/test/ + Tests/", "lib/category/", "lib/box/", "docs/caf\u00e9.md"]));
   });
 
   it("flags a plural next to its singular", async () => {

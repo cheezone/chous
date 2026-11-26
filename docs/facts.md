@@ -321,7 +321,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Cleanliness | Should not be committed: `**/.idea/workspace.xml` — personal IDE state; JetBrains says workspace.xml should not be shared, the rest of .idea may be | jetbrains.com | not yet |
+| Cleanliness | Should not be committed: `**/.idea/workspace.xml` — personal IDE state; JetBrains says workspace.xml should not be shared, the rest of .idea may be | jetbrains.com | Beeta-inc/nbheditor.apps.beeta.com |
 
 ### Agent Skills
 

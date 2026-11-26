@@ -103,7 +103,9 @@ export default {
     },
     twins: {
       case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
+      unicode: "和 {{other}} 是同一个名字，只是重音字符用了另一种 Unicode 写法；在 macOS 上检出时只会留下一个",
       plural: "{{other}} 也存在：同一个概念两个名字，合并它们",
+      pluralMaybe: "{{other}} 也存在：如果两边放的是同一类东西，就只留一个名字",
       synonyms: "同一个意思用了两个名字，只留一个",
       styles: "命名风格混用：{{styles}}（{{examples}}）；同一个目录只用一种起名方式",
       copy: "和 {{other}} 内容完全相同：只留一份，另一份用软链接，或者在 CLAUDE.md 里写 `@AGENTS.md`",

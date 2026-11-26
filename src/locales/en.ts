@@ -102,7 +102,9 @@ export default {
     },
     twins: {
       case: "same name as {{other}} except for case; macOS and Windows keep only one of them on checkout",
+      unicode: "same name as {{other}}, its accents written in another Unicode form; macOS keeps only one of them on checkout",
       plural: "{{other}} also exists: one concept, two names; merge them",
+      pluralMaybe: "{{other}} also exists: if both hold one kind of thing, keep one name",
       synonyms: "one thing under two names, keep one",
       styles: "mixes {{styles}} names ({{examples}}); one directory, one way of naming",
       copy: "same text as {{other}}: keep one file and symlink the other, or put `@AGENTS.md` in CLAUDE.md",

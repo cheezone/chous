@@ -115,7 +115,8 @@ export default tool({
       match: /^\.github\/(?!workflows\/|ISSUE_TEMPLATE\/|DISCUSSION_TEMPLATE\/).+\.ya?ml$/,
       when: (f) => {
         const text = f.text();
-        return /^on:/m.test(text) && /^jobs:/m.test(text) ? {} : undefined;
+        // `"on":` is quoted as often as not: YAML 1.1 reads a bare on as true.
+        return /^["']?on["']?\s*:/m.test(text) && /^jobs:/m.test(text) ? {} : undefined;
       },
       message: { en: "never run: GitHub Actions only reads workflows from .github/workflows/", zh: "永远不会运行：GitHub Actions 只读 .github/workflows/ 里的工作流" },
       sources: [
@@ -126,7 +127,7 @@ export default tool({
         },
       ],
       examples: {
-        smell: [{ ".github/workflow/ci.yml": "on: push\njobs:\n  test: {}\n" }],
+        smell: [{ ".github/workflow/ci.yml": "on: push\njobs:\n  test: {}\n" }, { ".github/ci.yml": '"on": push\njobs:\n  test: {}\n' }],
         clean: [{ ".github/workflows/ok.yml": "on: push\njobs:\n  test: {}\n" }, { ".github/labeler.yml": "area: ['src/**']\n" }],
       },
     }),

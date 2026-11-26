@@ -26,6 +26,7 @@ import {
   SYNONYM_DIRS,
   WORKLOG,
   backupOf,
+  backupOnlyBeside,
   nameStyle,
 } from "../../taste/hygiene";
 
@@ -150,14 +151,31 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     const referenced = rule.scripts ? rootText(snapshot) : "";
 
     for (const [rel, entry] of snapshot.byRel) {
-      if (entry.isDir || NOT_OURS.test(rel)) continue;
+      if (NOT_OURS.test(rel)) continue;
+      if (entry.isDir) {
+        // `src copy/` or `src.bak/` beside `src/`: the whole folder, copied.
+        const original = backupOf(entry.name);
+        const sibling = original && (rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original);
+        if (sibling && snapshot.byRel.get(sibling)?.isDir) report(`${rel}/`, { key: "issue.leftover.backup", params: { original: `${original}/` } });
+        continue;
+      }
       const atRoot = !rel.includes("/");
       const name = entry.name;
       const stem = name.replace(/\.[^.]+$/, "");
 
-      const known = KNOWN_BY_CONTENT.find((k) => k.name === name);
+      const known = KNOWN_BY_CONTENT.find((k) => k.name.test(name));
       if (known) {
-        if (known.content.test(head(entry.absPath))) report(rel, { key: "issue.no.because", params: { reason: { t: known.reason } } });
+        if (known.content.test(head(entry.absPath, 512, known.binary))) report(rel, { key: "issue.no.because", params: { reason: { t: known.reason } } });
+        continue;
+      }
+
+      const named = backupOf(name);
+      const original = named ?? backupOnlyBeside(name);
+      const sibling = original && (rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original);
+      // A copy beside its original is a backup, whatever it holds, docs too. A name that only
+      // says "old" or "backup" needs the same bytes as the original to be one.
+      if (sibling && snapshot.byRel.has(sibling) && (named || sameBytes(entry.absPath, snapshot.byRel.get(sibling)!.absPath))) {
+        report(rel, { key: "issue.leftover.backup", params: { original: original! } });
         continue;
       }
 
@@ -179,11 +197,8 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         continue;
       }
 
-      const original = backupOf(name);
-      if (original) {
-        const sibling = rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original;
-        if (snapshot.byRel.has(sibling)) report(rel, { key: "issue.leftover.backup", params: { original } });
-        else report(rel, { key: "issue.leftover.maybeBackup" }, "review");
+      if (backupOf(name)) {
+        report(rel, { key: "issue.leftover.maybeBackup" }, "review");
         continue;
       }
 
@@ -235,30 +250,50 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
   protected async validateInternal(rule: TwinsRule, context: RuleValidatorContext) {
     const { snapshot } = context;
     let hitCount = 0;
-    const report = (rel: string, key: MessageKey, other?: string) => {
+    const report = (rel: string, key: MessageKey, other?: string, verdict?: Verdict, path = resolve(context.root, rel)) => {
       hitCount++;
       context.rawIssues.push(issueFromRule(rule, {
-        path: resolve(context.root, rel),
+        path,
         displayPath: rel,
         message: { key, params: other ? { other } : undefined },
+        ...(verdict ? { verdict } : {}),
       }));
     };
 
     const seen = new Map<string, string>();
+    const dirsIn = new Map<string, Map<string, string>>(); // parent → lowercased name → name
     for (const rel of [...snapshot.byRel.keys()].sort()) {
       if (NOT_OURS.test(rel)) continue;
       // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
       const slash = rel.lastIndexOf("/");
-      const key = `${rel.slice(0, slash + 1)}${rel.slice(slash + 1).toLowerCase()}`;
+      const parent = rel.slice(0, slash + 1);
+      const name = rel.slice(slash + 1);
+      // macOS and Windows fold case; macOS also folds the two Unicode forms of `é`.
+      const key = `${parent.normalize("NFC")}${name.normalize("NFC").toLowerCase()}`;
       const other = seen.get(key);
       if (other === undefined) seen.set(key, rel);
-      else report(rel, "issue.twins.case", other);
+      else report(rel, rel.normalize("NFC") === other.normalize("NFC") ? "issue.twins.unicode" : "issue.twins.case", other);
+      if (snapshot.byRel.get(rel)?.isDir) {
+        const siblings = dirsIn.get(parent) ?? new Map<string, string>();
+        siblings.set(name.toLowerCase(), name);
+        dirsIn.set(parent, siblings);
+      }
     }
 
-    const rootDirs = new Set(snapshot.listDir(".").filter((e) => e.isDir).map((e) => e.name));
-    for (const group of SYNONYM_DIRS) {
-      const present = group.filter((d) => rootDirs.has(d));
-      if (present.length > 1) report(present.map((d) => `${d}/`).join(" + "), "issue.twins.synonyms");
+    // One concept, two names, in any directory: synonyms, and a plural beside its singular.
+    for (const [parent, siblings] of dirsIn) {
+      for (const group of SYNONYM_DIRS) {
+        const present = group.flatMap((d) => (siblings.has(d) ? [siblings.get(d)!] : []));
+        // `lib/test/ + __tests__/`: the parent once, so a workspace package's view of it is the same finding.
+        if (present.length > 1) report(`${parent}${present.map((d) => `${d}/`).join(" + ")}`, "issue.twins.synonyms", undefined, undefined, `${resolve(context.root, parent + present[0]!)}#synonyms`);
+      }
+      for (const [lower, name] of siblings) {
+        if (SYNONYM_DIRS.some((g) => g.includes(lower))) continue;
+        const plural = [`${lower}s`, `${lower}es`, lower.endsWith("y") ? `${lower.slice(0, -1)}ies` : ""].find((p) => p && siblings.has(p));
+        // At the root two names for one thing; deeper, `language/` beside `languages/` is as often two
+        // things (zed's crates, routes that are URLs): the names are a fact, the meaning is for review.
+        if (plural) report(`${parent}${name}/`, parent ? "issue.twins.pluralMaybe" : "issue.twins.plural", `${parent}${siblings.get(plural)}/`, parent ? "review" : undefined);
+      }
     }
 
     // The same instructions twice. Bun and cal.com keep one file and symlink the other;
@@ -269,12 +304,18 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
     }
 
     hitCount += mixedStyles(rule, context);
-
-    for (const dir of rootDirs) {
-      if (SYNONYM_DIRS.some((g) => g.includes(dir))) continue;
-      if (rootDirs.has(`${dir}s`)) report(`${dir}/`, "issue.twins.plural", `${dir}s/`);
-    }
     return { hitCount };
+  }
+}
+
+/** Two files with the same bytes; sizes are compared first, so large ones are rarely read. */
+function sameBytes(a: string, b: string): boolean {
+  try {
+    const size = statSync(a).size;
+    if (size !== statSync(b).size || size > 16 * 1024 * 1024) return false;
+    return readFileSync(a).equals(readFileSync(b));
+  } catch {
+    return false;
   }
 }
 
@@ -303,7 +344,8 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     const language = entry.isDir ? undefined : languageOf(entry.name);
     if (!language || NOT_OURS.test(rel) || NAME_EXEMPT.test(entry.name)) continue;
     if (angular && entry.name.endsWith(".ts")) continue; // Angular's style guide: hyphens
-    const style = nameStyle(language === "go" ? goStem(entry.name) : entry.name.split(".")[0]!);
+    // A leading `_` or `$` marks private or special files; the name after it is the style.
+    const style = nameStyle((language === "go" ? goStem(entry.name) : entry.name.split(".")[0]!).replace(/^[_$]+/, ""));
     if (!style || (style === "camelCase" && language === "py")) continue; // PEP 8: no capitals
     // One finding per directory; languages are compared apart within it.
     const dir = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000${language}`;
