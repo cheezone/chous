@@ -42,7 +42,7 @@ npx chous
 ```
 Modernity
   ✗ .nvmrc (Node 16)       → Node 16 reached end of life on 2023-09-11 → a supported LTS release
-  ✗ package.json (request) → request: Deprecated by its authors in 2020. → fetch
+  ✗ package.json (request) → request 2.88.2, deprecated by its authors on npm: “request has been deprecated, see https://github.com/request/request/issues/3142”
   ✗ package.json (Vue 2)   → Vue 2 reached end of life on 2023-12-31 → Vue 3
 
 Order
@@ -56,7 +56,7 @@ Cleanliness
 
 To review: chous knows the fact, not the purpose. You or your agent decide.
   ? bin/server                → a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
-  ? package.json (node-fetch) → the platform ships fetch: whether it fully replaces node-fetch depends on how you use it
+  ? ./                        → 2 source files over 1000 lines (src/api.ts 6763, src/board.ts 1840): whether one holds too many jobs is for you or your agent to judge; never split mechanically
 
 Smells: 9 · to review: 2
 Taste only: correctness, security and tests are not checked.
@@ -73,18 +73,18 @@ There are no errors, warnings or hints, and no score. Smells make chous exit non
 
 | Taste | Smell | To review |
 | --- | --- | --- |
-| Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); formats, fields and options their own tools call deprecated, obsolete or legacy; dependencies deprecated, called legacy or sabotaged by their authors; config of dead tools | Dependencies the platform now ships |
-| Order | A second config of one tool in one directory, which the tool never reads; Node pinned twice to different versions; names that differ only in case or Unicode form; mixed naming styles in one directory; a crowded root; `package-lock.json` beside `yarn.lock`; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo; `CLAUDE.md` identical to `AGENTS.md` | |
-| Convention | Files and fields a tool no longer reads, or reads only from one place or under one name; names that break a language's or framework's naming rules (Python, Go, Rust, Dart, Kotlin, Elixir, PHP's PSR-4, Angular, Vue); package names npm refuses; limits tools and platforms set in their docs (GitHub's file sizes, Codex's AGENTS.md size, line limits of agent instructions); skills that break the Agent Skills spec; directories Next.js and Nuxt never read | |
-| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets); files committed although .gitignore ignores them; installers (known by their signature) | Executables and libraries |
+| Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); dependencies deprecated, called legacy or sabotaged by their authors (npm's own words, read from the lockfile); a manifest field its tool deprecated | |
+| Order | Names that differ only in case or Unicode form; mixed naming styles in one directory; too many docs at the root; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo | Source files over 1000 lines; directories with more than 50 source files laid out flat; more than 30 files at the root; files with identical content; agent instructions over 300 lines |
+| Convention | Names that break a language's naming rules (Python, Go, Rust, Dart, Kotlin, Elixir, PHP's PSR-4) | |
+| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, `.idea/workspace.xml`); files committed although .gitignore ignores them; files GitHub refuses (50 MiB and up); installers (known by their signature) | Executables and libraries |
 
 Which tools, which files and which words: [the catalogue of what chous knows](docs/facts.md), generated from the registry so it never lists a tool chous does not check.
 
-Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, neither correctness nor security is checked, and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Other people's code and test data are skipped under the names their tools define (`node_modules/`, `vendor/`, `testdata/`, `__snapshots__/`, `tests/fixtures/`) or wherever `.gitattributes` says `linguist-vendored` or `linguist-generated`, in any language; `tests/` and `examples/` are your own code and are checked.
+Nothing missing is reported (no tests, no CI, no license); a line count, size or file count only ever puts something up for review, never settles it; neither correctness nor security is checked; and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Other people's code and test data are skipped under the names their tools define (`node_modules/`, `vendor/`, `testdata/`, `__snapshots__/`, `tests/fixtures/`) or wherever `.gitattributes` says `linguist-vendored` or `linguist-generated`, in any language; `tests/` and `examples/` are your own code and are checked.
 
-Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
+Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
 
-Everything chous knows about a tool lives in one file under [`src/facts/tools/`](src/facts/tools/): its files, its words, what chous says in each language, and examples it must and must not report.
+The little chous knows about named software (end-of-life schedules, deprecations, a language's naming rules) lives in [`src/facts/tools/`](src/facts/tools/). It stays little on purpose: a tool's config fields, read order and version-specific behaviour change, and the tool diagnoses them itself.
 
 ### Commands
 

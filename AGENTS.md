@@ -7,29 +7,41 @@
 一个**没有配置**的品味检查 CLI，像 `gofmt`：品味就是工具本身。**能跑，但还是臭。**
 
 - **最高设计依据是 [`docs/manifesto.zh.md`](docs/manifesto.zh.md)**（英文版 `docs/manifesto.md`，`chous manifesto` 输出它）。改规则前先读；规则和宣言冲突时，改规则或先改宣言。四种品味、两种结果（smell / review）、不惩罚缺失、不按行数判、不为任何项目加豁免，都写在那里，这里不重复。
-- chous 知道的每个工具、每句原话，见生成的 [`docs/facts.zh.md`](docs/facts.zh.md)。
+- chous 对具体软件知道的那一点（停止维护、废弃、语言命名），见生成的 [`docs/facts.zh.md`](docs/facts.zh.md)。
+
+## 什么规则能进来
+
+新规则先归类，再问有没有官方证据：
+
+- **A 通用事实**（优先做）：文件大小、行数、目录分布、重复内容、命名一致性、git 跟踪状态、文件签名。不依赖具体框架，几年后依然成立，没被适配过的语言也受益。
+- **B 已发生的事件**（有限收录）：停止维护、作者明确宣布的废弃。可以积累，日期由程序同步，不手写。
+- **C 易变的生态知识**（不收）：配置优先级、版本特定字段、文件位置变化、平台默认上限、原生替代关系。工具自己会诊断，agent 能读最新文档。
+- **D 语义判断**（交给 agent）：代码职责、架构、依赖用途、历史残留。写进宣言「交给 agent 的部分」。
+
+对每条规则回答：三年不维护还成立吗？必须懂某个具体工具吗？别的工具已经在查了吗？能用通用算法替代吗？能交给 agent 吗？**除停止维护和明确废弃外，需要知道具体软件的名字和版本才成立的规则，默认不收。** 不以支持的工具数量、知识条目数量作为进展。
 
 ## 做规则时最容易犯的错
 
 - **不读名字里的词。** `FIXES_SUMMARY.md`、`index.ts.bak`、`src copy/`、`plugin/` 和 `plugins/`、`test/` 和 `tests/`、`报告-最终版.md`、`백업.ts`：靠英文单词、词形、同义词推断含义的规则，换一种语言就得再猜一遍，不是事实，一律不写（备份、工作日志、一次性脚本、单复数、同义目录、`*.log` 都已删除）。名字只在两种情况下算证据：工具或操作系统规定的确切名字（`eslint.config.js`、`.DS_Store`），并且有内容佐证；或者名字本身就是事实（只差大小写、语言规定的命名风格）。其余证据只能来自内容：文件头签名、工具写下的标记文件、OS 写的内容、git 索引与 .gitignore 的矛盾。
 - **事实错了才是误报，审美不同不是。** 知名项目被报不是误报。事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。
-- 只收官方文档里写明的东西：位置、命名、上限、旧格式、停止维护日期。官方没写的不推断（Angular 只说「不再支持」，就只报这句，不编日期）。引用以原文为准，例如 `.env` 可以提交，只有 `.env*.local` 不行。
+- 收进来的事实只认官方文档写明的。官方没写的不推断（Angular 只说「不再支持」，就只报这句，不编日期）。引用以原文为准，例如 `.env` 可以提交，只有 `.env*.local` 不行。
 - 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。npm 的 `deprecated` 不维护名单：pnpm、npm 安装时把它原样记进 `pnpm-lock.yaml`、`package-lock.json`，chous 从那里读（`src/vfs/lockfile.ts`），只报 `package.json` 直接写的依赖；`src/facts/packages/npm.ts` 只放 lockfile 读不到的（README、安全公告、带替代品的）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何 Dockerfile 的 `FROM`（展开 `ARG`、允许任意镜像仓库）、workflow 里 `actions/setup-node`/`setup-python` 的单个版本和 `container`/`image`、devcontainer 的镜像和 features、`volta.node`、框架依赖；CI 矩阵是兼容测试，不读；Node 代号按 `schedule.json` 的 `codename` 换算）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
-- 不按职责数工具（「一件事两个工具」已删除）：用几个工具是用户的事。只有工具自己说不该并存的才报（Yarn 对 `package-lock.json` 的警告）。
-- 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
-- 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。
-- **优先级：生态约定先于 AI 工具约定。** AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研（用户量、是否还在维护、是否改名）。
+- 不按职责数工具（「一件事两个工具」已删除）：用几个工具是用户的事。
+- 命名：语言规定了风格的（`src/facts/kinds/naming.ts`：Python、Go、Rust、Dart、Kotlin、Elixir、PSR-4，不再加新语言，框架的不收），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
+- 体积和数量（`MEASURES`，`src/taste/hygiene.ts`）是 chous 的立场：源文件 1000 行、目录 50 个源文件、根目录 30 个文件、指令文件 300 行、4 KiB 以上的重复文件，只进入 review，每个仓库合并成一条。是否职责过度集中交给 agent，不机械拆分。阈值按语料分布选在尾部；「知名项目也这样」不是放弃检测的理由。
+- 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用）不写成启发式规则，写进宣言「交给 agent 的部分」。
+- AI 工具的格式和上限属于 C 类，不收（全部已删除）。agent 指令文件只按 chous 自己的立场看行数和重复。
 - 作用域（`snapshot.notOurs`）：名单只收工具规定的名字（`NOT_OURS`：npm 的 `node_modules/`、Go 和 Linguist 的 `vendor/`、Go 的 `testdata/`、Jest/Vitest 写的 `__snapshots__/`、Linguist 的 `tests/fixtures/`、`specs/fixtures/`），其余由仓库在 `.gitattributes` 里用 `linguist-vendored` / `linguist-generated` 声明（`src/vfs/gitattributes.ts`，按 git 的属性规则：后写的赢，深层文件赢，`-linguist-vendored` 要回）。`third_party/`、`upstream/`、`__fixtures__` 这类没有出处的名字不收。测试目录里的子项目只认测试工具读的目录：Node 的 `test/`、Jest 的 `__tests__/`。`tests/`、`examples/`、`playground/` 照常检查。
 - **不要**重新引入 `.chous` 配置、DSL、预设、开关规则的选项或任何让用户自定义规则的入口。运行时离线：不联网、不调用 AI、不需要 key。
 
 ## 代码在哪
 
-- **`src/facts/`：chous 知道的一切。** 一个工具一个文件 `tools/<生态>/<工具>.ts`，在 `index.ts` 登记。文件里放这个工具的全部知识：配置文件（`configs`、`legacy`）、事实（`facts`）、不该提交的路径（`absent`）、停止维护时间表（`eol`）、原话（`sources`）、中英文案（`message`）、正反例（`examples`）、调研日期（`researched`）。npm 包在 `packages/npm.ts`。
-  - 事实按「种类」写（`kinds/`）。新工具应该只填数据；`custom` 是逃生口，两个工具用到同一种检查时就把它提成新种类。
-  - 别处需要工具的文件列表时从工具文件引用（`configs`），不要抄一份。
+- **`src/facts/`：chous 对具体软件知道的那一点，故意保持很小。** 一个工具一个文件 `tools/<生态>/<工具>.ts`，在 `index.ts` 登记：停止维护时间表（`eol`）、语言的命名规定、工具宣布废弃的字段、工具说不能提交的文件（`absent`），每条带原话（`sources`）、中英文案和正反例。npm 包在 `packages/npm.ts`，只放 lockfile 读不到的废弃。
+  - 事实按「种类」写（`kinds/`：命名、TOML 废弃字段、`custom`）。
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
-- **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单；`frameworks.ts` 是 Next.js、Nuxt 的目录规则；`sources.ts` 是这些规则的原话。`contracts.ts` 只剩 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。
+- **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单和体积立场（`MEASURES`）；`sources.ts` 是这些规则的原话。
+- `src/rules/validators/measures.ts`：通用的体积、数量、重复检测，只在仓库根目录跑一次。
 - 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；`test/`、`__tests__/` 里的子项目是测试输入，不检查。
 - 读文件一律用 `readText` / `readBytes`（`src/fsutil.ts`）：只读普通文件，最多 16 MiB，非阻塞打开。仓库是不可信的输入：软链接可以指向 `/dev/zero`、`/`、`../secret`，文件名可以带 `..\\`、`#`、终端控制字符，manifest 可以是 `null` 或嵌套上万层。遍历不跟随软链接，只有 git 跟踪的、指向仓库内部的软链接才跟随。多行正则不要用 `^\\s*`（在空行上是平方复杂度），用 `^[ \\t]*`。`.gitignore` 规则按词建索引（`src/vfs/gitignore.ts`），两万行规则也不会让每个路径都试一遍；结果和 `ignore` 库逐条比对一致（`test/code/gitignore.test.ts`）。`test/code/robustness.test.ts` 锁住了这些攻击。
 - `src/rules/validators/`：每种规则的执行。
@@ -42,7 +54,7 @@
 - `pnpm run sync --check`：停止维护日期和官方数据比对。
 - **没有真实实例，就不算支持。** 新规则（尤其是新语言、新框架）要找到真实项目里的违例和守规的例子，锁定 commit 加进 `test/corpus.json`，逐条核对。`docs/facts*.md` 的「真实命中」一列由语料结论生成，「尚未见到」的规则要如实标出。
 - `pnpm run corpus`（联网，不在 CI 里，缓存目录用 `CHOUS_CORPUS_DIR`）：`test/corpus.json` 锁定 85 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行核对事实，确认正确才 `pnpm run corpus --update`。
-- `.github/workflows/sources.yml` 每周跑 `sync --check` 和 `sources`，失败说明官方文档变了。
+- `.github/workflows/eol.yml` 每周只跑 `sync --check`（停止维护日期）。原话只在新增来源时用 `pnpm run sources` 核对一次：官方改个措辞不是新闻，不值得每周维护。
 - `node dist/cli.mjs`：用 chous 检查本仓库，必须没有臭味。
 
 ## 常用命令

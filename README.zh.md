@@ -42,7 +42,7 @@ npx chous
 ```
 现代
   ✗ .nvmrc (Node 16)       → Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
-  ✗ package.json (request) → request：作者已于 2020 年宣布废弃。 → fetch
+  ✗ package.json (request) → request 2.88.2，作者已在 npm 上宣布废弃：「request has been deprecated, see https://github.com/request/request/issues/3142」
   ✗ package.json (Vue 2)   → Vue 2 已于 2023-12-31 停止维护 → Vue 3
 
 秩序
@@ -56,7 +56,7 @@ npx chous
 
 待审视：chous 知道事实，不知道用途。由你或你的 agent 判断。
   ? bin/server                → 编译好的可执行文件或库：如果是本项目构建出来的，应该放到 Releases；如果是构建要读取的输入，就留着
-  ? package.json (node-fetch) → 平台已经自带 fetch：能否完全替代 node-fetch，取决于你怎么用它
+  ? ./                        → 2 个源文件超过 1000 行（src/api.ts 6763, src/board.ts 1840）：是否承担了太多职责，由你或你的 agent 判断；不要机械拆分
 
 臭味 9 处 · 待审视 2 处
 只看品味：不检查正确性、安全和测试。
@@ -73,18 +73,18 @@ npx chous
 
 | 品味 | 臭味 | 待审视 |
 | --- | --- | --- |
-| 现代 | 已过官方停止维护日期的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；工具自己称为废弃、过时或旧格式的文件、字段和选项；作者废弃、称为遗留或故意破坏的依赖；死掉的工具留下的配置 | 平台已经自带同类能力的依赖 |
-| 秩序 | 同一目录里同一个工具的第二份配置，工具永远不会读它；写了两遍又不一样的 Node 版本；只差大小写或 Unicode 写法的两个名字；同一目录命名风格混用；根目录文档太多；`yarn.lock` 旁边的 `package-lock.json`；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
-| 约定 | 工具不再读、或只在某个位置某个名字下才读的文件和字段；不符合语言、框架命名规定的名字（Python、Go、Rust、Dart、Kotlin、Elixir、PHP 的 PSR-4、Angular、Vue）；npm 不接受的包名；工具和平台在文档里给出的上限（GitHub 的文件大小、Codex 的 AGENTS.md 大小、agent 指令的行数）；不符合 Agent Skills 规范的 skill；Next.js、Nuxt 不读的目录 | |
-| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；工具自己说不要提交的文件（`.env*.local`、个人 IDE 和 agent 配置、Worker 本地密钥）；被 .gitignore 忽略却仍被提交的文件；安装包（靠文件签名识别） | 可执行文件和库 |
+| 现代 | 已过官方停止维护日期的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；作者废弃、称为遗留或故意破坏的依赖（npm 上作者的原话，从 lockfile 读）；工具宣布废弃的清单字段 | |
+| 秩序 | 只差大小写或 Unicode 写法的两个名字；同一目录命名风格混用；根目录文档太多；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表 | 超过 1000 行的源文件；平铺 50 个以上源文件的目录；根目录超过 30 个文件；内容完全相同的文件；超过 300 行的 agent 指令 |
+| 约定 | 不符合语言命名规定的名字（Python、Go、Rust、Dart、Kotlin、Elixir、PHP 的 PSR-4） | |
+| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；工具自己说不要提交的文件（`.env*.local`、`.idea/workspace.xml`）；被 .gitignore 忽略却仍被提交的文件；GitHub 拒收的文件（50 MiB 起）；安装包（靠文件签名识别） | 可执行文件和库 |
 
 具体哪些工具、哪些文件、哪句原话：见 [chous 知道什么](docs/facts.zh.md)，由注册表生成，不会列出 chous 实际不查的工具。
 
-不检查缺失（没有测试、没有 CI、没有许可证都不报）；不按行数、体积、文件数量判，除非官方文档给了具体限制；也不检查正确性和安全；不读名字里的词，`FIXES_SUMMARY.md`、`index.ts.bak` 交给你的 agent 判断。别人的代码和测试数据不查：工具规定的名字（`node_modules/`、`vendor/`、`testdata/`、`__snapshots__/`、`tests/fixtures/`），以及 `.gitattributes` 里标了 `linguist-vendored` 或 `linguist-generated` 的路径，什么语言的目录名都行；`tests/`、`examples/` 是你自己的代码，照常检查。
+不检查缺失（没有测试、没有 CI、没有许可证都不报）；行数、体积、文件数量只会让东西进入待审视，从不定性；也不检查正确性和安全；不读名字里的词，`FIXES_SUMMARY.md`、`index.ts.bak` 交给你的 agent 判断。别人的代码和测试数据不查：工具规定的名字（`node_modules/`、`vendor/`、`testdata/`、`__snapshots__/`、`tests/fixtures/`），以及 `.gitattributes` 里标了 `linguist-vendored` 或 `linguist-generated` 的路径，什么语言的目录名都行；`tests/`、`examples/` 是你自己的代码，照常检查。
 
-每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。每周有一个任务核对每句原话还在不在页面上、每个停止维护日期和官方数据是否一致；`pnpm run corpus` 会把 chous 对 85 个真实仓库说的每一句话和[已记录的结论](test/corpus.claims.txt)比对。
+每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。每周有一个任务核对每个停止维护日期和官方数据是否一致；`pnpm run corpus` 会把 chous 对 85 个真实仓库说的每一句话和[已记录的结论](test/corpus.claims.txt)比对。
 
-chous 对一个工具的全部知识都在 [`src/facts/tools/`](src/facts/tools/) 下的一个文件里：它的文件、它的原话、chous 用各语言怎么说，以及必须报和必须不报的例子。
+chous 对具体软件知道的那一点（停止维护时间表、废弃事件、语言的命名规定）在 [`src/facts/tools/`](src/facts/tools/)。它故意保持很小：工具的配置字段、读取顺序、版本特定行为都会变，工具自己会诊断。
 
 ### 命令
 
