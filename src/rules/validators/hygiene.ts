@@ -21,7 +21,8 @@ import {
   VERSION_NAMED,
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
-  SOURCE_FILE,
+  languageOf,
+  goStem,
   SYNONYM_DIRS,
   WORKLOG,
   backupOf,
@@ -288,32 +289,36 @@ function sameRegularFile(a: string, b: string): boolean {
 }
 
 /**
- * One directory, one way of naming. Multi-word source files sharing a
- * directory should agree: `asyncData.ts` beside `lazy-hydration.ts` (Nuxt) is
- * two conventions in one place. Which one is up to you. PascalCase (components,
- * classes) and one-word names fit any convention; names a tool chose
- * (`vite-env.d.ts`, `not-found.tsx`) are not the project's choice.
+ * One directory, one way of naming. Multi-word source files of one language
+ * sharing a directory should agree: `asyncData.ts` beside `lazy-hydration.ts`
+ * (Nuxt) is two conventions in one place. Which one is up to you. PascalCase
+ * (components, classes) and one-word names fit any convention; names a tool
+ * chose (`vite-env.d.ts`, `not-found.tsx`, Go's `_test` and `_linux`) are not
+ * the project's choice.
  */
 function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
   const angular = context.snapshot.manifest.deps.has("@angular/core");
   const byDir = new Map<string, Map<string, string[]>>();
   for (const [rel, entry] of context.snapshot.byRel) {
-    if (entry.isDir || NOT_OURS.test(rel) || !SOURCE_FILE.test(entry.name) || NAME_EXEMPT.test(entry.name)) continue;
+    const language = entry.isDir ? undefined : languageOf(entry.name);
+    if (!language || NOT_OURS.test(rel) || NAME_EXEMPT.test(entry.name)) continue;
     if (angular && entry.name.endsWith(".ts")) continue; // Angular's style guide: hyphens
-    const style = nameStyle(entry.name.split(".")[0]!);
-    if (!style || (style === "camelCase" && entry.name.endsWith(".py"))) continue; // PEP 8: no capitals
-    const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
+    const style = nameStyle(language === "go" ? goStem(entry.name) : entry.name.split(".")[0]!);
+    if (!style || (style === "camelCase" && language === "py")) continue; // PEP 8: no capitals
+    // One finding per directory; languages are compared apart within it.
+    const dir = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000${language}`;
     const styles = byDir.get(dir) ?? new Map<string, string[]>();
     styles.set(style, [...(styles.get(style) ?? []), entry.name]);
     byDir.set(dir, styles);
   }
   let hits = 0;
-  for (const [dir, styles] of byDir) {
+  for (const [key, styles] of byDir) {
     if (styles.size < 2) continue;
     hits++;
+    const [dir, language] = key.split("\u0000") as [string, string];
     const ordered = [...styles].sort((a, b) => b[1].length - a[1].length);
     context.rawIssues.push(issueFromRule(rule, {
-      path: `${resolve(context.root, dir)}#styles`,
+      path: `${resolve(context.root, dir)}#styles:${language}`,
       displayPath: dir === "." ? "./" : `${dir}/`,
       message: {
         key: "issue.twins.styles",

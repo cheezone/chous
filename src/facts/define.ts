@@ -52,6 +52,8 @@ export type Fact<Id extends string = string> = {
    * it is reported once.
    */
   groupBy?(rel: string, file: ContractFile): string;
+  /** The group itself is what the fact is about (a directory's name): name it even when it holds one file. */
+  aboutGroup?: boolean;
   /** Also look inside fixtures and vendored code. */
   everywhere?: boolean;
   message: Text;

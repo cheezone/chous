@@ -283,5 +283,120 @@
     "repo": "wilsonzlin/fastrender",
     "commit": "19bf1036105d4eeb8bf3330678b7cb11c1490bdc",
     "group": "vibe"
+  },
+  {
+    "repo": "zed-industries/zed",
+    "commit": "a3ce8d5e88e35697b2ba1cf9cb3c6816089b8281",
+    "group": "rust"
+  },
+  {
+    "repo": "longbridge/gpui-component",
+    "commit": "6d7004f557d7da932992768f784b07ae97411fed",
+    "group": "rust"
+  },
+  {
+    "repo": "anomalyco/opencode",
+    "commit": "1f66f5f4adfc602dbece7f2d37835376df5081fb",
+    "group": "typescript"
+  },
+  {
+    "repo": "QuantumNous/new-api",
+    "commit": "c27abf36268001ebfcf4f478ba0f7bae1c19de22",
+    "group": "go"
+  },
+  {
+    "repo": "ollama/ollama",
+    "commit": "b207a5a319ba8bd21d5ca607cfb460b46ad6f946",
+    "group": "go"
+  },
+  {
+    "repo": "comfyanonymous/ComfyUI",
+    "commit": "ef507153a6b96c22e0ba98ceec824682c61d70fb",
+    "group": "python"
+  },
+  {
+    "repo": "open-webui/open-webui",
+    "commit": "926f826eaef6179c092a936eede6c7363e425975",
+    "group": "python"
+  },
+  {
+    "repo": "localsend/localsend",
+    "commit": "44f48f18a5503c43873570ff489d27ff1983e198",
+    "group": "dart"
+  },
+  {
+    "repo": "android/nowinandroid",
+    "commit": "2982e63cb691ad49cd009aab43dc206fee6699c2",
+    "group": "kotlin"
+  },
+  {
+    "repo": "phoenixframework/phoenix",
+    "commit": "e0ae76ec71b898caa1b7cfaface9f581b38a166b",
+    "group": "elixir"
+  },
+  {
+    "repo": "plausible/analytics",
+    "commit": "755359cadbe7e39fbaec6b8775acd3f5c4b1d462",
+    "group": "elixir"
+  },
+  {
+    "repo": "ghostfolio/ghostfolio",
+    "commit": "5136d5f16b6418167f1db7efd3a832d8c4b579e8",
+    "group": "angular"
+  },
+  {
+    "repo": "element-plus/element-plus",
+    "commit": "d93e089d9e5e2f7e09d4173fdf380eb3cd046652",
+    "group": "vue"
+  },
+  {
+    "repo": "zopefoundation/ZODB",
+    "commit": "c50a0941d40b22ff5b6fb30a5eab625fa4beba62",
+    "group": "python"
+  },
+  {
+    "repo": "ktorio/ktor",
+    "commit": "3bcd1654d99bbd43a3678b6668f049390a8c3903",
+    "group": "kotlin"
+  },
+  {
+    "repo": "chatwoot/chatwoot",
+    "commit": "a9c76fa50ff75c811d87c0a62fa1e0cfc2258b2f",
+    "group": "vue"
+  },
+  {
+    "repo": "vbenjs/vue-vben-admin",
+    "commit": "bf512713dbfa6f7890f0144242d8126bf37c2537",
+    "group": "vue"
+  },
+  {
+    "repo": "CarGuo/gsy_github_app_flutter",
+    "commit": "f5e6565a60be06af28ea06c0202cbc85c26e81f6",
+    "group": "dart"
+  },
+  {
+    "repo": "mitesh77/Best-Flutter-UI-Templates",
+    "commit": "c85450cb4367742e879ebfae6cda2b7b4da1c3cd",
+    "group": "dart"
+  },
+  {
+    "repo": "nisrulz/flutter-examples",
+    "commit": "9d67d31c72ce29fdef589a093ead99de9f38baf5",
+    "group": "dart"
+  },
+  {
+    "repo": "TheAlphamerc/flutter_twitter_clone",
+    "commit": "9e8defdebefa10590b0ac305ec1d9aac936f0d4c",
+    "group": "dart"
+  },
+  {
+    "repo": "AppFlowy-IO/AppFlowy",
+    "commit": "8fcee27d9bd93aad4ee0191d5d8d915d6a9a4e93",
+    "group": "dart"
+  },
+  {
+    "repo": "immich-app/immich",
+    "commit": "7b27863b13d7ec52340e87637d71a39aa8d7efc0",
+    "group": "dart"
   }
 ]

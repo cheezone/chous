@@ -166,6 +166,20 @@ describe("twins", () => {
     ).toEqual(["src/components/UserCard.vue", "src/composables/"]);
   });
 
+  it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
+    expect(
+      await findings({
+        "contribution_stats.py": "",
+        "i18next-parser.config.ts": "",
+        "relay/minimax/relay-minimax.go": "",
+        "relay/minimax/adaptor_test.go": "",
+        "relay/minimax/poll_linux_amd64.go": "",
+        "relay/aws/relay-aws.go": "",
+        "relay/aws/relay_aws_test.go": "",
+      }),
+    ).toEqual(["relay/aws/"]);
+  });
+
   it("flags editor files their makers call personal or legacy", async () => {
     expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
   });

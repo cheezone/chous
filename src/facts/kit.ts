@@ -61,6 +61,16 @@ export function nearest(file: ContractFile, name: string): string | undefined {
 /** The project a file belongs to: the directory of its nearest package.json, or the root. */
 export const projectOf = (file: ContractFile) => nearest(file, "package.json") ?? "";
 
+/**
+ * The file says a tool wrote it: Go's `Code generated … DO NOT EDIT.`,
+ * `@generated`, slang's `Generated file. Do not edit.`, build_runner's
+ * `GENERATED CODE - DO NOT MODIFY BY HAND`.
+ * Its name is the generator's choice, not the project's.
+ */
+export const generated = (file: ContractFile) => GENERATED.test(file.text().slice(0, 1024));
+// Markers as tools write them: case matters, so prose about "generated code" is not one.
+const GENERATED = /@generated\b|\bDO NOT (EDIT|MODIFY)\b|\b[Gg]enerated\b[^\n]{0,80}\b[Dd]o not (edit|modify)\b/;
+
 /** The nearest package.json lists this package, in dependencies or devDependencies. */
 export function hasDep(file: ContractFile, name: string): boolean {
   const pkg = file.pkg();

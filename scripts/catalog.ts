@@ -3,6 +3,8 @@
  * src/facts/ — so the docs can never list a tool chous does not check, or
  * miss one it does. `pnpm run docs` writes it; a test fails when it is stale.
  */
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { PACKAGES, TOOLS } from "../src/facts";
 import type { Source, Text } from "../src/facts/define";
 import type { Value } from "../src/types";
@@ -19,8 +21,12 @@ const WORDS = {
     researched: (date: string) => `Researched ${date}.`,
     colon: ": ",
     space: " ",
+    sep: " · ",
     taste: "Taste",
     says: "chous says",
+    seen: "Seen in real projects",
+    unseen: "not yet",
+    seenNote: "“Seen in real projects” counts findings in the regression corpus (`test/corpus.json`: real repositories at pinned commits, every finding checked by hand). “not yet” means no repository there breaks it: the fact is checked against the tool's own words and examples, not yet against the wild.",
     source: "Source",
     absent: "Should not be committed",
     eol: (label: string, n: number, first: string, last: string, latest: string) =>
@@ -43,8 +49,12 @@ const WORDS = {
     researched: (date: string) => `调研于 ${date}。`,
     colon: "：",
     space: "",
+    sep: "；",
     taste: "品味",
     says: "chous 说",
+    seen: "真实命中",
+    unseen: "尚未见到",
+    seenNote: "「真实命中」统计回归语料（`test/corpus.json`：锁定 commit 的真实仓库，每条结论都人工核对过）里的结论。「尚未见到」表示那里还没有仓库违反它：这条事实已对照工具原话和正反例检验，还没有在真实项目里遇到过。",
     source: "来源",
     absent: "不该提交",
     eol: (label: string, n: number, first: string, last: string, latest: string) =>
@@ -64,26 +74,44 @@ const cell = (s: string) => s.replace(/\|/g, "\\|").replace(/\{\{\w+\}\}/g, "…
 const hosts = (sources: readonly Source[] | undefined) => [...new Set((sources ?? []).map((s) => new URL(s.url).hostname.replace(/^www\./, "")))].join(", ");
 const say = (text: Text, lang: Lang) => cell(text[lang]);
 
+/** Which corpus repositories each finding was seen in, from the recorded claims. */
+const CLAIMS = readFileSync(resolve(import.meta.dirname, "../test/corpus.claims.txt"), "utf8").split("\n").filter(Boolean);
+function seenIn(test: (line: string) => boolean, w: (typeof WORDS)[Lang]): string {
+  const repos = new Map<string, number>();
+  for (const line of CLAIMS) if (test(line)) repos.set(line.split("\t")[0]!, (repos.get(line.split("\t")[0]!) ?? 0) + 1);
+  if (!repos.size) return w.unseen;
+  const top = [...repos].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+  return top.slice(0, 3).map(([r]) => r).join(", ") + (top.length > 3 ? ` +${top.length - 3}` : "");
+}
+
 export function catalog(lang: Lang): string {
   const w = WORDS[lang];
   const facts = TOOLS.reduce((n, t) => n + t.facts.length, 0);
   const absents = TOOLS.reduce((n, t) => n + ("absent" in t ? (t.absent?.length ?? 0) : 0), 0);
   const eols = TOOLS.filter((t) => "eol" in t).length;
-  const out = [`# ${w.title}`, "", `> ${w.generated}`, "", w.intro, "", w.counts(TOOLS.length, facts, absents, eols, PACKAGES.length), "", `## ${w.tools}`, ""];
+  const out = [`# ${w.title}`, "", `> ${w.generated}`, "", w.intro, "", w.counts(TOOLS.length, facts, absents, eols, PACKAGES.length), "", w.seenNote, "", `## ${w.tools}`, ""];
 
   for (const t of TOOLS) {
     out.push(`### ${t.name}`, "", w.researched(t.researched), "");
     const rows = [
-      ...t.facts.map((f) => [w.value[f.value], say(f.message, lang), hosts(f.sources)]),
-      ...("absent" in t ? (t.absent ?? []) : []).map((a) => [w.value[a.value], `${w.absent}${w.colon}${a.names.map((n) => `\`${n}\``).join(", ")} — ${say(a.message, lang)}`, hosts(a.sources)]),
+      ...t.facts.map((f) => [w.value[f.value], say(f.message, lang), hosts(f.sources), seenIn((l) => l.includes(`\tissue.contract.${f.id}\t`), w)]),
+      ...("absent" in t ? (t.absent ?? []) : []).map((a) => [
+        w.value[a.value],
+        `${w.absent}${w.colon}${a.names.map((n) => `\`${n}\``).join(", ")} — ${say(a.message, lang)}`,
+        hosts(a.sources),
+        seenIn((l) => l.includes(`"t":"reason.${a.id}"`), w),
+      ]),
     ];
     if (rows.length) {
-      out.push(`| ${w.taste} | ${w.says} | ${w.source} |`, "|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`), "");
+      out.push(`| ${w.taste} | ${w.says} | ${w.source} | ${w.seen} |`, "|---|---|---|---|", ...rows.map((r) => `| ${r.join(" | ")} |`), "");
     }
     if ("eol" in t && t.eol) {
       const { label, versions, source } = t.eol;
       const dates = versions.map((v) => v.date).filter(Boolean).sort();
-      out.push(`${w.eol(label, versions.length, versions[0]!.version, versions.at(-1)!.version, dates.at(-1) ?? "")}${w.space}${w.source}${w.colon}${hosts([{ url: source }])}`, "");
+      out.push(
+        `${w.eol(label, versions.length, versions[0]!.version, versions.at(-1)!.version, dates.at(-1) ?? "")}${w.space}${w.source}${w.colon}${hosts([{ url: source }])}${w.sep}${w.seen}${w.colon}${seenIn((l) => l.includes(`"t":"eol.${t.eol!.product}"`), w)}`,
+        "",
+      );
     }
   }
 

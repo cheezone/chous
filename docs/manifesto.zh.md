@@ -121,4 +121,4 @@ chous 怎样确认事实：
 | 找不到原件的备份 | 文件名 | 可能是备份，也可能不是 | 洁净 | 待审视 |
 | 成批按版本号命名的发布说明、成批的工作记录 | 同一目录里有至少 5 份 | 历史在 CHANGELOG 和 PR 里 | 洁净 | 待审视 |
 
-测试夹具（`fixtures/`、`testdata/`、`__snapshots__/`）是数据，`vendor/` 是别人的代码，这两类不检查。`tests/`、`examples/`、`playground/` 是你自己的代码，照常检查。
+测试夹具（`fixtures/`、`testdata/`、`__snapshots__/`）是数据，`vendor/`、`third_party/`、`upstream/` 是别人的代码，这两类不检查。`tests/`、`examples/`、`playground/` 是你自己的代码，照常检查。

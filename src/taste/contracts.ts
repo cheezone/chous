@@ -22,6 +22,8 @@ export type Contract = {
   check(file: ContractFile): Record<string, string | number> | undefined;
   /** Report each group once, not each file in it (`.claude/commands/` can hold hundreds): the group a file belongs to. */
   groupBy?(rel: string, file: ContractFile): string;
+  /** Name the group even when it holds one file: the group is the subject. */
+  aboutGroup?: boolean;
   /** Also look inside fixtures and vendored code: GitHub's limits apply to every file. */
   everywhere?: boolean;
 };

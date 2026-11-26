@@ -62,12 +62,32 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
 }
 
 /**
- * Source files whose directory should keep to one naming style. Languages that
- * prescribe the style themselves are held to it by their facts instead
- * (src/facts/tools/: Rust, Dart, Kotlin, Elixir, Vue), and so are camelCase
- * Python modules (PEP 8) and an Angular app's TypeScript.
+ * Source files whose directory should keep to one naming style, compared within
+ * one language: PEP 8's `snake_case.py` beside a kebab TypeScript config is two
+ * languages' habits, not a mix. Languages that prescribe the style themselves
+ * are held to it by their facts instead (src/facts/tools/: Rust, Dart, Kotlin,
+ * Elixir, Vue), and so are camelCase Python modules (PEP 8) and an Angular
+ * app's TypeScript.
  */
-export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|svelte|astro|py|go|zig|rb|swift)$/;
+const LANGUAGES: Array<[string, RegExp]> = [
+  ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|svelte|astro)$/],
+  ["py", /\.py$/],
+  ["go", /\.go$/],
+  ["zig", /\.zig$/],
+  ["rb", /\.rb$/],
+  ["swift", /\.swift$/],
+];
+export const languageOf = (name: string) => LANGUAGES.find(([, ext]) => ext.test(name))?.[0];
+
+/**
+ * The chosen part of a Go file name. go/build reads a `_test` suffix, then
+ * `_GOOS`, `_GOARCH` or `_GOOS_GOARCH`, as build constraints: they are the go
+ * command's words, not a naming style.
+ */
+const GOOS = "aix|android|darwin|dragonfly|freebsd|hurd|illumos|ios|js|linux|nacl|netbsd|openbsd|plan9|solaris|wasip1|windows|zos";
+const GOARCH = "386|amd64|arm|arm64|loong64|mips|mips64|mips64le|mipsle|ppc64|ppc64le|riscv64|s390x|wasm";
+const GO_CONSTRAINT = new RegExp(`(_(${GOOS}))?(_(${GOARCH}))?$`);
+export const goStem = (name: string) => name.slice(0, -".go".length).replace(/_test$/, "").replace(GO_CONSTRAINT, "");
 
 /** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
 export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client|mdx-components)\./;
@@ -143,11 +163,11 @@ export const EXECUTABLES: Array<{ ext: RegExp; magic: string[] }> = [
 
 /**
  * Data, and other people's code: test fixtures may hold anything (`fixtures/`,
- * and named ones like Nuxt's `components-fixture/`), `vendor/` is someone
- * else's taste. Tests and examples are the project's own code and are checked
+ * and named ones like Nuxt's `components-fixture/`); `vendor/`, `third_party/`
+ * and `upstream/` hold someone else's code, and their taste. Tests and examples are the project's own code and are checked
  * like the rest.
  */
-export const NOT_OURS = /(^|\/)([\w.-]+-)?(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
+export const NOT_OURS = /(^|\/)([\w.-]+-)?(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party|upstream)\//i;
 
 /**
  * Files known by what their maker writes into them, not by name alone: a file

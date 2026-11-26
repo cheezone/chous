@@ -5,6 +5,10 @@ Albertsun6/ontology-builder	smell	modernity	.cursorrules	issue.no.because	{"reas
 Albertsun6/ontology-builder	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Algodons/AlgoBrainDoctor	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 Algodons/AlgoBrainDoctor	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"ARCHITECTURE.md, IMPLEMENTATION_SUMMARY.md, MERMEDA.md, QUICKSTART.md"}
+AppFlowy-IO/AppFlowy	review	cleanliness	.github/workflows/android_ci.yaml.bak	issue.leftover.maybeBackup	{}
+AppFlowy-IO/AppFlowy	smell	convention	frontend/appflowy_flutter/packages/flowy_svg/.github/dependabot.yaml	issue.contract.dependabotPlace	{}
+AppFlowy-IO/AppFlowy	smell	modernity	frontend/scripts/docker-buildfiles/docker-compose.yml	issue.contract.composeName	{}
+AppFlowy-IO/AppFlowy	smell	modernity	frontend/scripts/docker-buildfiles/docker-compose.yml	issue.contract.composeVersion	{}
 Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20251213T0000_wikidata_food_graph/581_relevance_scoring/RUNBOOK_20260718_PHASE2_DEV_SYNC.md	issue.leftover.worklog	{}
 Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20260808T0000_restaurant/0000_open_data_poc/REPORT.md	issue.leftover.worklog	{}
 Ayato-kosaka/nanitabeyo	review	cleanliness	scripts/20260808T0000_restaurant/1276_place_id_free_poc/REPORT.md	issue.leftover.worklog	{}
@@ -17,7 +21,7 @@ Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (dotenv)	issue.de
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-mobile/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":712,"limit":200}
-Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/__init__.py	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
+Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
@@ -56,6 +60,9 @@ BrianTran24/screen_record	review	cleanliness	./	issue.leftover.worklogs	{"count"
 BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
 BurntSushi/ripgrep	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":10}
 BurntSushi/ripgrep	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"AI_POLICY.md, FAQ.md, GUIDE.md, RELEASE-CHECKLIST.md"}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/db/provider/repos/repository_commitInfo_detail_db_provider.dart	issue.contract.dartFileName	{"name":"repository_commitInfo_detail_db_provider","count":1}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/model/commitFile.dart	issue.contract.dartFileName	{"name":"commitFile","count":1}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/page/issue/issue_edit_dIalog.dart	issue.contract.dartFileName	{"name":"issue_edit_dIalog","count":1}
 FouadMagdy01/RNCopilot	smell	cleanliness	.claude/settings.local.json	issue.no.because	{"reason":{"t":"reason.claudeLocal"}}
 FouadMagdy01/RNCopilot	smell	modernity	.clinerules	issue.contract.clinerules	{"count":1}
 FouadMagdy01/RNCopilot	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
@@ -95,6 +102,32 @@ Neve77/comandaflow	smell	modernity	.nvmrc (Node 18)	issue.lifecycle.ended	{"name
 Neve77/comandaflow	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 Neve77/comandaflow	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
 Neve77/comandaflow	smell	order	./	issue.leftover.rootDocs	{"count":13,"limit":3,"names":"DEPLOYMENT.md, GERENCIADOR_PEDIDOS_GUIDE.md, GETTING_STARTED.md, IMPLEMENTATION_COMPLETE.md, ORDER_MANAGEMENT_IMPLEMENTATION.md, …"}
+QuantumNous/new-api	smell	convention	relay/channel/baidu_v2/	issue.contract.goPackageName	{"name":"baidu_v2","count":2}
+QuantumNous/new-api	smell	convention	relay/channel/zhipu_4v/	issue.contract.goPackageName	{"name":"zhipu_4v","count":6}
+QuantumNous/new-api	smell	convention	relay/common_handler/rerank.go	issue.contract.goPackageName	{"name":"common_handler","count":1}
+QuantumNous/new-api	smell	convention	setting/billing_setting/	issue.contract.goPackageName	{"name":"billing_setting","count":4}
+QuantumNous/new-api	smell	convention	setting/console_setting/	issue.contract.goPackageName	{"name":"console_setting","count":2}
+QuantumNous/new-api	smell	convention	setting/model_setting/	issue.contract.goPackageName	{"name":"model_setting","count":7}
+QuantumNous/new-api	smell	convention	setting/operation_setting/	issue.contract.goPackageName	{"name":"operation_setting","count":17}
+QuantumNous/new-api	smell	convention	setting/perf_metrics_setting/config.go	issue.contract.goPackageName	{"name":"perf_metrics_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/performance_setting/config.go	issue.contract.goPackageName	{"name":"performance_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/ratio_setting/	issue.contract.goPackageName	{"name":"ratio_setting","count":6}
+QuantumNous/new-api	smell	convention	setting/request_plugin_setting/config.go	issue.contract.goPackageName	{"name":"request_plugin_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/system_setting/	issue.contract.goPackageName	{"name":"system_setting","count":12}
+QuantumNous/new-api	smell	convention	setting/task_pricing_setting/	issue.contract.goPackageName	{"name":"task_pricing_setting","count":2}
+QuantumNous/new-api	smell	modernity	docker-compose.dev.yml	issue.contract.composeName	{}
+QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
+QuantumNous/new-api	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
+QuantumNous/new-api	smell	order	common/	issue.twins.styles	{"styles":"snake_case ×35 + kebab-case ×7","examples":"account_password.go, custom-event.go"}
+QuantumNous/new-api	smell	order	controller/	issue.twins.styles	{"styles":"snake_case ×106 + kebab-case ×2","examples":"access_token.go, channel-billing.go"}
+QuantumNous/new-api	smell	order	middleware/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×6","examples":"access_token_routes.go, disable-cache.go"}
+QuantumNous/new-api	smell	order	relay/channel/aws/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"relay-aws.go, relay_aws_test.go"}
+QuantumNous/new-api	smell	order	relay/channel/claude/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×1","examples":"message_delta_usage_patch_test.go, relay-claude.go"}
+QuantumNous/new-api	smell	order	relay/channel/gemini/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"adaptor_responses_test.go, relay-gemini-native.go"}
+QuantumNous/new-api	smell	order	relay/channel/openai/	issue.twins.styles	{"styles":"snake_case ×12 + kebab-case ×1","examples":"chat_via_responses.go, relay-openai.go"}
+QuantumNous/new-api	smell	order	relay/channel/vertex/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×1","examples":"adaptor_api_key_url_test.go, relay-vertex.go"}
+QuantumNous/new-api	smell	order	router/	issue.twins.styles	{"styles":"snake_case ×10 + kebab-case ×9","examples":"access_token_scope_test.go, api-router.go"}
+QuantumNous/new-api	smell	order	service/	issue.twins.styles	{"styles":"snake_case ×88 + kebab-case ×1","examples":"access_token_scope.go, notify-limit.go"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	./	issue.leftover.worklogs	{"count":16,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, DEPLOYMENT_FIX.md, …"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.leftover.script	{}
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
@@ -102,6 +135,57 @@ SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 SankrityaT/InstaCare	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 SankrityaT/InstaCare	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm + pnpm"}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/helper/customRoute.dart	issue.contract.dartFileName	{"name":"customRoute","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/model/	issue.contract.dartFileName	{"name":"bookmarkModel","count":4}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/	issue.contract.dartFileName	{"name":"appState","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/base/tweetBaseState.dart	issue.contract.dartFileName	{"name":"tweetBaseState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/chats/chatState.dart	issue.contract.dartFileName	{"name":"chatState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/	issue.contract.dartDirectoryName	{"name":"Auth","count":5}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/	issue.contract.dartFileName	{"name":"forgetPasswordPage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/widget/googleLoginButton.dart	issue.contract.dartFileName	{"name":"googleLoginButton","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/bookmark/bookmarkPage.dart	issue.contract.dartFileName	{"name":"bookmarkPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/common/	issue.contract.dartFileName	{"name":"updateApp","count":2}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/common/widget/userListWidget.dart	issue.contract.dartFileName	{"name":"userListWidget","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/	issue.contract.dartFileName	{"name":"feedPage","count":4}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/	issue.contract.dartDirectoryName	{"name":"composeTweet","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/composeTweet.dart	issue.contract.dartFileName	{"name":"composeTweet","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/state/composeTweetState.dart	issue.contract.dartFileName	{"name":"composeTweetState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/widget/	issue.contract.dartFileName	{"name":"composeBottomIconWidget","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/homePage.dart	issue.contract.dartFileName	{"name":"homePage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/	issue.contract.dartFileName	{"name":"chatListPage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/conversationInformation/	issue.contract.dartDirectoryName	{"name":"conversationInformation","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/conversationInformation/conversationInformation.dart	issue.contract.dartFileName	{"name":"conversationInformation","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/notification/notificationPage.dart	issue.contract.dartFileName	{"name":"notificationPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/	issue.contract.dartFileName	{"name":"EditProfilePage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/follow/	issue.contract.dartFileName	{"name":"followListState","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/qrCode/	issue.contract.dartDirectoryName	{"name":"qrCode","count":2}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/widgets/tabPainter.dart	issue.contract.dartFileName	{"name":"tabPainter","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/search/SearchPage.dart	issue.contract.dartFileName	{"name":"SearchPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/	issue.contract.dartDirectoryName	{"name":"accountSettings","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/about/aboutTwitter.dart	issue.contract.dartFileName	{"name":"aboutTwitter","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/accountSettingsPage.dart	issue.contract.dartFileName	{"name":"accountSettingsPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/	issue.contract.dartDirectoryName	{"name":"contentPrefrences","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/contentPreference.dart	issue.contract.dartFileName	{"name":"contentPreference","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/trends/trendsPage.dart	issue.contract.dartFileName	{"name":"trendsPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/dataUsage/	issue.contract.dartDirectoryName	{"name":"dataUsage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/dataUsage/dataUsagePage.dart	issue.contract.dartFileName	{"name":"dataUsagePage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/displaySettings/	issue.contract.dartDirectoryName	{"name":"displaySettings","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart	issue.contract.dartFileName	{"name":"displayAndSoundPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/notifications/notificationPage.dart	issue.contract.dartFileName	{"name":"notificationPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/	issue.contract.dartDirectoryName	{"name":"privacyAndSafety","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/directMessage/	issue.contract.dartDirectoryName	{"name":"directMessage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/directMessage/directMessage.dart	issue.contract.dartFileName	{"name":"directMessage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart	issue.contract.dartFileName	{"name":"privacyAndSafetyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/proxy/proxyPage.dart	issue.contract.dartFileName	{"name":"proxyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/settingsAndPrivacyPage.dart	issue.contract.dartFileName	{"name":"settingsAndPrivacyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/widgets/	issue.contract.dartFileName	{"name":"headerWidget","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/	issue.contract.dartFileName	{"name":"customAppBar","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/bottomMenuBar/	issue.contract.dartDirectoryName	{"name":"bottomMenuBar","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/bottomMenuBar/	issue.contract.dartFileName	{"name":"HalfPainter","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/newWidget/	issue.contract.dartDirectoryName	{"name":"newWidget","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/newWidget/	issue.contract.dartFileName	{"name":"customCheckBox","count":6}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/tweet/widgets/	issue.contract.dartFileName	{"name":"parentTweet","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/url_text/customUrlText.dart	issue.contract.dartFileName	{"name":"customUrlText","count":1}
 Walbrkt/HackBerlin_Solar	review	cleanliness	./	issue.leftover.worklogs	{"count":6,"names":"AGENT_PROMPTS.md, DATA_QUALITY_REPORT.md, INFERENCE_SERVER_SUMMARY.md, MODEL_TRAINING_REPORT.md, PIPELINE_SUMMARY.md, …"}
 Walbrkt/HackBerlin_Solar	smell	cleanliness	package-lock.json.bak	issue.leftover.backup	{"original":"package-lock.json"}
 Walbrkt/HackBerlin_Solar	smell	cleanliness	package.json.bak	issue.leftover.backup	{"original":"package.json"}
@@ -111,6 +195,10 @@ Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"lim
 Walbrkt/HackBerlin_Solar	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 ai-assist-org/ai-assist	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 ai-assist-org/ai-assist	review	cleanliness	docs/SELF_IMPROVEMENT.md	issue.leftover.worklog	{}
+anomalyco/opencode	review	modernity	packages/tui/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
+anomalyco/opencode	smell	convention	packages/plugins/figma/skills/figma-code-connect/SKILL.md	issue.contract.skillLines	{"lines":528,"limit":500}
+anomalyco/opencode	smell	order	package.json (vite)	issue.workspace.drift	{"name":"vite","versions":"packages/app: 8.2.4; packages/data/app: 8.2.4; packages/desktop: 8.2.4; services/site: 8.2.4; packages/stories: 7.3.7"}
+anomalyco/opencode	smell	order	services/site/test/	issue.twins.styles	{"styles":"kebab-case ×28 + camelCase ×4","examples":"changelog-highlights.test.ts, consoleMarketing.test.ts"}
 antfu/ni	smell	order	test/programmatic/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"catalog-interactive.spec.ts, runCli.spec.ts"}
 antfu/taze	smell	order	test/	issue.twins.styles	{"styles":"camelCase ×17 + kebab-case ×2","examples":"bunCatalog.test.ts, package-manager.test.ts"}
 astral-sh/uv	review	cleanliness	changelogs/	issue.leftover.versionNotes	{"count":12,"names":"0.1.x.md, 0.10.x.md, 0.11.x.md, 0.12.x.md, 0.2.x.md, …"}
@@ -204,6 +292,25 @@ calcom/cal.com	smell	order	packages/features/form-builder/	issue.twins.styles	{"
 calcom/cal.com	smell	order	packages/lib/	issue.twins.styles	{"styles":"camelCase ×99 + kebab-case ×10","examples":"buildCalEventFromBooking.ts, default-cookies.ts"}
 calcom/cal.com	smell	order	packages/lib/schedules/transformers/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"for-atom.ts, getScheduleListItemData.ts"}
 calcom/cal.com	smell	order	packages/lib/test/ + __tests__/	issue.twins.synonyms	{}
+chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/WootWriter/keyboardEmojiSelector.vue	issue.contract.vueFileName	{"name":"keyboardEmojiSelector","count":1}
+chatwoot/chatwoot	smell	convention	app/javascript/dashboard/components/widgets/conversation/contextMenu/	issue.contract.vueFileName	{"name":"agentLoadingPlaceholder","count":3}
+chatwoot/chatwoot	smell	convention	app/javascript/dashboard/routes/dashboard/settings/inbox/channels/360DialogWhatsapp.vue	issue.contract.vueFileName	{"name":"360DialogWhatsapp","count":1}
+chatwoot/chatwoot	smell	convention	vendor/db/sentiment-analysis.onnx	issue.contract.largeFile	{"mib":66}
+chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.base.yml	issue.contract.composeName	{}
+chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.base.yml	issue.contract.composeVersion	{}
+chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.yml	issue.contract.composeName	{}
+chatwoot/chatwoot	smell	modernity	.devcontainer/docker-compose.yml	issue.contract.composeVersion	{}
+chatwoot/chatwoot	smell	modernity	.windsurf/rules/chatwoot.md	issue.contract.windsurfLegacy	{"use":".devin/rules/","count":1}
+chatwoot/chatwoot	smell	modernity	docker-compose.production.yaml	issue.contract.composeName	{}
+chatwoot/chatwoot	smell	modernity	docker-compose.production.yaml	issue.contract.composeVersion	{}
+chatwoot/chatwoot	smell	modernity	docker-compose.test.yaml	issue.contract.composeName	{}
+chatwoot/chatwoot	smell	modernity	docker-compose.test.yaml	issue.contract.composeVersion	{}
+chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
+chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeVersion	{}
+chatwoot/chatwoot	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+chatwoot/chatwoot	smell	modernity	tests/playwright/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\", baseUrl: \".\""}
+chatwoot/chatwoot	smell	order	app/javascript/dashboard/api/	issue.twins.styles	{"styles":"camelCase ×25 + snake_case ×1","examples":"accountActions.js, notion_auth.js"}
+chatwoot/chatwoot	smell	order	app/javascript/dashboard/store/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"storeFactory.js, mutation-types.js"}
 coyvalyss1/model-matchmaker	review	cleanliness	test-auto-switch-timing.sh	issue.leftover.script	{}
 coyvalyss1/model-matchmaker	review	cleanliness	test-cc.sh	issue.leftover.script	{}
 coyvalyss1/model-matchmaker	review	cleanliness	test-context-monitor.sh	issue.leftover.script	{}
@@ -238,6 +345,15 @@ denoland/deno	smell	modernity	libs/core_testing/tsconfig.json	issue.contract.tsc
 denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
 denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
 denoland/deno	smell	order	tests/specs/node/node_test_mock_module/	issue.twins.styles	{"styles":"snake_case ×7 + kebab-case ×3","examples":"main_cache.mjs, basic-cjs.cjs"}
+element-plus/element-plus	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+element-plus/element-plus	smell	convention	docs/examples/select-v2/use-valueKey.vue	issue.contract.vueFileName	{"name":"use-valueKey","count":1}
+element-plus/element-plus	smell	convention	docs/examples/splitter/disableDrag.vue	issue.contract.vueFileName	{"name":"disableDrag","count":1}
+element-plus/element-plus	smell	order	docs/.vitepress/vitepress/composables/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×1","examples":"back-top.ts, useDynamicClass.ts"}
+element-plus/element-plus	smell	order	packages/components/message-box/src/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"message-box.type.ts, messageBox.ts"}
+element-plus/element-plus	smell	order	packages/components/select-v2/src/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×1","examples":"useAllowCreate.ts, select-dropdown.tsx"}
+element-plus/element-plus	smell	order	packages/components/step/	issue.twins.plural	{"other":"steps/"}
+element-plus/element-plus	smell	order	packages/components/table/src/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"h-helper.ts, tableColumn.ts"}
+element-plus/element-plus	smell	order	packages/components/tree/src/model/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"useDragNode.ts, tree-store.ts"}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
@@ -273,19 +389,98 @@ facebook/react	smell	order	scripts/ci/	issue.twins.styles	{"styles":"snake_case 
 facebook/react	smell	order	scripts/error-codes/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"extract-errors.js, invertObject.js"}
 facebook/react	smell	order	scripts/flow/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×2","examples":"createFlowConfigs.js, react-devtools.js"}
 facebook/react	smell	order	scripts/jest/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"patchMessageChannel.js, dont-run-jest-directly.js"}
+ghostfolio/ghostfolio	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+ghostfolio/ghostfolio	smell	convention	.agents/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
+ghostfolio/ghostfolio	smell	convention	.claude/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
+ghostfolio/ghostfolio	smell	convention	libs/ui/src/lib/mocks/httpClient.mock.ts	issue.contract.angularFileName	{"name":"httpClient","count":1}
+ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.build.yml	issue.contract.composeName	{}
+ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.dev.yml	issue.contract.composeName	{}
+ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.yml	issue.contract.composeName	{}
+ghostfolio/ghostfolio	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ghostfolio/ghostfolio	smell	modernity	tools/tsconfig.tools.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
 hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+immich-app/immich	review	modernity	e2e/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+immich-app/immich	review	modernity	web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+immich-app/immich	smell	convention	server/.npmignore	issue.contract.npmignoreWithFiles	{}
+immich-app/immich	smell	modernity	docker/docker-compose.dev.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	docker/docker-compose.prod.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	docker/docker-compose.rootless.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	docker/docker-compose.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	e2e/docker-compose.dev.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	e2e/docker-compose.yml	issue.contract.composeName	{}
+immich-app/immich	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"docs: ^3.2.4; server: ^3.4.0; web: ^4.2.4"}
+immich-app/immich	smell	order	packages/e2e-auth-server/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	packages/plugin-sdk/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	packages/scripts/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	web/src/lib/utils/	issue.twins.styles	{"styles":"kebab-case ×47 + camelCase ×1","examples":"adaptive-image-loader.spec.ts, invocationTracker.ts"}
 kartikramachandrula/thynk	smell	cleanliness	backend/__pycache__/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	backend/ocr_models/__pycache__/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 kartikramachandrula/thynk	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/common/src/io/ktor/client/engine/cio/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/jvm/src/io/ktor/client/plugins/websocket/cio/buildersCio.kt	issue.contract.kotlinFileName	{"name":"buildersCio","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/sse/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/websocket/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/request/	issue.contract.kotlinFileName	{"name":"builders","count":3}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/request/forms/	issue.contract.kotlinFileName	{"name":"formBuilders","count":2}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/utils/headers.kt	issue.contract.kotlinFileName	{"name":"headers","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/jvm/src/io/ktor/client/request/buildersJvm.kt	issue.contract.kotlinFileName	{"name":"buildersJvm","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/jvmAndPosix/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/web/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-jetty-jakarta/jvm/src/io/ktor/client/engine/jetty/jakarta/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-jetty/jvm/src/io/ktor/client/engine/jetty/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-plugins/ktor-client-resources/common/src/io/ktor/client/plugins/resources/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-http/common/src/io/ktor/http/header/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-network/js/src/io/ktor/network/sockets/nodejs/node.js.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-network/ktor-network-tls/ktor-network-tls-certificates/jvm/src/io/ktor/network/tls/certificates/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-network/wasmJs/src/io/ktor/network/sockets/nodejs/node.wasmJs.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-network/web/src/io/ktor/network/sockets/nodejs/node.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/runTestWithData.kt	issue.contract.kotlinFileName	{"name":"runTestWithData","count":1}
+longbridge/gpui-component	smell	modernity	.claude/commands/release-notes.md	issue.contract.claudeCommands	{"count":1}
+longbridge/gpui-component	smell	modernity	website/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":284,"limit":200}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
+mitesh77/Best-Flutter-UI-Templates	smell	cleanliness	assets/app-release.apk	issue.leftover.installer	{}
+mitesh77/Best-Flutter-UI-Templates	smell	convention	assets/app-release.apk	issue.contract.largeFile	{"mib":54}
+mitesh77/Best-Flutter-UI-Templates	smell	convention	best_flutter_ui_templates/lib/fitness_app/models/tabIcon_data.dart	issue.contract.dartFileName	{"name":"tabIcon_data","count":1}
+nisrulz/flutter-examples	smell	convention	bottom_sheet/lib/models/ListTileModel.dart	issue.contract.dartFileName	{"name":"ListTileModel","count":1}
+nisrulz/flutter-examples	smell	convention	covid19_mobile_app/lib/screens/searchCountry.dart	issue.contract.dartFileName	{"name":"searchCountry","count":1}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Screens/	issue.contract.dartDirectoryName	{"name":"Screens","count":3}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Screens/	issue.contract.dartFileName	{"name":"HomePage","count":3}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Services/	issue.contract.dartDirectoryName	{"name":"Services","count":1}
+nisrulz/flutter-examples	smell	convention	image_editor/lib/	issue.contract.dartFileName	{"name":"ApplyFilters","count":5}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/Screens/	issue.contract.dartDirectoryName	{"name":"Screens","count":3}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/Screens/	issue.contract.dartFileName	{"name":"HomePage","count":3}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/services/	issue.contract.dartFileName	{"name":"getMemes","count":2}
+nisrulz/flutter-examples	smell	convention	unit_testing/lib/api/Places.dart	issue.contract.dartFileName	{"name":"Places","count":1}
+nisrulz/flutter-examples	smell	convention	unit_testing/test/unit/formValidator_test.dart	issue.contract.dartFileName	{"name":"formValidator_test","count":1}
+nisrulz/flutter-examples	smell	convention	view_pdf_file/lib/viewPDF.dart	issue.contract.dartFileName	{"name":"viewPDF","count":1}
 nuxt/nuxt	review	modernity	packages/kit/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
 nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
+ollama/ollama	smell	convention	app/ui/app/tailwind.config.js	issue.contract.tailwindConfig	{"version":4}
+ollama/ollama	smell	convention	mlxrunner/model/cohere2_moe/	issue.contract.goPackageName	{"name":"cohere2_moe","count":2}
+ollama/ollama	smell	convention	mlxrunner/model/glm4_moe_lite/	issue.contract.goPackageName	{"name":"glm4_moe_lite","count":6}
+ollama/ollama	smell	convention	mlxrunner/model/nemotron_h/	issue.contract.goPackageName	{"name":"nemotron_h","count":8}
+ollama/ollama	smell	convention	mlxrunner/model/qwen3_5/	issue.contract.goPackageName	{"name":"qwen3_5","count":11}
+ollama/ollama	smell	convention	mlxrunner/model/qwen3_5_moe/qwen3_5_moe.go	issue.contract.goPackageName	{"name":"qwen3_5_moe","count":1}
+ollama/ollama	smell	convention	mlxrunner/model/qwen4_exp/	issue.contract.goPackageName	{"name":"qwen4_exp","count":21}
+ollama/ollama	smell	modernity	app/ui/app/tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+ollama/ollama	smell	order	app/ui/app/src/lib/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×1","examples":"chatPreload.test.ts, ollama-client.ts"}
+open-webui/open-webui	smell	modernity	docker-compose.a1111-test.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.amdgpu.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.api.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.data.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.gpu.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.otel.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.playwright.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
+open-webui/open-webui	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+open-webui/open-webui	smell	order	src/lib/utils/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×10","examples":"channelMentions.ts, google-drive-picker.ts"}
 oven-sh/bun	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
 oven-sh/bun	smell	convention	scripts/verify-baseline-static/CLAUDE.md	issue.contract.claudeMdLines	{"lines":288,"limit":200}
 oven-sh/bun	smell	convention	src/CLAUDE.md	issue.contract.claudeMdLines	{"lines":526,"limit":200}
@@ -504,11 +699,11 @@ oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an
 oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-function/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-function.cjs, a_test.cjs"}
 oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-text/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-text.cjs, a_test.cjs"}
 oven-sh/bun	smell	order	test/aot/parallel/packages/commonjs-interop/many-1/	issue.twins.styles	{"styles":"kebab-case ×42 + snake_case ×24","examples":"class-statics.default.mjs, reexport_of_array.mjs"}
-oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×151 + snake_case ×2","examples":"answers-test-from-source.ts, exact_counts.py"}
+oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×118 + snake_case ×2","examples":"draw-names-handed-on-by-stars.py, exact_counts.py"}
 oven-sh/bun	smell	order	test/bundler/	issue.twins.styles	{"styles":"kebab-case ×58 + snake_case ×42 + camelCase ×2","examples":"bun-build-api-dts.test.ts, bundler_allow_unresolved.test.ts, buildNoThrow.ts"}
 oven-sh/bun	smell	order	test/bundler/css/wpt/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"background-computed.test.ts, relative_color_out_of_gamut.test.ts"}
 oven-sh/bun	smell	order	test/cli/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×3","examples":"aot-builtin-modules-and-computed-paths.test.ts, update_interactive_formatting.test.ts"}
-oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×64 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
+oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×63 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
 oven-sh/bun	smell	order	test/internal/	issue.twins.styles	{"styles":"kebab-case ×50 + snake_case ×1","examples":"address-sanitizer-sees-wtf-allocations.test.ts, int_from_float.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"cipheriv-decipheriv.test.ts, webcryptoTestHelpers.ts"}
 oven-sh/bun	smell	order	test/js/bun/css/	issue.twins.styles	{"styles":"kebab-case ×17 + snake_case ×1","examples":"angle-serialization-hang.test.ts, doesnt_crash.test.ts"}
@@ -524,11 +719,10 @@ oven-sh/bun	smell	order	test/js/bun/toml/	issue.twins.styles	{"styles":"snake_ca
 oven-sh/bun	smell	order	test/js/bun/udp/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×2","examples":"dgram-cluster-disconnect-fixture.ts, udp_socket.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/util/	issue.twins.styles	{"styles":"kebab-case ×55 + camelCase ×14 + snake_case ×1","examples":"base64-url-safe-encode.test.ts, escapeHTML.test.js, filesystem_router.test.ts"}
 oven-sh/bun	smell	order	test/js/bun/xml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_xml_test_suite.ts, xml-test-suite.test.ts"}
-oven-sh/bun	smell	order	test/js/bun/yaml/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"yaml-block-scalar-matrix.test.ts, translate_yaml_test_suite_to_bun.py"}
 oven-sh/bun	smell	order	test/js/node/async_hooks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"async-local-storage-thenable.test.ts, async_hooks.node.test.ts"}
 oven-sh/bun	smell	order	test/js/node/child_process/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×5","examples":"child-process-exec.test.ts, child_process.test.ts"}
 oven-sh/bun	smell	order	test/js/node/module/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2 + snake_case ×1","examples":"esm-registry-concurrent-gc.test.ts, modulePrototypeOverwrite.cjs, esm_to_cjs_interop.mjs"}
-oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×6 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
+oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×5 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
 oven-sh/bun	smell	order	test/js/node/test/common/	issue.twins.styles	{"styles":"kebab-case ×7 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
 oven-sh/bun	smell	order	test/js/node/url/	issue.twins.styles	{"styles":"kebab-case ×15 + camelCase ×1","examples":"url-domain-ascii-unicode.test.js, pathToFileURL.test.ts"}
 oven-sh/bun	smell	order	test/js/node/worker_threads/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×4","examples":"a-message-listener-throws-behind-the-end-of-the-thread-fixture.ts, worker_destruction.test.ts"}
@@ -557,11 +751,15 @@ oxc-project/oxc	smell	modernity	tasks/codegen_conformance/Cargo.toml	issue.contr
 oxc-project/oxc	smell	modernity	tasks/e2e/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
 oxc-project/oxc	smell	modernity	tasks/sprout/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	tasks/transform_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.ports.yml	issue.contract.composeName	{}
+phoenixframework/phoenix	smell	modernity	integration_test/docker-compose.yml	issue.contract.composeName	{}
 pisces19860207/zhengdao	review	cleanliness	.github/release-notes/	issue.leftover.versionNotes	{"count":29,"names":"v2.0.1.md, v2.0.10.md, v2.0.11.md, v2.0.12.md, v2.0.13.md, …"}
 pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	{"count":22,"names":"322-治理中心-交付-2026-11-08.md, 467-租约-交付-2026-11-08.md, 482-目标模式-交付-2026-11-08.md, 482-真机链路验收-2026-11-09.md, 498-能力盘点-交付-2026-11-07.md, …"}
 pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+plausible/analytics	smell	convention	priv/repo/migrations/20230406110926_associate-goals-with-sites.exs	issue.contract.elixirFileName	{"name":"20230406110926_associate-goals-with-sites","count":1}
+plausible/analytics	smell	order	assets/js/liveview/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"combo-box.js, live_socket.js"}
 rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":64}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
@@ -790,6 +988,10 @@ unocss/unocss	smell	modernity	examples/vite-watch-mode/tsconfig.json	issue.contr
 unocss/unocss	smell	order	packages-integrations/svelte-scoped/src/_vite/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"createCssTransformerPlugins.ts, config-hmr.ts"}
 v833/q-code	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 v833/q-code	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":37,"limit":32}
+vbenjs/vue-vben-admin	review	modernity	internal/node-utils/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+vbenjs/vue-vben-admin	review	modernity	internal/vite-config/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
+vbenjs/vue-vben-admin	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+vbenjs/vue-vben-admin	smell	order	packages/@core/ui-kit/shadcn-ui/**/*.vue	issue.contract.vueFileStyles	{"style":"kebab-case","majority":"PascalCase","count":27}
 vercel/commerce	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"downlevelIteration: true, moduleResolution: \"node\", baseUrl: \".\""}
 vercel/next-learn	smell	modernity	basics/typescript-final/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\""}
 vercel/next-learn	smell	modernity	dashboard/final-example/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
@@ -810,16 +1012,21 @@ vitejs/vite	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×3 + 
 vuejs/core	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
 vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
-wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/MotionEST/	issue.contract.pythonModuleName	{"name":"Anandan","count":7}
-wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/genY4M/genY4M.py	issue.contract.pythonModuleName	{"name":"genY4M","count":1}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/resources/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×2","examples":"eventtarget_shim.js, testdriver-actions.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/	issue.twins.styles	{"styles":"snake_case ×59 + kebab-case ×11 + camelCase ×1","examples":"assert_throws_dom_legacy_domexception_names.window.js, cross-document-appendchild-adopts.window.js, getDomExceptionName.window.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/collections/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×1","examples":"getelementsbyclassname-live.window.js, length_readonly.window.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/domparsing/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"domparser_parsefromstring_html.window.js, innerhtml-comments.window.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/html_integration/resources/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×3","examples":"defer-1.js, import_meta_resolve_foo.js"}
+zed-industries/zed	review	cleanliness	crates/zed/resources/windows/bin/x64/OpenConsole.exe	issue.leftover.executable	{}
+zed-industries/zed	smell	order	script/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×2","examples":"github-assign-contributor-issue.py, github_helpers.py"}
 ziglang/zig	smell	cleanliness	test/cases/compile_errors/zon/desktop.ini	issue.no.because	{"reason":{"t":"reason.osJunk"}}
 ziglang/zig	smell	order	lib/compiler/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"build_runner.zig, std-docs.zig"}
 ziglang/zig	smell	order	lib/compiler_rt/	issue.twins.styles	{"styles":"snake_case ×71 + camelCase ×3","examples":"aarch64_outline_atomics.zig, mulXi3.zig"}
 ziglang/zig	smell	order	test/behavior/	issue.twins.styles	{"styles":"snake_case ×48 + kebab-case ×2","examples":"addrspace_and_linksection.zig, packed-struct.zig"}
 ziglang/zig	smell	order	test/cases/compile_errors/	issue.twins.styles	{"styles":"snake_case ×705 + kebab-case ×1","examples":"access_inactive_union_field_comptime.zig, non-comptime-parameter-used-as-array-size.zig"}
-ziglang/zig	smell	order	tools/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×3","examples":"fetch_them_macos_headers.zig, dump-cov.zig"}
+ziglang/zig	smell	order	tools/	issue.twins.styles	{"styles":"snake_case ×16 + kebab-case ×3","examples":"fetch_them_macos_headers.zig, dump-cov.zig"}
+zopefoundation/ZODB	smell	convention	src/ZODB/	issue.contract.pythonModuleName	{"name":"ActivityMonitor","count":11}
+zopefoundation/ZODB	smell	convention	src/ZODB/	issue.contract.pythonPackageName	{"name":"ZODB","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/FileStorage/	issue.contract.pythonPackageName	{"name":"FileStorage","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/FileStorage/FileStorage.py	issue.contract.pythonModuleName	{"name":"FileStorage","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/tests/	issue.contract.pythonModuleName	{"name":"BasicStorage","count":37}

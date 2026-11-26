@@ -1,4 +1,4 @@
-import { type ContractFile, projectOf } from "../kit";
+import { type ContractFile, generated, projectOf } from "../kit";
 import { NOT_OURS } from "../../taste/hygiene";
 import type { Fact, Text } from "./types";
 import { build, type Common, target, type Target } from "./shared";
@@ -27,7 +27,8 @@ export const byDirectory = (rel: string) => (rel.includes("/") ? `${rel.slice(0,
 /**
  * A name a language or framework prescribes a style for: a file, its
  * directory, or a name declared inside it (Go's `package`). Reported once per
- * directory, with the count and a name as an example.
+ * directory, with the count and a name as an example. Generated files are left
+ * out: their names are the generator's.
  */
 export function naming<const Id extends string>(
   spec: Common<Id> &
@@ -37,20 +38,25 @@ export function naming<const Id extends string>(
       style: RegExp;
       /** Narrows it to the projects the convention is for (an Angular app). */
       when?(file: ContractFile): boolean;
+      /** The name checked is the directory's: the finding names the directory. */
+      ofDirectory?: boolean;
       message: Text;
     },
 ): Fact<Id> {
-  return build(
+  const fact = build(
     { groupBy: byDirectory, ...spec },
     "convention",
     target(spec),
     (f) => {
       if (spec.when && !spec.when(f)) return undefined;
       const name = spec.name(f);
-      return name !== undefined && name !== "" && !spec.style.test(name) ? { name } : undefined;
+      if (name === undefined || name === "" || spec.style.test(name)) return undefined;
+      // A generator named it (`strings_en_IN.g.dart`): not the project's choice.
+      return generated(f) ? undefined : { name };
     },
     spec.message,
   );
+  return spec.ofDirectory ? { ...fact, aboutGroup: true } : fact;
 }
 
 /**

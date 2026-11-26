@@ -100,7 +100,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
     for (const [key, { contract, count, first, params }] of groups) {
       hitCount++;
       // One file names itself; several are named by what they share.
-      const where = count === 1 ? first : key.slice(contract.id.length + 1);
+      const where = count === 1 && !contract.aboutGroup ? first : key.slice(contract.id.length + 1);
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(root, where)}#${contract.id}`,
         displayPath: where,

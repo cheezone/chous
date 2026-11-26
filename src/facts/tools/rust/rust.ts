@@ -48,7 +48,7 @@ export default tool({
       },
       sources: [{ url: "https://rust-lang.github.io/api-guidelines/naming.html", check: "https://raw.githubusercontent.com/rust-lang/api-guidelines/master/src/naming.md", quote: "| Modules | `snake_case` |" }],
       examples: {
-        smell: [{ "Cargo.toml": "[package]", "src/userStore.rs": "" }, { "crates/core/Cargo.toml": "[package]", "crates/core/HttpClient.rs": "" }],
+        smell: [{ "Cargo.toml": "[package]", "src/userStore.rs": "//! Builds ASTs intended for generated code.\n" }, { "crates/core/Cargo.toml": "[package]", "crates/core/HttpClient.rs": "" }],
         clean: [
           { "Cargo.toml": "[package]", "src/user_store.rs": "", "src/bin/MyTool.rs": "", "tests/MyTest.rs": "", "build.rs": "", "src/lib.miri.rs": "" },
           { "Cargo.toml": "[package]", "lib.rs": '#[path = "MimallocArena.rs"]\nmod mimalloc_arena;\n', "MimallocArena.rs": "" },

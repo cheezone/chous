@@ -24,13 +24,14 @@ export default tool({
       sources: [STYLE_GUIDE],
       examples: {
         smell: [{ "lib/SliderMenu.dart": "" }, { "lib/file-system.dart": "" }],
-        clean: [{ "lib/slider_menu.dart": "", "lib/models/user.g.dart": "" }],
+        clean: [{ "lib/slider_menu.dart": "", "lib/models/user.g.dart": "" }, { "lib/gen/strings_en_IN.g.dart": "///\n/// Generated file. Do not edit.\n///\n" }],
       },
     }),
     naming({
       id: "dartDirectoryName",
       match: /\/[^/]+\.dart$/,
       name: folder,
+      ofDirectory: true,
       style: STYLE.snake,
       message: {
         en: "directory {{name}} holds Dart files and is not in lowercase_with_underscores: Effective Dart names directories that way",

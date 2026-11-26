@@ -20,7 +20,7 @@
 - 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - **优先级：生态约定先于 AI 工具约定。** AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研（用户量、是否还在维护、是否改名）。
-- 作用域：只有测试数据（`fixtures/`、`components-fixture/` 这类命名的夹具目录、`testdata/`、`__snapshots__/`）和 `vendor/`、`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 照常检查。
+- 作用域：只有测试数据（`fixtures/`、`components-fixture/` 这类命名的夹具目录、`testdata/`、`__snapshots__/`）和别人的代码 `vendor/`、`third_party/`、`upstream/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 照常检查。
 - **不要**重新引入 `.chous` 配置、DSL、预设、开关规则的选项或任何让用户自定义规则的入口。运行时离线：不联网、不调用 AI、不需要 key。
 
 ## 代码在哪
@@ -38,7 +38,8 @@
 - `pnpm run test`：包括 `test/code/facts.test.ts`，对每个工具跑同一套检查（每条事实有原话、中英文齐全且占位符一致、正例必报、反例必不报），加工具不用另写测试；`docs.test.ts` 在 `docs/facts*.md` 过期时失败（`pnpm run docs` 重新生成）。
 - `pnpm run sources`：逐条去页面核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）。新增或修改来源后必须跑。
 - `pnpm run sync --check`：停止维护日期和官方数据比对。
-- `pnpm run corpus`（联网，不在 CI 里，缓存目录用 `CHOUS_CORPUS_DIR`）：`test/corpus.json` 锁定 57 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行核对事实，确认正确才 `pnpm run corpus --update`。
+- **没有真实实例，就不算支持。** 新规则（尤其是新语言、新框架）要找到真实项目里的违例和守规的例子，锁定 commit 加进 `test/corpus.json`，逐条核对。`docs/facts*.md` 的「真实命中」一列由语料结论生成，「尚未见到」的规则要如实标出。
+- `pnpm run corpus`（联网，不在 CI 里，缓存目录用 `CHOUS_CORPUS_DIR`）：`test/corpus.json` 锁定 80 个仓库的 commit，结论记录在 `test/corpus.claims.txt`。改规则后必须跑；有差异时逐行核对事实，确认正确才 `pnpm run corpus --update`。
 - `.github/workflows/sources.yml` 每周跑 `sync --check` 和 `sources`，失败说明官方文档变了。
 - `node dist/cli.mjs`：用 chous 检查本仓库，必须没有臭味。
 

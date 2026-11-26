@@ -30,6 +30,7 @@ export default tool({
       id: "pythonPackageName",
       match: /(^|\/)[^/]+\/__init__\.py$/,
       name: folder,
+      ofDirectory: true,
       style: STYLE.lowercase,
       message: {
         en: "package {{name}} has capitals in its name: PEP 8 gives packages all-lowercase names",

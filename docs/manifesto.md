@@ -121,4 +121,4 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | A backup without its original | The name | It may be a backup, or not | Cleanliness | Review |
 | A series of per-version release notes, a pile of work records | At least 5 in one directory | History lives in the changelog and pull requests | Cleanliness | Review |
 
-Test fixtures (`fixtures/`, `testdata/`, `__snapshots__/`) are data and `vendor/` is someone else's code; neither is checked. `tests/`, `examples/` and `playground/` are your own code and are checked like the rest.
+Test fixtures (`fixtures/`, `testdata/`, `__snapshots__/`) are data, and `vendor/`, `third_party/` and `upstream/` hold someone else's code; neither is checked. `tests/`, `examples/` and `playground/` are your own code and are checked like the rest.
