@@ -58,7 +58,7 @@ These are not degrees of badness but degrees of knowledge. There are no errors, 
 How chous makes sure of a fact:
 
 - End-of-life dates exist only for the versions the official data lists. A version missing from it is not reported, and no date is ever inferred.
-- Versions come from what actually runs: `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, `volta.node`, framework dependencies. `engines.node` is a promise of compatibility, not a runtime; it is reported only when every version it allows has ended, as with `^16`.
+- Versions come from what actually runs: `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in any Dockerfile of the project (through any registry, with `ARG` defaults filled in), `volta.node`, framework dependencies. Node codenames (`lts/gallium`) are read through the official schedule. `engines.node` is a promise of compatibility, not a runtime; it is reported only when every version it allows has ended, as with `^16`.
 - A file is known by its content, not its name: `Bud1` in a `.DS_Store`, the "must NOT be checked in" Android writes into `local.properties`, the signature at the start of an installer or executable, the marker files a build tool leaves.
 - When chous quotes someone, the quote lives with its tool (`src/facts/tools/`) and is checked on its page every week. End-of-life dates are written from the makers' data by a program, and compared every week too.
 

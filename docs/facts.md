@@ -14,7 +14,7 @@ Each line is something a tool, platform or package author states about itself, w
 
 Researched 2026-11.
 
-End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: Neve77/comandaflow, ruvnet/symbolic-scribe, shadcn-ui/taxonomy
+End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +2
 
 ### Bun
 

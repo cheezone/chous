@@ -40,6 +40,7 @@ for (const e of FACT_EOL) {
   for (const line of published) {
     if (line.date !== "" && line.date > today) continue; // not ended yet
     const mine = recorded.get(line.version);
+    const index = lines.findIndex((l) => l.version === line.version);
     if (mine === undefined) {
       news++;
       lines.push(line);
@@ -47,13 +48,23 @@ for (const e of FACT_EOL) {
     } else if (mine !== line.date) {
       wrong++;
       console.log(`✗ eol.${e.product} ${line.version}: recorded ${mine}, the data now says ${line.date}`);
+    } else if (line.name && lines[index]!.name !== line.name) {
+      // A codename added to a line already recorded: more of the makers' data, not a change to it.
+      if (lines[index]!.name) {
+        wrong++;
+        console.log(`✗ eol.${e.product} ${line.version}: recorded codename ${lines[index]!.name}, the data now says ${line.name}`);
+      } else {
+        news++;
+        lines[index] = { ...lines[index]!, name: line.name };
+        console.log(`+ eol.${e.product} ${line.version} codename ${line.name}`);
+      }
     }
   }
   for (const line of e.versions) {
     if (!published.some((p) => p.version === line.version)) console.log(`? eol.${e.product} ${line.version}: gone from the data; kept, since it ended`);
   }
-  if (!check && lines.length > e.versions.length) {
-    const body = lines.sort(order).map((l) => `  { version: "${l.version}", date: "${l.date}" },`).join("\n");
+  if (!check && news) {
+    const body = lines.sort(order).map((l) => `  { version: "${l.version}", date: "${l.date}"${l.name ? `, name: "${l.name}"` : ""} },`).join("\n");
     writeFileSync(
       resolve(import.meta.dirname, `../src/facts/data/eol/${e.product}.ts`),
       `// Written by \`pnpm run sync\` from ${e.data} — do not edit.\nexport default [\n${body}\n] as const;\n`,

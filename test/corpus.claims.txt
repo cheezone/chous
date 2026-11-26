@@ -103,8 +103,10 @@ Neve77/comandaflow	review	cleanliness	installed/comandaflow.exe	issue.leftover.e
 Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win32/nssm.exe	issue.leftover.executable	{}
 Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win64/nssm.exe	issue.leftover.executable	{}
 Neve77/comandaflow	smell	modernity	.nvmrc (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+Neve77/comandaflow	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 Neve77/comandaflow	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 Neve77/comandaflow	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
+Neve77/comandaflow	smell	modernity	frontend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 Neve77/comandaflow	smell	order	./	issue.leftover.rootDocs	{"count":13,"limit":3,"names":"DEPLOYMENT.md, GERENCIADOR_PEDIDOS_GUIDE.md, GETTING_STARTED.md, IMPLEMENTATION_COMPLETE.md, ORDER_MANAGEMENT_IMPLEMENTATION.md, …"}
 QuantumNous/new-api	smell	convention	relay/channel/baidu_v2/	issue.contract.goPackageName	{"name":"baidu_v2","count":2}
 QuantumNous/new-api	smell	convention	relay/channel/zhipu_4v/	issue.contract.goPackageName	{"name":"zhipu_4v","count":6}
@@ -134,6 +136,7 @@ QuantumNous/new-api	smell	order	router/	issue.twins.styles	{"styles":"snake_case
 QuantumNous/new-api	smell	order	service/	issue.twins.styles	{"styles":"snake_case ×88 + kebab-case ×1","examples":"access_token_scope.go, notify-limit.go"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	./	issue.leftover.worklogs	{"count":16,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, DEPLOYMENT_FIX.md, …"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.leftover.script	{}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
 SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
@@ -1048,6 +1051,7 @@ ruvnet/ruflo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"nam
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.public.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	ruflo/src/ruvocal/docker-compose.yml	issue.contract.composeName	{}
+ruvnet/ruflo	smell	modernity	tests/docker-regression/Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeName	{}
 ruvnet/ruflo	smell	modernity	tests/docker-regression/docker-compose.yml	issue.contract.composeVersion	{}
 ruvnet/ruflo	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}

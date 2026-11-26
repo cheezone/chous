@@ -63,7 +63,12 @@ export type Fact<Id extends string = string> = {
 };
 
 /** A published end-of-life line: `date` is YYYY-MM-DD, or "" when the makers say "no longer supported" without one. */
-export type EolLine = { version: string; date: string };
+export type EolLine = {
+  version: string;
+  date: string;
+  /** The line's codename, lowercased, where its makers give one: Node 16 is `gallium` (`lts/gallium`, `node:gallium`). */
+  name?: string;
+};
 
 /** A tool's own end-of-life schedule. */
 export type EolDef<P extends string = string> = {

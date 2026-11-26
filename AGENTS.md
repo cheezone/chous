@@ -15,7 +15,7 @@
 - **事实错了才是误报，审美不同不是。** 知名项目被报不是误报。事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。
 - 只收官方文档里写明的东西：位置、命名、上限、旧格式、停止维护日期。官方没写的不推断（Angular 只说「不再支持」，就只报这句，不编日期）。引用以原文为准，例如 `.env` 可以提交，只有 `.env*.local` 不行。
 - 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
-- 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile `FROM`、`volta.node`、框架依赖）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
+- 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何 Dockerfile 的 `FROM`（展开 `ARG`、允许任意镜像仓库）、`volta.node`、框架依赖；Node 代号按 `schedule.json` 的 `codename` 换算）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
 - 工具并存只说「一件事两个工具」，不声称它们会互相破坏。
 - 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。

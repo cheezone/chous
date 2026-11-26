@@ -14,7 +14,7 @@
 
 调研于 2026-11。
 
-停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：Neve77/comandaflow, ruvnet/symbolic-scribe, shadcn-ui/taxonomy
+停止维护：Node 的 20 个版本，从 4 到 25；最近一个在 2026-06-01 停止维护。来源：github.com；真实命中：Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +2
 
 ### Bun
 

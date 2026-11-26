@@ -1,10 +1,11 @@
 import { readFileSync } from "node:fs";
-import { basename, resolve } from "node:path";
+import { resolve } from "node:path";
 import type { LifecycleRule, Rule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
 import { EOL, eolDate, hasEnded, lineOf, type Product } from "../../taste/eol";
+import { NOT_OURS } from "../../taste/hygiene";
 import { FACT_EOL } from "../../facts";
 
 type Found = { product: Product; version: string; file: string };
@@ -61,6 +62,26 @@ export function enginesMajors(spec: string): number[] | undefined {
   return majors.size ? [...majors].sort((a, b) => a - b) : undefined;
 }
 
+const DOCKERFILE = /^(Docker|Container)file(\..+)?$|\.(docker|container)file$/i;
+
+/**
+ * The node and python images a Dockerfile builds from, with their tags: through
+ * any registry (`public.ecr.aws/docker/library/node:14`), with `ARG` defaults
+ * filled in (`ARG V=16` then `FROM node:${V}`).
+ */
+function baseImages(text: string): Array<[Product, string]> {
+  const args = new Map<string, string>();
+  for (const m of text.matchAll(/^\s*ARG\s+(\w+)=["']?([^\s"']+)/gim)) args.set(m[1]!, m[2]!);
+  const expanded = text.replace(/\$\{(\w+)(?::?-([^}]*))?\}|\$(\w+)/g, (all, braced, fallback, bare) => args.get(braced ?? bare) ?? fallback ?? all);
+  return [...expanded.matchAll(/^\s*FROM\s+(?:--\S+\s+)*(?:[\w.-]+(?::\d+)?\/)*(node|python):([\w.-]+)/gim)].map((m) => [m[1]!.toLowerCase() as Product, m[2]!]);
+}
+
+/** `lts/gallium`, `gallium`, `fermium-alpine`: the version a codename stands for, from its makers' schedule. */
+function byCodename(product: Product, raw: string): string | undefined {
+  const name = /^(?:lts\/)?([a-z]+)(?:-[\w.]+)?$/i.exec(raw.trim())?.[1]?.toLowerCase();
+  return name ? EOL[product].versions.find((v) => v.name === name)?.version : undefined;
+}
+
 /**
  * Versions the project actually runs on: version files, Dockerfiles, Volta's
  * pin and framework deps. `engines` is a promise of compatibility, not a
@@ -71,7 +92,7 @@ function findVersions(context: RuleValidatorContext): Found[] {
   const found: Found[] = [];
   const at = (name: string) => resolve(root, name);
   const add = (product: Product, raw: string | undefined, file: string) => {
-    const version = raw ? pinnedVersion(raw) : undefined;
+    const version = raw ? (pinnedVersion(raw) ?? byCodename(product, raw)) : undefined;
     if (version) found.push({ product, version, file });
   };
 
@@ -86,11 +107,10 @@ function findVersions(context: RuleValidatorContext): Found[] {
       if (tool === "python") add("python", version, ".tool-versions");
     }
   }
-  for (const entry of snapshot.listDir(".")) {
-    if (entry.isDir || !/^(Docker|Container)file/.test(entry.name)) continue;
-    for (const m of read(entry.absPath).matchAll(/^FROM\s+(?:--\S+\s+)*(?:docker\.io\/)?(?:library\/)?(node|python):(\d+(?:\.\d+)?)/gim)) {
-      add(m[1] as Product, m[2], basename(entry.absPath));
-    }
+  // Every Dockerfile of the project (`docker/Dockerfile`, `api.Dockerfile`): what each image runs.
+  for (const [rel, entry] of snapshot.byRel) {
+    if (entry.isDir || !DOCKERFILE.test(entry.name) || NOT_OURS.test(rel)) continue;
+    for (const [image, tag] of baseImages(read(entry.absPath))) add(image, tag, rel);
   }
 
   const manifest = snapshot.manifest;
