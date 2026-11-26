@@ -15,7 +15,7 @@ for (const [lang, file] of [["en", "facts.md"], ["zh", "facts.zh.md"]] as const)
   const want = catalog(lang);
   let have = "";
   try {
-    have = readFileSync(path, "utf8");
+    have = readFileSync(path, "utf8").replace(/\r\n/g, "\n"); // CRLF from a Windows checkout is not staleness
   } catch {
     // not written yet
   }
