@@ -4,7 +4,7 @@
 
 Each line is something a tool, platform or package author states about itself, with their own words behind it (`chous --verbose` shows them). chous reports it when a project goes against it.
 
-37 tools · 46 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
+42 tools · 57 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
 
 ## Tools
 
@@ -128,6 +128,11 @@ Researched 2026-11.
 
 Researched 2026-11.
 
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | components named in neither PascalCase nor kebab-case (…, e.g. …): Vue's style guide allows only those two | vuejs.org |
+| Order | components named in … (…), while the rest use …: Vue's style guide says always one or the other | vuejs.org |
+
 End of life: 1 versions of Vue, from 2 to 2; the latest ended on 2023-12-31. Source: v2.vuejs.org
 
 ### Nuxt
@@ -140,6 +145,10 @@ End of life: 3 versions of Nuxt, from 1 to 3; the latest ended on 2026-07-31. So
 
 Researched 2026-11.
 
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | files whose words are not separated by hyphens (…, e.g. …): Angular's style guide names files like user-profile.ts | angular.dev |
+
 End of life: Angular 2 to 19 are no longer supported (no date given). Source: angular.dev
 
 ### Electron
@@ -147,6 +156,14 @@ End of life: Angular 2 to 19 are no longer supported (no date given). Source: an
 Researched 2026-11.
 
 End of life: 41 versions of Electron, from 2 to 42; the latest ended on 2026-10-20. Source: releases.electronjs.org
+
+### Rust
+
+Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | Rust module files not in snake_case (…, e.g. …): Rust's API guidelines name modules in snake_case | rust-lang.github.io |
 
 ### Cargo
 
@@ -169,6 +186,11 @@ Researched 2026-11.
 ### Python
 
 Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org |
+| Convention | package … has capitals in its name: PEP 8 gives packages all-lowercase names | peps.python.org |
 
 End of life: 13 versions of Python, from 2.6 to 3.10; the latest ended on 2026-10-01. Source: peps.python.org
 
@@ -209,6 +231,39 @@ Researched 2026-11.
 | Taste | chous says | Source |
 |---|---|---|
 | Order | never read: mypy takes one config per directory, here …, and does not merge | mypy.readthedocs.io |
+
+### Go
+
+Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | package …: Go package names are lower case and single words, with no underscores or mixedCaps | go.dev |
+
+### Dart
+
+Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | Dart files not in lowercase_with_underscores (…, e.g. …): Effective Dart names source files that way | dart.dev |
+| Convention | directory … holds Dart files and is not in lowercase_with_underscores: Effective Dart names directories that way | dart.dev |
+
+### Kotlin
+
+Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | Kotlin files not in upper camel case (…, e.g. …): Kotlin's coding conventions name files like ProcessDeclarations.kt | kotlinlang.org |
+
+### Elixir
+
+Researched 2026-11.
+
+| Taste | chous says | Source |
+|---|---|---|
+| Convention | Elixir files not in snake_case (…, e.g. …): Elixir's naming conventions say file names follow the module in snake_case | hexdocs.pm |
 
 ### GitHub
 

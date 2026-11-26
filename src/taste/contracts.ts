@@ -21,7 +21,7 @@ export type Contract = {
   /** Params of the finding, or undefined when the file keeps the contract. */
   check(file: ContractFile): Record<string, string | number> | undefined;
   /** Report each group once, not each file in it (`.claude/commands/` can hold hundreds): the group a file belongs to. */
-  groupBy?(rel: string): string;
+  groupBy?(rel: string, file: ContractFile): string;
   /** Also look inside fixtures and vendored code: GitHub's limits apply to every file. */
   everywhere?: boolean;
 };

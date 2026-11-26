@@ -61,8 +61,13 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
   return undefined;
 }
 
-/** Source files whose names follow a convention. Rust is left to rustc's own `non_snake_case`. */
-export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro|py|go|zig|rb|kt|swift|dart)$/;
+/**
+ * Source files whose directory should keep to one naming style. Languages that
+ * prescribe the style themselves are held to it by their facts instead
+ * (src/facts/tools/: Rust, Dart, Kotlin, Elixir, Vue), and so are camelCase
+ * Python modules (PEP 8) and an Angular app's TypeScript.
+ */
+export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|svelte|astro|py|go|zig|rb|swift)$/;
 
 /** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
 export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client|mdx-components)\./;
@@ -137,11 +142,12 @@ export const EXECUTABLES: Array<{ ext: RegExp; magic: string[] }> = [
 ];
 
 /**
- * Data, and other people's code: test fixtures may hold anything, `vendor/`
- * is someone else's taste. Tests and examples are the project's own code and
- * are checked like the rest.
+ * Data, and other people's code: test fixtures may hold anything (`fixtures/`,
+ * and named ones like Nuxt's `components-fixture/`), `vendor/` is someone
+ * else's taste. Tests and examples are the project's own code and are checked
+ * like the rest.
  */
-export const NOT_OURS = /(^|\/)(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
+export const NOT_OURS = /(^|\/)([\w.-]+-)?(fixtures?|__fixtures__|testdata|test-data|__snapshots__|vendor|third_party)\//i;
 
 /**
  * Files known by what their maker writes into them, not by name alone: a file

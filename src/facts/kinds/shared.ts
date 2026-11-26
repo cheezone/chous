@@ -7,7 +7,7 @@ export type Common<Id extends string> = {
   sources: Source[];
   examples: Examples;
   value?: Value;
-  groupBy?(rel: string): string;
+  groupBy?(rel: string, file: ContractFile): string;
   /** Also look inside fixtures and vendored code (a platform limit applies to every file). */
   everywhere?: boolean;
 };

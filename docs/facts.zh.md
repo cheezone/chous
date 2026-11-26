@@ -4,7 +4,7 @@
 
 每一行都是工具、平台或包作者对自己的说法，背后有他们的原话（`chous --verbose` 会显示）。项目违背它时，chous 就报出来。
 
-37 个工具 · 46 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
+42 个工具 · 57 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
 
 ## 工具
 
@@ -128,6 +128,11 @@
 
 调研于 2026-11。
 
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 既不是 PascalCase 也不是 kebab-case 的组件（… 个，如 …）：Vue 风格指南只允许这两种 | vuejs.org |
+| 秩序 | 用 … 命名的组件（… 个），其余都用 …：Vue 风格指南要求始终只用一种 | vuejs.org |
+
 停止维护：Vue 的 1 个版本，从 2 到 2；最近一个在 2023-12-31 停止维护。来源：v2.vuejs.org
 
 ### Nuxt
@@ -140,6 +145,10 @@
 
 调研于 2026-11。
 
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 单词之间没用连字符分隔的文件（… 个，如 …）：Angular 风格指南要求文件名像 user-profile.ts 这样 | angular.dev |
+
 停止维护：Angular 2 到 19 官方已不再支持（没有给出日期）。来源：angular.dev
 
 ### Electron
@@ -147,6 +156,14 @@
 调研于 2026-11。
 
 停止维护：Electron 的 41 个版本，从 2 到 42；最近一个在 2026-10-20 停止维护。来源：releases.electronjs.org
+
+### Rust
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 不是 snake_case 的 Rust 模块文件（… 个，如 …）：Rust API 指南规定模块用 snake_case | rust-lang.github.io |
 
 ### Cargo
 
@@ -169,6 +186,11 @@
 ### Python
 
 调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 名字带大写字母的 Python 文件（… 个，如 …）：PEP 8 规定模块名全小写 | peps.python.org |
+| 约定 | 包 … 的名字带大写字母：PEP 8 规定包名全小写 | peps.python.org |
 
 停止维护：Python 的 13 个版本，从 2.6 到 3.10；最近一个在 2026-10-01 停止维护。来源：peps.python.org
 
@@ -209,6 +231,39 @@
 | 品味 | chous 说 | 来源 |
 |---|---|---|
 | 秩序 | 永远不会被读：mypy 每个目录只用一份配置，这里是 …，而且不合并 | mypy.readthedocs.io |
+
+### Go
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | package …：Go 的包名是一个小写单词，不用下划线，也不用驼峰 | go.dev |
+
+### Dart
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 不是 lowercase_with_underscores 的 Dart 文件（… 个，如 …）：Effective Dart 规定源文件这样命名 | dart.dev |
+| 约定 | 目录 … 放着 Dart 文件，但不是 lowercase_with_underscores：Effective Dart 规定目录这样命名 | dart.dev |
+
+### Kotlin
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 不是大驼峰的 Kotlin 文件（… 个，如 …）：Kotlin 编码规范要求文件名像 ProcessDeclarations.kt 这样 | kotlinlang.org |
+
+### Elixir
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 |
+|---|---|---|
+| 约定 | 不是 snake_case 的 Elixir 文件（… 个，如 …）：Elixir 命名约定规定文件名按模块名的 snake_case 来写 | hexdocs.pm |
 
 ### GitHub
 

@@ -149,7 +149,7 @@ describe("leftovers", () => {
 });
 
 describe("twins", () => {
-  it("warns when one directory names files two ways, not for PascalCase or tool-chosen names", async () => {
+  it("warns when one directory names files two ways, not for PascalCase or tool-chosen names; Vue's own rule takes .vue files", async () => {
     expect(
       await findings({
         "src/composables/asyncData.ts": "",
@@ -163,7 +163,7 @@ describe("twins", () => {
         "test/fixtures/fooBar.ts": "",
         "test/fixtures/foo-baz.ts": "",
       }),
-    ).toEqual(["src/composables/"]);
+    ).toEqual(["src/components/UserCard.vue", "src/composables/"]);
   });
 
   it("flags editor files their makers call personal or legacy", async () => {

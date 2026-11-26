@@ -44,6 +44,29 @@ export function major(spec: unknown): number | undefined {
   return m ? Number(m[1]) : undefined;
 }
 
+/**
+ * The directory of the nearest file named `name` at or above this file, as a
+ * prefix of relative paths: `""` for the root, `packages/a/` for a package.
+ * Undefined when there is none.
+ */
+export function nearest(file: ContractFile, name: string): string | undefined {
+  const parts = file.dir ? file.dir.split("/") : [];
+  for (let i = parts.length; i >= 0; i--) {
+    const prefix = parts.slice(0, i).map((p) => `${p}/`).join("");
+    if (file.all.has(`${prefix}${name}`)) return prefix;
+  }
+  return undefined;
+}
+
+/** The project a file belongs to: the directory of its nearest package.json, or the root. */
+export const projectOf = (file: ContractFile) => nearest(file, "package.json") ?? "";
+
+/** The nearest package.json lists this package, in dependencies or devDependencies. */
+export function hasDep(file: ContractFile, name: string): boolean {
+  const pkg = file.pkg();
+  return name in { ...pkg?.devDependencies, ...pkg?.dependencies };
+}
+
 export function depMajor(file: ContractFile, name: string): number | undefined {
   const pkg = file.pkg();
   return major({ ...pkg?.devDependencies, ...pkg?.dependencies }[name]);

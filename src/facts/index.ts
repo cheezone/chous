@@ -23,6 +23,7 @@ import vitest from "./tools/js/vitest";
 import vue from "./tools/js/vue";
 import yarn from "./tools/js/yarn";
 import cargo from "./tools/rust/cargo";
+import rust from "./tools/rust/rust";
 import rustup from "./tools/rust/rustup";
 import django from "./tools/python/django";
 import mypy from "./tools/python/mypy";
@@ -30,6 +31,10 @@ import poetry from "./tools/python/poetry";
 import pytest from "./tools/python/pytest";
 import python from "./tools/python/python";
 import ruff from "./tools/python/ruff";
+import go from "./tools/go/go";
+import dart from "./tools/dart/dart";
+import kotlin from "./tools/kotlin/kotlin";
+import elixir from "./tools/elixir/elixir";
 import github from "./tools/github/github";
 import compose from "./tools/docker/compose";
 import wrangler from "./tools/cloudflare/wrangler";
@@ -63,6 +68,7 @@ export const TOOLS = [
   angular,
   electron,
   // Rust
+  rust,
   cargo,
   rustup,
   // Python
@@ -72,6 +78,11 @@ export const TOOLS = [
   pytest,
   ruff,
   mypy,
+  // Go, Dart, Kotlin, Elixir
+  go,
+  dart,
+  kotlin,
+  elixir,
   // Platforms
   github,
   compose,

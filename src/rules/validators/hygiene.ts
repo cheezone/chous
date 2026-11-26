@@ -295,11 +295,13 @@ function sameRegularFile(a: string, b: string): boolean {
  * (`vite-env.d.ts`, `not-found.tsx`) are not the project's choice.
  */
 function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
+  const angular = context.snapshot.manifest.deps.has("@angular/core");
   const byDir = new Map<string, Map<string, string[]>>();
   for (const [rel, entry] of context.snapshot.byRel) {
     if (entry.isDir || NOT_OURS.test(rel) || !SOURCE_FILE.test(entry.name) || NAME_EXEMPT.test(entry.name)) continue;
+    if (angular && entry.name.endsWith(".ts")) continue; // Angular's style guide: hyphens
     const style = nameStyle(entry.name.split(".")[0]!);
-    if (!style) continue;
+    if (!style || (style === "camelCase" && entry.name.endsWith(".py"))) continue; // PEP 8: no capitals
     const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
     const styles = byDir.get(dir) ?? new Map<string, string[]>();
     styles.set(style, [...(styles.get(style) ?? []), entry.name]);

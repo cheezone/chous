@@ -6,5 +6,6 @@
 export { exclusive, precedence } from "./precedence";
 export { custom, legacy, misplaced, unread } from "./legacy";
 export { limit, measure } from "./limit";
+export { byDirectory, folder, naming, oneStyle, stem, STYLE } from "./naming";
 export { searchOrder } from "./search";
 export { deprecatedKeys, deprecatedTable } from "./toml";

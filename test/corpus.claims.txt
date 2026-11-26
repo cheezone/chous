@@ -17,6 +17,7 @@ Ayato-kosaka/nanitabeyo	review	modernity	app-expo/package.json (dotenv)	issue.de
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-mobile/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	review	modernity	e2e-web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":712,"limit":200}
+Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/__init__.py	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
@@ -288,7 +289,12 @@ nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":
 oven-sh/bun	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":244,"limit":200}
 oven-sh/bun	smell	convention	scripts/verify-baseline-static/CLAUDE.md	issue.contract.claudeMdLines	{"lines":288,"limit":200}
 oven-sh/bun	smell	convention	src/CLAUDE.md	issue.contract.claudeMdLines	{"lines":526,"limit":200}
+oven-sh/bun	smell	convention	src/bun_core/Global.rs	issue.contract.rustModuleName	{"name":"Global","count":1}
+oven-sh/bun	smell	convention	src/bundler/	issue.contract.rustModuleName	{"name":"AstBuilder","count":8}
+oven-sh/bun	smell	convention	src/event_loop/	issue.contract.rustModuleName	{"name":"AnyTaskWithExtraContext","count":4}
 oven-sh/bun	smell	convention	src/format/CLAUDE.md	issue.contract.claudeMdLines	{"lines":428,"limit":200}
+oven-sh/bun	smell	convention	src/http_types/	issue.contract.rustModuleName	{"name":"ETag","count":8}
+oven-sh/bun	smell	convention	src/install_types/NodeLinker.rs	issue.contract.rustModuleName	{"name":"NodeLinker","count":1}
 oven-sh/bun	smell	convention	src/jsc/bindings/v8/CLAUDE.md	issue.contract.claudeMdLines	{"lines":331,"limit":200}
 oven-sh/bun	smell	convention	src/lint/CLAUDE.md	issue.contract.claudeMdLines	{"lines":345,"limit":200}
 oven-sh/bun	smell	convention	test/CLAUDE.md	issue.contract.claudeMdLines	{"lines":247,"limit":200}
@@ -501,7 +507,6 @@ oven-sh/bun	smell	order	test/aot/parallel/packages/commonjs-interop/many-1/	issu
 oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×151 + snake_case ×2","examples":"answers-test-from-source.ts, exact_counts.py"}
 oven-sh/bun	smell	order	test/bundler/	issue.twins.styles	{"styles":"kebab-case ×58 + snake_case ×42 + camelCase ×2","examples":"bun-build-api-dts.test.ts, bundler_allow_unresolved.test.ts, buildNoThrow.ts"}
 oven-sh/bun	smell	order	test/bundler/css/wpt/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"background-computed.test.ts, relative_color_out_of_gamut.test.ts"}
-oven-sh/bun	smell	order	test/bundler/transpiler/react-compiler-fixtures/	issue.twins.styles	{"styles":"kebab-case ×990 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
 oven-sh/bun	smell	order	test/cli/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×3","examples":"aot-builtin-modules-and-computed-paths.test.ts, update_interactive_formatting.test.ts"}
 oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×64 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
 oven-sh/bun	smell	order	test/internal/	issue.twins.styles	{"styles":"kebab-case ×50 + snake_case ×1","examples":"address-sanitizer-sees-wtf-allocations.test.ts, int_from_float.test.ts"}
@@ -539,7 +544,7 @@ oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"keb
 oven-sh/bun	smell	order	test/snapshots/	issue.twins.styles	{"styles":"kebab-case ×105 + snake_case ×4","examples":"array-args-with-default-values.debug.js, spread_with_key.debug.tsx"}
 oven-sh/bun	smell	order	test/snippets/	issue.twins.styles	{"styles":"kebab-case ×30 + snake_case ×1","examples":"array-args-with-default-values.js, spread_with_key.tsx"}
 oxc-project/oxc	review	modernity	tasks/sprout/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
-oxc-project/oxc	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":59}
+oxc-project/oxc	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":48}
 oxc-project/oxc	smell	modernity	apps/oxfmt/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	apps/oxlint/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
 oxc-project/oxc	smell	modernity	napi/minify/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
@@ -557,7 +562,7 @@ pisces19860207/zhengdao	review	cleanliness	docs/reports/	issue.leftover.records	
 pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
 pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
 pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
-rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
+rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":64}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
@@ -805,6 +810,8 @@ vitejs/vite	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×3 + 
 vuejs/core	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
 vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/MotionEST/	issue.contract.pythonModuleName	{"name":"Anandan","count":7}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/genY4M/genY4M.py	issue.contract.pythonModuleName	{"name":"genY4M","count":1}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/resources/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×2","examples":"eventtarget_shim.js, testdriver-actions.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/	issue.twins.styles	{"styles":"snake_case ×59 + kebab-case ×11 + camelCase ×1","examples":"assert_throws_dom_legacy_domexception_names.window.js, cross-document-appendchild-adopts.window.js, getDomExceptionName.window.js"}
 wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/collections/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×1","examples":"getelementsbyclassname-live.window.js, length_readonly.window.js"}

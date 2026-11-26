@@ -1,5 +1,6 @@
 import { tool } from "../../define";
 import { deprecatedKeys, deprecatedTable, precedence } from "../../kinds";
+import { projectOf } from "../../kit";
 
 const MANIFEST = "https://doc.rust-lang.org/cargo/reference/manifest.html";
 
@@ -29,7 +30,7 @@ export default tool({
       table: "package",
       keys: ["authors"],
       // A workspace repeats the field in every crate: one finding, counted.
-      groupBy: () => "**/Cargo.toml",
+      groupBy: (_rel, f) => `${projectOf(f)}**/Cargo.toml`,
       message: {
         en: "{{count}} Cargo.toml files set authors in [package], a field Cargo has deprecated",
         zh: "{{count}} 个 Cargo.toml 在 [package] 里写了 authors，这个字段 Cargo 已废弃",

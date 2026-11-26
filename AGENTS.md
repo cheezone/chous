@@ -17,9 +17,10 @@
 - 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、Dockerfile `FROM`、`volta.node`、框架依赖）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
 - 工具并存只说「一件事两个工具」，不声称它们会互相破坏。
+- 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - **优先级：生态约定先于 AI 工具约定。** AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研（用户量、是否还在维护、是否改名）。
-- 作用域：只有测试数据（`fixtures/`、`testdata/`、`__snapshots__/`）和 `vendor/`、`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 照常检查。
+- 作用域：只有测试数据（`fixtures/`、`components-fixture/` 这类命名的夹具目录、`testdata/`、`__snapshots__/`）和 `vendor/`、`third_party/` 跳过（`NOT_OURS`）；`tests/`、`examples/`、`playground/` 照常检查。
 - **不要**重新引入 `.chous` 配置、DSL、预设、开关规则的选项或任何让用户自定义规则的入口。运行时离线：不联网、不调用 AI、不需要 key。
 
 ## 代码在哪

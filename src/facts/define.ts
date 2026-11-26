@@ -45,8 +45,13 @@ export type Fact<Id extends string = string> = {
   match: RegExp;
   /** Params of the finding, or undefined when the file keeps to the tool's word. */
   check(file: ContractFile): Params | undefined;
-  /** Report each group once, counted, not each file in it: the group a file belongs to. */
-  groupBy?(rel: string): string;
+  /**
+   * Report each group once, counted, not each file in it: the group a file
+   * belongs to, as a path from the root. A group inside a workspace package
+   * resolves to the same path whether the root or the package is linted, so
+   * it is reported once.
+   */
+  groupBy?(rel: string, file: ContractFile): string;
   /** Also look inside fixtures and vendored code. */
   everywhere?: boolean;
   message: Text;

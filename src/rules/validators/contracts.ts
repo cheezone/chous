@@ -81,7 +81,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         const params = contract.check(file);
         if (!params) continue;
         if (contract.groupBy) {
-          const key = `${contract.id}:${contract.groupBy(rel)}`;
+          const key = `${contract.id}:${contract.groupBy(rel, file)}`;
           const group = groups.get(key);
           if (group) group.count++;
           else groups.set(key, { contract, count: 1, first: rel, params });

@@ -230,3 +230,25 @@ describe("Vite, Vitest, Oxc, Cargo and Poetry contracts", () => {
     ).toEqual(["cargoAuthors **/Cargo.toml"]);
   });
 });
+
+describe("findings counted across a project", () => {
+  it("are counted per project, and reported once whether the root or the workspace package is linted", async () => {
+    expect(
+      await contracts({
+        "package.json": JSON.stringify({ name: "root", private: true }),
+        "pnpm-workspace.yaml": "packages:\n  - packages/*\n",
+        "packages/ui/package.json": JSON.stringify({ name: "ui", private: true }),
+        "packages/ui/src/MyButton.vue": "",
+        "packages/ui/src/MyCard.vue": "",
+        "packages/ui/src/user-menu.vue": "",
+        "packages/ui/src/user-list.vue": "",
+        "packages/ui/src/MyIcon.vue": "",
+        "packages/ui/test/fixtures/a-b.vue": "",
+        "examples/demo/package.json": JSON.stringify({ name: "demo", private: true }),
+        "examples/demo/src/demo-app.vue": "",
+        "crate/Cargo.toml": '[package]\nname = "x"\nauthors = ["a"]\n',
+        "packages/ui/native/Cargo.toml": '[package]\nname = "y"\nauthors = ["a"]\n',
+      }),
+    ).toEqual(["cargoAuthors crate/Cargo.toml", "cargoAuthors packages/ui/native/Cargo.toml", "vueFileStyles packages/ui/**/*.vue"]);
+  });
+});

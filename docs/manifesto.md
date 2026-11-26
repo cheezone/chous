@@ -17,7 +17,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 ### Order
 
 - One thing, one name: `test/` beside `tests/`, `plugin/` beside `plugins/`, two files that differ only in case.
-- One directory, one way of naming. kebab, snake or camel is yours to pick; just one.
+- One directory, one way of naming. Where the language prescribes none, kebab, snake or camel is yours to pick; just one.
 - The root is an entrance, not a heap. Besides the files with a claim to the root (README, LICENSE, CONTRIBUTING and the like, AGENTS.md, CLAUDE.md), it holds at most 3 more docs. That is a stance, not a measurement.
 - Hidden files count like any others: a directory starting with `.` does not make what is in it smell any less.
 - Configuration as gathered as it can be without crossing responsibilities: one tool's config in one place, each tool its own.
@@ -32,6 +32,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 - Where a framework documents a convention, follow it. A file the framework never reads (`src/app` beside a root `app/` in Next.js, `pages/` outside `app/` in Nuxt 4) is dead code that looks alive, and stinks worst.
 - Where the vendor gives a limit, keep to it: Codex reads only the first 32 KiB of AGENTS.md, GitHub warns on files over 50 MiB.
 - Where a tool says what it reads, where a file lives or what it is called, follow it: pnpm 11 no longer reads the `pnpm` field of package.json, GitHub Actions reads only `.github/workflows/`. What a tool does not read never takes effect.
+- Where a language or framework says how names are written, follow it: Python modules are all lowercase, a Go package name is one lowercase word, Vue components are always PascalCase or always kebab-case. Where the makers call it "unclear" (Rust crate names) or stay "unopinionated" (Next.js, React), chous prescribes nothing either.
 - What a tool itself calls an older format or location stinks: `.eslintrc` from ESLint 9, `docker-compose.yml`, `.claude/commands/` (merged into skills).
 - Supporting several runtimes is fine, and so is the duplication it needs: `workspaces` in package.json alongside `pnpm-workspace.yaml` lets npm, Yarn and Bun read the workspace too. Only when the two disagree does it stink.
 - The convention is what the official docs say, word for word, and every rule cites them.
@@ -106,6 +107,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | `CLAUDE.md` identical to `AGENTS.md` | Both files have the same text | Keep one; symlink the other or import it with `@AGENTS.md` | Order | Smell |
 | Files and fields a tool does not read: in the wrong place, under the wrong name, shadowed by another, or dropped from some version on | Place, name, the version in use, and the tool's own words | Write what the tool reads, where it reads it | Convention | Smell |
 | Sizes past a limit a tool or platform states (GitHub's file sizes, Codex's AGENTS.md, line limits of agent instructions) | Bytes, lines or characters, and the stated limit | Keep to the stated limit | Convention | Smell |
+| Names that break a language's or framework's naming rules (file names, directory names, or the package name a file declares) | The name, and the style guide's own words | Name things the language's way | Convention | Smell |
 | Names and fields that break a stated spec (npm package names, the Agent Skills spec) | The name or the frontmatter | Follow the spec | Convention | Smell |
 | Directories a framework never reads; capitalised directories it cannot find | The rule as the framework's docs state it | Follow the framework's convention | Convention | Smell |
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
