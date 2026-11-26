@@ -9,11 +9,10 @@
  */
 import type { Value } from "../types";
 import { FACTS, type FactId } from "../facts";
-import { type ContractFile, depMajor, field, frontmatter, lines, major, parseJsonc, pinnedManager, shadowed, sibling, tomlTableKeys } from "../facts/kit";
+import { type ContractFile, field, frontmatter, lines, major, parseJsonc, shadowed, tomlTableKeys } from "../facts/kit";
 
 export type { ContractFile };
 export { field, frontmatter, parseJsonc, tomlTableKeys };
-
 
 export type Contract = {
   id: ContractId;
@@ -53,45 +52,16 @@ export type ContractId =
   | "workflowPlace"
   | "composeVersion"
   | "composeName"
-  | "tailwindConfig"
   | "rustToolchainLegacy"
-  | "npmShrinkwrap"
-  | "npmignoreWithFiles"
-  | "npmName"
-  | "pnpmNpmrc"
-  | "pnpmField"
-  | "yarnrc"
-  | "prettierConfigs"
   | "pytestConfigs"
   | "ruffConfigs"
   | "mypyConfigs"
-  | "tsconfigDeprecated"
   | "nodeVersions"
-  | "vitestWorkspace"
-  | "viteConfigs"
-  | "oxlintConfigs"
   | "poetryFields"
   | FactId;
 
 const KiB = 1024;
 const MiB = 1024 * KiB;
-
-
-/** tsconfig options TypeScript 6.0 deprecated, and TypeScript 7.0 does not support. */
-const TS6_DEPRECATED: Array<[string, (v: unknown) => boolean]> = [
-  ["target", (v) => typeof v === "string" && v.toLowerCase() === "es5"],
-  ["downlevelIteration", (v) => v !== undefined],
-  ["moduleResolution", (v) => typeof v === "string" && ["node", "node10", "classic"].includes(v.toLowerCase())],
-  ["module", (v) => typeof v === "string" && ["amd", "umd", "system", "systemjs"].includes(v.toLowerCase())],
-  ["baseUrl", (v) => v !== undefined],
-  ["esModuleInterop", (v) => v === false],
-  ["allowSyntheticDefaultImports", (v) => v === false],
-  ["alwaysStrict", (v) => v === false],
-  ["outFile", (v) => v !== undefined],
-];
-
-/** pnpm 11 reads only registry, auth, TLS and network settings from .npmrc. */
-const PNPM_NPMRC = /^(registry|@[^:]+:registry|\/\/.*|_auth|_authToken|always-auth|ca|cafile|cert|certfile|key|keyfile|strict-ssl|proxy|http-proxy|https-proxy|no-proxy|noproxy|local-address|git-shallow-hosts|email|username|_password|tokenHelper)$/;
 
 /** Node major pinned by a version file, or undefined. */
 function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
@@ -104,7 +74,6 @@ function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
 /** [tool.poetry] fields Poetry deprecated in favor of the standard [project] table. */
 // `scripts` is left out: only console and gui scripts moved to project.scripts; file scripts stay.
 const POETRY_DEPRECATED = ["name", "description", "license", "authors", "maintainers", "homepage", "repository", "documentation", "keywords", "extras", "plugins", "urls"];
-
 
 const SKILL = /(^|\/)SKILL\.md$/;
 /** Agent Skills spec: 1-64 of a-z, 0-9 and single hyphens, not at either end. */
@@ -331,17 +300,6 @@ export const CONTRACTS: Contract[] = [
     check: () => ({}),
   },
   {
-    // Tailwind v4: JavaScript config files "are no longer detected automatically" — only with @config.
-    id: "tailwindConfig",
-    value: "convention",
-    match: /(^|\/)tailwind\.config\.(js|cjs|mjs|ts|cts|mts)$/,
-    check: (f) => {
-      const tailwind = depMajor(f, "tailwindcss");
-      if (tailwind === undefined || tailwind < 4) return undefined;
-      return f.cssLoadsConfig() ? undefined : { version: tailwind };
-    },
-  },
-  {
     // rustup: a rust-toolchain file holding just a toolchain name is the "legacy format".
     id: "rustToolchainLegacy",
     value: "modernity",
@@ -350,99 +308,8 @@ export const CONTRACTS: Contract[] = [
   },
 
   // ── npm, pnpm, Yarn ──────────────────────────────────────────────
-  {
-    // npm: "As of npm v12, npm-shrinkwrap.json is no longer read or written by npm."
-    id: "npmShrinkwrap",
-    value: "modernity",
-    match: /(^|\/)npm-shrinkwrap\.json$/,
-    check: () => ({}),
-  },
-  {
-    // npm: a root .npmignore "will not override the files field".
-    id: "npmignoreWithFiles",
-    value: "convention",
-    match: /(^|\/)\.npmignore$/,
-    check: (f) => {
-      const pkg = parseJsonc(f.read(sibling(f, "package.json")));
-      return pkg && Array.isArray(pkg.files) ? {} : undefined;
-    },
-  },
-  {
-    // npm: a name is at most 214 characters, lowercase for new packages, no leading dot or underscore unscoped, URL-safe.
-    id: "npmName",
-    value: "convention",
-    match: /(^|\/)package\.json$/,
-    check: (f) => {
-      const pkg = parseJsonc(f.text());
-      const name = pkg?.name;
-      if (!pkg || pkg.private === true || typeof name !== "string") return undefined;
-      const scoped = name.startsWith("@");
-      const bad = name.length > 214 || name !== name.toLowerCase() || (!scoped && /^[._]/.test(name)) || /[^a-z0-9@/._~-]/.test(name.toLowerCase());
-      return bad ? { name } : undefined;
-    },
-  },
-  {
-    // pnpm 11: "pnpm no longer reads non-auth settings from .npmrc".
-    id: "pnpmNpmrc",
-    value: "convention",
-    match: /^\.npmrc$/,
-    check: (f) => {
-      if ((pinnedManager(f, "pnpm") ?? 0) < 11) return undefined;
-      const keys = f
-        .text()
-        .split(/\r?\n/)
-        .map((l) => l.trim())
-        .filter((l) => l && !/^[#;]/.test(l) && l.includes("="))
-        .map((l) => l.slice(0, l.indexOf("=")).trim())
-        .filter((k) => !PNPM_NPMRC.test(k));
-      return keys.length ? { keys: [...new Set(keys)].join(", ") } : undefined;
-    },
-  },
-  {
-    // pnpm 11: "pnpm no longer reads the pnpm field in package.json".
-    id: "pnpmField",
-    value: "convention",
-    match: /^package\.json$/,
-    check: (f) => ((pinnedManager(f, "pnpm") ?? 0) >= 11 && parseJsonc(f.text())?.pnpm !== undefined ? {} : undefined),
-  },
-  {
-    // Yarn Modern: "now uses .yarnrc.yml. Any other file is now ignored".
-    id: "yarnrc",
-    value: "convention",
-    match: /(^|\/)\.yarnrc$/,
-    check: (f) => ((pinnedManager(f, "yarn") ?? 0) >= 2 || f.all.has(sibling(f, ".yarnrc.yml")) ? {} : undefined),
-  },
 
   // ── Configs read by precedence: one per directory, the rest never ─
-  {
-    // Prettier: config files "in order of precedence".
-    id: "prettierConfigs",
-    value: "order",
-    match: /(^|\/)(package\.json|\.prettierrc(\.(json|yml|yaml|json5|js|ts|mjs|mts|cjs|cts|toml))?|prettier\.config\.(js|ts|mjs|mts|cjs|cts))$/,
-    check: (f) =>
-      shadowed(f, [
-        // A top-level "prettier" key, not the devDependency of that name.
-        ["package.json", (text) => parseJsonc(text)?.prettier !== undefined],
-        [".prettierrc"],
-        [".prettierrc.json"],
-        [".prettierrc.yml"],
-        [".prettierrc.yaml"],
-        [".prettierrc.json5"],
-        [".prettierrc.js"],
-        ["prettier.config.js"],
-        [".prettierrc.ts"],
-        ["prettier.config.ts"],
-        [".prettierrc.mjs"],
-        ["prettier.config.mjs"],
-        [".prettierrc.mts"],
-        ["prettier.config.mts"],
-        [".prettierrc.cjs"],
-        ["prettier.config.cjs"],
-        [".prettierrc.cts"],
-        ["prettier.config.cts"],
-        [".prettierrc.toml"],
-      ]),
-  },
   {
     // pytest: pytest.toml, then pytest.ini, "take precedence over other files, even when empty".
     id: "pytestConfigs",
@@ -475,18 +342,6 @@ export const CONTRACTS: Contract[] = [
 
   // ── TypeScript, Node ─────────────────────────────────────────────
   {
-    // TypeScript 6.0 deprecated these options; "TypeScript 7.0 will not support any of these deprecated options".
-    id: "tsconfigDeprecated",
-    value: "modernity",
-    match: /(^|\/)tsconfig(\.[\w.-]+)?\.json$/,
-    check: (f) => {
-      const options = parseJsonc(f.text())?.compilerOptions;
-      if (!options || typeof options !== "object") return undefined;
-      const found = TS6_DEPRECATED.filter(([key, bad]) => key in options && bad(options[key])).map(([key]) => `${key}: ${JSON.stringify(options[key])}`);
-      return found.length ? { options: found.join(", ") } : undefined;
-    },
-  },
-  {
     // Two files pinning Node to different majors: one fact said twice, and the two disagree.
     id: "nodeVersions",
     value: "order",
@@ -500,30 +355,6 @@ export const CONTRACTS: Contract[] = [
   },
 
   // ── Vite, Vitest, Oxc ────────────────────────────────────────────
-  {
-    // Vitest: "The workspace is deprecated since 3.2 and replaced with the projects configuration."
-    id: "vitestWorkspace",
-    value: "modernity",
-    match: /(^|\/)vitest\.workspace\.(js|mjs|cjs|ts|mts|cts|json)$/,
-    check: () => ({}),
-  },
-  {
-    // Vite reads the first of DEFAULT_CONFIG_FILES it finds: .js, .mjs, .ts, .cjs, .mts, .cts.
-    id: "viteConfigs",
-    value: "order",
-    match: /(^|\/)vite\.config\.(js|mjs|ts|cjs|mts|cts)$/,
-    check: (f) => shadowed(f, ["js", "mjs", "ts", "cjs", "mts", "cts"].map((e) => [`vite.config.${e}`])),
-  },
-  {
-    // Oxlint: "You can use only one config file per directory".
-    id: "oxlintConfigs",
-    value: "order",
-    match: /(^|\/)(\.oxlintrc\.jsonc?|oxlint\.config\.m?ts)$/,
-    check: (f) => {
-      const all = [".oxlintrc.json", ".oxlintrc.jsonc", "oxlint.config.ts", "oxlint.config.mts"].filter((n) => f.all.has(sibling(f, n)));
-      return all.length > 1 && all[0] === f.name ? { files: all.join(", ") } : undefined;
-    },
-  },
 
   // ── Rust, Python packaging ───────────────────────────────────────
   {

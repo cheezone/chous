@@ -1,4 +1,8 @@
 import { defineTool } from "../types";
+import facts from "../../facts/tools/js/oxlint";
+
+/** Detected by the files the facts declare: one list, no copy to drift. */
+const FILES = [...facts.configs];
 
 export default defineTool({
   id: "oxlint",
@@ -6,10 +10,10 @@ export default defineTool({
   roles: {
     linter: {
       signals: [
-        { type: "files", patterns: [".oxlintrc.json", "oxlint.config.ts", "oxlint.config.js"] },
+        { type: "files", patterns: FILES },
         { type: "deps", names: ["oxlint"] },
       ],
-      files: [".oxlintrc.json", "oxlint.config.ts", "oxlint.config.js"],
+      files: FILES,
     },
   },
 });

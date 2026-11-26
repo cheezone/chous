@@ -4,9 +4,32 @@
  */
 import type { EolDef, Fact, Source, Tool } from "./define";
 import eslint from "./tools/js/eslint";
+import npm from "./tools/js/npm";
+import oxlint from "./tools/js/oxlint";
+import pnpm from "./tools/js/pnpm";
+import prettier from "./tools/js/prettier";
+import tailwind from "./tools/js/tailwind";
+import typescript from "./tools/js/typescript";
+import vite from "./tools/js/vite";
+import vitest from "./tools/js/vitest";
+import yarn from "./tools/js/yarn";
 import cargo from "./tools/rust/cargo";
 
-export const TOOLS = [eslint, cargo] as const satisfies readonly Tool[];
+export const TOOLS = [
+  // JavaScript and TypeScript
+  npm,
+  pnpm,
+  yarn,
+  typescript,
+  eslint,
+  oxlint,
+  prettier,
+  vite,
+  vitest,
+  tailwind,
+  // Rust
+  cargo,
+] as const satisfies readonly Tool[];
 
 type Facts = (typeof TOOLS)[number]["facts"][number];
 /** The id of every fact, so `issue.contract.<id>` stays a typed message key. */

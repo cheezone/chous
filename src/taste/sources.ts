@@ -270,13 +270,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "Compose also supports docker-compose.yaml and docker-compose.yml for backwards compatibility of earlier versions.",
     },
   ],
-  "issue.contract.tailwindConfig": [
-    {
-      url: "https://tailwindcss.com/docs/upgrade-guide#using-a-javascript-config-file",
-      check: `${GH}/tailwindlabs/tailwindcss.com/main/src/docs/upgrade-guide.mdx`,
-      quote: "JavaScript config files are still supported for backward compatibility, but they are no longer detected automatically in v4.",
-    },
-  ],
   "issue.contract.rustToolchainLegacy": [
     {
       url: "https://rust-lang.github.io/rustup/overrides.html#the-toolchain-file",
@@ -284,26 +277,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "For backwards compatibility, rust-toolchain files also support a legacy format",
     },
   ],
-  "issue.contract.npmShrinkwrap": [
-    { url: "https://docs.npmjs.com/cli/configuring-npm/package-lock-json", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-lock-json.md`, quote: "As of npm v12, npm-shrinkwrap.json is no longer read or written by npm." },
-  ],
-  "issue.contract.npmignoreWithFiles": [
-    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#files", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "At the root of your package it will not override the \"files\" field" },
-  ],
-  "issue.contract.npmName": [
-    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#name", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "The name must be less than or equal to 214 characters." },
-    { url: "https://docs.npmjs.com/cli/configuring-npm/package-json#name", check: `${GH}/npm/cli/latest/docs/lib/content/configuring-npm/package-json.md`, quote: "New packages must not have uppercase letters in the name." },
-  ],
-  "issue.contract.pnpmNpmrc": [{ url: "https://pnpm.io/blog/releases/11.0", check: `${GH}/pnpm/pnpm.io/main/blog/releases/11.0.md`, quote: "pnpm no longer reads non-auth settings from .npmrc." }],
-  "issue.contract.pnpmField": [{ url: "https://pnpm.io/blog/releases/11.0", check: `${GH}/pnpm/pnpm.io/main/blog/releases/11.0.md`, quote: "pnpm no longer reads the pnpm field in package.json." }],
-  "issue.contract.yarnrc": [
-    {
-      url: "https://yarnpkg.com/getting-started/migration",
-      check: `${GH}/yarnpkg/berry/master/packages/docusaurus/docs/getting-started/migrating/steps.mdx`,
-      quote: "Yarn Modern now uses .yarnrc.yml. Any other file is now ignored",
-    },
-  ],
-  "issue.contract.prettierConfigs": [{ url: "https://prettier.io/docs/configuration", check: `${GH}/prettier/prettier/main/docs/configuration.md`, quote: "You can configure Prettier via (in order of precedence):" }],
   "issue.contract.pytestConfigs": [
     { url: "https://docs.pytest.org/en/stable/reference/customize.html", check: `${GH}/pytest-dev/pytest/main/doc/en/reference/customize.rst`, quote: "pytest.ini files take precedence over other files (except pytest.toml and .pytest.toml), even when empty." },
   ],
@@ -316,22 +289,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ],
   "issue.contract.mypyConfigs": [
     { url: "https://mypy.readthedocs.io/en/stable/config_file.html", check: `${GH}/python/mypy/master/docs/source/config_file.rst`, quote: "It is important to understand that there is no merging of configuration" },
-  ],
-  "issue.contract.tsconfigDeprecated": [
-    {
-      url: "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-6-0.html",
-      check: `${GH}/microsoft/TypeScript-Website/v2/packages/documentation/copy/en/release-notes/TypeScript%206.0.md`,
-      quote: "however, note that TypeScript 7.0 will not support any of these deprecated options.",
-    },
-  ],
-  "issue.contract.vitestWorkspace": [
-    { url: "https://vitest.dev/guide/projects", check: `${GH}/vitest-dev/vitest/main/docs/guide/projects.md`, quote: "The workspace is deprecated since 3.2 and replaced with the projects configuration." },
-  ],
-  "issue.contract.viteConfigs": [
-    { url: "https://github.com/vitejs/vite/blob/main/packages/vite/src/node/constants.ts", check: `${GH}/vitejs/vite/main/packages/vite/src/node/constants.ts`, quote: "'vite.config.js', 'vite.config.mjs', 'vite.config.ts', 'vite.config.cjs', 'vite.config.mts', 'vite.config.cts'," },
-  ],
-  "issue.contract.oxlintConfigs": [
-    { url: "https://oxc.rs/docs/guide/usage/linter/config.html", quote: "You can use only one config file per directory: JSON and TypeScript configs cannot coexist" },
   ],
   "issue.contract.poetryFields": [
     { url: "https://python-poetry.org/docs/pyproject/", check: `${GH}/python-poetry/poetry/main/docs/pyproject.md`, quote: "Deprecated: Use project.name instead." },

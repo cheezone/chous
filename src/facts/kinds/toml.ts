@@ -1,6 +1,6 @@
 import { tomlTableKeys } from "../kit";
 import type { Fact, Params, Text } from "./types";
-import { type Common, escape, named } from "./shared";
+import { build, type Common, escape, named } from "./shared";
 
 /**
  * Keys a tool deprecated in a table of its TOML manifest. Dotted keys count
@@ -17,11 +17,11 @@ export function deprecatedKeys<const Id extends string>(
     message: Text;
   },
 ): Fact<Id> {
-  return {
-    id: spec.id,
-    value: spec.value ?? "modernity",
-    match: named([spec.file]),
-    check: (f): Params | undefined => {
+  return build(
+    spec,
+    "modernity",
+    named([spec.file]),
+    (f): Params | undefined => {
       const text = f.text();
       const keys = tomlTableKeys(text, spec.table).filter((k) => spec.keys.includes(k));
       const tables = spec.tables ? spec.keys.filter((k) => new RegExp(`^\\[${escape(`${spec.table}.${k}`)}\\]`, "m").test(text)) : [];
@@ -29,25 +29,14 @@ export function deprecatedKeys<const Id extends string>(
       if (!found.length) return undefined;
       return spec.keys.length > 1 ? { fields: found.join(", ") } : {};
     },
-    groupBy: spec.groupBy,
-    message: spec.message,
-    sources: spec.sources,
-    examples: spec.examples,
-  };
+    spec.message,
+  );
 }
 
 /** A table a tool deprecated, e.g. Cargo's `[replace]`. */
 export function deprecatedTable<const Id extends string>(
   spec: Common<Id> & { file: string; table: string; message: Text },
 ): Fact<Id> {
-  return {
-    id: spec.id,
-    value: spec.value ?? "modernity",
-    match: named([spec.file]),
-    check: (f) => (new RegExp(`^\\s*\\[${escape(spec.table)}\\]\\s*(#.*)?$`, "m").test(f.text()) ? {} : undefined),
-    groupBy: spec.groupBy,
-    message: spec.message,
-    sources: spec.sources,
-    examples: spec.examples,
-  };
+  const header = new RegExp(`^\\s*\\[${escape(spec.table)}\\]\\s*(#.*)?$`, "m");
+  return build(spec, "modernity", named([spec.file]), (f) => (header.test(f.text()) ? {} : undefined), spec.message);
 }
