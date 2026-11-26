@@ -120,7 +120,8 @@ describe("names", () => {
     expect(result.issues.map((i) => i.displayPath)).toEqual(["foo#bar/.DS_Store"]);
   });
 
-  it("prints control characters in names escaped, so a name cannot erase or fake a line", async () => {
+  // Windows forbids control characters in names: there the attack cannot exist.
+  it.runIf(posix)("prints control characters in names escaped, so a name cannot erase or fake a line", async () => {
     const name = "x\u001b[2K\u001b[1Aall good";
     const { result } = await timed(project({ [name]: "a", [`${name}.bak`]: "a" }));
     const text = renderReport(result, { verbose: true, color: createColorizer({ enabled: false }), t: getT("en").t });
