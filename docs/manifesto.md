@@ -111,11 +111,11 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Names that break a language's or framework's naming rules (file names, directory names, or the package name a file declares) | The name, and the style guide's own words | Name things the language's way | Convention | Smell |
 | Names and fields that break a stated spec (npm package names, the Agent Skills spec) | The name or the frontmatter | Follow the spec | Convention | Smell |
 | Directories a framework never reads; capitalised directories it cannot find | The rule as the framework's docs state it | Follow the framework's convention | Convention | Smell |
-| Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
+| Build output, caches and virtual environments, whatever the directory is called | A marker file its tool writes (`CACHEDIR.TAG`, `pyvenv.cfg`, `CMakeCache.txt`, a `.tsbuildinfo`), or a build script | Build output is not committed | Cleanliness | Smell |
 | OS junk, crash dumps (ELF core files), `local.properties` | The content the OS or Android Studio writes | No OS junk or machine settings committed | Cleanliness | Smell |
 | Files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets) | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |
 | A backup next to its original (`package.json.bak`, `index - Copy.ts`, `src copy/`; a name that only says old or backup must have the original's exact bytes) | The original is right there | Git already keeps the old version | Cleanliness | Smell |
-| Installers (`.apk`, `.ipa`, `.msi`, `.deb`, …) | The file's signature confirms the format | What users get belongs in releases | Cleanliness | Smell |
+| Installers (`.apk`, `.ipa`, `.msi`, `.deb`, `.dmg`, …) | The file's signature confirms the format | What users get belongs in releases | Cleanliness | Smell |
 | Executables and libraries (`.exe`, `.dll`, `.so`, `.dylib`, and ELF or Mach-O files with no extension) | The file's signature confirms the format | Built by this project: releases. Read by a build: keep it | Cleanliness | Review |
 | Docs named like work logs | The name | The record of one session belongs in its pull request | Cleanliness | Review |
 | Scripts named like one-offs that nothing mentions | The name, and that no file refers to it | Delete it once it has run | Cleanliness | Review |

@@ -6,6 +6,7 @@ AdekunleBamz/stackhub	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":
 Albertsun6/ontology-builder	smell	modernity	.cursorrules	issue.no.because	{"reason":{"t":"reason.cursorrules"}}
 Albertsun6/ontology-builder	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Algodons/AlgoBrainDoctor	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
+Algodons/AlgoBrainDoctor	smell	cleanliness	src/ui/tsconfig.tsbuildinfo	issue.leak.tsbuildinfo	{}
 Algodons/AlgoBrainDoctor	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"ARCHITECTURE.md, IMPLEMENTATION_SUMMARY.md, MERMEDA.md, QUICKSTART.md"}
 AppFlowy-IO/AppFlowy	review	cleanliness	.github/workflows/android_ci.yaml.bak	issue.leftover.maybeBackup	{}
 AppFlowy-IO/AppFlowy	smell	convention	frontend/appflowy_flutter/packages/flowy_svg/.github/dependabot.yaml	issue.contract.dependabotPlace	{}
@@ -235,6 +236,8 @@ calcom/cal.com	review	modernity	example-apps/credential-sync/package.json (doten
 calcom/cal.com	review	modernity	packages/platform/examples/base/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 calcom/cal.com	review	order	apps/web/app/(use-page-wrapper)/(main-nav)/booking/	issue.twins.pluralMaybe	{"other":"apps/web/app/(use-page-wrapper)/(main-nav)/bookings/"}
 calcom/cal.com	review	order	apps/web/app/api/webhook/	issue.twins.pluralMaybe	{"other":"apps/web/app/api/webhooks/"}
+calcom/cal.com	smell	cleanliness	packages/app-store/tsconfig.build.tsbuildinfo	issue.leak.tsbuildinfo	{}
+calcom/cal.com	smell	cleanliness	packages/trpc/tsconfig.server.build.tsbuildinfo	issue.leak.tsbuildinfo	{}
 calcom/cal.com	smell	convention	.claude/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}
 calcom/cal.com	smell	convention	.cursor/rules/	issue.contract.cursorRuleExtension	{"count":45}
 calcom/cal.com	smell	convention	.cursor/skills/vercel-react-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":59,"limit":32}

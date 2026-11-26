@@ -28,6 +28,21 @@ export const ARTIFACT_DIRS: Array<{ dir: string; when?: string[]; unless?: strin
   { dir: "dist", when: ["package.json"], unless: ["action.yml", "action.yaml"], built: true },
 ];
 
+/**
+ * Output found by what its tool writes into it, whatever the directory is
+ * called: the file says itself what it is. `dir` reports the directory the
+ * marker sits in; otherwise the file itself.
+ */
+export const MARKED_OUTPUT: Array<{ name: RegExp; content: RegExp; key: "cache" | "venv" | "cmake" | "tsbuildinfo"; dir: boolean }> = [
+  // The Cache Directory Tagging spec's signature; pytest, Ruff, mypy, Cargo and uv write it.
+  { name: /^CACHEDIR\.TAG$/, content: /^Signature: 8a477f597d28d172789f06886806bc55/, key: "cache", dir: true },
+  // venv writes the interpreter's `home` into pyvenv.cfg at the environment's root.
+  { name: /^pyvenv\.cfg$/, content: /^home[ \t]*=/m, key: "venv", dir: true },
+  { name: /^CMakeCache\.txt$/, content: /^# This is the CMakeCache file\./, key: "cmake", dir: true },
+  // tsc's build state: TypeScript 4 starts it with `program`, 5 with `fileNames` or `root`.
+  { name: /\.tsbuildinfo$/, content: /^\{"(program|fileNames|root)":/, key: "tsbuildinfo", dir: false },
+];
+
 /** Signs that a package builds something: a `build` script, or a bundler's config next to package.json. */
 export const BUNDLER_CONFIG = /^(vite|vitest|tsdown|tsup|rollup|rolldown|webpack|esbuild|unbuild|parcel|rspack|rsbuild|svelte|astro|nuxt|next)\.config\.[cm]?[jt]s$|^tsconfig(\.[\w-]+)?\.json$/;
 
@@ -167,7 +182,9 @@ const MACH_O = ["\xfe\xed\xfa\xce", "\xfe\xed\xfa\xcf", "\xce\xfa\xed\xfe", "\xc
  * Installers and app bundles: what a build hands to users, never what a build
  * reads. In the source tree they are a smell; they belong in releases.
  */
-export const INSTALLERS: Array<{ ext: RegExp; magic: string[] }> = [
+export const INSTALLERS: Array<{ ext: RegExp; magic: string[]; trailer?: string }> = [
+  // A macOS disk image (UDIF) signs its last 512 bytes, not its first.
+  { ext: /\.dmg$/i, magic: [], trailer: "koly" },
   { ext: /\.(apk|aab|ipa|msix|xapk|apks|vsix|nupkg)$/i, magic: [ZIP] },
   { ext: /\.pkg$/i, magic: ["xar!"] },
   { ext: /\.crx$/i, magic: ["Cr24"] },

@@ -48,6 +48,9 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   "reason.bunRunsTs": [{ url: "https://bun.com/docs/runtime", check: `${GH}/oven-sh/bun/main/docs/runtime/index.mdx`, quote: "Bun supports TypeScript and JSX with no configuration." }],
   // Files with a claim to the root, and where releases belong (taste/hygiene.ts). Build output is
   // known by the marker its tool writes: a fact, not someone's word.
+  "issue.leak.venv": [
+    { url: "https://docs.python.org/3/library/venv.html", check: `${GH}/python/cpython/main/Doc/library/venv.rst`, quote: "Not checked into source control systems such as Git." },
+  ],
   "issue.leftover.rootDocs": [
     {
       url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",

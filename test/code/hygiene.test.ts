@@ -43,6 +43,38 @@ describe("committed build output", () => {
     ).toEqual(["api/target/", "dist/", "node_modules/"]);
   });
 
+  it("knows output by what its tool writes into it, whatever the directory is called", async () => {
+    const tag = "Signature: 8a477f597d28d172789f06886806bc55\n# This file is a cache directory tag created by pytest.\n";
+    expect(
+      await findings({
+        ".pytest_cache/CACHEDIR.TAG": tag,
+        ".pytest_cache/v/cache/nodeids": "[]",
+        "env/pyvenv.cfg": "home = /usr/bin\ninclude-system-site-packages = false\n",
+        "env/bin/activate": "",
+        "env/lib/.ruff_cache/CACHEDIR.TAG": tag,
+        "cmake-build-debug/CMakeCache.txt": "# This is the CMakeCache file.\n# For build in directory: /x\n",
+        "cmake-build-debug/Makefile": "",
+        "tsconfig.tsbuildinfo": "{\"root\":[\"./src/index.ts\"],\"version\":\"5.9.3\"}",
+        "packages/a/tsconfig.tsbuildinfo": "{\"program\":{\"fileNames\":[]},\"version\":\"4.9.5\"}",
+        "api/Cargo.toml": "",
+        "api/target/CACHEDIR.TAG": tag,
+      }),
+    ).toEqual([".pytest_cache/", "api/target/", "cmake-build-debug/", "env/", "packages/a/tsconfig.tsbuildinfo", "tsconfig.tsbuildinfo"]);
+  });
+
+  it("does not take a file named like a marker for one, nor a tag that only marks an empty directory", async () => {
+    expect(
+      await findings({
+        "docs/CACHEDIR.TAG": "an example tag for the docs\n",
+        "examples/pyvenv.cfg": "# how a venv config looks\n",
+        "cmake/CMakeCache.txt": "notes\n",
+        "test/fixtures/venv/pyvenv.cfg": "home = /usr/bin\n",
+        "tmp/.gitkeep": "",
+        "tmp/CACHEDIR.TAG": "Signature: 8a477f597d28d172789f06886806bc55\n# This file is a cache directory tag created by Matomo.\n",
+      }),
+    ).toEqual([]);
+  });
+
   it("trusts .gitignore, GitHub Actions and hand-written fixtures", async () => {
     expect(
       await findings({
@@ -152,8 +184,10 @@ describe("leftovers", () => {
         "Installer.pkg": "xar!\u0000\u001c",
         "notes.pkg": "not an installer",
         "ext.vsix": "PK\u0003\u0004rest",
+        "App.dmg": "compressed blocks".padEnd(4096, "\u0000") + "koly".padEnd(512, "\u0000"),
+        "screenshot.dmg": "koly at the start is not a trailer".padEnd(2048, " "),
       }),
-    ).toEqual(["review server", "smell Installer.pkg", "smell core", "smell ext.vsix"].sort());
+    ).toEqual(["review server", "smell App.dmg", "smell Installer.pkg", "smell core", "smell ext.vsix"].sort());
   });
 
   it("merges root work logs into one review", async () => {

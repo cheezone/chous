@@ -17,17 +17,18 @@ export const READ_LIMIT = 16 * 1024 * 1024;
  * socket is never read: a committed symlink to /dev/zero would never end, and
  * /dev/tty would wait for a keypress. Opened non-blocking, checked after open.
  */
-export function readBytes(path: string, limit = READ_LIMIT): Buffer {
+export function readBytes(path: string, limit = READ_LIMIT, fromEnd = false): Buffer {
   let fd: number | undefined;
   try {
     fd = openSync(path, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
     const stat = fstatSync(fd);
     if (!stat.isFile()) return Buffer.alloc(0);
     const size = Math.min(stat.size, limit);
+    const start = fromEnd ? stat.size - size : 0;
     const buf = Buffer.alloc(size);
     let read = 0;
     while (read < size) {
-      const n = readSync(fd, buf, read, size - read, read);
+      const n = readSync(fd, buf, read, size - read, start + read);
       if (n === 0) break;
       read += n;
     }
@@ -38,6 +39,9 @@ export function readBytes(path: string, limit = READ_LIMIT): Buffer {
     if (fd !== undefined) closeSync(fd);
   }
 }
+
+/** The last `bytes` bytes of a regular file: where a disk image keeps its signature. */
+export const readTail = (path: string, bytes: number) => readBytes(path, bytes, true);
 
 /** A regular file's text (UTF-8), up to `limit` bytes; "" when it cannot be read as one. */
 export const readText = (path: string, limit = READ_LIMIT) => readBytes(path, limit).toString("utf8");

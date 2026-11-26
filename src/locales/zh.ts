@@ -107,6 +107,10 @@ export default {
     },
     leak: {
       artifact: "构建产物没有被 gitignore，会被提交上去",
+      cache: "缓存目录，它自己的 CACHEDIR.TAG 写明了：工具会重新生成，加进 .gitignore",
+      venv: "Python 虚拟环境（pyvenv.cfg）：Python 文档写明它不提交进版本控制",
+      cmake: "CMake 构建目录（CMakeCache.txt）：是构建产物，不是源码，加进 .gitignore",
+      tsbuildinfo: "TypeScript 的增量构建状态：tsc 每次构建都会重写，加进 .gitignore",
     },
     lifecycle: {
       ended: "{{name}} 已于 {{date}} 停止维护 → {{use}}",

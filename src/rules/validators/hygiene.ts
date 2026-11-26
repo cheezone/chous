@@ -1,5 +1,5 @@
 import { existsSync, lstatSync, readdirSync, statSync } from "node:fs";
-import { readBytes, readText } from "../../fsutil";
+import { readBytes, readTail, readText } from "../../fsutil";
 import { join, resolve } from "node:path";
 import type { ArtifactsRule, IssueMessage, LeftoverRule, Rule, TwinsRule, Verdict } from "../../types";
 import type { MessageKey } from "../../i18n";
@@ -8,6 +8,7 @@ import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
 import {
   ARTIFACT_DIRS,
+  MARKED_OUTPUT,
   BUNDLER_CONFIG,
   EXECUTABLES,
   INSTALLERS,
@@ -55,6 +56,9 @@ function buildsSomething(dir: string): boolean {
   }
 }
 
+/** Files that only keep a directory in git. */
+const PLACEHOLDER = /^\.(gitkeep|keep|gitignore|gitattributes)$/;
+
 /** Build output that is not gitignored, so it gets committed. */
 export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   canHandle(rule: Rule): rule is ArtifactsRule {
@@ -66,6 +70,8 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
     const parents = ["", ...[...snapshot.byRel.values()].filter((e) => e.isDir).map((e) => e.relPath)];
     const ignored = (rel: string) => snapshot.ig.ignores(rel) || snapshot.ig.ignores(`${rel}/`);
     let hitCount = 0;
+    const reported: string[] = [];
+    const within = (rel: string) => reported.some((dir) => rel === dir || rel.startsWith(`${dir}/`));
 
     for (const parent of parents) {
       if (NOT_OURS.test(`${parent}/`)) continue;
@@ -81,12 +87,31 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
         if (markerMatch && !safeList(join(parentAbs, dir)).some((f) => markerMatch.test(f))) continue;
         if (built && !buildsSomething(parentAbs)) continue;
         hitCount++;
+        reported.push(rel);
         rawIssues.push(issueFromRule(rule, {
           path: resolve(root, rel),
           displayPath: `${rel}/`,
           message: { key: "issue.leak.artifact" },
         }));
       }
+    }
+
+    // Shallow first, so a cache inside a reported virtual environment is not reported again.
+    const files = [...snapshot.byRel.values()].filter((e) => !e.isDir).sort((a, b) => a.relPath.split("/").length - b.relPath.split("/").length);
+    for (const entry of files) {
+      const marked = MARKED_OUTPUT.find((m) => m.name.test(entry.name));
+      if (!marked || NOT_OURS.test(entry.relPath)) continue;
+      const rel = marked.dir ? entry.relPath.slice(0, -entry.name.length - 1) : entry.relPath;
+      if (!rel || within(rel) || !marked.content.test(head(entry.absPath, 4096))) continue;
+      // Matomo commits `tmp/CACHEDIR.TAG` beside a `.gitkeep` to tag the directory: the cache itself is not committed.
+      if (marked.dir && !files.some((f) => f.relPath.startsWith(`${rel}/`) && !PLACEHOLDER.test(f.name) && !MARKED_OUTPUT.some((m) => m.name.test(f.name)))) continue;
+      hitCount++;
+      reported.push(rel);
+      rawIssues.push(issueFromRule(rule, {
+        path: resolve(root, rel),
+        displayPath: marked.dir ? `${rel}/` : rel,
+        message: { key: `issue.leak.${marked.key}` },
+      }));
     }
     return { hitCount };
   }
@@ -201,7 +226,10 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       }
 
       const installer = INSTALLERS.find((b) => b.ext.test(name));
-      if (installer && installer.magic.some((m) => head(entry.absPath, 8, true).startsWith(m))) {
+      const signed = installer && (installer.trailer
+        ? readTail(entry.absPath, 512).toString("latin1").startsWith(installer.trailer)
+        : installer.magic.some((m) => head(entry.absPath, 8, true).startsWith(m)));
+      if (signed) {
         report(rel, { key: "issue.leftover.installer" });
         continue;
       }

@@ -106,6 +106,10 @@ export default {
     },
     leak: {
       artifact: "build output that is not gitignored, so it gets committed",
+      cache: "a cache directory, by its own CACHEDIR.TAG: the tool rebuilds it; gitignore it",
+      venv: "a Python virtual environment (pyvenv.cfg): Python's docs say it is not checked into source control",
+      cmake: "a CMake build tree (CMakeCache.txt): build output, not source; gitignore it",
+      tsbuildinfo: "TypeScript's incremental build state: tsc writes it on every build; gitignore it",
     },
     lifecycle: {
       ended: "{{name}} reached end of life on {{date}} → {{use}}",
