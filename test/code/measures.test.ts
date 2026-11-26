@@ -33,6 +33,12 @@ describe("measures", () => {
     ]);
   });
 
+  it("measures content, not the checkout's line endings", async () => {
+    const lf = await measures({ "src/a.ts": lines(1500) });
+    const crlf = await measures({ "src/a.ts": lines(1500).replaceAll("\n", "\r\n") });
+    expect(crlf).toEqual(lf);
+  });
+
   it("gives an agent every file, untruncated, in the details", async () => {
     const root = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`src/m${i}.ts`, lines(1001 + i)]));
     const result = await lintWorkspace({ root: (() => {

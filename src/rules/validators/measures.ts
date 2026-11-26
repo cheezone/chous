@@ -99,7 +99,11 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
       const text = readBytes(entry.absPath, 16 * 1024 * 1024);
       if (GENERATED.test(text.subarray(0, 1024).toString("latin1"))) continue;
       const lines = lineCount(text);
-      if (lines > MEASURES.sourceLines || size > MEASURES.sourceBytes) long.push({ path: rel, lines, bytes: size });
+      // Line endings are the checkout's, not the content's: Windows turns \n into \r\n.
+      let crlf = 0;
+      for (let i = text.indexOf("\r\n"); i >= 0; i = text.indexOf("\r\n", i + 2)) crlf++;
+      const bytes = size - crlf;
+      if (lines > MEASURES.sourceLines || bytes > MEASURES.sourceBytes) long.push({ path: rel, lines, bytes });
     }
 
     if (long.length) {
