@@ -40,40 +40,49 @@ npx chous
 ### Output
 
 ```
-Modernity
-  ✗ Node 16 reached end of life on 2023-09-11 → a supported LTS release
+Modernity 3
+  ✗ Node 16 reached end of life on 2023-09-11
       .nvmrc
-  ✗ request 2.88.2, deprecated by its authors on npm: “request has been deprecated, see
-    https://github.com/request/request/issues/3142”
+    → a supported LTS release
+  ✗ request 2.88.2, deprecated by its authors on npm
+    “request has been deprecated, see https://github.com/request/request/issues/3142”
       package.json
-  ✗ Vue 2 reached end of life on 2023-12-31 → Vue 3
+  ✗ Vue 2 reached end of life on 2023-12-31
       package.json
+    → Vue 3
 
-Order
-  ✗ 4 docs at the root besides README, LICENSE and the like: the root is an entrance, keep at most 3 and move the rest
-    into docs/
+Order 3
+  ✗ 4 docs at the root besides README, LICENSE and the like
+    the root is an entrance
       ARCHITECTURE.md
       DEPLOYMENT.md
       FIXES_SUMMARY.md
       IMPLEMENTATION_COMPLETE.md
-  ✗ same name as README.md except for case; macOS and Windows keep only one of them on checkout
+    → keep at most 3, move the rest into docs/
+  ✗ same name as README.md except for case
+    macOS and Windows keep only one of them on checkout
       Readme.md
-  ✗ mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
+    → keep one name
+  ✗ mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
       src/composables/
+    → one directory, one way of naming
 
-Cleanliness
-  ✗ not allowed: OS junk, delete it and gitignore it
+Cleanliness 2
+  ✗ OS junk
       .DS_Store
-  ✗ committed although .gitignore ignores it: untrack it with `git rm --cached`, or unignore it with a `!` pattern
+    → delete it and gitignore it
+  ✗ committed although .gitignore ignores it
       dist/  3 files
+    → untrack it with `git rm --cached`, or unignore it with a `!` pattern
 
-To review: chous knows the fact, not the purpose. You or your agent decide.
-  ? 2 source files over 1000 lines or 100 KiB: whether one holds too many jobs is for you or your agent to judge; never
-    split mechanically
+To review 2  chous knows the fact, not the purpose. You or your agent decide.
+  ? 2 source files over 1000 lines or 100 KiB
       src/api.ts    6763 lines · 132 KiB
       src/board.ts  1840 lines · 36 KiB
-  ? a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
+    → whether one holds too many jobs is for you or your agent to judge; never split mechanically
+  ? a compiled executable or library
       bin/server
+    → if this project builds it, put it in releases; if a build reads it, keep it
 
 Smells: 8 · to review: 2
 Taste only: correctness, security and tests are not checked.

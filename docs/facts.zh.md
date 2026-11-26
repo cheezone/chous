@@ -28,7 +28,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 洁净 | 不该提交：`**/.env*.local` — 本地环境变量文件，可能含密钥；Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore | vite.dev, nextjs.org | 尚未见到 |
+| 洁净 | 不该提交：`**/.env*.local` — 本地环境变量文件，可能含密钥：Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore → 加进 .gitignore | vite.dev, nextjs.org | 尚未见到 |
 
 ### Vue
 
@@ -134,7 +134,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 洁净 | 不该提交：`**/.idea/workspace.xml` — 个人的 IDE 状态；JetBrains 说 workspace.xml 不应共享，.idea 里其余文件可以提交 | jetbrains.com | Beeta-inc/nbheditor.apps.beeta.com |
+| 洁净 | 不该提交：`**/.idea/workspace.xml` — 个人的 IDE 状态：JetBrains 说 workspace.xml 不应共享，.idea 里其余文件可以提交 → 加进 .gitignore | jetbrains.com | Beeta-inc/nbheditor.apps.beeta.com |
 
 ## npm 包
 

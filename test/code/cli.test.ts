@@ -31,8 +31,9 @@ describe("cli", () => {
     const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
     const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
     const en = runCli(["-l", "en", "-v"], garbage).stdout;
-    expect(zh).toContain("moment：维护者称它为处于维护模式的遗留项目。 → dayjs / date-fns / Temporal");
-    expect(en).toContain("moment: Its maintainers call it a legacy project in maintenance mode. → dayjs / date-fns / Temporal");
+    // Subject, then the reason, then what to do, each on its own line.
+    expect(zh).toMatch(/✗ moment\n {4}维护者称它为处于维护模式的遗留项目。\n[\s\S]*?\n {4}→ dayjs \/ date-fns \/ Temporal\n/);
+    expect(en).toMatch(/✗ moment\n {4}Its maintainers call it a legacy project in maintenance mode\.\n[\s\S]*?\n {4}→ dayjs \/ date-fns \/ Temporal\n/);
   });
 
   it("speaks JSON to agents: every finding with its verdict, taste and sources", () => {

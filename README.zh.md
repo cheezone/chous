@@ -40,38 +40,50 @@ npx chous
 ### 输出
 
 ```
-现代
-  ✗ Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
+现代 3
+  ✗ Node 16 已于 2023-09-11 停止维护
       .nvmrc
-  ✗ request 2.88.2，作者已在 npm 上宣布废弃：「request has been deprecated, see
-    https://github.com/request/request/issues/3142」
+    → 仍在维护的 LTS 版本
+  ✗ request 2.88.2，作者已在 npm 上宣布废弃
+    「request has been deprecated, see https://github.com/request/request/issues/3142」
       package.json
-  ✗ Vue 2 已于 2023-12-31 停止维护 → Vue 3
+  ✗ Vue 2 已于 2023-12-31 停止维护
       package.json
+    → Vue 3
 
-秩序
-  ✗ 根目录除 README、LICENSE 这类之外还有 4 份文档：根目录是入口，最多留 3 份，其余移进 docs/
+秩序 3
+  ✗ 根目录除 README、LICENSE 这类之外还有 4 份文档
+    根目录是入口
       ARCHITECTURE.md
       DEPLOYMENT.md
       FIXES_SUMMARY.md
       IMPLEMENTATION_COMPLETE.md
-  ✗ 和 README.md 只差大小写；在 macOS 和 Windows 上检出时只会留下一个
+    → 最多留 3 份，其余移进 docs/
+  ✗ 和 README.md 只差大小写
+    在 macOS 和 Windows 上检出时只会留下一个
       Readme.md
-  ✗ 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
+    → 只留一个名字
+  ✗ 命名风格混用
+    camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）
       src/composables/
+    → 同一个目录只用一种起名方式
 
-洁净
-  ✗ 不允许：系统垃圾文件，删掉并加进 .gitignore
+洁净 2
+  ✗ 系统垃圾文件
       .DS_Store
-  ✗ .gitignore 忽略了它，却仍被提交：用 `git rm --cached` 取消跟踪，或者用 `!` 规则写明例外
+    → 删掉并加进 .gitignore
+  ✗ .gitignore 忽略了它，却仍被提交
       dist/  3 个文件
+    → 用 `git rm --cached` 取消跟踪，或者用 `!` 规则写明例外
 
-待审视：chous 知道事实，不知道用途。由你或你的 agent 判断。
-  ? 2 个源文件超过 1000 行或 100 KiB：是否承担了太多职责，由你或你的 agent 判断；不要机械拆分
+待审视 2  chous 知道事实，不知道用途。由你或你的 agent 判断。
+  ? 2 个源文件超过 1000 行或 100 KiB
       src/api.ts    6763 行 · 132 KiB
       src/board.ts  1840 行 · 36 KiB
-  ? 编译好的可执行文件或库：如果是本项目构建出来的，应该放到 Releases；如果是构建要读取的输入，就留着
+    → 是否承担了太多职责，由你或你的 agent 判断；不要机械拆分
+  ? 编译好的可执行文件或库
       bin/server
+    → 如果是本项目构建出来的，放到 Releases；如果是构建要读取的输入，就留着
 
 臭味 8 处 · 待审视 2 处
 只看品味：不检查正确性、安全和测试。

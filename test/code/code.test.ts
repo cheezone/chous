@@ -32,27 +32,34 @@ const EXPECTED: Record<string, Array<[string, string]>> = {
     ["Vue 2 reached end of life on 2023-12-31", "package.json"],
   ],
   garbage: [
-    ["moment: Its maintainers call it a legacy project in maintenance mode. → dayjs", "package.json"],
-    ["node-sass 9.0.0, deprecated by its authors on npm: “Node Sass is no longer supported. Please use `sass` or `sass-embedded` instead.”", "package.json"],
+    ["moment", "package.json"],
+    ["node-sass 9.0.0, deprecated by its authors on npm", "package.json"],
   ],
   js: [["mixes camelCase ×1 + kebab-case ×1 names", "src/"]],
   monorepo: [
     ["zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)", "package.json"],
-    ["not allowed: one lockfile, at the workspace root", "apps/web/pnpm-lock.yaml"],
+    ["a lockfile inside a workspace package", "apps/web/pnpm-lock.yaml"],
   ],
 };
 
-/** The report's smells as [what, where]: an explanation (wrapped lines joined), then the paths listed under it. */
+/** The report's smells as [what, where]: the subject line (wrapped lines joined), then the paths listed under it. */
 function smells(stdout: string): Array<[string, string]> {
   const out: Array<[string, string]> = [];
   let what: string | undefined;
   let inSmell = false;
+  let wrapped = false;
   for (const line of stdout.split("\n")) {
     if (/^  [✗?] /.test(line)) {
       inSmell = line.startsWith("  ✗");
       what = line.slice(4).trim();
-    } else if (inSmell && what !== undefined && /^ {4}\S/.test(line)) what += ` ${line.trim()}`;
-    else if (inSmell && what !== undefined && /^ {6}\S/.test(line)) out.push([what, line.trim()]);
+      wrapped = true;
+    } else if (inSmell && what !== undefined && wrapped && /^ {4}\S/.test(line) && !line.startsWith("    →")) {
+      // A subject wraps with the same indent as its detail; the detail is checked by the tests that read words.
+      continue;
+    } else if (inSmell && what !== undefined && /^ {6}\S/.test(line)) {
+      wrapped = false;
+      out.push([what, line.trim()]);
+    } else if (inSmell && what !== undefined && /^ {6}\S/.test(line)) out.push([what, line.trim()]);
     else if (!line.startsWith(" ")) inSmell = false;
   }
   return out;

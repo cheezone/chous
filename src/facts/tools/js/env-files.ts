@@ -15,8 +15,8 @@ export default tool({
       names: ["**/.env*.local"],
       value: "cleanliness",
       message: {
-        en: "local env file that may hold secrets; Vite and Next.js say to gitignore *.local",
-        zh: "本地环境变量文件，可能含密钥；Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore",
+        en: "a local env file that may hold secrets: Vite and Next.js say to gitignore *.local → gitignore it",
+        zh: "本地环境变量文件，可能含密钥：Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore → 加进 .gitignore",
       },
       sources: [
         { url: "https://vite.dev/guide/env-and-mode", check: `${GH}/vitejs/vite/main/docs/guide/env-and-mode.md`, quote: "loaded in all cases, ignored by git" },

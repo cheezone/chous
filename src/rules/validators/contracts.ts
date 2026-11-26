@@ -73,7 +73,8 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         displayPath: where,
         message: { key: `issue.contract.${contract.id}` as MessageKey, params: { ...params, count } },
         value: contract.value,
-        ...(count > 1 ? { details: { files: grouped } } : {}),
+        // The snapshot is walked concurrently: sorted, the same repository lists the same files in the same order.
+        ...(count > 1 ? { details: { files: grouped.sort() } } : {}),
       }));
     }
     return { hitCount };

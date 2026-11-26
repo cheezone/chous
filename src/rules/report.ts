@@ -44,6 +44,37 @@ function wrap(text: string, width: number, indent: number): string[] {
 
 const kib = (bytes: number) => Math.max(1, Math.round(bytes / 1024));
 
+/**
+ * A message as the report shows it: what it is, then why or the details, then
+ * what to do. chous's messages are written `subject: detail → action` (or `；`,
+ * `：` in Chinese); a message without them is all subject.
+ */
+export function messageParts(message: string): { subject: string; detail?: string; action?: string } {
+  const arrow = outside(message, /\s*→\s*/g);
+  const action = arrow ? message.slice(arrow.index + arrow[0].length) : undefined;
+  const rest = arrow ? message.slice(0, arrow.index) : message;
+  const sep = outside(rest, /: |：|; |；/g);
+  const subject = sep ? rest.slice(0, sep.index) : rest;
+  const detail = sep ? rest.slice(sep.index + sep[0].length) : undefined;
+  return { subject, ...(detail ? { detail } : {}), ...(action ? { action } : {}) };
+}
+
+const OPEN = "(（[“「";
+const CLOSE = ")）]”」";
+
+/** The first match not inside brackets or quotes: `zod (.: ^3; web: ^4)` is one subject, and so is a quoted sentence. */
+function outside(text: string, pattern: RegExp): RegExpExecArray | undefined {
+  const depthAt: number[] = [];
+  let depth = 0;
+  for (const ch of text) {
+    if (CLOSE.includes(ch)) depth = Math.max(0, depth - 1);
+    for (let i = 0; i < ch.length; i++) depthAt.push(depth);
+    if (OPEN.includes(ch)) depth++;
+  }
+  for (const m of text.matchAll(pattern)) if (depthAt[m.index] === 0) return m;
+  return undefined;
+}
+
 /** What a finding lists, from its details: the files, directories or copies behind it, one line each. */
 export function detailItems(t: TFunction, issue: Issue): Array<{ text: string; note?: string; children?: string[] }> {
   const d = issue.details ?? {};
@@ -91,6 +122,9 @@ export function renderReport(
     return [...byMessage];
   };
 
+  // `git rm --cached` in a message is something to type: in bold instead of backticks, or as written without color.
+  const code = (s: string, base: (x: string) => string) =>
+    c.enabled ? s.split(/`([^`]+)`/).map((part, i) => (i % 2 ? c.bold(part) : base(part))).join("") : s;
   const block = (issues: Issue[], mark: string) => {
     for (const [message, group] of entries(issues)) {
       // `package.json (moment)` under a line about moment says it twice: the path is enough.
@@ -99,8 +133,10 @@ export function renderReport(
         return m && message.includes(m[2]!) ? m[1]! : path;
       };
       const rows: Array<{ text: string; note?: string; children?: string[] }> = [];
-      const [first, ...rest] = wrap(message, width - 4, 4);
-      lines.push(`  ${mark} ${first}`, ...rest);
+      const { subject, detail, action } = messageParts(message);
+      const [first, ...rest] = wrap(subject, width - 4, 4);
+      lines.push(`  ${mark} ${code(first!, c.bold)}`, ...rest.map((l) => code(l, c.bold)));
+      if (detail) lines.push(...wrap(detail, width - 4, 0).map((l) => `    ${code(l, c.dim)}`));
       if (verbose && group[0]!.reason) lines.push(...wrap(c.dim(t("report.reason", { reason: t(group[0]!.reason) })), width - 4, 4).map((l) => `    ${l.trimStart()}`));
       for (const issue of group) {
         const items = detailItems(t, issue);
@@ -118,10 +154,11 @@ export function renderReport(
       const aligned = pad + 30 <= width;
       for (const r of shown) {
         const text = visible(r.text);
-        lines.push(`      ${text}${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.dim(r.note)}` : ""}`);
-        for (const child of r.children ?? []) lines.push(`        ${visible(child)}`);
+        lines.push(`      ${r.children ? text : c.cyan(text)}${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.dim(r.note)}` : ""}`);
+        for (const child of r.children ?? []) lines.push(`        ${c.cyan(visible(child))}`);
       }
       if (rows.length > shown.length) lines.push(c.dim(`      ${t("report.more", { count: rows.length - shown.length })}`));
+      if (action) lines.push(...wrap(action, width - 6, 0).map((l, i) => `    ${i ? "  " : `${c.green("→")} `}${code(l, (x) => x)}`));
       if (verbose) {
         const nested = Object.values(group[0]!.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
         for (const { url } of sourcesFor([group[0]!.reason, group[0]!.message.key, ...nested])) lines.push(c.dim(`      ${t("report.source", { url })}`));
@@ -132,12 +169,13 @@ export function renderReport(
   for (const value of VALUES) {
     const issues = smells.filter((i) => i.value === value);
     if (!issues.length) continue;
-    lines.push(c.bold(t(`report.value.${value}`)));
+    lines.push(`${c.bold(t(`report.value.${value}`))} ${c.dim(String(issues.length))}`);
     block(issues, c.red("✗"));
     lines.push("");
   }
   if (reviews.length) {
-    lines.push(c.bold(t("report.review")));
+    const { subject, detail } = messageParts(t("report.review"));
+    lines.push(`${c.bold(c.yellow(subject))} ${c.dim(String(reviews.length))}${detail ? `  ${c.dim(detail)}` : ""}`);
     block(reviews, c.yellow("?"));
     lines.push("");
   }
@@ -145,10 +183,10 @@ export function renderReport(
   lines.push(
     result.issues.length === 0
       ? c.green(t("report.noIssues"))
-      : t("report.found", { smells: smells.length, reviews: reviews.length }),
+      : t("report.found", { smells: smells.length ? c.bold(c.red(String(smells.length))) : "0", reviews: reviews.length ? c.bold(c.yellow(String(reviews.length))) : "0" }),
   );
   lines.push(c.dim(t("report.scope")));
-  if (result.issues.length) lines.push(c.dim(t("report.agentHint")));
+  if (result.issues.length) lines.push(code(t("report.agentHint"), c.dim));
 
   lines.push("", c.dim(t("meta.taste", { names: result.tastes.join(" · ") })));
   if (result.workspacePackages?.length) {
