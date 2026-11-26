@@ -37,9 +37,9 @@ Ayato-kosaka/nanitabeyo	smell	order	shared/package.json (packageManager)	issue.m
 Ayato-kosaka/nanitabeyo	smell	order	shared/prisma/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"index-browser.js, query_compiler_bg.js"}
 Ayato-kosaka/nanitabeyo	smell	order	shared/utils/	issue.twins.styles	{"styles":"camelCase ×9 + snake_case ×2","examples":"devDB.types.ts, geo_search.ts"}
 Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	./	issue.leftover.worklogs	{"count":11,"names":"BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, FIX_GMAIL_LINKS.md, …"}
+Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	.kotlin/errors/errors-1777453046994.log	issue.no.because	{"reason":{"t":"reason.logs"}}
 Beeta-inc/nbheditor.apps.beeta.com	review	cleanliness	fix-signin.sh	issue.leftover.script	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.gradle/	issue.leak.artifact	{}
-Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.kotlin/errors/errors-1777453046994.log	issue.no.because	{"reason":{"t":"reason.logs"}}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0-release.apk	issue.leftover.installer	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0.1-release.apk	issue.leftover.installer	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.0.1-release.apk	issue.leftover.installer	{}
@@ -389,6 +389,35 @@ facebook/react	smell	order	scripts/ci/	issue.twins.styles	{"styles":"snake_case 
 facebook/react	smell	order	scripts/error-codes/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"extract-errors.js, invertObject.js"}
 facebook/react	smell	order	scripts/flow/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×2","examples":"createFlowConfigs.js, react-devtools.js"}
 facebook/react	smell	order	scripts/jest/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"patchMessageChannel.js, dont-run-jest-directly.js"}
+filamentphp/filament	smell	convention	tests/src/Actions/CreateActionTest.php	issue.contract.psr4FileName	{"name":"CreateActionTest","className":"CreateActionPostPolicy","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Exports/ContentGenerators/XlsxExportContentGeneratorTest.php	issue.contract.psr4FileName	{"name":"XlsxExportContentGeneratorTest","className":"TestXlsxExportContentGeneratorExporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Exports/ExportColumnTest.php	issue.contract.psr4FileName	{"name":"ExportColumnTest","className":"FakeStateExportColumn","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/ContentGenerators/CsvImportFailureContentGeneratorTest.php	issue.contract.psr4FileName	{"name":"CsvImportFailureContentGeneratorTest","className":"TestCsvImportFailureContentGeneratorImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/ImportColumnTest.php	issue.contract.psr4FileName	{"name":"ImportColumnTest","className":"ImportColumnTeamImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/Jobs/ImportCsvTest.php	issue.contract.psr4FileName	{"name":"ImportCsvTest","className":"AccountingPostImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Testing/TestableImportTest.php	issue.contract.psr4FileName	{"name":"TestableImportTest","className":"UserRowTestImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Forms/	issue.contract.psr4FileName	{"name":"ActionTest","className":"TestComponentWithActionState","count":2}
+filamentphp/filament	smell	convention	tests/src/Forms/Components/	issue.contract.psr4FileName	{"name":"FieldTest","className":"IdField","count":2}
+filamentphp/filament	smell	convention	tests/src/Infolists/Components/	issue.contract.psr4FileName	{"name":"EntryTest","className":"IdEntry","count":2}
+filamentphp/filament	smell	convention	tests/src/Infolists/LivewireTest.php	issue.contract.psr4FileName	{"name":"LivewireTest","className":"LivewireInfolists","count":1}
+filamentphp/filament	smell	convention	tests/src/Notifications/NotificationTest.php	issue.contract.psr4FileName	{"name":"NotificationTest","className":"NotificationWithLazyIconSize","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Auth/MultiFactor/MultiFactorChallengeTest.php	issue.contract.psr4FileName	{"name":"MultiFactorChallengeTest","className":"AlternateMultiFactorChallengeUser","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Auth/Pages/EditProfileTest.php	issue.contract.psr4FileName	{"name":"EditProfileTest","className":"EditProfileWithCustomEmailField","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Navigation/NavigationTest.php	issue.contract.psr4FileName	{"name":"NavigationTest","className":"CollapsibleNavigationGroupEnum","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Pages/Tenancy/RegisterTenantTest.php	issue.contract.psr4FileName	{"name":"RegisterTenantTest","className":"AuthorizableRegisterTeam","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Panel/Concerns/HasMiddlewareTest.php	issue.contract.psr4FileName	{"name":"HasMiddlewareTest","className":"HasMiddlewareTestCase","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Resources/Pages/ViewRecordTest.php	issue.contract.psr4FileName	{"name":"ViewRecordTest","className":"CombinedContentViewTicket","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Resources/ResourceTest.php	issue.contract.psr4FileName	{"name":"ResourceTest","className":"EditDepartmentWithResponseAuthorization","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/Components/Utilities/GetTest.php	issue.contract.psr4FileName	{"name":"GetTest","className":"GetTestStatus","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/Concerns/ResolvesDynamicLivewirePropertiesTest.php	issue.contract.psr4FileName	{"name":"ResolvesDynamicLivewirePropertiesTest","className":"ComputedPropertySchema","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/StateTest.php	issue.contract.psr4FileName	{"name":"StateTest","className":"StateTestLivewire","count":1}
+filamentphp/filament	smell	convention	tests/src/SpatieSettingsPlugin/Pages/SettingsPageTest.php	issue.contract.psr4FileName	{"name":"SettingsPageTest","className":"DerivedGeneralSettings","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Assets/AssetTest.php	issue.contract.psr4FileName	{"name":"AssetTest","className":"TestAsset","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Commands/CanConfigureViteTest.php	issue.contract.psr4FileName	{"name":"CanConfigureViteTest","className":"ViteInputSetupCommand","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Concerns/MacroableTest.php	issue.contract.psr4FileName	{"name":"MacroableTest","className":"FieldMixin","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Services/RelationshipOrdererTest.php	issue.contract.psr4FileName	{"name":"RelationshipOrdererTest","className":"RelationshipOrdererUser","count":1}
+filamentphp/filament	smell	convention	tests/src/Tables/Columns/	issue.contract.psr4FileName	{"name":"BadgeColumnTest","className":"TestTableWithBadgeColumn","count":5}
+filamentphp/filament	smell	convention	tests/src/Tables/RecordTest.php	issue.contract.psr4FileName	{"name":"RecordTest","className":"AggregateRecordTable","count":1}
 ghostfolio/ghostfolio	review	modernity	package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 ghostfolio/ghostfolio	smell	convention	.agents/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
 ghostfolio/ghostfolio	smell	convention	.claude/skills/nestjs-best-practices/AGENTS.md	issue.contract.agentsMdBytes	{"kib":159,"limit":32}
@@ -439,11 +468,41 @@ ktorio/ktor	smell	convention	ktor-network/ktor-network-tls/ktor-network-tls-cert
 ktorio/ktor	smell	convention	ktor-network/wasmJs/src/io/ktor/network/sockets/nodejs/node.wasmJs.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
 ktorio/ktor	smell	convention	ktor-network/web/src/io/ktor/network/sockets/nodejs/node.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
 ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/runTestWithData.kt	issue.contract.kotlinFileName	{"name":"runTestWithData","count":1}
+laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
+laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
+laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
 longbridge/gpui-component	smell	modernity	.claude/commands/release-notes.md	issue.contract.claudeCommands	{"count":1}
 longbridge/gpui-component	smell	modernity	website/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":284,"limit":200}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/different_hosts.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_cloudfront.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_cloudfront_rtmp.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_custom.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_custom_iis.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_dynamic.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_enable_all.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_netscaler.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_nginx_json.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_replay.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_replay_host.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/fake_logs_visits_in_reverse_chronological_order.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/filter_exclude_logs.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/filter_include_logs.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	review	cleanliness	tests/resources/access-logs/windows-1252.log	issue.no.because	{"reason":{"t":"reason.logs"}}
+matomo-org/matomo	smell	convention	core/Policy/Exceptions/CompliancyPolicyNotFoundException.php	issue.contract.psr4FileName	{"name":"CompliancyPolicyNotFoundException","className":"CompliancePolicyNotFoundException","count":1}
+matomo-org/matomo	smell	convention	plugins/Actions/tests/Unit/ArchiverTest.php	issue.contract.psr4FileName	{"name":"ArchiverTest","className":"ArchiverTests","count":1}
+matomo-org/matomo	smell	convention	plugins/FeatureFlags/tests/Integration/FeatureFlagManagerTest.php	issue.contract.psr4FileName	{"name":"FeatureFlagManagerTest","className":"FeatureFlagManagerTests","count":1}
+matomo-org/matomo	smell	convention	plugins/LanguagesManager/tests/Unit/TranslationWriter/Filter/UnnecassaryWhitespacesTest.php	issue.contract.psr4FileName	{"name":"UnnecassaryWhitespacesTest","className":"UnnecassaryWhitepsacesTest","count":1}
+matomo-org/matomo	smell	convention	plugins/UserCountry/tests/System/StaticAPITest.php	issue.contract.psr4FileName	{"name":"StaticAPITest","className":"StaticApiTest","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Framework/Mock/Category/Categeories.php	issue.contract.psr4FileName	{"name":"Categeories","className":"Categories","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Integration/Report/ReportsTest.php	issue.contract.psr4FileName	{"name":"ReportsTest","className":"ReportTest","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Unit/DataTable/Filter/	issue.contract.psr4FileName	{"name":"AddSegmentFilterByLabelMappingTest","className":"AddSegmentByLabelMappingTest","count":4}
+matomo-org/matomo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+matomo-org/matomo	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\", baseUrl: \".\""}
+matomo-org/matomo	smell	order	plugins/CoreHome/javascripts/	issue.twins.styles	{"styles":"camelCase ×4 + snake_case ×2 + kebab-case ×2","examples":"dataTable.js, color_manager.js, materialize-bc.js"}
 mitesh77/Best-Flutter-UI-Templates	smell	cleanliness	assets/app-release.apk	issue.leftover.installer	{}
 mitesh77/Best-Flutter-UI-Templates	smell	convention	assets/app-release.apk	issue.contract.largeFile	{"mib":54}
 mitesh77/Best-Flutter-UI-Templates	smell	convention	best_flutter_ui_templates/lib/fitness_app/models/tabIcon_data.dart	issue.contract.dartFileName	{"name":"tabIcon_data","count":1}

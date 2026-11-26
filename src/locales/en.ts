@@ -123,7 +123,7 @@ export default {
     ...absentMessages("en"),
     chousConfig: "chous has no config, delete it",
     osJunk: "OS junk, delete it and gitignore it",
-    logs: "logs, gitignore them",
+    logs: "named like a log: if a program wrote it, gitignore it; test input can stay",
     nestedLockfile: "one lockfile, at the workspace root",
     nestedPackageManager: "set it once, in the workspace root",
     bunRunsTs: "Bun runs TypeScript directly.",

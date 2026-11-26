@@ -17,7 +17,8 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
 
   // Anything still visible here is not gitignored, so it would be committed.
   // OS junk and local.properties are found by what their makers write into them (see `leftovers`).
-  t.no(["**/*.log"], { reason: "reason.logs", value: "cleanliness" });
+  // A name only: a program's log, or a test's input (Matomo keeps access logs to import). For review.
+  t.no(["**/*.log"], { reason: "reason.logs", value: "cleanliness", verdict: "review" });
 
   // Files their own tools call personal, local or legacy: src/facts/tools/ (`absent`).
   t.absent("base");

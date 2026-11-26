@@ -4,7 +4,7 @@
 
 每一行都是工具、平台或包作者对自己的说法，背后有他们的原话（`chous --verbose` 会显示）。项目违背它时，chous 就报出来。
 
-42 个工具 · 57 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
+43 个工具 · 58 条关于文件的事实 · 8 条不该提交的路径 · 8 份停止维护时间表 · 41 条 npm 包。
 
 「真实命中」统计回归语料（`test/corpus.json`：锁定 commit 的真实仓库，每条结论都人工核对过）里的结论。「尚未见到」表示那里还没有仓库违反它：这条事实已对照工具原话和正反例检验，还没有在真实项目里遇到过。
 
@@ -57,7 +57,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 现代 | TypeScript 6 已废弃、7 不再支持：… | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +18 |
+| 现代 | TypeScript 6 已废弃、7 不再支持：… | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +19 |
 
 ### ESLint
 
@@ -68,7 +68,7 @@
 | 秩序 | 永远不会被读：ESLint 每个目录只用一份配置，这里是 … | eslint.org | 尚未见到 |
 | 现代 | ESLint … 下的 eslintrc：ESLint 9 起已废弃、默认不再查找，10 起彻底移除；改用 eslint.config.js | eslint.org | oven-sh/bun |
 
-停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +19
+停止维护：ESLint 的 9 个版本，从 1 到 9；最近一个在 2026-08-06 停止维护。来源：eslint.org；真实命中：Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +20
 
 ### TSLint, JSCS
 
@@ -267,6 +267,14 @@
 |---|---|---|---|
 | 约定 | 不是 snake_case 的 Elixir 文件（… 个，如 …）：Elixir 命名约定规定文件名按模块名的 snake_case 来写 | hexdocs.pm | plausible/analytics |
 
+### Composer (PSR-4)
+
+调研于 2026-11。
+
+| 品味 | chous 说 | 来源 | 真实命中 |
+|---|---|---|---|
+| 约定 | 文件名和所声明的类名不一致（… 个，如 ….php 声明的是 …）：PSR-4 规定文件名与类名一致，大小写也要一致 | php-fig.org | filamentphp/filament, matomo-org/matomo |
+
 ### GitHub
 
 调研于 2026-11。
@@ -286,8 +294,8 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 现代 | 顶层的 version：Docker 称它已过时，用了会警告；删掉这一行 | docs.docker.com | chatwoot/chatwoot, ruvnet/ruflo, AppFlowy-IO/AppFlowy +2 |
-| 现代 | 旧文件名：Docker 首选 compose.yaml，docker-compose.yml 只是为了兼容旧版本 | docs.docker.com | open-webui/open-webui, ruvnet/ruflo, immich-app/immich +9 |
+| 现代 | 顶层的 version：Docker 称它已过时，用了会警告；删掉这一行 | docs.docker.com | chatwoot/chatwoot, ruvnet/ruflo, AppFlowy-IO/AppFlowy +3 |
+| 现代 | 旧文件名：Docker 首选 compose.yaml，docker-compose.yml 只是为了兼容旧版本 | docs.docker.com | open-webui/open-webui, ruvnet/ruflo, immich-app/immich +10 |
 
 ### Cloudflare Wrangler
 

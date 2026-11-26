@@ -398,5 +398,20 @@
     "repo": "immich-app/immich",
     "commit": "7b27863b13d7ec52340e87637d71a39aa8d7efc0",
     "group": "dart"
+  },
+  {
+    "repo": "laravel/framework",
+    "commit": "321caf77d6c037577434e177c3bf280abb2b3513",
+    "group": "php"
+  },
+  {
+    "repo": "filamentphp/filament",
+    "commit": "1eb10d5fb9942322d142b905efbaddfb23be6933",
+    "group": "php"
+  },
+  {
+    "repo": "matomo-org/matomo",
+    "commit": "d632b5c4fa476cfc58555e71a691e6ec2079a549",
+    "group": "php"
   }
 ]

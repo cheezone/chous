@@ -80,6 +80,13 @@ describe("leftovers", () => {
     expect(await claims({ ...root, ...docs, "ROADMAP.md": "" })).toEqual(["smell ./"]);
   });
 
+  it("puts files named like logs up for review: a name cannot tell a program's log from a test's input", async () => {
+    expect(await claims({ ".kotlin/errors/errors-1777453046994.log": "e: oops", "tests/resources/access-logs/fake_logs.log": "1.2.3.4 - -" })).toEqual([
+      "review .kotlin/errors/errors-1777453046994.log",
+      "review tests/resources/access-logs/fake_logs.log",
+    ]);
+  });
+
   it("merges root work logs into one review", async () => {
     expect(await claims({ "FIXES_SUMMARY.md": "", "IMPLEMENTATION_COMPLETE.md": "" })).toEqual(["review ./"]);
   });

@@ -124,7 +124,7 @@ export default {
     ...absentMessages("zh"),
     chousConfig: "chous 没有配置，删掉它",
     osJunk: "系统垃圾文件，删掉并加进 .gitignore",
-    logs: "日志文件，加进 .gitignore",
+    logs: "名字像日志：如果是程序写出来的，就加进 .gitignore；测试输入可以留",
     nestedLockfile: "只能有一个 lockfile，放在工作区根目录",
     nestedPackageManager: "只在工作区根目录设置一次",
     bunRunsTs: "Bun 直接运行 TypeScript。",

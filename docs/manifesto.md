@@ -118,6 +118,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Executables and libraries (`.exe`, `.dll`, `.so`, `.dylib`) | The file's signature confirms the format | Built by this project: releases. Read by a build: keep it | Cleanliness | Review |
 | Docs named like work logs | The name | The record of one session belongs in its pull request | Cleanliness | Review |
 | Scripts named like one-offs that nothing mentions | The name, and that no file refers to it | Delete it once it has run | Cleanliness | Review |
+| Files named like logs (`*.log`) | The name | A program's logs are not committed; test input can stay | Cleanliness | Review |
 | A backup without its original | The name | It may be a backup, or not | Cleanliness | Review |
 | A series of per-version release notes, a pile of work records | At least 5 in one directory | History lives in the changelog and pull requests | Cleanliness | Review |
 

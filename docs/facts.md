@@ -4,7 +4,7 @@
 
 Each line is something a tool, platform or package author states about itself, with their own words behind it (`chous --verbose` shows them). chous reports it when a project goes against it.
 
-42 tools · 57 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
+43 tools · 58 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
 
 “Seen in real projects” counts findings in the regression corpus (`test/corpus.json`: real repositories at pinned commits, every finding checked by hand). “not yet” means no repository there breaks it: the fact is checked against the tool's own words and examples, not yet against the wild.
 
@@ -57,7 +57,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | deprecated in TypeScript 6 and unsupported in 7: … | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +18 |
+| Modernity | deprecated in TypeScript 6 and unsupported in 7: … | typescriptlang.org | calcom/cal.com, oven-sh/bun, ruvnet/ruflo +19 |
 
 ### ESLint
 
@@ -68,7 +68,7 @@ Researched 2026-11.
 | Order | never read: ESLint takes one config per directory, here … | eslint.org | not yet |
 | Modernity | eslintrc with ESLint …: deprecated since ESLint 9, no longer looked for, and gone in 10; use eslint.config.js | eslint.org | oven-sh/bun |
 
-End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +19
+End of life: 9 versions of ESLint, from 1 to 9; the latest ended on 2026-08-06. Source: eslint.org · Seen in real projects: Ayato-kosaka/nanitabeyo, ruvnet/ruflo, AdekunleBamz/stackhub +20
 
 ### TSLint, JSCS
 
@@ -267,6 +267,14 @@ Researched 2026-11.
 |---|---|---|---|
 | Convention | Elixir files not in snake_case (…, e.g. …): Elixir's naming conventions say file names follow the module in snake_case | hexdocs.pm | plausible/analytics |
 
+### Composer (PSR-4)
+
+Researched 2026-11.
+
+| Taste | chous says | Source | Seen in real projects |
+|---|---|---|---|
+| Convention | files named unlike the class they declare (…, e.g. ….php declares …): PSR-4 says the file name matches the class name, case included | php-fig.org | filamentphp/filament, matomo-org/matomo |
+
 ### GitHub
 
 Researched 2026-11.
@@ -286,8 +294,8 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | a top-level version: Docker calls it obsolete and warns about it; delete the line | docs.docker.com | chatwoot/chatwoot, ruvnet/ruflo, AppFlowy-IO/AppFlowy +2 |
-| Modernity | the old name: Docker prefers compose.yaml and keeps docker-compose.yml for earlier versions | docs.docker.com | open-webui/open-webui, ruvnet/ruflo, immich-app/immich +9 |
+| Modernity | a top-level version: Docker calls it obsolete and warns about it; delete the line | docs.docker.com | chatwoot/chatwoot, ruvnet/ruflo, AppFlowy-IO/AppFlowy +3 |
+| Modernity | the old name: Docker prefers compose.yaml and keeps docker-compose.yml for earlier versions | docs.docker.com | open-webui/open-webui, ruvnet/ruflo, immich-app/immich +10 |
 
 ### Cloudflare Wrangler
 
