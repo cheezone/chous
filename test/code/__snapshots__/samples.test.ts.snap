@@ -1,13 +1,23 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`real-world samples > ai-chatbot 1`] = `[]`;
+exports[`real-world samples > ai-chatbot 1`] = `
+[
+  "review order ./ issue.measure.longFiles {"count":2,"limit":1000,"files":"components/ai-elements/prompt-input.tsx 1427, components/icons.tsx 1213"}",
+]
+`;
 
 exports[`real-world samples > nuxt.com 1`] = `
 [
+  "review order ./ issue.measure.copies {"count":17,"groups":"2 × 48 KiB: public/assets/enterprise/agencies/square/dark/curotec.jpeg, public/assets/enterprise/agencies/square/light/curotec.jpeg; 2 × 24 KiB: public/assets/enterprise/agencies/full/dark/brain.svg, public/assets/enterprise/agencies/full/light/brain.svg; 2 × 20 KiB: public/assets/enterprise/agencies/square/light/fidelitysolutions.svg, public/assets/enterprise/sponsors/fidelity-solutions.svg; …"}",
   "smell modernity package.json (ESLint 9) issue.lifecycle.ended {"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}",
 ]
 `;
 
 exports[`real-world samples > project-layout 1`] = `[]`;
 
-exports[`real-world samples > pythondotorg 1`] = `[]`;
+exports[`real-world samples > pythondotorg 1`] = `
+[
+  "review order ./ issue.measure.flatDirs {"count":1,"limit":50,"dirs":"sponsors/migrations/ 106"}",
+  "review order ./ issue.measure.longFiles {"count":3,"limit":1000,"files":"sponsors/tests/test_models.py 1286, sponsors/admin.py 1198, sponsors/tests/test_views_admin.py 1146"}",
+]
+`;

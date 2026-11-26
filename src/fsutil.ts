@@ -1,5 +1,6 @@
 import { stat } from "node:fs/promises";
 import { closeSync, constants, existsSync, fstatSync, openSync, readSync } from "node:fs";
+import { createHash } from "node:crypto";
 import { dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 
@@ -35,6 +36,27 @@ export function readBytes(path: string, limit = READ_LIMIT, fromEnd = false): Bu
     return buf.subarray(0, read);
   } catch {
     return Buffer.alloc(0);
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
+
+/**
+ * A regular file's content hash, read in chunks so a large file never sits in
+ * memory; undefined for anything that is not a regular file. The same caution
+ * as readBytes: opened non-blocking, checked after open.
+ */
+export function hashFile(path: string): string | undefined {
+  let fd: number | undefined;
+  try {
+    fd = openSync(path, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
+    if (!fstatSync(fd).isFile()) return undefined;
+    const hash = createHash("sha256");
+    const chunk = Buffer.alloc(1024 * 1024);
+    for (let n = readSync(fd, chunk, 0, chunk.length, null); n > 0; n = readSync(fd, chunk, 0, chunk.length, null)) hash.update(chunk.subarray(0, n));
+    return hash.digest("hex");
+  } catch {
+    return undefined;
   } finally {
     if (fd !== undefined) closeSync(fd);
   }

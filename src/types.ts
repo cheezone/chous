@@ -35,6 +35,7 @@ export type Rule =
   | LifecycleRule
   | ArtifactsRule
   | LeftoverRule
+  | MeasuresRule
   | TwinsRule
   | ContractsRule
   | ManifestRule
@@ -90,6 +91,11 @@ export type TwinsRule = RuleBase & {
 };
 
 /** OS junk, installers, binaries and a crowded root, known by content (see `taste/hygiene.ts`). */
+/** Sizes and counts any repository has (see `MEASURES` in `taste/hygiene.ts`). */
+export type MeasuresRule = RuleBase & {
+  kind: "measures";
+};
+
 export type LeftoverRule = RuleBase & {
   kind: "leftover";
   /** Count docs at the root (repository root only). */

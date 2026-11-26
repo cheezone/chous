@@ -4,6 +4,7 @@ import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
 import { LifecycleRuleValidator } from "./lifecycle";
 import { ContractsRuleValidator } from "./contracts";
 import { ArtifactsRuleValidator, LeftoverRuleValidator, TwinsRuleValidator } from "./hygiene";
+import { MeasuresRuleValidator } from "./measures";
 import type { Rule } from "../../types";
 import type { RuleValidator } from "./types";
 
@@ -17,6 +18,7 @@ const validators: RuleValidator[] = [
   new ContractsRuleValidator(),
   new ArtifactsRuleValidator(),
   new LeftoverRuleValidator(),
+  new MeasuresRuleValidator(),
   new TwinsRuleValidator(),
 ];
 

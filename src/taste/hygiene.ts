@@ -45,6 +45,29 @@ export const MARKED_OUTPUT: Array<{ name: RegExp; content: RegExp; key: "cache" 
   { name: /\.tsbuildinfo$/, content: /^\{"(program|fileNames|root)":/, key: "tsbuildinfo", dir: false },
 ];
 
+/**
+ * chous's stance on sizes, not a measurement of quality: past these, a person
+ * or an agent should look. Chosen against 85 real repositories (test/corpus.json)
+ * so that what is reported is the tail, not the norm: half of them have a
+ * source file over 1000 lines, a sixth have more than 30 files at the root.
+ * GitHub's 50 MiB is the platform's own: it warns above it and rejects 100 MiB.
+ */
+export const MEASURES = {
+  sourceLines: 1000,
+  /** Bytes per line above which a file is minified or bundled, a machine's. */
+  minifiedLineBytes: 300,
+  filesPerDir: 50,
+  rootFiles: 30,
+  duplicateBytes: 4096,
+  instructionLines: 300,
+  /** The files agents read whole whenever they work in that directory. */
+  instructions: /(^|\/)(AGENTS|CLAUDE|GEMINI)\.md$|^\.github\/copilot-instructions\.md$/,
+  hugeBytes: 50 * 1024 * 1024,
+};
+
+/** Source code, by the extensions compilers and interpreters read. */
+export const SOURCE_FILE = /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro|py|go|rs|rb|php|java|kt|kts|scala|swift|m|mm|dart|c|h|cc|cpp|cxx|hpp|cs|fs|ex|exs|erl|zig|lua|sh|bash|ps1|sql|r|jl|hs|ml|clj|groovy|gradle)$/i;
+
 /** Signs that a package builds something: a `build` script, or a bundler's config next to package.json. */
 export const BUNDLER_CONFIG = /^(vite|vitest|tsdown|tsup|rollup|rolldown|webpack|esbuild|unbuild|parcel|rspack|rsbuild|svelte|astro|nuxt|next)\.config\.[cm]?[jt]s$|^tsconfig(\.[\w-]+)?\.json$/;
 

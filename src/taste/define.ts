@@ -63,6 +63,11 @@ export function taste(id: string) {
       push({ kind: "artifacts", value: "cleanliness" });
     },
 
+    /** Sizes and counts any repository has: long files, flat directories, copies, a crowded root. */
+    measures() {
+      push({ kind: "measures", value: "order" });
+    },
+
     /** OS junk, installers, binaries and a crowded root, known by content. */
     leftovers(opts: { rootDocs: boolean }) {
       push({ kind: "leftover", value: "cleanliness", ...opts });

@@ -10,6 +10,8 @@ export function base(opts: { workspacePackage?: boolean } = {}) {
   t.lifecycle({ workflows: !opts.workspacePackage });
   t.artifacts();
   t.leftovers({ rootDocs: !opts.workspacePackage });
+  // Counted once, over the whole repository.
+  if (!opts.workspacePackage) t.measures();
   t.twins();
   t.contracts();
 

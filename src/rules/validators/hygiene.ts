@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync } from "node:fs";
+import { existsSync, readdirSync } from "node:fs";
 import { readBytes, readTail, readText } from "../../fsutil";
 import { join, resolve } from "node:path";
 import type { ArtifactsRule, IssueMessage, LeftoverRule, Rule, TwinsRule, Verdict } from "../../types";
@@ -192,8 +192,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
 
 /**
  * One thing, two spellings: `README.md` next to `Readme.md` (case-insensitive
- * file systems keep one), one directory naming files two ways, the same
- * instructions twice. What names mean (`test/` and `tests/`, `plugin/` and
+ * file systems keep one), one directory naming files two ways. What names mean (`test/` and `tests/`, `plugin/` and
  * `plugins/`) is a question of language, and chous does not read language.
  */
 export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
@@ -228,25 +227,8 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
       else report(rel, rel.normalize("NFC") === other.normalize("NFC") ? "issue.twins.unicode" : "issue.twins.case", other);
     }
 
-    // The same instructions twice. Bun and cal.com keep one file and symlink the other;
-    // Claude Code's docs also offer `@AGENTS.md` in CLAUDE.md. Different contents are
-    // fine: a CLAUDE.md may add to AGENTS.md on purpose.
-    if (sameRegularFile(resolve(context.root, "AGENTS.md"), resolve(context.root, "CLAUDE.md"))) {
-      report("CLAUDE.md", "issue.twins.copy", "AGENTS.md");
-    }
-
     hitCount += mixedStyles(rule, context);
     return { hitCount };
-  }
-}
-
-/** Two regular files (not symlinks) with the same text. */
-function sameRegularFile(a: string, b: string): boolean {
-  try {
-    if (lstatSync(a).isSymbolicLink() || lstatSync(b).isSymbolicLink()) return false;
-    return readText(a).trim() === readText(b).trim();
-  } catch {
-    return false;
   }
 }
 

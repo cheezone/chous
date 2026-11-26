@@ -93,7 +93,14 @@ export default {
       case: "和 {{other}} 只差大小写；在 macOS 和 Windows 上检出时只会留下一个",
       unicode: "和 {{other}} 是同一个名字，只是重音字符用了另一种 Unicode 写法；在 macOS 上检出时只会留下一个",
       styles: "命名风格混用：{{styles}}（{{examples}}）；同一个目录只用一种起名方式",
-      copy: "和 {{other}} 内容完全相同：只留一份，另一份用软链接，或者在 CLAUDE.md 里写 `@AGENTS.md`",
+    },
+    measure: {
+      longFiles: "{{count}} 个源文件超过 {{limit}} 行（{{files}}）：是否承担了太多职责，由你或你的 agent 判断；不要机械拆分",
+      flatDirs: "{{count}} 个目录各自平铺了 {{limit}} 个以上源文件（{{dirs}}）：每个目录是不是只管一件事？",
+      crowdedRoot: "根目录有 {{count}} 个文件，超过 {{limit}} 个：根目录是入口",
+      copies: "{{count}} 组内容完全相同的文件（{{groups}}）：只留一份、改用链接，或者说明为什么要有多份",
+      instructions: "{{lines}} 行 agent 指令（超过 {{limit}} 行）：agent 每次在这里工作都会全部读一遍；只留每次都用得上的，其余放到用得上的地方",
+      hugeFile: "{{size}} MiB：GitHub 对超过 50 MiB 的文件发警告，100 MiB 及以上直接拒收；改用 Git LFS 或 Releases",
     },
     leak: {
       artifact: "构建产物没有被 gitignore，会被提交上去",

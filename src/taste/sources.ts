@@ -50,10 +50,6 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "If you need to distribute large files within your repository, you can create releases",
     },
   ],
-  // CLAUDE.md can import AGENTS.md instead of copying it (the twins rule).
-  "issue.twins.copy": [
-    { url: "https://code.claude.com/docs/en/memory#agents-md", check: "https://code.claude.com/docs/en/memory.md", quote: "imports AGENTS.md" },
-  ],
 };
 
 // End-of-life dates: each product's own schedule (checked by `pnpm run sync --check`).
