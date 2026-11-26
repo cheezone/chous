@@ -14,7 +14,7 @@ describe("real-world samples", () => {
   for (const name of ["project-layout", "nuxt.com", "pythondotorg", "ai-chatbot"]) {
     it(name, async () => {
       const result = await lintWorkspace({ root: resolve(SAMPLES, name), today: "2026-11-25" });
-      const claims = result.issues.map((i) => `${i.verdict} ${i.value} ${i.displayPath} ${i.message.key} ${JSON.stringify(i.message.params ?? {})}`).sort();
+      const claims = result.issues.map((i) => `${i.verdict} ${i.value} ${i.displayPath} ${i.message.key} ${JSON.stringify(i.message.params ?? {})}${i.details ? ` ${JSON.stringify(i.details)}` : ""}`).sort();
       expect(claims).toMatchSnapshot();
     });
   }

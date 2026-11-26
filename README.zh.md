@@ -41,26 +41,57 @@ npx chous
 
 ```
 现代
-  ✗ .nvmrc (Node 16)       → Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
-  ✗ package.json (request) → request 2.88.2，作者已在 npm 上宣布废弃：「request has been deprecated, see https://github.com/request/request/issues/3142」
-  ✗ package.json (Vue 2)   → Vue 2 已于 2023-12-31 停止维护 → Vue 3
+  ✗ Node 16 已于 2023-09-11 停止维护 → 仍在维护的 LTS 版本
+      .nvmrc
+  ✗ request 2.88.2，作者已在 npm 上宣布废弃：「request has been deprecated, see
+    https://github.com/request/request/issues/3142」
+      package.json
+  ✗ Vue 2 已于 2023-12-31 停止维护 → Vue 3
+      package.json
 
 秩序
-  ✗ ./                             → 根目录除 README、LICENSE 这类之外还有 4 份文档（ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md）：根目录是入口，最多留 3 份，其余移进 docs/
-  ✗ src/composables/               → 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
-  ✗ Readme.md                      → 和 README.md 只差大小写；macOS 和 Windows 检出时只能留下一个
+  ✗ 根目录除 README、LICENSE 这类之外还有 4 份文档：根目录是入口，最多留 3 份，其余移进 docs/
+      ARCHITECTURE.md
+      DEPLOYMENT.md
+      FIXES_SUMMARY.md
+      IMPLEMENTATION_COMPLETE.md
+  ✗ 和 README.md 只差大小写；在 macOS 和 Windows 上检出时只会留下一个
+      Readme.md
+  ✗ 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
+      src/composables/
 
 洁净
-  ✗ .DS_Store        → 不允许：系统垃圾文件，删掉并加进 .gitignore
-  ✗ dist/            → 3 个文件被 .gitignore 忽略，却仍被提交：用 `git rm --cached` 取消跟踪，或者用 `!` 规则把它们排除出忽略
+  ✗ 不允许：系统垃圾文件，删掉并加进 .gitignore
+      .DS_Store
+  ✗ .gitignore 忽略了它，却仍被提交：用 `git rm --cached` 取消跟踪，或者用 `!` 规则写明例外
+      dist/  3 个文件
 
 待审视：chous 知道事实，不知道用途。由你或你的 agent 判断。
-  ? bin/server                → 编译好的可执行文件或库：如果是本项目构建出来的，应该放到 Releases；如果是构建要读取的输入，就留着
-  ? ./                        → 2 个源文件超过 1000 行（src/api.ts 6763, src/board.ts 1840）：是否承担了太多职责，由你或你的 agent 判断；不要机械拆分
+  ? 2 个源文件超过 1000 行或 100 KiB：是否承担了太多职责，由你或你的 agent 判断；不要机械拆分
+      src/api.ts    6763 行 · 132 KiB
+      src/board.ts  1840 行 · 36 KiB
+  ? 编译好的可执行文件或库：如果是本项目构建出来的，应该放到 Releases；如果是构建要读取的输入，就留着
+      bin/server
 
-臭味 9 处 · 待审视 2 处
+臭味 8 处 · 待审视 2 处
 只看品味：不检查正确性、安全和测试。
+交给 agent：`chous claude install`，或让它运行 `chous manifesto` 和 `chous --json`。
 ```
+
+### 交给 agent
+
+chous 只列事实；决定怎么处理、动手处理，是 agent 的事。两种交法：
+
+- **钩子**：`npx chous claude install`（或 `cursor install`）。agent 每次停下时 chous 自动运行，把所有臭味和待审视的完整清单交给它。
+- **一句提示词**，任何 agent 都能用：
+
+  ```text
+  运行 `npx chous manifesto`，读懂它描述的品味。再运行 `npx chous --json`，整理这个仓库：
+  修掉所有臭味；每一条待审视的，看过之后决定留不留，并说明理由。
+  不要机械地拆文件。最后再运行一次 `npx chous`。
+  ```
+
+`--json` 里有每条结果的完整事实（`details`：所有长文件、平铺目录、重复文件组），上面的报告只列前几项。
 
 ### 两种结果
 

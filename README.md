@@ -41,26 +41,59 @@ npx chous
 
 ```
 Modernity
-  ✗ .nvmrc (Node 16)       → Node 16 reached end of life on 2023-09-11 → a supported LTS release
-  ✗ package.json (request) → request 2.88.2, deprecated by its authors on npm: “request has been deprecated, see https://github.com/request/request/issues/3142”
-  ✗ package.json (Vue 2)   → Vue 2 reached end of life on 2023-12-31 → Vue 3
+  ✗ Node 16 reached end of life on 2023-09-11 → a supported LTS release
+      .nvmrc
+  ✗ request 2.88.2, deprecated by its authors on npm: “request has been deprecated, see
+    https://github.com/request/request/issues/3142”
+      package.json
+  ✗ Vue 2 reached end of life on 2023-12-31 → Vue 3
+      package.json
 
 Order
-  ✗ ./                             → 4 docs at the root besides README, LICENSE and the like (ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md): the root is an entrance, keep at most 3 and move the rest into docs/
-  ✗ src/composables/               → mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
-  ✗ Readme.md                      → same name as README.md except for case; macOS and Windows keep only one of them on checkout
+  ✗ 4 docs at the root besides README, LICENSE and the like: the root is an entrance, keep at most 3 and move the rest
+    into docs/
+      ARCHITECTURE.md
+      DEPLOYMENT.md
+      FIXES_SUMMARY.md
+      IMPLEMENTATION_COMPLETE.md
+  ✗ same name as README.md except for case; macOS and Windows keep only one of them on checkout
+      Readme.md
+  ✗ mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
+      src/composables/
 
 Cleanliness
-  ✗ .DS_Store        → not allowed: OS junk, delete it and gitignore it
-  ✗ dist/            → 3 committed file(s) that .gitignore ignores: untrack them with `git rm --cached`, or unignore them with a `!` pattern
+  ✗ not allowed: OS junk, delete it and gitignore it
+      .DS_Store
+  ✗ committed although .gitignore ignores it: untrack it with `git rm --cached`, or unignore it with a `!` pattern
+      dist/  3 files
 
 To review: chous knows the fact, not the purpose. You or your agent decide.
-  ? bin/server                → a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
-  ? ./                        → 2 source files over 1000 lines (src/api.ts 6763, src/board.ts 1840): whether one holds too many jobs is for you or your agent to judge; never split mechanically
+  ? 2 source files over 1000 lines or 100 KiB: whether one holds too many jobs is for you or your agent to judge; never
+    split mechanically
+      src/api.ts    6763 lines · 132 KiB
+      src/board.ts  1840 lines · 36 KiB
+  ? a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
+      bin/server
 
-Smells: 9 · to review: 2
+Smells: 8 · to review: 2
 Taste only: correctness, security and tests are not checked.
+Hand it to an agent: `chous claude install`, or have it run `chous manifesto` and `chous --json`.
 ```
+
+### With an agent
+
+chous lists facts; deciding what to do about them, and doing it, is an agent's job. Two ways to hand it over:
+
+- **Hooks**: `npx chous claude install` (or `cursor install`). Whenever the agent stops, chous runs and hands it every smell and every item to review, with the full lists.
+- **A prompt**, in any agent:
+
+  ```text
+  Run `npx chous manifesto` and read the taste it describes. Then run `npx chous --json` and clean up the repository:
+  fix every smell, and for each item to review, look at it, decide whether it stays, and say why.
+  Do not split files mechanically. Run `npx chous` again at the end.
+  ```
+
+`--json` holds every fact in full (`details`: every long file, flat directory, set of copies); the report above shows the first few.
 
 ### Two kinds of finding
 

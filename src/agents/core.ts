@@ -1,7 +1,7 @@
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { getT, type TFunction } from "../i18n";
 import { lintWorkspace } from "../rules/lint";
-import { formatIssueMessage } from "../rules/report";
+import { detailItems, formatIssueMessage } from "../rules/report";
 
 export type AgentIssue = {
   root: string;
@@ -9,6 +9,8 @@ export type AgentIssue = {
   message: string;
   verdict: "smell" | "review";
   reason?: string;
+  /** What the finding lists (files, directories, copies), one line each. */
+  items?: string[];
 };
 
 export type AgentCheckResult = {
@@ -17,6 +19,8 @@ export type AgentCheckResult = {
 };
 
 const SUMMARY_ISSUE_LIMIT = 40;
+/** Items listed under one finding for an agent; the rest are in `chous --json`. */
+const SUMMARY_ITEM_LIMIT = 50;
 
 /**
  * Resolve a hook-provided path. Claude Code and Cursor on Windows both pass
@@ -65,6 +69,7 @@ export async function checkWorkspaces(opts: {
         message: formatIssueMessage(t, issue.message),
         verdict: issue.verdict,
         reason: issue.reason && t(issue.reason),
+        items: detailItems(t, issue).flatMap((it) => [`${it.text}${it.note ? ` (${it.note})` : ""}`, ...(it.children ?? []).map((c) => `  ${c}`)]),
       });
     }
   }
@@ -77,6 +82,9 @@ function formatIssueBlock(t: TFunction, issues: AgentIssue[]): string[] {
   for (const issue of issues) {
     lines.push(`- ${issue.displayPath}: ${issue.message}`);
     if (issue.reason) lines.push(`  ${t("agent.reason", { reason: issue.reason })}`);
+    const items = issue.items ?? [];
+    for (const item of items.slice(0, SUMMARY_ITEM_LIMIT)) lines.push(`  - ${item}`);
+    if (items.length > SUMMARY_ITEM_LIMIT) lines.push(`  - ${t("report.more", { count: items.length - SUMMARY_ITEM_LIMIT })}`);
   }
   return lines;
 }
