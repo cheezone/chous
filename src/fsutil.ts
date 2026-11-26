@@ -1,4 +1,4 @@
-import { stat, readFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 import { closeSync, constants, existsSync, fstatSync, openSync, readSync } from "node:fs";
 import { dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
@@ -105,7 +105,7 @@ export async function loadGitIgnorePatterns(
       const abs = resolve(root, ".gitignore");
       if (existsSync(abs)) {
         try {
-          appendGitIgnoreFile(allPatterns, await readFile(abs, "utf-8"), "");
+          appendGitIgnoreFile(allPatterns, readText(abs), "");
         } catch { /* ignore */ }
       }
       return allPatterns;
@@ -123,7 +123,7 @@ export async function loadGitIgnorePatterns(
       const dir = dirname(relFile);
       const prefix = dir === "." ? "" : dir + "/";
       try {
-        appendGitIgnoreFile(allPatterns, await readFile(absFile, "utf-8"), prefix);
+        appendGitIgnoreFile(allPatterns, readText(absFile), prefix);
       } catch { /* ignore */ }
     }
   } catch { /* ignore */ }

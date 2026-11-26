@@ -6,6 +6,7 @@ import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
 import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
 import { tracked as gitTracked } from "./git-index";
+import { gitignoreMatcher } from "./gitignore";
 import type { PackageManagerName } from "../types";
 
 /** Always skip VCS / dependency trees even if a project gitignore forgets them. */
@@ -432,7 +433,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     listWorkspacePackages(root),
   ]);
   // A pattern stacking `**/` segments makes the matcher backtrack for every deep path; git users never need more than a few.
-  const gitignore = ignore().add(patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3));
+  const gitignore = gitignoreMatcher(patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3));
   // What git tracks is committed, whatever .gitignore says: a force-added file counts.
   const index = shallow || rootOnly ? undefined : gitTracked(root);
   const tracked = index?.files;
