@@ -3,7 +3,7 @@ import { relative, resolve, sep } from "node:path";
 import type { Issue, LintResult, Rule } from "../types";
 import { buildWorkspaceSnapshot, subSnapshot, type WorkspaceSnapshot } from "../vfs/snapshot";
 import { resolveTaste } from "../taste";
-import { IN_TESTS, LOCKFILE_MANAGER } from "../taste/js";
+import { IN_TESTS, LOCKFILES } from "../taste/js";
 import { findValidator, type RuleValidatorContext } from "./validators";
 
 /** Validate one root (the repo, or one workspace package) against its rules. */
@@ -69,7 +69,7 @@ export async function lintWorkspace(opts: {
   const nested = [...snapshot.byRel.values()]
     .filter((e) => !e.isDir && e.name === "package.json" && e.relPath.includes("/") && !NOT_OURS.test(e.relPath) && !IN_TESTS.test(e.relPath))
     .map((e) => e.relPath.slice(0, e.relPath.lastIndexOf("/")))
-    .filter((dir) => [...LOCKFILE_MANAGER.keys()].some((lock) => snapshot.byRel.has(`${dir}/${lock}`)))
+    .filter((dir) => LOCKFILES.some((lock) => snapshot.byRel.has(`${dir}/${lock}`)))
     .filter((dir) => !packages.some((p) => dir === p || dir.startsWith(`${p}/`)));
   for (const dir of nested) {
     const projectRoot = resolve(root, dir);

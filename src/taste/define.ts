@@ -28,11 +28,6 @@ export function taste(id: string) {
       push({ kind: "no", names, ...extra });
     },
 
-    /** In these roles, a second tool holding the same job is a smell; with `acrossProjects`, package managers count across the repository's nested projects. */
-    oneToolPer(roles: string[], opts: { acrossProjects?: boolean } = {}) {
-      push({ kind: "stack", roles, value: "order", ...(opts.acrossProjects ? { acrossProjects: true } : {}) });
-    },
-
     /** Paths the tools of this kind of project say should not be there (src/facts/tools/, `absent`). */
     absent(scope: Scope) {
       for (const a of absentIn(scope)) push({ kind: "no", names: [...a.names], reason: `reason.${a.id}` as MessageKey, value: a.value });

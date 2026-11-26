@@ -11,9 +11,8 @@ export default {
       noCommand: "(no command)",
       commands: "Commands:",
       lintCmdDesc: "Lint the current directory",
-      scanCmdDesc: "Find git repos and show detected kinds and stack roles",
+      scanCmdDesc: "Find git repos below a directory and lint each",
       manifestoCmdDesc: "Print the taste chous stands for (for you and your agent)",
-      knowledgeCmdDesc: "Dump built-in stack knowledge as JSON",
       installCursorHookDesc: "Install Cursor hooks for automatic linting",
       installClaudeHookDesc: "Install Claude Code hooks for automatic linting",
       options: "Options:",
@@ -35,11 +34,7 @@ export default {
     },
   },
   scan: {
-    kinds: "kinds",
-    roles: "roles",
-    component: "component {{name}}",
     issues: "issues ({{count}})",
-    none: "(none)",
   },
   meta: {
     taste: "Taste: {{names}}",
@@ -117,9 +112,6 @@ export default {
       unsupported: "{{name}} is no longer supported, by its makers' own word → {{use}}",
       declared: "engines.node allows only {{versions}}, all past end of life (the last on {{date}}) → {{use}}",
     },
-    stack: {
-      conflict: "{{role}}: {{tools}}, two tools for one job; keep one",
-    },
   },
   reason: {
     ...absentMessages("en"),
@@ -139,18 +131,4 @@ export default {
   },
   dep: depMessages("en"),
   eol: eolMessages("en"),
-  role: {
-    "package-manager": "package manager",
-    runtime: "runtime",
-    linter: "linter",
-    formatter: "formatter",
-    typechecker: "type checker",
-    "test-runner": "test runner",
-    e2e: "e2e tests",
-    bundler: "bundler",
-    framework: "framework",
-    "git-hooks": "git hooks",
-    monorepo: "monorepo",
-    release: "release",
-  },
 } as const;

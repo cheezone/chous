@@ -31,7 +31,6 @@ export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
 export type Rule =
   | NoFilesRule
   | DepsRule
-  | StackRule
   | LifecycleRule
   | ArtifactsRule
   | LeftoverRule
@@ -95,18 +94,6 @@ export type LeftoverRule = RuleBase & {
 /** Monorepo root: one major version per dependency across packages. */
 export type WorkspaceRule = RuleBase & {
   kind: "workspace";
-};
-
-/**
- * One job, one tool: a second package manager, formatter, git-hook manager or
- * release tool holding the same job. Whether they actually collide is not claimed.
- */
-export type StackRule = RuleBase & {
-  kind: "stack";
-  /** Roles where one job takes one tool, e.g. `package-manager`. */
-  roles: string[];
-  /** At a repository's root: package managers are also counted in the projects nested in it (`frontend/` on npm, `backend/` on Yarn). */
-  acrossProjects?: boolean;
 };
 
 /** A param that is itself a message: translated, then interpolated. */

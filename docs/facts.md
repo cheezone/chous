@@ -4,7 +4,7 @@
 
 Each line is something a tool, platform or package author states about itself, with their own words behind it (`chous --verbose` shows them). chous reports it when a project goes against it.
 
-44 tools · 60 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
+44 tools · 61 facts about files · 8 paths that should not be committed · 8 end-of-life schedules · 41 npm package entries.
 
 “Seen in real projects” counts findings in the regression corpus (`test/corpus.json`: real repositories at pinned commits, every finding checked by hand). “not yet” means no repository there breaks it: the fact is checked against the tool's own words and examples, not yet against the wild.
 
@@ -49,6 +49,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
+| Order | two lockfiles that do not sync (…): Yarn itself advises not to mix package managers | github.com | dennislee928/Carbon_Trading_For_Individuals |
 | Convention | Yarn 2 and later read only .yarnrc.yml; this file is ignored | yarnpkg.com | not yet |
 
 ### TypeScript

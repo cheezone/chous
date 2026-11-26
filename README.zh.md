@@ -47,7 +47,6 @@ npx chous
 
 秩序
   ✗ ./                             → 根目录除 README、LICENSE 这类之外还有 4 份文档（ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md）：根目录是入口，最多留 3 份，其余移进 docs/
-  ✗ package.json (package-manager) → 包管理器：npm + pnpm，一件事两个工具，只留一个
   ✗ src/composables/               → 命名风格混用：camelCase ×1 + kebab-case ×1（asyncData.ts, lazy-hydration.ts）；同一个目录只用一种起名方式
   ✗ test/ + tests/                 → 同一个意思用了两个名字，只留一个
 
@@ -75,7 +74,7 @@ npx chous
 | 品味 | 臭味 | 待审视 |
 | --- | --- | --- |
 | 现代 | 已过官方停止维护日期的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；工具自己称为废弃、过时或旧格式的文件、字段和选项；作者废弃、称为遗留或故意破坏的依赖；死掉的工具留下的配置 | 平台已经自带同类能力的依赖 |
-| 秩序 | 同一目录里同一个工具的第二份配置，工具永远不会读它；写了两遍又不一样的 Node 版本；一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；一件事两个工具；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
+| 秩序 | 同一目录里同一个工具的第二份配置，工具永远不会读它；写了两遍又不一样的 Node 版本；一个东西两个名字（`test/` 和 `tests/`、单复数、只差大小写）；同一目录命名风格混用；根目录文档太多；`yarn.lock` 旁边的 `package-lock.json`；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表；内容一模一样的 `CLAUDE.md` 和 `AGENTS.md` | |
 | 约定 | 工具不再读、或只在某个位置某个名字下才读的文件和字段；不符合语言、框架命名规定的名字（Python、Go、Rust、Dart、Kotlin、Elixir、PHP 的 PSR-4、Angular、Vue）；npm 不接受的包名；工具和平台在文档里给出的上限（GitHub 的文件大小、Codex 的 AGENTS.md 大小、agent 指令的行数）；不符合 Agent Skills 规范的 skill；Next.js、Nuxt 不读的目录 | |
 | 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；工具自己说不要提交的文件（`.env*.local`、个人 IDE 和 agent 配置、Worker 本地密钥）；旁边就有原件的备份；安装包（靠文件头识别） | 可执行文件和库；名字像工作日志的文档；没人提到的一次性脚本；找不到原件的备份；成批的版本说明和工作记录 |
 
@@ -95,8 +94,7 @@ npx chous --json          # 以数据形式输出所有结果，给 agent 用
 npx chous manifesto       # 输出品味宣言，给 agent 读完再审视整个仓库
 npx chous claude install  # 在 Claude Code hooks 里运行 chous
 npx chous cursor install  # 在 Cursor hooks 里运行 chous
-npx chous scan .          # 找 git 仓库，识别项目类型 / 技术栈角色
-npx chous knowledge       # 以 JSON 导出 chous 识别的工具、角色和项目类型
+npx chous scan .          # 找出目录下的 git 仓库，逐个检查
 ```
 
 输出支持英文和中文（`-l en` / `-l zh`，默认跟随系统）。

@@ -12,9 +12,8 @@ export default {
       noCommand: "（不带命令）",
       commands: "命令：",
       lintCmdDesc: "检查当前目录",
-      scanCmdDesc: "查找 git 仓库，显示识别到的项目类型和技术栈角色",
+      scanCmdDesc: "找出目录下的 git 仓库，逐个检查",
       manifestoCmdDesc: "输出 chous 的品味宣言（给你和你的 agent 看）",
-      knowledgeCmdDesc: "以 JSON 导出内置技术栈知识",
       installCursorHookDesc: "安装 Cursor hooks，自动检查",
       installClaudeHookDesc: "安装 Claude Code hooks，自动检查",
       options: "选项：",
@@ -36,11 +35,7 @@ export default {
     },
   },
   scan: {
-    kinds: "项目类型",
-    roles: "技术栈",
-    component: "组件 {{name}}",
     issues: "问题（{{count}}）",
-    none: "（无）",
   },
   meta: {
     taste: "品味：{{names}}",
@@ -118,9 +113,6 @@ export default {
       unsupported: "官方已声明 {{name}} 不再受支持 → {{use}}",
       declared: "engines.node 只允许 {{versions}}，全都已停止维护（最晚一个于 {{date}}）→ {{use}}",
     },
-    stack: {
-      conflict: "{{role}}：{{tools}}，一件事两个工具，只留一个",
-    },
   },
   reason: {
     ...absentMessages("zh"),
@@ -140,18 +132,4 @@ export default {
   },
   dep: depMessages("zh"),
   eol: eolMessages("zh"),
-  role: {
-    "package-manager": "包管理器",
-    runtime: "运行时",
-    linter: "代码检查",
-    formatter: "格式化",
-    typechecker: "类型检查",
-    "test-runner": "测试框架",
-    e2e: "端到端测试",
-    bundler: "打包工具",
-    framework: "框架",
-    "git-hooks": "Git 钩子",
-    monorepo: "monorepo",
-    release: "发版工具",
-  },
 } satisfies Messages;

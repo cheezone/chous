@@ -151,7 +151,6 @@ RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count
 SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 SankrityaT/InstaCare	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
-SankrityaT/InstaCare	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm + pnpm"}
 TheAlphamerc/flutter_twitter_clone	smell	convention	lib/helper/customRoute.dart	issue.contract.dartFileName	{"name":"customRoute","count":1}
 TheAlphamerc/flutter_twitter_clone	smell	convention	lib/model/	issue.contract.dartFileName	{"name":"bookmarkModel","count":4}
 TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/	issue.contract.dartFileName	{"name":"appState","count":7}
@@ -209,7 +208,6 @@ Walbrkt/HackBerlin_Solar	smell	cleanliness	package.json.bak	issue.leftover.backu
 Walbrkt/HackBerlin_Solar	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 Walbrkt/HackBerlin_Solar	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"limit":3,"names":"AGENT_PROMPTS.md, API_DOCUMENTATION.md, DATA_QUALITY_REPORT.md, END_TO_END_PHILOSOPHY.md, INFERENCE_SERVER_SUMMARY.md, …"}
-Walbrkt/HackBerlin_Solar	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 ai-assist-org/ai-assist	review	cleanliness	IMPLEMENTATION_SUMMARY.md	issue.leftover.worklog	{}
 ai-assist-org/ai-assist	review	cleanliness	docs/SELF_IMPROVEMENT.md	issue.leftover.worklog	{}
 anomalyco/opencode	review	modernity	packages/tui/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
@@ -217,7 +215,6 @@ anomalyco/opencode	review	order	packages/core/test/fixture/	issue.twins.pluralMa
 anomalyco/opencode	review	order	packages/plugin/	issue.twins.pluralMaybe	{"other":"packages/plugins/"}
 anomalyco/opencode	smell	convention	packages/plugins/figma/skills/figma-code-connect/SKILL.md	issue.contract.skillLines	{"lines":528,"limit":500}
 anomalyco/opencode	smell	modernity	sdks/vscode/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
-anomalyco/opencode	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm (.github/release/cf/, .github/release/wrangler/)"}
 anomalyco/opencode	smell	order	package.json (vite)	issue.workspace.drift	{"name":"vite","versions":"packages/app: 8.2.4; packages/data/app: 8.2.4; packages/desktop: 8.2.4; services/site: 8.2.4; packages/stories: 7.3.7"}
 anomalyco/opencode	smell	order	services/site/test/	issue.twins.styles	{"styles":"kebab-case ×28 + camelCase ×4","examples":"changelog-highlights.test.ts, consoleMarketing.test.ts"}
 antfu/ni	smell	order	test/programmatic/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"catalog-interactive.spec.ts, runCli.spec.ts"}
@@ -373,8 +370,7 @@ dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/tsconfig.j
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Frontend/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
-dennislee928/Carbon_Trading_For_Individuals	smell	order	Frontend/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + yarn"}
-dennislee928/Carbon_Trading_For_Individuals	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + yarn (Frontend/)"}
+dennislee928/Carbon_Trading_For_Individuals	smell	order	Frontend/yarn.lock	issue.contract.yarnNpmLock	{"files":"yarn.lock, package-lock.json"}
 denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-aarch64	issue.leftover.executable	{}
 denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-x86_64	issue.leftover.executable	{}
 denoland/deno	review	cleanliness	tests/specs/compile/cross_compile_intel_mac/denort_intel	issue.leftover.executable	{}
@@ -402,7 +398,6 @@ eryngordon/quiz-lead-magnet-maker	smell	modernity	bun.lockb	issue.no.because	{"r
 eryngordon/quiz-lead-magnet-maker	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 eryngordon/quiz-lead-magnet-maker	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
-eryngordon/quiz-lead-magnet-maker	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 facebook/react	review	modernity	compiler/package.json (object-assign)	issue.deps.native	{"name":"object-assign","use":"Object.assign / spread"}
 facebook/react	review	modernity	compiler/package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
 facebook/react	review	modernity	package.json (mkdirp)	issue.deps.native	{"name":"mkdirp","use":"fs.mkdir(path, { recursive: true })"}
@@ -481,8 +476,6 @@ hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.end
 honojs/hono	review	modernity	benchmarks/query-param/package.json (tsx)	issue.deps.native	{"name":"tsx","use":"bun"}
 honojs/hono	review	modernity	benchmarks/routers/package.json (tsx)	issue.deps.native	{"name":"tsx","use":"bun"}
 honojs/hono	smell	modernity	benchmarks/query-param/bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
-honojs/hono	smell	order	benchmarks/query-param/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
-honojs/hono	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun (benchmarks/query-param/, benchmarks/routers/) + npm (benchmarks/query-param/) + pnpm + yarn (benchmarks/jsx/)"}
 immich-app/immich	review	modernity	e2e/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 immich-app/immich	review	modernity	web/package.json (dotenv)	issue.deps.native	{"name":"dotenv","use":"process.loadEnvFile() / node --env-file"}
 immich-app/immich	review	order	web/src/routes/(user)/memory/	issue.twins.pluralMaybe	{"other":"web/src/routes/(user)/memories/"}
@@ -505,7 +498,6 @@ kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
 kartikramachandrula/thynk	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
 kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 kartikramachandrula/thynk	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
-kartikramachandrula/thynk	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 koel/koel	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":36,"limit":32}
 koel/koel	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":377,"limit":200}
 koel/koel	smell	modernity	.github/workflows/release.yml	issue.contract.workflowCommands	{"command":"set-output"}
@@ -920,7 +912,6 @@ rust-lang/rust	review	order	src/tools/rustfmt/tests/target/reorder_modules/v0/	i
 rust-lang/rust	review	order	tests/ui/static/	issue.twins.pluralMaybe	{"other":"tests/ui/statics/"}
 rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
 rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
-rust-lang/rust	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm (src/tools/clippy/.github/, src/tools/rust-analyzer/editors/code/) + yarn"}
 rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
 rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
 ruvnet/ruflo	review	cleanliness	.claude-plugin/docs/PLUGIN_SUMMARY.md	issue.leftover.worklog	{}
@@ -1122,7 +1113,6 @@ ruvnet/ruflo	smell	modernity	v3/tsconfig.json	issue.contract.tsconfigDeprecated	
 ruvnet/ruflo	smell	modernity	v3/tsconfig.vitest-temp.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 ruvnet/ruflo	smell	order	docs/assets/readme/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"generate-learning-cosmos.py, theme_artwork.py"}
 ruvnet/ruflo	smell	order	package.json (agentic-flow)	issue.workspace.drift	{"name":"agentic-flow","versions":".: ^3.0.0; v3/@claude-flow/plugin-agent-federation: 2.0.14"}
-ruvnet/ruflo	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
 ruvnet/ruflo	smell	order	package.json (vitest)	issue.workspace.drift	{"name":"vitest","versions":".: ^3.2.6; v3/@claude-flow/codex: ^4.1.0; v3/@claude-flow/mcp: ^4.1.0; v3/@claude-flow/plugin-agent-federation: ^4.1.0; v3/@claude-flow/security: ^4.1.0"}
 ruvnet/ruflo	smell	order	plugin/	issue.twins.plural	{"other":"plugins/"}
 ruvnet/ruflo	smell	order	plugins/ruflo-ai-team/test/ + tests/	issue.twins.synonyms	{}
@@ -1132,14 +1122,12 @@ ruvnet/ruflo	smell	order	ruflo/src/ruvocal/scripts/	issue.twins.styles	{"styles"
 ruvnet/ruflo	smell	order	ruflo/src/ruvocal/src/lib/server/api/__tests__/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"conversations-id.spec.ts, testHelpers.ts"}
 ruvnet/ruflo	smell	order	v3/@claude-flow/claims/tests/ + __tests__/	issue.twins.synonyms	{}
 ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
-ruvnet/ruflo	smell	order	v3/package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"npm + pnpm"}
 ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 ruvnet/symbolic-scribe	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
 ruvnet/symbolic-scribe	smell	modernity	harness/.claude/commands/	issue.contract.claudeCommands	{"count":3}
 ruvnet/symbolic-scribe	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 ruvnet/symbolic-scribe	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 ruvnet/symbolic-scribe	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
-ruvnet/symbolic-scribe	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 shadcn-ui/taxonomy	smell	modernity	.nvmrc (Node 16)	issue.lifecycle.ended	{"name":"Node 16","date":"2023-09-11","use":{"t":"eol.node"}}
 shadcn-ui/taxonomy	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 shadcn-ui/taxonomy	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\", baseUrl: \".\""}
@@ -1154,7 +1142,6 @@ theaiautomators/insights-lm-public	smell	modernity	bun.lockb	issue.no.because	{"
 theaiautomators/insights-lm-public	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 theaiautomators/insights-lm-public	smell	modernity	tsconfig.app.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 theaiautomators/insights-lm-public	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
-theaiautomators/insights-lm-public	smell	order	package.json (package-manager)	issue.stack.conflict	{"role":{"t":"role.package-manager"},"tools":"bun + npm"}
 theaiautomators/insights-lm-public	smell	order	src/hooks/	issue.twins.styles	{"styles":"camelCase ×13 + kebab-case ×2","examples":"useAudioOverview.tsx, use-mobile.tsx"}
 tokio-rs/tokio	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":8}
 unocss/unocss	smell	cleanliness	examples/sveltekit-preprocess/dist/	issue.leak.artifact	{}

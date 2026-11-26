@@ -16,7 +16,7 @@
 - 只收官方文档里写明的东西：位置、命名、上限、旧格式、停止维护日期。官方没写的不推断（Angular 只说「不再支持」，就只报这句，不编日期）。引用以原文为准，例如 `.env` 可以提交，只有 `.env*.local` 不行。
 - 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何 Dockerfile 的 `FROM`（展开 `ARG`、允许任意镜像仓库）、`volta.node`、框架依赖；Node 代号按 `schedule.json` 的 `codename` 换算）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
-- 工具并存只说「一件事两个工具」，不声称它们会互相破坏。
+- 不按职责数工具（「一件事两个工具」已删除）：用几个工具是用户的事。只有工具自己说不该并存的才报（Yarn 对 `package-lock.json` 的警告）。
 - 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用、巨型文件）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - **优先级：生态约定先于 AI 工具约定。** AI 工具一年内就会改名、被收购、换格式，收录前必须重新调研（用户量、是否还在维护、是否改名）。
@@ -27,12 +27,12 @@
 
 - **`src/facts/`：chous 知道的一切。** 一个工具一个文件 `tools/<生态>/<工具>.ts`，在 `index.ts` 登记。文件里放这个工具的全部知识：配置文件（`configs`、`legacy`）、事实（`facts`）、不该提交的路径（`absent`）、停止维护时间表（`eol`）、原话（`sources`）、中英文案（`message`）、正反例（`examples`）、调研日期（`researched`）。npm 包在 `packages/npm.ts`。
   - 事实按「种类」写（`kinds/`）。新工具应该只填数据；`custom` 是逃生口，两个工具用到同一种检查时就把它提成新种类。
-  - 别处需要工具的文件列表时（如 `src/knowledge/tools/eslint.ts`）从工具文件引用，不要抄一份。
+  - 别处需要工具的文件列表时从工具文件引用（`configs`），不要抄一份。
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
 - **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单；`frameworks.ts` 是 Next.js、Nuxt 的目录规则；`sources.ts` 是这些规则的原话。`contracts.ts` 只剩 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。
-- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；测试目录里的子项目是测试输入，不检查。包管理器按整个仓库计数。
+- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；测试目录里的子项目是测试输入，不检查。
 - 读文件一律用 `readText` / `readBytes`（`src/fsutil.ts`）：只读普通文件，最多 16 MiB，非阻塞打开。仓库是不可信的输入：软链接可以指向 `/dev/zero`、`/`、`../secret`，文件名可以带 `..\\`、`#`、终端控制字符，manifest 可以是 `null` 或嵌套上万层。遍历不跟随软链接，只有 git 跟踪的、指向仓库内部的软链接才跟随。多行正则不要用 `^\\s*`（在空行上是平方复杂度），用 `^[ \\t]*`。`test/code/robustness.test.ts` 锁住了这些攻击。
-- `src/rules/validators/`：每种规则的执行；`src/knowledge/`：识别项目用了哪些工具（「一件事两个工具」用）。
+- `src/rules/validators/`：每种规则的执行。
 - 文案：i18next，只有 `en` 和 `zh`，在 `src/locales/{en,zh}.ts`（TS 模块，tsdown 的 dts 不支持 JSON）。工具的文案写在工具文件里，由注册表并入。不要再引入 typesafe-i18n（不支持 TS 7）。
 
 ## 怎么验证

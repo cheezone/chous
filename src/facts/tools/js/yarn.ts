@@ -1,5 +1,5 @@
 import { tool } from "../../define";
-import { unread } from "../../kinds";
+import { exclusive, unread } from "../../kinds";
 import { pinnedManager, sibling } from "../../kit";
 
 export default tool({
@@ -8,6 +8,25 @@ export default tool({
   researched: "2026-11",
   legacy: [".yarnrc"],
   facts: [
+    exclusive({
+      id: "yarnNpmLock",
+      files: ["yarn.lock", "package-lock.json"],
+      message: {
+        en: "two lockfiles that do not sync ({{files}}): Yarn itself advises not to mix package managers",
+        zh: "两份互不同步的 lockfile（{{files}}）：Yarn 自己建议不要混用包管理器",
+      },
+      sources: [
+        {
+          url: "https://github.com/yarnpkg/yarn/blob/master/src/reporters/lang/en.js",
+          check: "https://raw.githubusercontent.com/yarnpkg/yarn/master/src/reporters/lang/en.js",
+          quote: "It is advised not to mix package managers in order to avoid resolution inconsistencies caused by unsynchronized lock files.",
+        },
+      ],
+      examples: {
+        smell: [{ "package.json": "{}", "yarn.lock": "", "package-lock.json": "{}" }],
+        clean: [{ "package.json": "{}", "yarn.lock": "" }, { "a/yarn.lock": "", "b/package-lock.json": "{}" }],
+      },
+    }),
     unread({
       id: "yarnrc",
       files: [".yarnrc"],

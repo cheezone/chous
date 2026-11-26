@@ -47,7 +47,6 @@ Modernity
 
 Order
   ✗ ./                             → 4 docs at the root besides README, LICENSE and the like (ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md): the root is an entrance, keep at most 3 and move the rest into docs/
-  ✗ package.json (package-manager) → package manager: npm + pnpm, two tools for one job; keep one
   ✗ src/composables/               → mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
   ✗ test/ + tests/                 → one thing under two names, keep one
 
@@ -75,7 +74,7 @@ There are no errors, warnings or hints, and no score. Smells make chous exit non
 | Taste | Smell | To review |
 | --- | --- | --- |
 | Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); formats, fields and options their own tools call deprecated, obsolete or legacy; dependencies deprecated, called legacy or sabotaged by their authors; config of dead tools | Dependencies the platform now ships |
-| Order | A second config of one tool in one directory, which the tool never reads; Node pinned twice to different versions; one thing, two names (`test/` and `tests/`, singular and plural, case only); mixed naming styles in one directory; a crowded root; one job, two tools; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo; `CLAUDE.md` identical to `AGENTS.md` | |
+| Order | A second config of one tool in one directory, which the tool never reads; Node pinned twice to different versions; one thing, two names (`test/` and `tests/`, singular and plural, case only); mixed naming styles in one directory; a crowded root; `package-lock.json` beside `yarn.lock`; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo; `CLAUDE.md` identical to `AGENTS.md` | |
 | Convention | Files and fields a tool no longer reads, or reads only from one place or under one name; names that break a language's or framework's naming rules (Python, Go, Rust, Dart, Kotlin, Elixir, PHP's PSR-4, Angular, Vue); package names npm refuses; limits tools and platforms set in their docs (GitHub's file sizes, Codex's AGENTS.md size, line limits of agent instructions); skills that break the Agent Skills spec; directories Next.js and Nuxt never read | |
 | Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets); a backup next to its original; installers (known by their signature) | Executables and libraries; docs named like work logs; one-off scripts nothing mentions; backups without an original; series of per-version notes and piles of work records |
 
@@ -95,8 +94,7 @@ npx chous --json          # every finding as data, for agents
 npx chous manifesto       # print the manifesto, for an agent to read before reviewing the repo
 npx chous claude install  # run chous in Claude Code hooks
 npx chous cursor install  # run chous in Cursor hooks
-npx chous scan .          # find git repos, detect project kinds / stack roles
-npx chous knowledge       # dump the tools, roles and project kinds chous detects, as JSON
+npx chous scan .          # find git repos below a directory and lint each
 ```
 
 Output is in English or Chinese (`-l en` / `-l zh`; default follows the system).

@@ -20,7 +20,7 @@ const VERSION: string = packageJson.version;
 type HookSubcommand = "after-edit" | "stop" | "install";
 
 type CliOptions = {
-  command: "lint" | "cursor" | "claude" | "scan" | "knowledge" | "manifesto";
+  command: "lint" | "cursor" | "claude" | "scan" | "manifesto";
   hook?: HookSubcommand;
   cwd: string;
   verbose: boolean;
@@ -71,8 +71,7 @@ function parseArgs(argv: string[], t: TFunction): CliOptions {
         opts.scanDir = next;
         i++;
       }
-    } else if (a === "knowledge") opts.command = "knowledge";
-    else if (a === "manifesto") opts.command = "manifesto";
+    } else if (a === "manifesto") opts.command = "manifesto";
     else if (a === "--json") opts.json = true;
     else if (a === "--help" || a === "-h") opts.help = true;
     else if (a === "--verbose" || a === "-v") opts.verbose = true;
@@ -107,7 +106,6 @@ function printHelp(t: TFunction): void {
     row(t("cli.help.noCommand"), "cli.help.lintCmdDesc"),
     row("scan [dir]", "cli.help.scanCmdDesc"),
     row("manifesto", "cli.help.manifestoCmdDesc"),
-    row("knowledge", "cli.help.knowledgeCmdDesc"),
     row("cursor install", "cli.help.installCursorHookDesc"),
     row("claude install", "cli.help.installClaudeHookDesc"),
     "",
@@ -292,20 +290,11 @@ async function main() {
     return;
   }
 
-  if (opts.command === "knowledge") {
-    const { knowledgeToJSON } = await import("./knowledge");
-    console.log(JSON.stringify(knowledgeToJSON(), null, 2));
-    return;
-  }
-
   if (opts.command === "scan") {
     const { scanDirectory, formatScanText } = await import("./scan");
     const result = await scanDirectory({
       dir: resolve(opts.cwd, opts.scanDir ?? "."),
       lang,
-      json: opts.json,
-      withKnowledge: Boolean(opts.json && opts.verbose),
-      withSpecfy: true,
     });
     console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, getT(lang).t));
     process.exitCode = result.repos.some((r) => r.issues.some((i) => i.verdict === "smell")) ? 1 : 0;

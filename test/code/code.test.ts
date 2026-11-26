@@ -44,12 +44,6 @@ const EXPECTED: Record<string, string[]> = {
     "zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)",
     "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
   ],
-  stack: [
-    "package manager: npm + pnpm, two tools for one job",
-    "formatter: oxfmt + prettier, two tools for one job",
-    "git hooks: husky + simple-git-hooks, two tools for one job",
-  ],
-  yarn: ["package manager: pnpm + yarn, two tools for one job"],
 };
 
 describe("fixtures that match the taste", () => {

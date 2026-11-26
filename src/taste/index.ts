@@ -55,7 +55,7 @@ export function resolveTaste(root: string, opts: TasteOptions = {}): Taste {
   const tastes: Array<[string, Rule[]]> = [["base", base({ workspacePackage: inner })]];
 
   if (anyExists(root, ["package.json"])) {
-    tastes.push(["js", js({ workspacePackage: opts.workspacePackage, repositoryRoot: !inner })]);
+    tastes.push(["js", js({ workspacePackage: opts.workspacePackage })]);
     if (opts.monorepo) tastes.push(["monorepo", monorepo()]);
     if (runtime === "bun") tastes.push(["bun", bun()]);
     const pkg = readJson(resolve(root, "package.json"));

@@ -22,7 +22,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 - Hidden files count like any others: a directory starting with `.` does not make what is in it smell any less.
 - Configuration as gathered as it can be without crossing responsibilities: one tool's config in one place, each tool its own.
 - Nothing laid out flat. Hundreds of files in one directory, every responsibility in one file: neither is organised. But a count proves nothing by itself, so chous does not judge counts; the agent does (see below).
-- One job, one tool: two package managers, two formatters, two git-hook managers or two release tools at once stink. chous does not claim they break each other, only that one job has two tools.
+- Which tools you use, and how many, is yours to decide; chous does not count tools by job. It speaks only where a tool speaks itself: Yarn warns that a `package-lock.json` beside `yarn.lock` makes two lockfiles that drift apart.
 - One tool, one config per directory. A tool reads one of them by its own precedence (ESLint takes `eslint.config.js` before `.ts`); the rest are never read.
 - One fact, said once: a dependency on two major versions, two instruction files with the same text, two workspace lists that disagree, Node pinned twice to different versions.
 - How many files or dependencies a project has is not a smell.
@@ -102,7 +102,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Singular and plural directories side by side deeper down (`language/` and `languages/`) | Both names exist | One kind of thing, one name; they may also be two things | Order | Review |
 | Mixed naming styles in one directory | Each name's style | One directory, one style | Order | Smell |
 | A crowded root | How many docs without a claim to the root it holds | The root is an entrance | Order | Smell |
-| Tools that share a job (package managers counted across the repository: `frontend/` on npm and `backend/` on Yarn count) | Both tools' config, lockfile or scripts | One job, one tool | Order | Smell |
+| `package-lock.json` beside `yarn.lock` | Both lockfiles in one directory; Yarn's own warning | One fact, said once | Order | Smell |
 | A second config of one tool in one directory | Which configs exist, and the order in which the tool's docs say it reads them | One tool, one config | Order | Smell |
 | One fact said twice, disagreeing: Node pinned to two versions; in a monorepo, major-version drift, nested lockfiles, workspace lists that differ | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | `CLAUDE.md` identical to `AGENTS.md` | Both files have the same text | Keep one; symlink the other or import it with `@AGENTS.md` | Order | Smell |
