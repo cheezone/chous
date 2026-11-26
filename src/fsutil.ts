@@ -78,8 +78,9 @@ function appendGitIgnoreFile(
     const hasSlash = line.slice(0, -1).includes("/");
     let p = line;
     if (hasSlash || p.startsWith("/")) {
-      // Has slash or starts with slash → relative to this .gitignore's directory
-      if (p.startsWith("/")) p = p.slice(1);
+      // Has slash or starts with slash → relative to this .gitignore's directory.
+      // At the root the leading slash stays: `/*.js` is the root's files only, `*.js` would be every directory's.
+      if (p.startsWith("/") && prefix) p = p.slice(1);
       p = prefix + p;
     } else {
       // No slash → match this name in current directory and any subdirectories
