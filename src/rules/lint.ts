@@ -59,7 +59,7 @@ export async function lintWorkspace(opts: {
       // The same finding reached from the root and from a package is reported once.
       if (seen.has(issueKey(issue))) continue;
       seen.add(issueKey(issue));
-      issues.push({ ...issue, displayPath: within(pkg, issue.displayPath) });
+      issues.push(fromProject(pkg, issue));
     }
   }
 
@@ -76,7 +76,7 @@ export async function lintWorkspace(opts: {
     for (const issue of await checkRoot(projectRoot, projectTaste.rules, subSnapshot(snapshot, dir), today)) {
       if (seen.has(issueKey(issue))) continue;
       seen.add(issueKey(issue));
-      issues.push({ ...issue, displayPath: within(dir, issue.displayPath) });
+      issues.push(fromProject(dir, issue));
     }
   }
 
@@ -92,6 +92,13 @@ export async function lintWorkspace(opts: {
 
 /** A path inside a package or nested project, as seen from the repository: its own root `./` is `pkg/`. */
 const within = (dir: string, path: string) => (path === "./" ? `${dir}/` : `${dir}/${path}`);
+
+/** A finding of a package or nested project, its paths as seen from the repository (the files a grouped finding lists too). */
+function fromProject(dir: string, issue: Issue): Issue {
+  const files = issue.details?.files;
+  const details = Array.isArray(files) && files.every((f) => typeof f === "string") ? { ...issue.details, files: files.map((f: string) => within(dir, f)) } : issue.details;
+  return { ...issue, displayPath: within(dir, issue.displayPath), ...(details ? { details } : {}) };
+}
 
 function issueKey(issue: Issue): string {
   return `${issue.path}:${issue.message.key}`;

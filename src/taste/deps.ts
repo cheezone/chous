@@ -15,10 +15,8 @@ export type ObsoleteDep = {
 
 const of = (kind: PackageFact["kind"]): ObsoleteDep[] => PACKAGES.filter((p) => p.kind === kind).map(({ names, use }) => ({ names: [...names], use }));
 
-/** 1. Deprecated, or called legacy, by its own authors. */
+/** Deprecated, or called legacy, by its own authors. */
 export const DEPRECATED = of("deprecated");
-/** 2. Broken on purpose by its own author. */
-export const SABOTAGED = of("sabotaged");
 
 export function depReason(dep: ObsoleteDep): MessageKey {
   return `dep.${dep.names[0]}` as MessageKey;

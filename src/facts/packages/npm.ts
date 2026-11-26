@@ -6,7 +6,6 @@
  *   (moment), where npm itself does not say so: npm's `deprecated` field is
  *   read from the lockfile (src/vfs/lockfile.ts). Bower is not here: its
  *   README says it is maintained.
- * - sabotaged (a smell): its author broke it on purpose.
  *
  * "Old", "slow", "written in the wrong language", "the platform has one now" or
  * "there is something newer" are not rot: reusing a package is no smell. Those change; facts do not. Silence is not evidence either: an
@@ -25,8 +24,5 @@ export default packages([
   { kind: "deprecated", names: ["react-scripts"], use: "a framework, or Vite / Parcel / Rsbuild", why: { en: "Create React App was deprecated in 2025.", zh: "Create React App 已于 2025 年废弃。" }, sources: [{ url: "https://github.com/facebook/create-react-app#readme", check: "https://raw.githubusercontent.com/facebook/create-react-app/main/README.md", quote: "## Deprecated" }] },
   { kind: "deprecated", names: ["@vue/cli-service"], use: "create-vue (Vite)", why: { en: "Its authors: Vue CLI is now in maintenance mode.", zh: "作者原话：Vue CLI 已进入维护模式。" }, sources: [{ url: "https://github.com/vuejs/vue-cli#readme", check: "https://raw.githubusercontent.com/vuejs/vue-cli/dev/README.md", quote: "Vue CLI is now in maintenance mode." }] },
   { kind: "deprecated", names: ["react-test-renderer"], use: "@testing-library/react", why: { en: "Deprecated by React and no longer maintained.", zh: "React 官方已宣布废弃，不再维护。" }, sources: [{ url: "https://www.npmjs.com/package/react-test-renderer", check: "https://raw.githubusercontent.com/facebook/react/main/packages/react-test-renderer/README.md", quote: "react-test-renderer is deprecated and no longer maintained." }] },
-  // Broken on purpose by its own author.
-  { kind: "sabotaged", names: ["colors"], use: "util.styleText", why: { en: "Its author published an infinite loop in January 2022 (GHSA-5rqg-jm4f-cqx7).", zh: "作者在 2022 年 1 月发布了死循环（GHSA-5rqg-jm4f-cqx7）。" }, sources: [{ url: "https://github.com/advisories/GHSA-5rqg-jm4f-cqx7", check: "https://raw.githubusercontent.com/github/advisory-database/main/advisories/github-reviewed/2022/01/GHSA-5rqg-jm4f-cqx7/GHSA-5rqg-jm4f-cqx7.json", quote: "were published including malicious code that caused a Denial of Service due to an infinite loop" }] },
-  { kind: "sabotaged", names: ["faker"], use: "@faker-js/faker", why: { en: "Its author deleted the package in January 2022; the community fork lives on.", zh: "作者在 2022 年 1 月删掉了这个包；社区分支还在维护。" }, sources: [{ url: "https://fakerjs.dev/about/announcements/2022-01-14", check: "https://raw.githubusercontent.com/faker-js/faker/next/docs/about/announcements/2022-01-14.md", quote: "when the main package was deleted" }] },
 
 ]);

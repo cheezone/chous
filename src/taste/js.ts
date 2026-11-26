@@ -1,5 +1,5 @@
 import { taste } from "./define";
-import { DEPRECATED, SABOTAGED, depReason } from "./deps";
+import { DEPRECATED, depReason } from "./deps";
 
 export type JsProject = {
   /** A package inside a monorepo: the root owns the lockfile. */
@@ -30,7 +30,7 @@ export function js(project: JsProject = {}) {
   }
 
   t.deprecations();
-  for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, depReason(dep));
+  for (const dep of DEPRECATED) t.obsolete(dep.names, dep.use, depReason(dep));
 
   return t.rules;
 }

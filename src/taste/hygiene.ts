@@ -50,12 +50,13 @@ export const MARKED_OUTPUT: Array<{ name: RegExp; content: RegExp; key: "cache" 
  * or an agent should look. Chosen against 85 real repositories (test/corpus.json)
  * so that what is reported is the tail, not the norm: half of them have a
  * source file over 1000 lines, a sixth have more than 30 files at the root.
- * GitHub's 50 MiB is the platform's own: it warns above it and rejects 100 MiB.
+ * A file of 50 MiB does not belong in a repository's history: chous's policy,
+ * whatever a host allows.
  */
 export const MEASURES = {
   sourceLines: 1000,
-  /** Bytes per line above which a file is minified or bundled, a machine's. */
-  minifiedLineBytes: 300,
+  /** Long lines count too: a source file this heavy is worth a look, minified or not. */
+  sourceBytes: 100 * 1024,
   filesPerDir: 50,
   rootFiles: 30,
   duplicateBytes: 4096,

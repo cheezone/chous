@@ -20,7 +20,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
     const files = [...snapshot.byRel.values()].filter((e) => !e.isDir);
     const all = new Set(files.map((e) => e.relPath));
 
-    const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; first: string; params: Record<string, string | number> }>();
+    const groups = new Map<string, { contract: (typeof CONTRACTS)[number]; count: number; first: string; params: Record<string, string | number>; files: string[] }>();
     let hitCount = 0;
 
     for (const entry of files) {
@@ -48,8 +48,10 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         if (contract.groupBy) {
           const key = `${contract.id}:${contract.groupBy(rel, file)}`;
           const group = groups.get(key);
-          if (group) group.count++;
-          else groups.set(key, { contract, count: 1, first: rel, params });
+          if (group) {
+            group.count++;
+            group.files.push(rel);
+          } else groups.set(key, { contract, count: 1, first: rel, params, files: [rel] });
           continue;
         }
         hitCount++;
@@ -62,7 +64,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
       }
     }
 
-    for (const [key, { contract, count, first, params }] of groups) {
+    for (const [key, { contract, count, first, params, files: grouped }] of groups) {
       hitCount++;
       // One file names itself; several are named by what they share.
       const where = count === 1 && !contract.aboutGroup ? first : key.slice(contract.id.length + 1);
@@ -71,6 +73,7 @@ export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
         displayPath: where,
         message: { key: `issue.contract.${contract.id}` as MessageKey, params: { ...params, count } },
         value: contract.value,
+        ...(count > 1 ? { details: { files: grouped } } : {}),
       }));
     }
     return { hitCount };

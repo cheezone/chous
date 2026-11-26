@@ -73,12 +73,12 @@ npx chous
 
 | 品味 | 臭味 | 待审视 |
 | --- | --- | --- |
-| 现代 | 已过官方停止维护日期的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；作者废弃、称为遗留或故意破坏的依赖（npm 上作者的原话，从 lockfile 读）；工具宣布废弃的清单字段 | |
-| 秩序 | 只差大小写或 Unicode 写法的两个名字；同一目录命名风格混用；根目录文档太多；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表 | 超过 1000 行的源文件；平铺 50 个以上源文件的目录；根目录超过 30 个文件；内容完全相同的文件；超过 300 行的 agent 指令 |
+| 现代 | 已过官方停止维护日期的运行时和框架（从停止那天起，没有宽限期；`engines.node` 只在它允许的版本全部停止维护时才报）；作者废弃或称为遗留的依赖（npm 上作者的原话，从 lockfile 读）；工具宣布废弃的清单字段 | |
+| 秩序 | 只差大小写或 Unicode 写法的两个名字；同一目录命名风格混用；根目录文档太多；monorepo 里跨大版本的依赖、嵌套 lockfile、两份不一致的 workspace 列表 | 超过 1000 行或 100 KiB 的源文件；平铺 50 个以上源文件的目录；根目录超过 30 个文件；内容完全相同的文件；超过 300 行的 agent 指令 |
 | 约定 | 不符合语言命名规定的名字（Python、Go、Rust、Dart、Kotlin、Elixir、PHP 的 PSR-4） | |
-| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；工具自己说不要提交的文件（`.env*.local`、`.idea/workspace.xml`）；被 .gitignore 忽略却仍被提交的文件；GitHub 拒收的文件（50 MiB 起）；安装包（靠文件签名识别） | 可执行文件和库 |
+| 洁净 | 构建产物（靠工具写下的标记识别）；系统垃圾和 `local.properties`（靠文件内容识别）；工具自己说不要提交的文件（`.env*.local`、`.idea/workspace.xml`）；被 .gitignore 忽略却仍被提交的文件；50 MiB 以上的文件；安装包（靠文件签名识别） | 可执行文件和库 |
 
-具体哪些工具、哪些文件、哪句原话：见 [chous 知道什么](docs/facts.zh.md)，由注册表生成，不会列出 chous 实际不查的工具。
+每项检查看什么、立场值是多少、凭什么：见 [chous 的规则](docs/rules.zh.md)。chous 认识的少数具体工具：见 [chous 知道什么](docs/facts.zh.md)，由注册表生成。
 
 不检查缺失（没有测试、没有 CI、没有许可证都不报）；行数、体积、文件数量只会让东西进入待审视，从不定性；也不检查正确性和安全；不读名字里的词，`FIXES_SUMMARY.md`、`index.ts.bak` 交给你的 agent 判断。别人的代码和测试数据不查：工具规定的名字（`node_modules/`、`vendor/`、`testdata/`、`__snapshots__/`、`tests/fixtures/`），以及 `.gitattributes` 里标了 `linguist-vendored` 或 `linguist-generated` 的路径，什么语言的目录名都行；`tests/`、`examples/` 是你自己的代码，照常检查。
 

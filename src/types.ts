@@ -127,6 +127,8 @@ export type Issue = {
   message: IssueMessage;
   verdict: Verdict;
   value: Value;
+  /** Every fact behind the finding, in full: the message shows a few, an agent gets them all (`--json`). */
+  details?: Record<string, unknown>;
 };
 
 export type LintResult = {

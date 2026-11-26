@@ -73,12 +73,12 @@ There are no errors, warnings or hints, and no score. Smells make chous exit non
 
 | Taste | Smell | To review |
 | --- | --- | --- |
-| Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); dependencies deprecated, called legacy or sabotaged by their authors (npm's own words, read from the lockfile); a manifest field its tool deprecated | |
-| Order | Names that differ only in case or Unicode form; mixed naming styles in one directory; too many docs at the root; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo | Source files over 1000 lines; directories with more than 50 source files laid out flat; more than 30 files at the root; files with identical content; agent instructions over 300 lines |
+| Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); dependencies deprecated or called legacy by their authors (npm's own words, read from the lockfile); a manifest field its tool deprecated | |
+| Order | Names that differ only in case or Unicode form; mixed naming styles in one directory; too many docs at the root; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo | Source files over 1000 lines or 100 KiB; directories with more than 50 source files laid out flat; more than 30 files at the root; files with identical content; agent instructions over 300 lines |
 | Convention | Names that break a language's naming rules (Python, Go, Rust, Dart, Kotlin, Elixir, PHP's PSR-4) | |
-| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, `.idea/workspace.xml`); files committed although .gitignore ignores them; files GitHub refuses (50 MiB and up); installers (known by their signature) | Executables and libraries |
+| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, `.idea/workspace.xml`); files committed although .gitignore ignores them; files of 50 MiB and more; installers (known by their signature) | Executables and libraries |
 
-Which tools, which files and which words: [the catalogue of what chous knows](docs/facts.md), generated from the registry so it never lists a tool chous does not check.
+What each check looks at, its numbers and its evidence: [chous's rules](docs/rules.md). The few named tools it knows: [what chous knows](docs/facts.md), generated from the registry.
 
 Nothing missing is reported (no tests, no CI, no license); a line count, size or file count only ever puts something up for review, never settles it; neither correctness nor security is checked; and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Other people's code and test data are skipped under the names their tools define (`node_modules/`, `vendor/`, `testdata/`, `__snapshots__/`, `tests/fixtures/`) or wherever `.gitattributes` says `linguist-vendored` or `linguist-generated`, in any language; `tests/` and `examples/` are your own code and are checked.
 

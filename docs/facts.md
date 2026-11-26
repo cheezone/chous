@@ -4,7 +4,7 @@
 
 Each line is something a tool, platform or package author states about itself, with their own words behind it (`chous --verbose` shows them). chous reports it when a project goes against it.
 
-17 tools · 10 facts about files · 2 paths that should not be committed · 8 end-of-life schedules · 8 npm package entries.
+17 tools · 10 facts about files · 2 paths that should not be committed · 8 end-of-life schedules · 6 npm package entries.
 
 “Seen in real projects” counts findings in the regression corpus (`test/corpus.json`: real repositories at pinned commits, every finding checked by hand). “not yet” means no repository there breaks it: the fact is checked against the tool's own words and examples, not yet against the wild.
 
@@ -146,5 +146,3 @@ Researched 2026-11.
 | `react-scripts` | smell | a framework, or Vite / Parcel / Rsbuild | Create React App was deprecated in 2025. |
 | `@vue/cli-service` | smell | create-vue (Vite) | Its authors: Vue CLI is now in maintenance mode. |
 | `react-test-renderer` | smell | @testing-library/react | Deprecated by React and no longer maintained. |
-| `colors` | smell | util.styleText | Its author published an infinite loop in January 2022 (GHSA-5rqg-jm4f-cqx7). |
-| `faker` | smell | @faker-js/faker | Its author deleted the package in January 2022; the community fork lives on. |

@@ -133,7 +133,7 @@ export function tool<const T extends Tool>(def: T): T {
 
 /** An npm package, and what is wrong with it. Reported as `issue.deps.*`, with `dep.<first name>` as the reason. */
 export type PackageFact = {
-  kind: "deprecated" | "sabotaged";
+  kind: "deprecated";
   /** One package, or several doing the same job; the first names the reason. */
   names: readonly string[];
   /** What to use instead. */

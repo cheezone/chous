@@ -28,6 +28,8 @@ export function issueFromRule(
     value?: Value;
     /** `false` keeps the rule's reason out (when the message already says it). */
     reason?: MessageKey | false;
+    /** Every fact behind the finding, untruncated, for `--json`. */
+    details?: Record<string, unknown>;
   },
 ): Issue {
   const reason = partial.reason === false ? undefined : (partial.reason ?? rule.reason);
@@ -40,5 +42,6 @@ export function issueFromRule(
     message: partial.message,
     verdict: rule.verdict ?? partial.verdict ?? "smell",
     value: partial.value ?? rule.value,
+    ...(partial.details ? { details: partial.details } : {}),
   };
 }

@@ -94,12 +94,12 @@ export default {
       styles: "mixes {{styles}} names ({{examples}}); one directory, one way of naming",
     },
     measure: {
-      longFiles: "{{count}} source files over {{limit}} lines ({{files}}): whether one holds too many jobs is for you or your agent to judge; never split mechanically",
+      longFiles: "{{count}} source files over {{lines}} lines or {{kib}} KiB ({{files}}): whether one holds too many jobs is for you or your agent to judge; never split mechanically",
       flatDirs: "{{count}} directories hold more than {{limit}} source files each ({{dirs}}): is each one a single concern?",
       crowdedRoot: "{{count}} files at the root, more than {{limit}}: the root is an entrance",
       copies: "{{count}} sets of identical files ({{groups}}): keep one, link to it, or say why there are several",
       instructions: "{{lines}} lines of agent instructions (more than {{limit}}): an agent reads all of it whenever it works here; keep what applies every time, move the rest where it is needed",
-      hugeFile: "{{size}} MiB: GitHub warns above 50 MiB and rejects files of 100 MiB; use Git LFS or releases",
+      hugeFile: "{{size}} MiB: a file this large does not belong in a repository's history; use Git LFS or releases",
     },
     leak: {
       artifact: "build output that is not gitignored, so it gets committed",

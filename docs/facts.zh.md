@@ -4,7 +4,7 @@
 
 每一行都是工具、平台或包作者对自己的说法，背后有他们的原话（`chous --verbose` 会显示）。项目违背它时，chous 就报出来。
 
-17 个工具 · 10 条关于文件的事实 · 2 条不该提交的路径 · 8 份停止维护时间表 · 8 条 npm 包。
+17 个工具 · 10 条关于文件的事实 · 2 条不该提交的路径 · 8 份停止维护时间表 · 6 条 npm 包。
 
 「真实命中」统计回归语料（`test/corpus.json`：锁定 commit 的真实仓库，每条结论都人工核对过）里的结论。「尚未见到」表示那里还没有仓库违反它：这条事实已对照工具原话和正反例检验，还没有在真实项目里遇到过。
 
@@ -146,5 +146,3 @@
 | `react-scripts` | 臭味 | a framework, or Vite / Parcel / Rsbuild | Create React App 已于 2025 年废弃。 |
 | `@vue/cli-service` | 臭味 | create-vue (Vite) | 作者原话：Vue CLI 已进入维护模式。 |
 | `react-test-renderer` | 臭味 | @testing-library/react | React 官方已宣布废弃，不再维护。 |
-| `colors` | 臭味 | util.styleText | 作者在 2022 年 1 月发布了死循环（GHSA-5rqg-jm4f-cqx7）。 |
-| `faker` | 臭味 | @faker-js/faker | 作者在 2022 年 1 月删掉了这个包；社区分支还在维护。 |

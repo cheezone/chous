@@ -133,9 +133,9 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   protected async validateInternal(rule: LeftoverRule, context: RuleValidatorContext) {
     const { snapshot, rawIssues } = context;
     let hitCount = 0;
-    const report = (rel: string, message: IssueMessage, verdict: Verdict = "smell") => {
+    const report = (rel: string, message: IssueMessage, verdict: Verdict = "smell", details?: Record<string, unknown>) => {
       hitCount++;
-      rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message, verdict }));
+      rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message, verdict, ...(details ? { details } : {}) }));
     };
     const extraDocs: string[] = [];
 
@@ -174,7 +174,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     // The repository says two things: .gitignore keeps it out, the index has it in.
     for (const { path, files } of snapshot.ignoredTracked ?? []) {
       if (context.snapshot.notOurs.test(path)) continue;
-      report(path, { key: "issue.leftover.ignoredTracked", params: { count: files } });
+      report(path, { key: "issue.leftover.ignoredTracked", params: { count: files.length } }, "smell", { files });
     }
 
     if (rule.rootDocs && extraDocs.length > ROOT_DOCS_LIMIT) {
@@ -184,6 +184,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         displayPath: "./",
         message: { key: "issue.leftover.rootDocs", params: { count: extraDocs.length, limit: ROOT_DOCS_LIMIT, names: list(extraDocs) } },
         value: "order",
+        details: { docs: [...extraDocs].sort() },
       }));
     }
     return { hitCount };
@@ -272,6 +273,7 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
           examples: ordered.map(([, names]) => names.sort()[0]).join(", "),
         },
       },
+      details: { styles: Object.fromEntries(ordered.map(([s, names]) => [s, names.sort()])) },
     }));
   }
   return hits;

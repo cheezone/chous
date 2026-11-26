@@ -6,7 +6,7 @@
 
 一个**没有配置**的品味检查 CLI，像 `gofmt`：品味就是工具本身。**能跑，但还是臭。**
 
-- **最高设计依据是 [`docs/manifesto.zh.md`](docs/manifesto.zh.md)**（英文版 `docs/manifesto.md`，`chous manifesto` 输出它）。改规则前先读；规则和宣言冲突时，改规则或先改宣言。四种品味、两种结果（smell / review）、不惩罚缺失、不按行数判、不为任何项目加豁免，都写在那里，这里不重复。
+- **最高设计依据是 [`docs/manifesto.zh.md`](docs/manifesto.zh.md)**（英文版 `docs/manifesto.md`，`chous manifesto` 输出它）：长期稳定、简洁的审美宪法，不放具体数值和名单。改规则前先读；规则和宣言冲突时，改规则或先改宣言。具体查什么、立场值、作用域、规则表在 [`docs/rules.zh.md`](docs/rules.zh.md)，改规则时同步改它。
 - chous 对具体软件知道的那一点（停止维护、废弃、语言命名），见生成的 [`docs/facts.zh.md`](docs/facts.zh.md)。
 
 ## 什么规则能进来
@@ -18,7 +18,7 @@
 - **C 易变的生态知识**（不收）：配置优先级、版本特定字段、文件位置变化、平台默认上限、原生替代关系。工具自己会诊断，agent 能读最新文档。
 - **D 语义判断**（交给 agent）：代码职责、架构、依赖用途、历史残留。写进宣言「交给 agent 的部分」。
 
-对每条规则回答：三年不维护还成立吗？必须懂某个具体工具吗？别的工具已经在查了吗？能用通用算法替代吗？能交给 agent 吗？**除停止维护和明确废弃外，需要知道具体软件的名字和版本才成立的规则，默认不收。** 不以支持的工具数量、知识条目数量作为进展。
+**首要问题：如果三年没人维护 chous，这条规则是否仍然成立？** 漏报可以接受，持续产生错误事实不可接受。其余要回答的：必须懂某个具体工具吗？别的工具已经在查了吗？能用通用算法替代吗？能交给 agent 吗？**除停止维护和明确废弃外，需要知道具体软件的名字和版本才成立的规则，默认不收。** 不以支持的工具数量、知识条目数量作为进展。
 
 ## 做规则时最容易犯的错
 
@@ -28,8 +28,8 @@
 - 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。npm 的 `deprecated` 不维护名单：pnpm、npm 安装时把它原样记进 `pnpm-lock.yaml`、`package-lock.json`，chous 从那里读（`src/vfs/lockfile.ts`），只报 `package.json` 直接写的依赖；`src/facts/packages/npm.ts` 只放 lockfile 读不到的（README、安全公告、带替代品的）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何 Dockerfile 的 `FROM`（展开 `ARG`、允许任意镜像仓库）、workflow 里 `actions/setup-node`/`setup-python` 的单个版本和 `container`/`image`、devcontainer 的镜像和 features、`volta.node`、框架依赖；CI 矩阵是兼容测试，不读；Node 代号按 `schedule.json` 的 `codename` 换算）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
 - 不按职责数工具（「一件事两个工具」已删除）：用几个工具是用户的事。
-- 命名：语言规定了风格的（`src/facts/kinds/naming.ts`：Python、Go、Rust、Dart、Kotlin、Elixir、PSR-4，不再加新语言，框架的不收），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
-- 体积和数量（`MEASURES`，`src/taste/hygiene.ts`）是 chous 的立场：源文件 1000 行、目录 50 个源文件、根目录 30 个文件、指令文件 300 行、4 KiB 以上的重复文件，只进入 review，每个仓库合并成一条。是否职责过度集中交给 agent，不机械拆分。阈值按语料分布选在尾部；「知名项目也这样」不是放弃检测的理由。
+- 命名：语言规定了风格的（`src/facts/kinds/naming.ts`：Python、Go、Rust、Dart、Kotlin、Elixir、PSR-4）**规模冻结**：不再加新语言，框架的不收，尤其不再加需要读源码声明的规则（PSR-4、Kotlin、Rust `#[path]`、Go 包名已经是上限）。这些规则由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。
+- 体积和数量（`MEASURES`，`src/taste/hygiene.ts`）是 chous 的立场：源文件 1000 行或 100 KiB（长行不跳过，压缩代码交给 agent）、目录 50 个源文件、根目录 30 个文件、指令文件 300 行、4 KiB 以上的重复文件，只进入 review，每个仓库合并成一条；50 MiB 以上的文件是 chous 自己的政策（smell），不引用平台限制。人看的消息只列前几项，`details` 里给 agent 完整数据（JSON 不截断）。是否职责过度集中交给 agent，不机械拆分。阈值按语料分布选在尾部；「知名项目也这样」不是放弃检测的理由。
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - AI 工具的格式和上限属于 C 类，不收（全部已删除）。agent 指令文件只按 chous 自己的立场看行数和重复。
 - 作用域（`snapshot.notOurs`）：名单只收工具规定的名字（`NOT_OURS`：npm 的 `node_modules/`、Go 和 Linguist 的 `vendor/`、Go 的 `testdata/`、Jest/Vitest 写的 `__snapshots__/`、Linguist 的 `tests/fixtures/`、`specs/fixtures/`），其余由仓库在 `.gitattributes` 里用 `linguist-vendored` / `linguist-generated` 声明（`src/vfs/gitattributes.ts`，按 git 的属性规则：后写的赢，深层文件赢，`-linguist-vendored` 要回）。`third_party/`、`upstream/`、`__fixtures__` 这类没有出处的名字不收。测试目录里的子项目只认测试工具读的目录：Node 的 `test/`、Jest 的 `__tests__/`。`tests/`、`examples/`、`playground/` 照常检查。
@@ -37,7 +37,7 @@
 
 ## 代码在哪
 
-- **`src/facts/`：chous 对具体软件知道的那一点，故意保持很小。** 一个工具一个文件 `tools/<生态>/<工具>.ts`，在 `index.ts` 登记：停止维护时间表（`eol`）、语言的命名规定、工具宣布废弃的字段、工具说不能提交的文件（`absent`），每条带原话（`sources`）、中英文案和正反例。npm 包在 `packages/npm.ts`，只放 lockfile 读不到的废弃。
+- **`src/facts/`：chous 对具体软件知道的那一点，故意保持很小。** 一个工具一个文件 `tools/<生态>/<工具>.ts`，在 `index.ts` 登记：停止维护时间表（`eol`）、语言的命名规定、工具宣布废弃的字段、工具说不能提交的文件（`absent`），每条带原话（`sources`）、中英文案和正反例。npm 包在 `packages/npm.ts`，只放 lockfile 读不到的作者废弃（没有「被作者破坏」类：历史上的破坏事件不能证明所有版本永久腐烂，安全审计不归 chous）。
   - 事实按「种类」写（`kinds/`：命名、TOML 废弃字段、`custom`）。
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
 - **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单和体积立场（`MEASURES`）；`sources.ts` 是这些规则的原话。

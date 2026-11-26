@@ -3,7 +3,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { resolveTaste } from "../../src/taste";
-import { DEPRECATED, SABOTAGED } from "../../src/taste/deps";
+import { DEPRECATED } from "../../src/taste/deps";
 import { EOL, eolDate, hasEnded } from "../../src/taste/eol";
 import { pinnedVersion } from "../../src/rules/validators/lifecycle";
 import { createMemorySnapshot } from "../../src/vfs/snapshot";
@@ -173,7 +173,7 @@ describe("end of life", () => {
 
 describe("obsolete dependency list", () => {
   it("names each package once", () => {
-    const names = [...DEPRECATED, ...SABOTAGED].flatMap((d) => d.names);
+    const names = DEPRECATED.flatMap((d) => d.names);
     expect(names.filter((n, i) => names.indexOf(n) !== i)).toEqual([]);
   });
 

@@ -3,7 +3,7 @@ import { dirname, join, relative, resolve, sep } from "node:path";
 import type { DeprecatedRule, DepsRule, Rule } from "../../types";
 import { readText } from "../../fsutil";
 import { npmLocked, pnpmLocked, type Locked } from "../../vfs/lockfile";
-import { DEPRECATED, SABOTAGED } from "../../taste/deps";
+import { DEPRECATED } from "../../taste/deps";
 import { FACT_EOL } from "../../facts";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
@@ -78,7 +78,7 @@ function lockedDependencies(root: string): Map<string, Locked> | undefined {
 }
 
 /** Packages chous already knows with a replacement (src/facts/packages/npm.ts) or by their end-of-life schedule. */
-const KNOWN = new Set([...DEPRECATED, ...SABOTAGED].flatMap((d) => d.names));
+const KNOWN = new Set(DEPRECATED.flatMap((d) => d.names));
 const SCHEDULED = new Set(FACT_EOL.flatMap((e) => (e.dep ? [e.dep] : [])));
 
 /** Direct dependencies whose authors set a deprecation on the npm registry, in their own words. */

@@ -109,7 +109,7 @@ export type WorkspaceSnapshot = {
    * repository root only): an ignored directory once (`dist/`, with its file
    * count); otherwise the file, or its directory when several share one.
    */
-  ignoredTracked?: Array<{ path: string; files: number }>;
+  ignoredTracked?: Array<{ path: string; files: string[] }>;
   manifest: PackageManifestSnapshot;
   workspace: WorkspaceInfo;
   exists(relOrAbs: string): boolean;
@@ -474,7 +474,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
   }
   const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && gitignore.ignores(rel) };
-  const ignoredTracked = new Map<string, number>();
+  const ignoredTracked = new Map<string, string[]>();
   for (const rel of tracked ?? []) {
     if (!gitignore.ignores(rel)) continue;
     // A directory's own .gitignore, or an empty placeholder, keeps the directory and commits nothing.
@@ -486,7 +486,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
         break;
       }
     }
-    ignoredTracked.set(at, (ignoredTracked.get(at) ?? 0) + 1);
+    ignoredTracked.set(at, [...(ignoredTracked.get(at) ?? []), rel]);
   }
   const byDir = new Map<string, string[]>();
   for (const at of ignoredTracked.keys()) {
@@ -497,7 +497,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   for (const [dir, files] of byDir) {
     if (files.length < 2 || ignoredTracked.has(dir)) continue;
     for (const f of files) ignoredTracked.delete(f);
-    ignoredTracked.set(dir, files.length);
+    ignoredTracked.set(dir, files);
   }
 
   const byRel = new Map<string, VfsEntry>();
@@ -634,7 +634,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     fileCount,
     ig,
     notOurs: notOursOf(byRel),
-    ignoredTracked: [...ignoredTracked].sort().map(([path, files]) => ({ path, files })),
+    ignoredTracked: [...ignoredTracked].sort(([a], [b]) => a.localeCompare(b)).map(([path, files]) => ({ path, files: files.sort() })),
     manifest,
     workspace,
     ...api,

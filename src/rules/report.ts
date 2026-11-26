@@ -111,6 +111,7 @@ export function reportToJSON(result: LintResult, t: TFunction, version?: string)
       params: Object.fromEntries(Object.entries(issue.message.params ?? {}).map(([k, v]) => [k, typeof v === "object" ? t(v.t) : v])),
       ...(issue.reason ? { reason: t(issue.reason) } : {}),
       sources: sourcesFor([issue.reason, issue.message.key, ...nested]).map((s) => s.url),
+      ...(issue.details ? { details: issue.details } : {}),
     };
   });
   return {
