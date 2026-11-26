@@ -27,12 +27,12 @@
 - 语义判断（注释掉的旧代码、无人调用的兼容层、过度抽象、文件到底有没有用）不写成启发式规则，写进宣言「交给 agent 的部分」。
 - **事实注册表**（`src/facts/`）：新工具一律写在这里，一个工具一个文件 `src/facts/tools/<生态>/<工具>.ts`，在 `src/facts/index.ts` 登记。
   - 一个文件里放这个工具的全部知识：配置文件及优先级（`configs`）、旧配置（`legacy`）、事实（`facts`）、原话（`sources`）、中英文案（`message`）、正反例（`examples`）、停止维护时间表（`eol`）、调研日期（`researched`）。
-  - 事实按「种类」写（`src/facts/kinds/`：`precedence`、`exclusive`、`legacy`、`unread`、`deprecatedKeys`、`deprecatedTable`；`custom` 是逃生口，两个工具用到同一种检查时就把它提成新种类）。新工具应该只填数据、不写检查代码；需要新种类是一个设计决定，先想清楚再加。
+  - 事实按「种类」写（`src/facts/kinds/`：`precedence`、`exclusive`、`searchOrder`、`legacy`、`unread`、`misplaced`、`limit`、`deprecatedKeys`、`deprecatedTable`；`custom` 是逃生口，两个工具用到同一种检查时就把它提成新种类）。新工具应该只填数据、不写检查代码；需要新种类是一个设计决定，先想清楚再加。
   - 共用的读取函数在 `src/facts/kit.ts`。别处需要这个工具的文件列表（如 `knowledge/tools/eslint.ts`）时从工具文件引用，不要再抄一份。
   - `test/code/facts.test.ts` 对每个工具跑同一套检查：每条事实有原话、中英文都有且占位符一致、正例必报、反例必不报。加工具不用另写测试。
   - 停止维护日期不手写：工具的 `eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `src/facts/data/eol/`（禁止手改）。已记录的日期和官方数据不一致时只报告、不覆盖，交给人判断。
   - `.github/workflows/sources.yml` 每周跑 `pnpm run sync --check` 和 `pnpm run sources`，失败就说明官方文档变了。
-  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）和 Cargo；其余仍在 `src/taste/contracts.ts`、`eol.ts`、`deps.ts`、`sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
+  - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose；其余仍在 `src/taste/contracts.ts`、`eol.ts`、`deps.ts`、`sources.ts`，逐个迁过来，每批迁完 `pnpm run corpus` 必须零差异。
 - 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
 - **来源**：凡是引用别人说法的原因，都登记在 `src/taste/sources.ts`（页面 URL + 原话 + 可校验的原始文件），`--verbose` 显示。文案里不写 URL。`pnpm run sources` 逐条核对原话（沙箱里需 `NODE_USE_ENV_PROXY=1`）；新增或修改来源后必须跑一遍。
 - 引用官方文档以原文为准：例如 `.env` 可以提交，只有 `.env*.local` 不行（Vite、Next.js 官方文档）。

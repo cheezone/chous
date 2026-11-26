@@ -8,10 +8,16 @@ export type Common<Id extends string> = {
   examples: Examples;
   value?: Value;
   groupBy?(rel: string): string;
+  /** Also look inside fixtures and vendored code (a platform limit applies to every file). */
+  everywhere?: boolean;
 };
 
 /** Which files a fact looks at: by name, anywhere or only in `dir`, or only at the project root. */
 export type Where = { files: readonly string[]; dir?: string; root?: boolean };
+/** Or by a pattern over the relative path, when names vary (`compose.override.yaml`). */
+export type Target = Where | { match: RegExp };
+
+export const target = (spec: Target): RegExp => ("match" in spec ? spec.match : named(spec.files, spec.dir, spec.root));
 
 export const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -33,6 +39,7 @@ export function build<Id extends string>(
     match,
     check,
     groupBy: spec.groupBy,
+    everywhere: spec.everywhere,
     message,
     sources: spec.sources,
     examples: spec.examples,

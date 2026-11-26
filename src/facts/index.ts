@@ -14,6 +14,13 @@ import vite from "./tools/js/vite";
 import vitest from "./tools/js/vitest";
 import yarn from "./tools/js/yarn";
 import cargo from "./tools/rust/cargo";
+import rustup from "./tools/rust/rustup";
+import mypy from "./tools/python/mypy";
+import poetry from "./tools/python/poetry";
+import pytest from "./tools/python/pytest";
+import ruff from "./tools/python/ruff";
+import github from "./tools/github/github";
+import compose from "./tools/docker/compose";
 
 export const TOOLS = [
   // JavaScript and TypeScript
@@ -29,6 +36,15 @@ export const TOOLS = [
   tailwind,
   // Rust
   cargo,
+  rustup,
+  // Python
+  poetry,
+  pytest,
+  ruff,
+  mypy,
+  // Platforms
+  github,
+  compose,
 ] as const satisfies readonly Tool[];
 
 type Facts = (typeof TOOLS)[number]["facts"][number];

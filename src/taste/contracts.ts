@@ -9,7 +9,7 @@
  */
 import type { Value } from "../types";
 import { FACTS, type FactId } from "../facts";
-import { type ContractFile, field, frontmatter, lines, major, parseJsonc, shadowed, tomlTableKeys } from "../facts/kit";
+import { type ContractFile, field, frontmatter, lines, major, parseJsonc, tomlTableKeys } from "../facts/kit";
 
 export type { ContractFile };
 export { field, frontmatter, parseJsonc, tomlTableKeys };
@@ -44,24 +44,10 @@ export type ContractId =
   | "copilotInstructionsName"
   | "windsurfLegacy"
   | "clinerules"
-  | "largeFile"
-  | "readmeSize"
-  | "codeownersShadowed"
-  | "codeownersSize"
-  | "dependabotPlace"
-  | "workflowPlace"
-  | "composeVersion"
-  | "composeName"
-  | "rustToolchainLegacy"
-  | "pytestConfigs"
-  | "ruffConfigs"
-  | "mypyConfigs"
   | "nodeVersions"
-  | "poetryFields"
   | FactId;
 
 const KiB = 1024;
-const MiB = 1024 * KiB;
 
 /** Node major pinned by a version file, or undefined. */
 function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
@@ -70,10 +56,6 @@ function nodeMajorIn(file: ContractFile, rel: string): number | undefined {
   if (rel.endsWith(".tool-versions")) return major(/^(?:nodejs|node)\s+(\S+)/m.exec(text)?.[1]);
   return major(text.trim().split(/\r?\n/)[0]);
 }
-
-/** [tool.poetry] fields Poetry deprecated in favor of the standard [project] table. */
-// `scripts` is left out: only console and gui scripts moved to project.scripts; file scripts stay.
-const POETRY_DEPRECATED = ["name", "description", "license", "authors", "maintainers", "homepage", "repository", "documentation", "keywords", "extras", "plugins", "urls"];
 
 const SKILL = /(^|\/)SKILL\.md$/;
 /** Agent Skills spec: 1-64 of a-z, 0-9 and single hyphens, not at either end. */
@@ -234,111 +216,12 @@ export const CONTRACTS: Contract[] = [
   },
 
   // ── GitHub ───────────────────────────────────────────────────────
-  {
-    // GitHub warns on files over 50 MiB and blocks files over 100 MiB.
-    id: "largeFile",
-    value: "convention",
-    match: /./,
-    everywhere: true,
-    check: (f) => (f.bytes() > 50 * MiB ? { mib: Math.round(f.bytes() / MiB) } : undefined),
-  },
-  {
-    // GitHub: "any content beyond 500 KiB will be truncated."
-    id: "readmeSize",
-    value: "convention",
-    match: /^(\.github\/|docs\/)?readme(\.[\w]+)?$/i,
-    check: (f) => (f.bytes() > 500 * KiB ? { kib: Math.round(f.bytes() / KiB), limit: 500 } : undefined),
-  },
-  {
-    // GitHub searches .github/, the root, then docs/ for CODEOWNERS "and use[s] the first one it finds".
-    id: "codeownersShadowed",
-    value: "convention",
-    match: /^(\.github\/|docs\/)?CODEOWNERS$/,
-    check: (f) => {
-      const first = [".github/CODEOWNERS", "CODEOWNERS", "docs/CODEOWNERS"].find((p) => f.all.has(p));
-      return first && first !== f.rel ? { used: first } : undefined;
-    },
-  },
-  {
-    // GitHub: "CODEOWNERS files must be under 3 MB in size."
-    id: "codeownersSize",
-    value: "convention",
-    match: /^(\.github\/|docs\/)?CODEOWNERS$/,
-    check: (f) => (f.bytes() >= 3 * 1000 * 1000 ? { mb: Math.round(f.bytes() / 1e6) } : undefined),
-  },
-  {
-    // GitHub: "You must store this file in the .github directory" (.github/dependabot.yml or .yaml).
-    id: "dependabotPlace",
-    value: "convention",
-    match: /(^|\/)dependabot\.ya?ml$/,
-    check: (f) => (f.rel === ".github/dependabot.yml" || f.rel === ".github/dependabot.yaml" ? undefined : {}),
-  },
-  {
-    // GitHub: "You must store workflow files in the .github/workflows directory."
-    id: "workflowPlace",
-    value: "convention",
-    match: /^\.github\/(?!workflows\/|ISSUE_TEMPLATE\/|DISCUSSION_TEMPLATE\/).+\.ya?ml$/,
-    check: (f) => {
-      const text = f.text();
-      return /^on:/m.test(text) && /^jobs:/m.test(text) ? {} : undefined;
-    },
-  },
 
   // ── Tool formats ─────────────────────────────────────────────────
-  {
-    // Docker: the top-level `version` property is "obsolete".
-    id: "composeVersion",
-    value: "modernity",
-    match: /(^|\/)(docker-)?compose(\.[\w-]+)?\.ya?ml$/,
-    check: (f) => (/^version\s*:/m.test(f.text()) ? {} : undefined),
-  },
-  {
-    // Docker: compose.yaml is preferred; docker-compose.y(a)ml is kept "for backwards compatibility of earlier versions".
-    id: "composeName",
-    value: "modernity",
-    match: /(^|\/)docker-compose(\.[\w-]+)?\.ya?ml$/,
-    check: () => ({}),
-  },
-  {
-    // rustup: a rust-toolchain file holding just a toolchain name is the "legacy format".
-    id: "rustToolchainLegacy",
-    value: "modernity",
-    match: /(^|\/)rust-toolchain$/,
-    check: (f) => (/\[toolchain\]/.test(f.text()) ? undefined : {}),
-  },
 
   // ── npm, pnpm, Yarn ──────────────────────────────────────────────
 
   // ── Configs read by precedence: one per directory, the rest never ─
-  {
-    // pytest: pytest.toml, then pytest.ini, "take precedence over other files, even when empty".
-    id: "pytestConfigs",
-    value: "order",
-    match: /(^|\/)(pytest\.toml|\.pytest\.toml|pytest\.ini|pyproject\.toml|tox\.ini|setup\.cfg)$/,
-    check: (f) =>
-      shadowed(f, [
-        ["pytest.toml"],
-        [".pytest.toml"],
-        ["pytest.ini"],
-        ["pyproject.toml", /^\[tool\.pytest(\.ini_options)?\]/m],
-        ["tox.ini", /^\[pytest\]/m],
-        ["setup.cfg", /^\[tool:pytest\]/m],
-      ]),
-  },
-  {
-    // Ruff: ".ruff.toml ... will take precedence over the ruff.toml file, and the ruff.toml file ... over the pyproject.toml file".
-    id: "ruffConfigs",
-    value: "order",
-    match: /(^|\/)(\.ruff\.toml|ruff\.toml|pyproject\.toml)$/,
-    check: (f) => shadowed(f, [[".ruff.toml"], ["ruff.toml"], ["pyproject.toml", /^\[tool\.ruff/m]]),
-  },
-  {
-    // mypy: mypy.ini, .mypy.ini, pyproject.toml, setup.cfg — "there is no merging".
-    id: "mypyConfigs",
-    value: "order",
-    match: /(^|\/)(mypy\.ini|\.mypy\.ini|pyproject\.toml|setup\.cfg)$/,
-    check: (f) => shadowed(f, [["mypy.ini"], [".mypy.ini"], ["pyproject.toml", /^\[tool\.mypy\]/m], ["setup.cfg", /^\[mypy\]/m]]),
-  },
 
   // ── TypeScript, Node ─────────────────────────────────────────────
   {
@@ -357,17 +240,4 @@ export const CONTRACTS: Contract[] = [
   // ── Vite, Vitest, Oxc ────────────────────────────────────────────
 
   // ── Rust, Python packaging ───────────────────────────────────────
-  {
-    // Poetry: "Deprecated: Use project.<field> instead."
-    id: "poetryFields",
-    value: "modernity",
-    match: /(^|\/)pyproject\.toml$/,
-    check: (f) => {
-      const text = f.text();
-      const keys = tomlTableKeys(text, "tool.poetry").filter((k) => POETRY_DEPRECATED.includes(k));
-      const tables = POETRY_DEPRECATED.filter((k) => new RegExp(`^\\[tool\\.poetry\\.${k}\\]`, "m").test(text));
-      const all = [...new Set([...keys, ...tables])];
-      return all.length ? { fields: all.join(", ") } : undefined;
-    },
-  },
 ];

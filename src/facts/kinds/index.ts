@@ -4,5 +4,7 @@
  * as data. A new tool should need no new code; a new kind is a decision.
  */
 export { exclusive, precedence } from "./precedence";
-export { custom, legacy, unread } from "./legacy";
+export { custom, legacy, misplaced, unread } from "./legacy";
+export { limit, measure } from "./limit";
+export { searchOrder } from "./search";
 export { deprecatedKeys, deprecatedTable } from "./toml";
