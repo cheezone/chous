@@ -80,6 +80,55 @@ function baseImages(text: string): Array<[Product, string]> {
   return images;
 }
 
+const WORKFLOW = /^\.github\/workflows\/[^/]+\.ya?ml$/;
+const DEVCONTAINER = /(^|\/)\.devcontainer(\/[^/]+)?\/devcontainer\.json$|(^|\/)\.devcontainer\.json$/;
+const IMAGE = /(?:[\w.-]+(?::\d+)?\/)*(node|python):([\w.-]+)/;
+
+/**
+ * What a workflow job runs on: the one version `actions/setup-node` or
+ * `actions/setup-python` installs, and the `container` or `image` it runs in.
+ * A matrix (`${{ matrix.node }}`, `[18, 20]`) tests a promise of compatibility,
+ * like `engines`; it is not read.
+ */
+function workflowRuntimes(text: string): Array<[Product, string]> {
+  const found: Array<[Product, string]> = [];
+  // An image reference or a version is never long.
+  const lines = text.split("\n").map((line) => line.slice(0, 1024));
+  lines.forEach((line, i) => {
+    const image = new RegExp(`^[ \\t]*(?:-[ \\t]+)?(?:container|image):[ \\t]*["']?${IMAGE.source}`).exec(line);
+    if (image) found.push([image[1] as Product, image[2]!]);
+    const setup = /^([ \t]*(?:-[ \t]+)?)uses:[ \t]*["']?actions\/setup-(node|python)@/.exec(line);
+    if (!setup) return;
+    // The step's own keys sit at the column of `uses`; the next step or job starts left of it, or with a dash there.
+    const column = setup[1]!.length;
+    for (const next of lines.slice(i + 1, i + 64)) {
+      const indent = /^[ \t]*/.exec(next)![0].length;
+      if (next.trim() && (indent < column || (indent === column && next.trimStart().startsWith("-")))) break;
+      const version = /^[ \t]*(node|python)-version:[ \t]*["']?([^"'\s#]+)/.exec(next);
+      if (version && version[1] === setup[2]) found.push([setup[2] as Product, version[2]!]);
+    }
+  });
+  return found;
+}
+
+/**
+ * What a dev container runs: its image (the Dev Containers images tag the
+ * runtime after their own version, `typescript-node:1-20-bullseye`) and the
+ * version its node or python feature installs.
+ */
+function devcontainerRuntimes(text: string): Array<[Product, string]> {
+  const found: Array<[Product, string]> = [];
+  const image = new RegExp(`"image"[ \\t]*:[ \\t]*"((?:[\\w.-]+(?::\\d+)?/)*)(javascript-node|typescript-node|node|python):([\\w.-]+)"`).exec(text);
+  if (image) {
+    const tag = image[1]!.includes("devcontainers/") ? image[3]!.replace(/^\d+-(?=\d)/, "") : image[3]!;
+    found.push([image[2] === "python" ? "python" : "node", tag]);
+  }
+  for (const m of text.matchAll(/"ghcr\.io\/devcontainers\/features\/(node|python)(?::\d+)?"[ \t]*:[ \t]*\{[^}]{0,1000}?"version"[ \t]*:[ \t]*"([^"]+)"/g)) {
+    found.push([m[1] as Product, m[2]!]);
+  }
+  return found;
+}
+
 /** `lts/gallium`, `gallium`, `fermium-alpine`: the version a codename stands for, from its makers' schedule. */
 function byCodename(product: Product, raw: string): string | undefined {
   const name = /^(?:lts\/)?([a-z]+)(?:-[\w.]+)?$/i.exec(raw.trim())?.[1]?.toLowerCase();
@@ -91,7 +140,7 @@ function byCodename(product: Product, raw: string): string | undefined {
  * pin and framework deps. `engines` is a promise of compatibility, not a
  * runtime, and is checked separately.
  */
-function findVersions(context: RuleValidatorContext): Found[] {
+function findVersions(context: RuleValidatorContext, workflows: boolean): Found[] {
   const { root, snapshot } = context;
   const found: Found[] = [];
   const at = (name: string) => resolve(root, name);
@@ -115,6 +164,11 @@ function findVersions(context: RuleValidatorContext): Found[] {
   for (const [rel, entry] of snapshot.byRel) {
     if (entry.isDir || !DOCKERFILE.test(entry.name) || NOT_OURS.test(rel)) continue;
     for (const [image, tag] of baseImages(read(entry.absPath))) add(image, tag, rel);
+  }
+  for (const [rel, entry] of snapshot.byRel) {
+    if (entry.isDir || NOT_OURS.test(rel)) continue;
+    if (workflows && WORKFLOW.test(rel)) for (const [product, version] of workflowRuntimes(read(entry.absPath))) add(product, version, rel);
+    else if (DEVCONTAINER.test(rel)) for (const [product, version] of devcontainerRuntimes(read(entry.absPath))) add(product, version, rel);
   }
 
   const manifest = snapshot.manifest;
@@ -151,7 +205,7 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
 
   protected async validateInternal(rule: LifecycleRule, context: RuleValidatorContext) {
     const today = context.today ?? new Date().toISOString().slice(0, 10);
-    const found = findVersions(context);
+    const found = findVersions(context, Boolean(rule.workflows));
     for (const { product, version, file } of found) {
       const date = eolDate(product, version);
       if (!hasEnded(date, today)) continue;

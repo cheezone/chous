@@ -58,7 +58,7 @@ chous 只说它确定的事实，所以每条结果分两种：
 chous 怎样确认事实：
 
 - 停止维护的日期只收官方数据里写着的版本。表里没有的版本不报，也从不推断日期。
-- 版本只取实际运行的环境：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何一个 Dockerfile 的 `FROM`（经过任何镜像仓库，`ARG` 展开后）、`volta.node`、框架依赖。Node 的代号（`lts/gallium`）按官方时间表换算成版本。`engines.node` 是兼容承诺，不是运行环境；只有它声明的范围全部已停止维护时才报，例如 `^16`。
+- 版本只取实际运行的环境：`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何一个 Dockerfile 的 `FROM`（经过任何镜像仓库，`ARG` 展开后）、GitHub workflow 任务安装的版本或运行它的容器、dev container 的镜像和 features、`volta.node`、框架依赖。CI 矩阵测试的是兼容承诺，和 `engines` 一样，不读。Node 的代号（`lts/gallium`）按官方时间表换算成版本。`engines.node` 是兼容承诺，不是运行环境；只有它声明的范围全部已停止维护时才报，例如 `^16`。
 - 文件的身份靠内容确认，不靠名字：`.DS_Store` 开头的 `Bud1`、Android 写进 `local.properties` 的「绝不能提交」、安装包和可执行文件的文件头、构建工具写下的标记文件。
 - 引用别人的话，原话和它的工具放在一起（`src/facts/tools/`），每周核对一次是否还在页面上。停止维护的日期由程序从官方数据写入，同样每周比对。
 

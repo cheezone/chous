@@ -117,6 +117,46 @@ describe("end of life", () => {
     ]);
   });
 
+  it("reads what CI jobs and dev containers run on, but not a matrix", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-ci-"));
+    const write = (path: string, content: string) => {
+      mkdirSync(join(dir, path, ".."), { recursive: true });
+      writeFileSync(join(dir, path), content, "utf8");
+    };
+    write(".github/workflows/ci.yml", [
+      "jobs:",
+      "  test:",
+      "    strategy:",
+      "      matrix:",
+      "        node: [14, 22]",
+      "    steps:",
+      "      - uses: actions/setup-node@v4",
+      "        with:",
+      "          node-version: ${{ matrix.node }}",
+      "  lint:",
+      "    container: node:16-alpine",
+      "    steps:",
+      "      - uses: actions/setup-python@v5",
+      "        with:",
+      "          python-version: '3.8'",
+      "      - name: unrelated",
+      "        with:",
+      "          node-version: 12",
+      "",
+    ].join("\n"));
+    write(".devcontainer/devcontainer.json", JSON.stringify({
+      image: "mcr.microsoft.com/devcontainers/typescript-node:1-18-bullseye",
+      features: { "ghcr.io/devcontainers/features/python:1": { version: "3.7" } },
+    }));
+    const issues = (await lintWorkspace({ root: dir, today: "2026-11-25" })).issues.filter((i) => i.ruleKind === "lifecycle");
+    expect(issues.map((i) => i.displayPath).sort()).toEqual([
+      ".devcontainer/devcontainer.json (Node 18)",
+      ".devcontainer/devcontainer.json (Python 3.7)",
+      ".github/workflows/ci.yml (Node 16)",
+      ".github/workflows/ci.yml (Python 3.8)",
+    ]);
+  });
+
   it("leaves a Django range alone", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-django-"));
     writeFileSync(join(dir, "requirements.txt"), "Django>=4.1,<6\n", "utf8");

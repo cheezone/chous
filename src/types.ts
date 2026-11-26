@@ -65,6 +65,8 @@ export type ManifestRule = RuleBase & {
 /** Runtimes and frameworks past their published end of life (each tool's `eol` in src/facts/). */
 export type LifecycleRule = RuleBase & {
   kind: "lifecycle";
+  /** At the repository's root: GitHub runs only the root's `.github/workflows`. */
+  workflows?: boolean;
 };
 
 /** Build output that is not gitignored (see `taste/hygiene.ts`). */

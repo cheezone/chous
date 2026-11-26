@@ -14,7 +14,7 @@ Each line is something a tool, platform or package author states about itself, w
 
 Researched 2026-11.
 
-End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: Neve77/comandaflow, RoniAbravaya/ai-stock-summary-app, ruvnet/ruflo +3
+End of life: 20 versions of Node, from 4 to 25; the latest ended on 2026-06-01. Source: github.com · Seen in real projects: ruvnet/ruflo, Neve77/comandaflow, ollama/ollama +10
 
 ### Bun
 
@@ -195,7 +195,7 @@ Researched 2026-11.
 | Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org | zopefoundation/ZODB |
 | Convention | package … has capitals in its name: PEP 8 gives packages all-lowercase names | peps.python.org | zopefoundation/ZODB, Ayato-kosaka/nanitabeyo |
 
-End of life: 13 versions of Python, from 2.6 to 3.10; the latest ended on 2026-10-01. Source: peps.python.org · Seen in real projects: not yet
+End of life: 13 versions of Python, from 2.6 to 3.10; the latest ended on 2026-10-01. Source: peps.python.org · Seen in real projects: comfyanonymous/ComfyUI, astral-sh/uv, MUKUL-PRASAD-SIGH/AetherSentrix
 
 ### Django
 

@@ -49,8 +49,8 @@ export function taste(id: string) {
     },
 
     /** Runtimes and frameworks past their published end of life. */
-    lifecycle() {
-      push({ kind: "lifecycle", value: "modernity" });
+    lifecycle(opts: { workflows?: boolean } = {}) {
+      push({ kind: "lifecycle", value: "modernity", ...(opts.workflows ? { workflows: true } : {}) });
     },
 
     /** Build output that is not gitignored. */

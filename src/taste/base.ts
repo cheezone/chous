@@ -7,7 +7,7 @@ import { taste } from "./define";
 export function base(opts: { workspacePackage?: boolean } = {}) {
   const t = taste("base");
 
-  t.lifecycle();
+  t.lifecycle({ workflows: !opts.workspacePackage });
   t.artifacts();
   t.leftovers({ scripts: !opts.workspacePackage, rootDocs: !opts.workspacePackage });
   t.twins();
