@@ -82,7 +82,8 @@ export default {
     leftover: {
       installer: "an installer in the source tree: built things belong in releases, and git keeps every version of them forever",
       executable: "a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it",
-      ignoredTracked: "{{count}} committed file(s) that .gitignore ignores: untrack them with `git rm --cached`, or unignore them with a `!` pattern",
+      ignoredTracked_one: "{{count}} committed file that .gitignore ignores: untrack it with `git rm --cached`, or unignore it with a `!` pattern",
+      ignoredTracked_other: "{{count}} committed files that .gitignore ignores: untrack them with `git rm --cached`, or unignore them with a `!` pattern",
       rootDocs: "{{count}} docs at the root besides README, LICENSE and the like ({{names}}): the root is an entrance, keep at most {{limit}} and move the rest into docs/",
     },
     contract: {
@@ -94,10 +95,13 @@ export default {
       styles: "mixes {{styles}} names ({{examples}}); one directory, one way of naming",
     },
     measure: {
-      longFiles: "{{count}} source files over {{lines}} lines or {{kib}} KiB ({{files}}): whether one holds too many jobs is for you or your agent to judge; never split mechanically",
-      flatDirs: "{{count}} directories hold more than {{limit}} source files each ({{dirs}}): is each one a single concern?",
+      longFiles_one: "{{count}} source file over {{lines}} lines or {{kib}} KiB ({{files}}): whether it holds too many jobs is for you or your agent to judge; never split mechanically",
+      longFiles_other: "{{count}} source files over {{lines}} lines or {{kib}} KiB ({{files}}): whether one holds too many jobs is for you or your agent to judge; never split mechanically",
+      flatDirs_one: "{{count}} directory holds more than {{limit}} source files ({{dirs}}): is it a single concern?",
+      flatDirs_other: "{{count}} directories hold more than {{limit}} source files each ({{dirs}}): is each one a single concern?",
       crowdedRoot: "{{count}} files at the root, more than {{limit}}: the root is an entrance",
-      copies: "{{count}} sets of identical files ({{groups}}): keep one, link to it, or say why there are several",
+      copies_one: "{{count}} set of identical files ({{groups}}): keep one, link to it, or say why there are several",
+      copies_other: "{{count}} sets of identical files ({{groups}}): keep one, link to it, or say why there are several",
       instructions: "{{lines}} lines of agent instructions (more than {{limit}}): an agent reads all of it whenever it works here; keep what applies every time, move the rest where it is needed",
       hugeFile: "{{size}} MiB: a file this large does not belong in a repository's history; use Git LFS or releases",
     },

@@ -62,3 +62,14 @@ describe("cli", () => {
     expect(r.code).toBe(2);
   });
 });
+
+describe("plurals", () => {
+  it("says one file, two files", async () => {
+    const { getT } = await import("../../src/i18n");
+    const { t } = getT("en");
+    expect(t("issue.measure.copies", { count: 1, groups: "x" })).toMatch(/^1 set of identical files/);
+    expect(t("issue.measure.copies", { count: 2, groups: "x" })).toMatch(/^2 sets of identical files/);
+    expect(t("issue.leftover.ignoredTracked", { count: 1 })).toMatch(/^1 committed file that .+ untrack it/);
+    expect(t("issue.leftover.ignoredTracked", { count: 3 })).toMatch(/^3 committed files that .+ untrack them/);
+  });
+});
