@@ -123,7 +123,7 @@ describe("names", () => {
   // Windows forbids control characters in names: there the attack cannot exist.
   it.runIf(posix)("prints control characters in names escaped, so a name cannot erase or fake a line", async () => {
     const name = "x\u001b[2K\u001b[1Aall good";
-    const { result } = await timed(project({ [name]: "a", [`${name}.bak`]: "a" }));
+    const { result } = await timed(project({ [`${name}/.DS_Store`]: "\u0000\u0000\u0000\u0001Bud1" }));
     const text = renderReport(result, { verbose: true, color: createColorizer({ enabled: false }), t: getT("en").t });
     expect(text).not.toContain("\u001b");
     expect(text).toContain("\\x1b[2K");

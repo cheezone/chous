@@ -1,4 +1,4 @@
-import { existsSync, lstatSync, readdirSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync } from "node:fs";
 import { readBytes, readTail, readText } from "../../fsutil";
 import { join, resolve } from "node:path";
 import type { ArtifactsRule, IssueMessage, LeftoverRule, Rule, TwinsRule, Verdict } from "../../types";
@@ -13,23 +13,14 @@ import {
   EXECUTABLES,
   INSTALLERS,
   isCoreDump,
-  DECISION_RECORD,
   DOC_FILE,
   NAME_EXEMPT,
   NOT_OURS,
-  ONE_OFF_SCRIPT,
   KNOWN_BY_CONTENT,
-  RECORD_DIRS,
-  SERIES,
-  VERSION_NAMED,
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
   languageOf,
   goStem,
-  SYNONYM_DIRS,
-  WORKLOG,
-  backupOf,
-  backupOnlyBeside,
   nameStyle,
 } from "../../taste/hygiene";
 
@@ -117,20 +108,6 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   }
 }
 
-/** Text of the root's own files (package.json, configs, README), small ones only. */
-function rootText(snapshot: RuleValidatorContext["snapshot"]): string {
-  return snapshot.listDir(".")
-    .filter((e) => !e.isDir && !ONE_OFF_SCRIPT.test(e.name))
-    .map((e) => {
-      try {
-        return readText(e.absPath, 256_000);
-      } catch {
-        return "";
-      }
-    })
-    .join("\n");
-}
-
 /** `a, b, c, d, e, …` */
 function list(names: string[], max = 5): string {
   const sorted = [...names].sort();
@@ -144,10 +121,10 @@ function head(path: string, bytes = 512, keepNul = false): string {
 }
 
 /**
- * What a work session leaves behind. Smells where chous knows: OS junk (by
- * what the OS writes into it), built binaries, a copy next to its original, a
- * crowded root. Review where only the name speaks: work logs, one-off scripts,
- * a backup whose original is gone.
+ * What a work session leaves behind, known by what is in it: OS junk (by what
+ * the OS writes into it), installers and binaries (by their signatures), a
+ * crowded root. A name's words are never the evidence: `FIXES_SUMMARY.md`,
+ * `index.ts.bak` or `报告-最终版.md` say nothing chous can check.
  */
 export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   canHandle(rule: Rule): rule is LeftoverRule {
@@ -162,29 +139,11 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       rawIssues.push(issueFromRule(rule, { path: resolve(context.root, rel), displayPath: rel, message, verdict }));
     };
     const extraDocs: string[] = [];
-    const versionSeries = new Map<string, string[]>();
-    const recordDirs = new Map<string, string[]>();
-    const push = (map: Map<string, string[]>, key: string, name: string) => {
-      const names = map.get(key);
-      if (names) names.push(name);
-      else map.set(key, [name]);
-    };
-    const rootLogs: string[] = [];
-    // Named in package.json, a config or the README: someone runs it.
-    const referenced = rule.scripts ? rootText(snapshot) : "";
 
     for (const [rel, entry] of snapshot.byRel) {
-      if (NOT_OURS.test(rel)) continue;
-      if (entry.isDir) {
-        // `src copy/` or `src.bak/` beside `src/`: the whole folder, copied.
-        const original = backupOf(entry.name);
-        const sibling = original && (rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original);
-        if (sibling && snapshot.byRel.get(sibling)?.isDir) report(`${rel}/`, { key: "issue.leftover.backup", params: { original: `${original}/` } });
-        continue;
-      }
+      if (entry.isDir || NOT_OURS.test(rel)) continue;
       const atRoot = !rel.includes("/");
       const name = entry.name;
-      const stem = name.replace(/\.[^.]+$/, "");
 
       const known = KNOWN_BY_CONTENT.find((k) => k.name.test(name));
       if (known) {
@@ -192,36 +151,8 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         continue;
       }
 
-      const named = backupOf(name);
-      const original = named ?? backupOnlyBeside(name);
-      const sibling = original && (rel.includes("/") ? `${rel.slice(0, rel.lastIndexOf("/"))}/${original}` : original);
-      // A copy beside its original is a backup, whatever it holds, docs too. A name that only
-      // says "old" or "backup" needs the same bytes as the original to be one.
-      if (sibling && snapshot.byRel.has(sibling) && (named || sameBytes(entry.absPath, snapshot.byRel.get(sibling)!.absPath))) {
-        report(rel, { key: "issue.leftover.backup", params: { original: original! } });
-        continue;
-      }
-
       if (DOC_FILE.test(name)) {
         if (atRoot && !ROOT_CONTRACT_DOCS.test(name)) extraDocs.push(name);
-        const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : ".";
-        if (VERSION_NAMED.test(stem)) push(versionSeries, dir, name);
-        if (RECORD_DIRS.test(dir.split("/").at(-1)!)) push(recordDirs, dir, name);
-        const format = DECISION_RECORD.test(rel) || (!atRoot && stem === "SUMMARY");
-        if (!format && (atRoot || /^[A-Z0-9_-]+$/.test(stem)) && !ROOT_CONTRACT_DOCS.test(name) && WORKLOG.test(stem)) {
-          if (atRoot) rootLogs.push(name);
-          else report(rel, { key: "issue.leftover.worklog" }, "review");
-        }
-        continue;
-      }
-
-      if (rule.scripts && atRoot && ONE_OFF_SCRIPT.test(name) && !referenced.includes(name)) {
-        report(rel, { key: "issue.leftover.script" }, "review");
-        continue;
-      }
-
-      if (backupOf(name)) {
-        report(rel, { key: "issue.leftover.maybeBackup" }, "review");
         continue;
       }
 
@@ -241,16 +172,11 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       }
     }
 
-    for (const [dir, names] of versionSeries) {
-      if (names.length >= SERIES) report(`${dir}/`, { key: "issue.leftover.versionNotes", params: { count: names.length, names: list(names) } }, "review");
+    // The repository says two things: .gitignore keeps it out, the index has it in.
+    for (const { path, files } of snapshot.ignoredTracked ?? []) {
+      if (NOT_OURS.test(path)) continue;
+      report(path, { key: "issue.leftover.ignoredTracked", params: { count: files } });
     }
-    for (const [dir, names] of recordDirs) {
-      if (names.length >= SERIES) report(`${dir}/`, { key: "issue.leftover.records", params: { count: names.length, names: list(names) } }, "review");
-    }
-
-    // At the root they are one finding, not twenty.
-    if (rootLogs.length === 1) report(rootLogs[0]!, { key: "issue.leftover.worklog" }, "review");
-    if (rootLogs.length > 1) report("./", { key: "issue.leftover.worklogs", params: { count: rootLogs.length, names: list(rootLogs) } }, "review");
 
     if (rule.rootDocs && extraDocs.length > ROOT_DOCS_LIMIT) {
       hitCount++;
@@ -266,9 +192,10 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
 }
 
 /**
- * One concept, two names: `README.md` next to `Readme.md` (case-insensitive
- * file systems keep one), `test/` next to `tests/`, `plugin/` next to
- * `plugins/`, one directory naming files two ways, the same instructions twice.
+ * One thing, two spellings: `README.md` next to `Readme.md` (case-insensitive
+ * file systems keep one), one directory naming files two ways, the same
+ * instructions twice. What names mean (`test/` and `tests/`, `plugin/` and
+ * `plugins/`) is a question of language, and chous does not read language.
  */
 export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
   canHandle(rule: Rule): rule is TwinsRule {
@@ -289,7 +216,6 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
     };
 
     const seen = new Map<string, string>();
-    const dirsIn = new Map<string, Map<string, string>>(); // parent → lowercased name → name
     for (const rel of [...snapshot.byRel.keys()].sort()) {
       if (NOT_OURS.test(rel)) continue;
       // Compare within one directory: children of `Docs/` vs `docs/` are the same finding.
@@ -301,27 +227,6 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
       const other = seen.get(key);
       if (other === undefined) seen.set(key, rel);
       else report(rel, rel.normalize("NFC") === other.normalize("NFC") ? "issue.twins.unicode" : "issue.twins.case", other);
-      if (snapshot.byRel.get(rel)?.isDir) {
-        const siblings = dirsIn.get(parent) ?? new Map<string, string>();
-        siblings.set(name.toLowerCase(), name);
-        dirsIn.set(parent, siblings);
-      }
-    }
-
-    // One concept, two names, in any directory: synonyms, and a plural beside its singular.
-    for (const [parent, siblings] of dirsIn) {
-      for (const group of SYNONYM_DIRS) {
-        const present = group.flatMap((d) => (siblings.has(d) ? [siblings.get(d)!] : []));
-        // `lib/test/ + __tests__/`: the parent once, so a workspace package's view of it is the same finding.
-        if (present.length > 1) report(`${parent}${present.map((d) => `${d}/`).join(" + ")}`, "issue.twins.synonyms", undefined, undefined, `${resolve(context.root, parent + present[0]!)}#synonyms`);
-      }
-      for (const [lower, name] of siblings) {
-        if (SYNONYM_DIRS.some((g) => g.includes(lower))) continue;
-        const plural = [`${lower}s`, `${lower}es`, lower.endsWith("y") ? `${lower.slice(0, -1)}ies` : ""].find((p) => p && siblings.has(p));
-        // At the root two names for one thing; deeper, `language/` beside `languages/` is as often two
-        // things (zed's crates, routes that are URLs): the names are a fact, the meaning is for review.
-        if (plural) report(`${parent}${name}/`, parent ? "issue.twins.pluralMaybe" : "issue.twins.plural", `${parent}${siblings.get(plural)}/`, parent ? "review" : undefined);
-      }
     }
 
     // The same instructions twice. Bun and cal.com keep one file and symlink the other;
@@ -333,17 +238,6 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
 
     hitCount += mixedStyles(rule, context);
     return { hitCount };
-  }
-}
-
-/** Two files with the same bytes; sizes are compared first, so large ones are rarely read. */
-function sameBytes(a: string, b: string): boolean {
-  try {
-    const size = statSync(a).size;
-    if (size !== statSync(b).size || size > 16 * 1024 * 1024) return false;
-    return readBytes(a).equals(readBytes(b));
-  } catch {
-    return false;
   }
 }
 

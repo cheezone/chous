@@ -190,7 +190,7 @@ describe("lint pipeline integration", () => {
     expect((await lintWorkspace({ root: dir })).issues.map((i) => i.displayPath)).toEqual([".env.production.local"]);
   });
 
-  it("lets one test directory be, whatever its name, but not two", async () => {
+  it("does not read the words in names: test/ beside tests/ is the project's business", async () => {
     const dir = mkdtempSync(join(tmpdir(), "chous-lint-"));
     writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "t", type: "module", private: true }), "utf8");
     mkdirSync(join(dir, "tests"));
@@ -199,10 +199,6 @@ describe("lint pipeline integration", () => {
 
     mkdirSync(join(dir, "test"));
     writeFileSync(join(dir, "test", "b.test.ts"), "", "utf8");
-    const result = await lintWorkspace({ root: dir });
-    expect(result.issues.map((i) => i.message)).toEqual([
-      { key: "issue.twins.synonyms" },
-    ]);
-    expect(result.issues[0]?.ruleSource.taste).toBe("base");
+    expect((await lintWorkspace({ root: dir })).issues).toEqual([]);
   });
 });

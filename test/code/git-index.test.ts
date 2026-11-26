@@ -37,6 +37,15 @@ describe("what git tracks", () => {
     });
   }
 
+  it("reports what is committed although .gitignore ignores it: an ignored directory once, honouring ! exceptions, not empty placeholders", async () => {
+    const root = repo(
+      { ".gitignore": "dist/\n*.log\n!keep.log\n/*.js\n", "package.json": JSON.stringify({ name: "a", private: true }), "dist/a.js": "a", "dist/b.js": "b", "x.log": "x", "keep.log": "", "fixtures/y.log": "", "src/app.js": "", "models/.gitignore": "*\n", "models/checkpoints/put_here": "" },
+      ["dist/a.js", "dist/b.js", "x.log", "fixtures/y.log", "models/.gitignore", "models/checkpoints/put_here"],
+    );
+    const found = (await lintWorkspace({ root })).issues.filter((i) => i.message.key === "issue.leftover.ignoredTracked");
+    expect(found.map((i) => [i.displayPath, i.message.params?.count])).toEqual([["dist/", 2], ["x.log", 1]]);
+  });
+
   it("checks what is committed, however .gitignore or a folder name would hide it; leaves untracked node_modules alone", async () => {
     const root = repo(FILES, ["package.json.bak", "build/.DS_Store"]);
     const paths = (await lintWorkspace({ root })).issues.map((i) => i.displayPath).sort();

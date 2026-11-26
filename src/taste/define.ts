@@ -58,8 +58,8 @@ export function taste(id: string) {
       push({ kind: "artifacts", value: "cleanliness" });
     },
 
-    /** Work logs, one-off scripts, hand-made backups, release binaries. */
-    leftovers(opts: { scripts: boolean; rootDocs: boolean }) {
+    /** OS junk, installers, binaries and a crowded root, known by content. */
+    leftovers(opts: { rootDocs: boolean }) {
       push({ kind: "leftover", value: "cleanliness", ...opts });
     },
 
@@ -68,7 +68,7 @@ export function taste(id: string) {
       push({ kind: "contracts", value: "convention" });
     },
 
-    /** One thing twice: names that differ only by case, number or synonym, or two identical files. */
+    /** One thing twice: names that differ only by case or Unicode form, mixed naming styles, two identical instruction files. */
     twins() {
       push({ kind: "twins", value: "order" });
     },

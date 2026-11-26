@@ -67,6 +67,15 @@ export type WorkspaceInfo = {
   tool: string;
 };
 
+/** A file's size, or undefined when it cannot be read. */
+function sizeOf(path: string): number | undefined {
+  try {
+    return statSync(path).size;
+  } catch {
+    return undefined;
+  }
+}
+
 export type WorkspaceSnapshot = {
   root: string;
   /** Absolute paths of all visible entries (files + dirs) */
@@ -78,6 +87,12 @@ export type WorkspaceSnapshot = {
   fileCount: number;
   /** Gitignore matcher for paths relative to `root`. */
   ig: { ignores(relPath: string): boolean };
+  /**
+   * What git tracks although the repository's own .gitignore ignores it (a
+   * repository root only): an ignored directory once (`dist/`, with its file
+   * count); otherwise the file, or its directory when several share one.
+   */
+  ignoredTracked?: Array<{ path: string; files: number }>;
   manifest: PackageManifestSnapshot;
   workspace: WorkspaceInfo;
   exists(relOrAbs: string): boolean;
@@ -442,6 +457,31 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
   }
   const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && gitignore.ignores(rel) };
+  const ignoredTracked = new Map<string, number>();
+  for (const rel of tracked ?? []) {
+    if (!gitignore.ignores(rel)) continue;
+    // A directory's own .gitignore, or an empty placeholder, keeps the directory and commits nothing.
+    if (rel === ".gitignore" || rel.endsWith("/.gitignore") || sizeOf(resolve(root, rel)) === 0) continue;
+    let at = rel;
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      if (gitignore.ignores(`${rel.slice(0, i)}/`)) {
+        at = `${rel.slice(0, i)}/`;
+        break;
+      }
+    }
+    ignoredTracked.set(at, (ignoredTracked.get(at) ?? 0) + 1);
+  }
+  const byDir = new Map<string, string[]>();
+  for (const at of ignoredTracked.keys()) {
+    if (at.endsWith("/") || !at.includes("/")) continue;
+    const dir = `${at.slice(0, at.lastIndexOf("/"))}/`;
+    byDir.set(dir, [...(byDir.get(dir) ?? []), at]);
+  }
+  for (const [dir, files] of byDir) {
+    if (files.length < 2 || ignoredTracked.has(dir)) continue;
+    for (const f of files) ignoredTracked.delete(f);
+    ignoredTracked.set(dir, files.length);
+  }
 
   const byRel = new Map<string, VfsEntry>();
   const byAbs = new Map<string, VfsEntry>();
@@ -576,6 +616,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     byAbs,
     fileCount,
     ig,
+    ignoredTracked: [...ignoredTracked].sort().map(([path, files]) => ({ path, files })),
     manifest,
     workspace,
     ...api,

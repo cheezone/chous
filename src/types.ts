@@ -84,11 +84,9 @@ export type TwinsRule = RuleBase & {
   kind: "twins";
 };
 
-/** Work logs, one-off scripts, backups, release binaries (see `taste/hygiene.ts`). */
+/** OS junk, installers, binaries and a crowded root, known by content (see `taste/hygiene.ts`). */
 export type LeftoverRule = RuleBase & {
   kind: "leftover";
-  /** Look for one-off scripts (repository root only: a package root is part of a bigger build). */
-  scripts: boolean;
   /** Count docs at the root (repository root only). */
   rootDocs: boolean;
 };

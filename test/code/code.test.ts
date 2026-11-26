@@ -39,7 +39,7 @@ const EXPECTED: Record<string, string[]> = {
     "moment: Its maintainers call it a legacy project in maintenance mode. → dayjs",
     "node-sass: Its authors: Node Sass is no longer supported. → sass",
   ],
-  js: ["test/ + tests/ → one thing under two names"],
+  js: ["src/ → mixes camelCase ×1 + kebab-case ×1 names"],
   monorepo: [
     "zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)",
     "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",

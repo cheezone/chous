@@ -48,14 +48,14 @@ Modernity
 Order
   ✗ ./                             → 4 docs at the root besides README, LICENSE and the like (ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md): the root is an entrance, keep at most 3 and move the rest into docs/
   ✗ src/composables/               → mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
-  ✗ test/ + tests/                 → one thing under two names, keep one
+  ✗ Readme.md                      → same name as README.md except for case; macOS and Windows keep only one of them on checkout
 
 Cleanliness
   ✗ .DS_Store        → not allowed: OS junk, delete it and gitignore it
-  ✗ package.json.bak → a copy of package.json: git already keeps the old version
+  ✗ dist/            → 3 committed file(s) that .gitignore ignores: untrack them with `git rm --cached`, or unignore them with a `!` pattern
 
 To review: chous knows the fact, not the purpose. You or your agent decide.
-  ? ./                        → 2 docs named like work logs (FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md): if they record single sessions, they belong in pull requests, not the repository
+  ? bin/server                → a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
   ? package.json (node-fetch) → the platform ships fetch: whether it fully replaces node-fetch depends on how you use it
 
 Smells: 9 · to review: 2
@@ -65,7 +65,7 @@ Taste only: correctness, security and tests are not checked.
 ### Two kinds of finding
 
 - **Smell**: a fact chous is sure of that goes against its taste. Nothing to decide. Grouped by the four tastes: modernity, order, convention, cleanliness.
-- **To review**: the fact is certain, its meaning needs context. A file named like a work log: chous knows its name, not what it says. You or your agent decide.
+- **To review**: the fact is certain, its meaning needs context. An executable: chous knows its format from its header, not whether a build made it or reads it. You or your agent decide.
 
 There are no errors, warnings or hints, and no score. Smells make chous exit non-zero; things to review never do. A wrong fact is a false positive; a different taste is not.
 
@@ -74,13 +74,13 @@ There are no errors, warnings or hints, and no score. Smells make chous exit non
 | Taste | Smell | To review |
 | --- | --- | --- |
 | Modernity | Runtimes and frameworks past their published end of life (from that day, no grace period; `engines.node` only when every version it allows has ended); formats, fields and options their own tools call deprecated, obsolete or legacy; dependencies deprecated, called legacy or sabotaged by their authors; config of dead tools | Dependencies the platform now ships |
-| Order | A second config of one tool in one directory, which the tool never reads; Node pinned twice to different versions; one thing, two names (`test/` and `tests/`, singular and plural, case only); mixed naming styles in one directory; a crowded root; `package-lock.json` beside `yarn.lock`; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo; `CLAUDE.md` identical to `AGENTS.md` | |
+| Order | A second config of one tool in one directory, which the tool never reads; Node pinned twice to different versions; names that differ only in case or Unicode form; mixed naming styles in one directory; a crowded root; `package-lock.json` beside `yarn.lock`; major-version drift, nested lockfiles and workspace lists that disagree in a monorepo; `CLAUDE.md` identical to `AGENTS.md` | |
 | Convention | Files and fields a tool no longer reads, or reads only from one place or under one name; names that break a language's or framework's naming rules (Python, Go, Rust, Dart, Kotlin, Elixir, PHP's PSR-4, Angular, Vue); package names npm refuses; limits tools and platforms set in their docs (GitHub's file sizes, Codex's AGENTS.md size, line limits of agent instructions); skills that break the Agent Skills spec; directories Next.js and Nuxt never read | |
-| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets); a backup next to its original; installers (known by their signature) | Executables and libraries; docs named like work logs; one-off scripts nothing mentions; backups without an original; series of per-version notes and piles of work records |
+| Cleanliness | Build output (known by the markers its tools write); OS junk and `local.properties` (known by their content); files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets); files committed although .gitignore ignores them; installers (known by their signature) | Executables and libraries |
 
 Which tools, which files and which words: [the catalogue of what chous knows](docs/facts.md), generated from the registry so it never lists a tool chous does not check.
 
-Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, and neither correctness nor security is checked. Test fixtures and other people's code (`vendor/`, `third_party/`, `upstream/`) are skipped; `tests/` and `examples/` are your own code and are checked.
+Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, neither correctness nor security is checked, and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Test fixtures and other people's code (`vendor/`, `third_party/`, `upstream/`) are skipped; `tests/` and `examples/` are your own code and are checked.
 
 Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
 

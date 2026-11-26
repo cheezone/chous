@@ -92,17 +92,23 @@ describe("committed build output", () => {
 });
 
 describe("leftovers", () => {
-  it("puts docs named like work logs up for review, and never ADRs or book tables of contents", async () => {
+  it("never reads the words in a name, in any language", async () => {
     expect(
       await claims({
-        "README.md": "",
         "IMPLEMENTATION_COMPLETE.md": "",
         "docs/BUGFIX_LOGIN.md": "",
-        "docs/report-format.md": "",
-        "docs/adr/ADR-001-IMPLEMENTATION.md": "",
-        "book/src/SUMMARY.md": "",
+        "src/index.ts": "x",
+        "src/index.ts.bak": "x",
+        "src/index - Copy.ts": "x",
+        "src/index.备份.ts": "x",
+        "src/index_백업.ts": "x",
+        "src copy/a.ts": "",
+        "fix_login.sh": "",
+        "debug.log": "",
+        "reports/1.md": "", "reports/2.md": "", "reports/3.md": "", "reports/4.md": "", "reports/5.md": "",
+        "notes/v1.0.md": "", "notes/v1.1.md": "", "notes/v1.2.md": "", "notes/v1.3.md": "", "notes/v1.4.md": "",
       }),
-    ).toEqual(["review IMPLEMENTATION_COMPLETE.md", "review docs/BUGFIX_LOGIN.md"]);
+    ).toEqual([]);
   });
 
   it("smells a crowded root, whatever the docs are, counting only what has no claim to the root", async () => {
@@ -112,48 +118,12 @@ describe("leftovers", () => {
     expect(await claims({ ...root, ...docs, "ROADMAP.md": "" })).toEqual(["smell ./"]);
   });
 
-  it("puts files named like logs up for review: a name cannot tell a program's log from a test's input", async () => {
-    expect(await claims({ ".kotlin/errors/errors-1777453046994.log": "e: oops", "tests/resources/access-logs/fake_logs.log": "1.2.3.4 - -" })).toEqual([
-      "review .kotlin/errors/errors-1777453046994.log",
-      "review tests/resources/access-logs/fake_logs.log",
-    ]);
-  });
-
   it("does not let a contract name's prefix carry any doc to the root", async () => {
     const docs = ["README.md", "README.zh-CN.md", "README_EN.md", "LICENSE-MIT", "LICENSE_NOTICE", "CHANGELOG.en-US.md"];
     const prefixed = ["README_IMPLEMENTATION_COMPLETE.md", "AGENTS-handoff.md", "CLAUDE_SESSION_NOTES.md", "SECURITY_AUDIT_REPORT.md"];
     const found = await claims(Object.fromEntries([...docs, ...prefixed].map((n) => [n, "# x"])));
     expect(found).toContain("smell ./");
     expect(found.filter((c) => /README\.zh|README_EN|LICENSE|CHANGELOG/.test(c))).toEqual([]);
-  });
-
-  it("knows a copy beside its original in the ways systems name them, docs and folders too", async () => {
-    expect(
-      await claims({
-        "src/index.ts": "x",
-        "src/index - Copy.ts": "x",
-        "src/Copy of index.ts": "x",
-        "src/index.old.ts": "x",
-        "src/index_backup.ts": "x",
-        "icons/cloud.svg": "<svg>cloud</svg>",
-        "icons/cloud-backup.svg": "<svg>cloud with an arrow</svg>",
-        "src/index.ts.bak2": "x",
-        "src/index copy 2.ts": "x",
-        "docs/guide.md": "# g",
-        "docs/guide copy.md": "# g",
-        "lib/a.ts": "x",
-        "lib copy/a.ts": "x",
-      }),
-    ).toEqual([
-      "smell docs/guide copy.md",
-      "smell lib copy/",
-      "smell src/Copy of index.ts",
-      "smell src/index - Copy.ts",
-      "smell src/index copy 2.ts",
-      "smell src/index.old.ts",
-      "smell src/index.ts.bak2",
-      "smell src/index_backup.ts",
-    ]);
   });
 
   it("knows OS junk by content whatever the case of its name, and macOS AppleDouble files", async () => {
@@ -190,37 +160,6 @@ describe("leftovers", () => {
     ).toEqual(["review server", "smell App.dmg", "smell Installer.pkg", "smell core", "smell ext.vsix"].sort());
   });
 
-  it("merges root work logs into one review", async () => {
-    expect(await claims({ "FIXES_SUMMARY.md": "", "IMPLEMENTATION_COMPLETE.md": "" })).toEqual(["review ./"]);
-  });
-
-  it("puts unreferenced one-off scripts up for review", async () => {
-    expect(
-      await claims({
-        "package.json": JSON.stringify({ type: "module", private: true, files: ["test-utils.js"] }),
-        "README.md": "Run `./check-env.sh` first.",
-        "check-env.sh": "",
-        "test-utils.js": "",
-        "fix_login.sh": "",
-        "scripts/fix_login.sh": "",
-      }),
-    ).toEqual(["review fix_login.sh"]);
-  });
-
-  it("smells a copy next to its original; a lone backup is for review", async () => {
-    expect(
-      await claims({
-        "package.json": "{}",
-        "package.json.bak": "",
-        "public/logo.png": "",
-        "public/logo (1).png": "",
-        "old-config.js.orig": "",
-        "vendor/serde/Cargo.toml.orig": "",
-        "test/fixtures/x.bak": "",
-      }),
-    ).toEqual(["review old-config.js.orig", "smell package.json.bak", "smell public/logo (1).png"]);
-  });
-
   it("reads a binary's format from its bytes: installers smell, executables are for review", async () => {
     expect(
       await claims({
@@ -251,11 +190,6 @@ describe("leftovers", () => {
     expect(await claims({ "CLAUDE.md": "x\n".repeat(200), "packages/a/CLAUDE.md": "x\n".repeat(201) })).toEqual(["smell packages/a/CLAUDE.md"]);
   });
 
-  it("puts a series of per-version notes and a pile of work records up for review", async () => {
-    const notes = Object.fromEntries(["v2.0.1", "v2.0.2", "v2.0.3", "v2.0.4", "v2.1.0"].map((v) => [`.github/release-notes/${v}.md`, ""]));
-    const reports = Object.fromEntries(["a", "b", "c", "d", "e"].map((n) => [`docs/reports/${n}.md`, ""]));
-    expect(await claims({ ...notes, ...reports, "docs/guide/1.0.md": "" })).toEqual(["review .github/release-notes/", "review docs/reports/"]);
-  });
 });
 
 describe("twins", () => {
@@ -294,17 +228,16 @@ describe("twins", () => {
     expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
   });
 
-  it("finds one concept under two names in any directory, whatever the case", async () => {
+  it("finds names that differ only by case, never names that differ by meaning", async () => {
     expect(
       await findings({
-        "src/test/a.ts": "",
-        "src/Tests/b.ts": "",
+        "src/Test/a.ts": "",
+        "src/test/b.ts": "",
+        "src/tests/c.ts": "",
         "lib/category/a.ts": "",
         "lib/categories/b.ts": "",
-        "lib/box/a.ts": "",
-        "lib/boxes/b.ts": "",
       }),
-    ).toEqual(expect.arrayContaining(["src/test/ + Tests/", "lib/category/", "lib/box/"]));
+    ).toEqual(["src/test"]);
   });
 
   it("finds the two Unicode forms of one name, where the file system keeps both", async () => {
@@ -320,9 +253,6 @@ describe("twins", () => {
     expect(found).toEqual(kept === 2 ? ["docs/caf\u00e9.md"] : []);
   });
 
-  it("flags a plural next to its singular", async () => {
-    expect(await findings({ "plugin/a.ts": "", "plugins/b.ts": "", "src/a.ts": "" })).toEqual(["plugin/"]);
-  });
 });
 
 describe("workspace lists", () => {

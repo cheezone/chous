@@ -16,7 +16,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 
 ### Order
 
-- One thing, one name: `test/` beside `tests/`, `plugin/` beside `plugins/`, two files that differ only in case.
+- One thing, one name. What chous can see is spelling: two names that differ only in case or Unicode form. Whether `test/` and `tests/` are one thing takes reading the words; that is for the agent.
 - One directory, one way of naming. Where the language prescribes none, kebab, snake or camel is yours to pick; just one.
 - The root is an entrance, not a heap. Besides the files with a claim to the root (README, LICENSE, CONTRIBUTING and the like, AGENTS.md, CLAUDE.md), it holds at most 3 more docs. That is a stance, not a measurement.
 - Hidden files count like any others: a directory starting with `.` does not make what is in it smell any less.
@@ -48,8 +48,8 @@ There is one taste. It cannot be configured or switched off. chous has the right
 
 chous only states facts it is sure of, so every finding is one of two:
 
-- **Smell**: the fact is certain and it goes against the taste above. There is nothing to decide. "Node 16 reached end of life on 2023-09-11." "`package.json.bak` is a copy of the `package.json` next to it." "The root holds 9 docs."
-- **To review**: the fact is certain, but what it means needs context chous does not have. A file named like a work log: chous knows its name, not what it says. You or your agent decide.
+- **Smell**: the fact is certain and it goes against the taste above. There is nothing to decide. "Node 16 reached end of life on 2023-09-11." "`dist/` is ignored by .gitignore, yet committed." "The root holds 9 docs."
+- **To review**: the fact is certain, but what it means needs context chous does not have. An executable: chous knows its format from its header, not whether a build made it or reads it. You or your agent decide.
 
 These are not degrees of badness but degrees of knowledge. There are no errors, warnings or hints, and no score. Smells make chous exit non-zero; things to review never do.
 
@@ -66,7 +66,7 @@ How chous makes sure of a fact:
 
 - It does not punish what is missing: no tests, no CI, no TypeScript, no license. chous looks only at the choices you made.
 - It does not judge by line counts, sizes or file counts, unless official docs set the limit.
-- It does not judge a file by its name: a name can put a file up for review, never make it a smell.
+- It does not read the words in a name: `FIXES_SUMMARY.md`, `index.ts.bak`, `报告-最终版.md` and `백업.ts` all say nothing to chous. A rule that has to guess again in every language is not a fact. Only names a tool or the operating system defines count, and only with content to confirm them.
 - It adds no exceptions to suit a project. It keeps two kinds of lists only: where official conventions put things, and history that has happened and can be checked (end-of-life dates, deprecations announced by their authors).
 - It does not go online, call an AI or need a key.
 
@@ -81,8 +81,8 @@ Some taste needs the code read and understood. That is not written into chous's 
 - Compatibility, adapter and forwarding layers that nothing calls any more.
 - Duplicated implementations and needless abstraction.
 - Generated code committed without the means to generate it.
-- Dispatch records, task reports, delivery notes and per-version release notes piled up in the source and docs: once the work is done, its story is in pull requests and the changelog. chous can only say "22 delivery reports are here"; the agent can read them and decide which still belong.
-- Whether a file is still of use: chous can only say "named like a work log"; an agent can read it and decide whether it goes in docs/, in a pull request, or away.
+- Dispatch records, task reports, delivery notes and per-version release notes piled up in the source and docs: once the work is done, its story is in pull requests and the changelog. The agent can read them and decide which still belong.
+- Whether a file is still of use: a work log, a hand-made backup, a one-off script, whether `plugin/` and `plugins/` are one thing. chous does not read the words in names; an agent can read the files and decide whether they go in docs/, in a pull request, or away.
 - Whether a dependency can give way to what the platform ships: chous knows what the platform ships, the agent knows which parts of the package this project uses.
 
 `chous manifesto` prints this document and `chous --json` prints every finding as data, so an agent can read the taste first and then review the whole repository, not only what chous listed.
@@ -98,8 +98,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
 | Files, fields and options a tool itself calls deprecated, obsolete or legacy (an old config format, a retired linter's config, a deprecated manifest field or tsconfig option) | The file or field, the version in use, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Dependencies the platform now ships | The version from which the platform ships it | Whether it fully replaces the package depends on how the project uses it | Modernity | Review |
-| Names that differ only in case or Unicode form; singular and plural directories at the root; synonym directories anywhere (`test/`, `tests/`, `__tests__/`) | Both names exist | One thing, one name | Order | Smell |
-| Singular and plural directories side by side deeper down (`language/` and `languages/`) | Both names exist | One kind of thing, one name; they may also be two things | Order | Review |
+| Names that differ only in case or Unicode form | Both names exist | One thing, one name | Order | Smell |
 | Mixed naming styles in one directory | Each name's style | One directory, one style | Order | Smell |
 | A crowded root | How many docs without a claim to the root it holds | The root is an entrance | Order | Smell |
 | `package-lock.json` beside `yarn.lock` | Both lockfiles in one directory; Yarn's own warning | One fact, said once | Order | Smell |
@@ -114,13 +113,8 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 | Build output, caches and virtual environments, whatever the directory is called | A marker file its tool writes (`CACHEDIR.TAG`, `pyvenv.cfg`, `CMakeCache.txt`, a `.tsbuildinfo`), or a build script | Build output is not committed | Cleanliness | Smell |
 | OS junk, crash dumps (ELF core files), `local.properties` | The content the OS or Android Studio writes | No OS junk or machine settings committed | Cleanliness | Smell |
 | Files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets) | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |
-| A backup next to its original (`package.json.bak`, `index - Copy.ts`, `src copy/`; a name that only says old or backup must have the original's exact bytes) | The original is right there | Git already keeps the old version | Cleanliness | Smell |
+| Files committed although .gitignore ignores them (not empty placeholders, nor a directory's own .gitignore) | The git index and .gitignore say opposite things | Untrack it, or write the exception with `!` | Cleanliness | Smell |
 | Installers (`.apk`, `.ipa`, `.msi`, `.deb`, `.dmg`, …) | The file's signature confirms the format | What users get belongs in releases | Cleanliness | Smell |
 | Executables and libraries (`.exe`, `.dll`, `.so`, `.dylib`, and ELF or Mach-O files with no extension) | The file's signature confirms the format | Built by this project: releases. Read by a build: keep it | Cleanliness | Review |
-| Docs named like work logs | The name | The record of one session belongs in its pull request | Cleanliness | Review |
-| Scripts named like one-offs that nothing mentions | The name, and that no file refers to it | Delete it once it has run | Cleanliness | Review |
-| Files named like logs (`*.log`) | The name | A program's logs are not committed; test input can stay | Cleanliness | Review |
-| A backup without its original | The name | It may be a backup, or not | Cleanliness | Review |
-| A series of per-version release notes, a pile of work records | At least 5 in one directory | History lives in the changelog and pull requests | Cleanliness | Review |
 
 Test fixtures (`fixtures/`, `testdata/`, `__snapshots__/`) are data, and `vendor/`, `third_party/` and `upstream/` hold someone else's code; neither is checked. `tests/`, `examples/` and `playground/` are your own code and are checked like the rest.

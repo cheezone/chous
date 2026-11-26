@@ -1,6 +1,8 @@
 /**
- * Repository hygiene: build output that should never be committed, and agent
- * work logs that should never sit at the root.
+ * Repository hygiene: what should never be committed, known by evidence a tool
+ * or the operating system leaves (a marker file, a signature, its own header),
+ * never by the words in a name. A name in English, Chinese or Korean says the
+ * same nothing to chous; only names a tool defines count, with content to confirm.
  */
 
 /**
@@ -47,24 +49,6 @@ export const MARKED_OUTPUT: Array<{ name: RegExp; content: RegExp; key: "cache" 
 export const BUNDLER_CONFIG = /^(vite|vitest|tsdown|tsup|rollup|rolldown|webpack|esbuild|unbuild|parcel|rspack|rsbuild|svelte|astro|nuxt|next)\.config\.[cm]?[jt]s$|^tsconfig(\.[\w-]+)?\.json$/;
 
 /**
- * Leftovers. chous knows a file's name, place and content; it does not know
- * what the file is for. So a name alone never makes a smell: a file named
- * like a work log or a one-off script is put up for review, and a backup is a
- * smell only when the original sits right next to it.
- */
-
-/** Named like a work log: `IMPLEMENTATION_COMPLETE.md`, `FIXES_SUMMARY.md`, `PHASE_4_PLAN.md`. Any name at the root; SCREAMING_CASE deeper down. */
-export const WORKLOG = /(^|[_\-. ])(summary|complete|completed|completion|status|progress|report|reports|fix|fixes|fixed|bugfix|hotfix|done|improvements?|implementation|changes[_-]made|session|handoff|walkthrough|analysis|cleanup|audit|debug|phase[_-]?\d*|prompts?|brief)([_\-. ]|$)/i;
-
-/**
- * Root directories that mean the same thing. Which name you pick is up to you;
- * two of them is a mess. `spec/` is left out: it may hold tests (RSpec) or
- * specifications (fastrender keeps the WHATWG specs there). Plain plurals (`plugin/` + `plugins/`) are found
- * without a list.
- */
-export const SYNONYM_DIRS = [["test", "tests", "__tests__"]];
-
-/**
  * Naming styles of multi-word file names. One word (`index`) fits every style;
  * PascalCase is left out on purpose: components and classes are PascalCase in
  * projects whose other files are kebab or camel (React, Vue, Svelte).
@@ -107,9 +91,6 @@ export const goStem = (name: string) => name.slice(0, -".go".length).replace(/_t
 /** Names a tool chose, not the project: type shims, generated files, framework file conventions. */
 export const NAME_EXEMPT = /\.d\.[mc]?ts$|\.gen\.|^(not-found|global-error|global-not-found|instrumentation-client|mdx-components)\./;
 
-/** Decision records and book tables of contents are formats, not logs: `docs/adr/ADR-003-…`, mdBook's `src/SUMMARY.md`. */
-export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[-_]?\d/i;
-
 /**
  * Root docs with a claim to the root: hosts and tools look for them there.
  * README and LICENSE everywhere; GitHub's community health files; the files
@@ -117,10 +98,10 @@ export const DECISION_RECORD = /(^|\/)(adrs?|decisions|rfcs?)\/|(^|\/)(adr|rfc)[
  * belong together.
  */
 const LANGUAGE_TAG = "[a-z]{2}(?:[-_][a-z]{2,4})?|zh[a-z]"; // zh-CN, ja_JP, en, zht
-const LICENSE_PART = "mit|apache(?:-?2(?:\\.0)?)?|bsd(?:-\\d-clause)?|[al]?gpl[\\w.-]*|mpl[\\w.-]*|isc|cc0[\\w.-]*|cc-by[\\w.-]*|ofl|notice|history|third[-_]?party|thirdparty|dependencies";
+const LICENSE_PART = "mit|apache(?:-?2(?:\\.0)?)?|bsd(?:-\\d-clause)?|[al]?gpl[\\w.-]*|mpl[\\w.-]*|isc|cc0[\\w.-]*|cc-by[\\w.-]*|ofl";
 /**
  * The name exactly, in another language (`README.zh-CN.md`, `README_EN.md`),
- * or a license's companion (`LICENSE-MIT`, `LICENSE_NOTICE`). Any other suffix
+ * or a license's companion by its SPDX identifier (`LICENSE-MIT`). Any other suffix
  * is a name of its own: no host looks for `README_IMPLEMENTATION_COMPLETE.md`.
  */
 export const ROOT_CONTRACT_DOCS = new RegExp(
@@ -138,38 +119,6 @@ export const DOC_FILE = /\.(md|mdx|markdown|rst|adoc|asciidoc|org)$/i;
  * docs besides the contract ones, they belong in `docs/`.
  */
 export const ROOT_DOCS_LIMIT = 3;
-
-/** Named like a one-off script: `fix_login.sh`, `test_api.py`, `debug-auth.js`. */
-export const ONE_OFF_SCRIPT = /^(fix|test|debug|check|verify|temp|tmp|quick|try)[_-][\w.-]*\.(sh|bash|py|js|mjs|cjs|ts|bat|cmd|ps1)$/i;
-
-/**
- * Hand-made copies, and the name of the original they were copied from:
- * `package.json.bak` ← `package.json`, `logo (1).png` ← `logo.png`.
- */
-export function backupOf(name: string): string | undefined {
-  const forms: Array<[RegExp, string]> = [
-    [/^(.+)\.(bak|backup|orig|old|save|rej)\d*$/i, "$1"], // index.ts.bak, .bak2; nano's .save; patch's .rej
-    [/^(.+)_original$/i, "$1"],
-    [/^(.+)~$/, "$1"],
-    [/^(.+) - copy( \(\d+\))?(\.\w+)?$/i, "$1$3"], // Windows Explorer: "index - Copy.ts"
-    [/^copy of (.+)$/i, "$1"],
-    [/^(.+) \(\d+\)(\.\w+)?$/, "$1$2"],
-    [/^(.+) copy( \d+)?(\.\w+)?$/i, "$1$3"], // macOS Finder: "index copy.ts", "index copy 2.ts"
-  ];
-  for (const [re, to] of forms) if (re.test(name)) return name.replace(re, to);
-  return undefined;
-}
-
-/**
- * Names that say "old" or "backup" inside them: `index.old.ts`, `index_backup.ts`.
- * Common in names that are nothing of the kind (rustc's `*.old.stderr`, an icon
- * named `cloud-backup.svg`, SQLite's `sqlite3_backup.java`), so only the same
- * bytes as the original beside them make them a backup.
- */
-export function backupOnlyBeside(name: string): string | undefined {
-  const m = /^(.+)[._-](bak|backup|old|orig)(\.\w+)$/i.exec(name);
-  return m ? `${m[1]}${m[3]}` : undefined;
-}
 
 /** File signatures, as latin1 strings: the format is read from the bytes, never from the extension. */
 const ZIP = "PK\x03\x04";
@@ -241,11 +190,3 @@ export const KNOWN_BY_CONTENT: Array<{ name: RegExp; content: RegExp; reason: "r
   { name: /^local\.properties$/, content: /must \*NOT\* be checked into Version Control/i, reason: "reason.localProperties" },
 ];
 
-/** Release notes kept one file per version: `v2.0.1.md`, `1.4.0.md`. */
-export const VERSION_NAMED = /^v?\d+\.\d+(\.\d+)?([-.][\w.]+)?$/i;
-
-/** Directories that hold records of work done. */
-export const RECORD_DIRS = /^(reports?|handoffs?|progress|sessions?|worklogs?|task-reports?)$/i;
-
-/** How many alike files make a series. */
-export const SERIES = 5;
