@@ -1,0 +1,5 @@
+{
+  "name": "@demo/core",
+  "type": "module",
+  "private": true
+}

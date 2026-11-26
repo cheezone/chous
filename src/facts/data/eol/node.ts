@@ -1,0 +1,23 @@
+// Written by `pnpm run sync` from https://raw.githubusercontent.com/nodejs/Release/main/schedule.json — do not edit.
+export default [
+  { version: "4", date: "2018-04-30", name: "argon" },
+  { version: "5", date: "2016-06-30" },
+  { version: "6", date: "2019-04-30", name: "boron" },
+  { version: "7", date: "2017-06-30" },
+  { version: "8", date: "2019-12-31", name: "carbon" },
+  { version: "9", date: "2018-06-30" },
+  { version: "10", date: "2021-04-30", name: "dubnium" },
+  { version: "11", date: "2019-06-01" },
+  { version: "12", date: "2022-04-30", name: "erbium" },
+  { version: "13", date: "2020-06-01" },
+  { version: "14", date: "2023-04-30", name: "fermium" },
+  { version: "15", date: "2021-06-01" },
+  { version: "16", date: "2023-09-11", name: "gallium" },
+  { version: "17", date: "2022-06-01" },
+  { version: "18", date: "2025-04-30", name: "hydrogen" },
+  { version: "19", date: "2023-06-01" },
+  { version: "20", date: "2026-04-30", name: "iron" },
+  { version: "21", date: "2024-06-01" },
+  { version: "23", date: "2025-06-01" },
+  { version: "25", date: "2026-06-01" },
+] as const;

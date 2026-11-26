@@ -1,57 +1,32 @@
 import { resolve } from "node:path";
-import type { NoFilesRule } from "../../types";
+import type { NoFilesRule, Rule } from "../../types";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { toDisplayPath } from "../../fsutil";
 import { BaseRuleValidator } from "./base";
 
+/** Paths that must not exist. The message is the rule's reason. */
 export class NoFilesRuleValidator extends BaseRuleValidator<NoFilesRule> {
-  canHandle(rule: any): rule is NoFilesRule {
+  canHandle(rule: Rule): rule is NoFilesRule {
     return rule.kind === "no";
   }
 
-  protected async validateInternal(
-    rule: NoFilesRule,
-    context: RuleValidatorContext
-  ): Promise<{ hitCount: number }> {
+  protected async validateInternal(rule: NoFilesRule, context: RuleValidatorContext) {
     const { root, snapshot, rawIssues } = context;
-
-    const currentRuleFiles = new Set<string>();
-    for (const name of rule.names) {
-      for (const match of snapshot.match(name, { onlyFiles: true })) {
-        currentRuleFiles.add(resolve(root, match));
-      }
-    }
-
-    for (let i = rawIssues.length - 1; i >= 0; i--) {
-      const issue = rawIssues[i]!;
-      if (issue.ruleKind === "no" && issue.path && currentRuleFiles.has(resolve(issue.path))) {
-        rawIssues.splice(i, 1);
-      }
-    }
-
     let hitCount = 0;
-    for (const name of rule.names) {
-      const matches = snapshot.match(name, { onlyFiles: true });
-      for (const match of matches) {
-        const abs = resolve(root, match);
-        if (!snapshot.exists(abs)) continue;
-
-        const shouldApply = await this.shouldApplyToTarget(rule, abs, context);
-        if (!shouldApply) continue;
-
-        hitCount++;
-        rawIssues.push(issueFromRule(rule, {
-          path: abs,
-          displayPath: toDisplayPath(abs, root),
-          message: { key: "issue.no.forbidden", params: { name } },
-          category: "forbidden",
-          severity: "error",
-          reason: false,
-        }));
-      }
+    const anywhere = rule.names.every((n) => n.startsWith("**/"));
+    for (const match of snapshot.match(rule.names, { onlyFiles: false })) {
+      const abs = resolve(root, match);
+      // Test inputs may hold anything, even a `desktop.ini` (Zig tests one).
+      if (anywhere && context.snapshot.notOurs.test(toDisplayPath(abs, root))) continue;
+      hitCount++;
+      rawIssues.push(issueFromRule(rule, {
+        path: abs,
+        displayPath: toDisplayPath(abs, root),
+        message: { key: "issue.no.because", params: { reason: { t: rule.reason! } } },
+        reason: false,
+      }));
     }
-
     return { hitCount };
   }
 }

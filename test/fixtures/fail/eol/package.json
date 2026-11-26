@@ -1,0 +1,8 @@
+{
+  "name": "eol",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "vue": "^2.7.16"
+  }
+}

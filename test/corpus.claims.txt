@@ -1,0 +1,1010 @@
+AdekunleBamz/stackhub	smell	cleanliness	frontend/.env.example	issue.leftover.ignoredTracked	{"count":1}
+AdekunleBamz/stackhub	smell	modernity	.github/workflows/frontend.yml (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+AdekunleBamz/stackhub	smell	modernity	frontend/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+AdekunleBamz/stackhub	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+AdekunleBamz/stackhub	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"IMPLEMENTATION_SUMMARY.md, IMPROVEMENTS_QUICKSTART.md, IMPROVEMENT_ROADMAP.md, PR_COMPLETION_STATUS.md"}
+Albertsun6/ontology-builder	review	order	./	issue.measure.longFiles	{"count":2,"lines":1000,"kib":100,"files":"src/store/tradeErpDemo.ts 1179 / 86 KiB, src/components/panels/GraphDatabaseView.tsx 1072 / 47 KiB"}
+Albertsun6/ontology-builder	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+Algodons/AlgoBrainDoctor	review	order	./	issue.measure.longFiles	{"count":1,"lines":1000,"kib":100,"files":"src/ui/dist/assets/index-BQA4p9nN.js 10 / 204 KiB"}
+Algodons/AlgoBrainDoctor	smell	cleanliness	src/ui/dist/	issue.leftover.ignoredTracked	{"count":4}
+Algodons/AlgoBrainDoctor	smell	cleanliness	src/ui/tsconfig.tsbuildinfo	issue.leak.tsbuildinfo	{}
+Algodons/AlgoBrainDoctor	smell	cleanliness	src/ui/tsconfig.tsbuildinfo	issue.leftover.ignoredTracked	{"count":1}
+Algodons/AlgoBrainDoctor	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"ARCHITECTURE.md, IMPLEMENTATION_SUMMARY.md, MERMEDA.md, QUICKSTART.md"}
+AppFlowy-IO/AppFlowy	review	order	./	issue.measure.copies	{"count":15,"groups":"2 × 208 KiB: frontend/appflowy_flutter/assets/translations/mr-IN.json, frontend/resources/translations/mr-IN.json; 3 × 46 KiB: frontend/appflowy_flutter/packages/appflowy_backend/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png, frontend/appflowy_flutter/packages/appflowy_popover/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png, frontend/appflowy_flutter/packages/flowy_infra_ui/example/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png; 3 × 33 KiB: frontend/appflowy_flutter/packages/appflowy_backend/example/windows/runner/resources/app_icon.ico, frontend/appflowy_flutter/packages/appflowy_popover/example/windows/runner/resources/app_icon.ico, frontend/appflowy_flutter/packages/flowy_infra_ui/example/windows/runner/resources/app_icon.ico; …"}
+AppFlowy-IO/AppFlowy	review	order	./	issue.measure.longFiles	{"count":19,"lines":1000,"kib":100,"files":"frontend/appflowy_flutter/lib/workspace/presentation/settings/widgets/emoji_picker/src/emoji_lists.dart 3223 / 49 KiB, frontend/rust-lib/flowy-folder/src/manager.rs 2637 / 87 KiB, frontend/rust-lib/flowy-database2/src/services/database/database_editor.rs 2464 / 75 KiB, frontend/appflowy_flutter/integration_test/shared/database_test_op.dart 1792 / 57 KiB, frontend/appflowy_flutter/lib/shared/popup_menu/appflowy_popup_menu.dart 1667 / 57 KiB, …"}
+AppFlowy-IO/AppFlowy	smell	cleanliness	frontend/appflowy_flutter/assets/translations/	issue.leftover.ignoredTracked	{"count":1}
+AppFlowy-IO/AppFlowy	smell	cleanliness	frontend/rust-lib/.cargo/config.toml	issue.leftover.ignoredTracked	{"count":1}
+AppFlowy-IO/AppFlowy	smell	cleanliness	frontend/rust-lib/flowy-sqlite/.env	issue.leftover.ignoredTracked	{"count":1}
+Ayato-kosaka/nanitabeyo	review	order	./	issue.measure.copies	{"count":11,"groups":"2 × 264 KiB: e2e-web/ui-preview-shots/embed-feed-loaded.png, e2e-web/ui-preview-shots/embed-feed.png; 2 × 115 KiB: e2e-web/ui-preview-shots/calendar-legend.png, e2e-web/ui-preview-shots/calendar.png; 2 × 49 KiB: api/prisma/schema.prisma, shared/prisma/schema.prisma; …"}
+Ayato-kosaka/nanitabeyo	review	order	./	issue.measure.flatDirs	{"count":5,"limit":50,"dirs":"infra/supabase/migrations/ 71, app-expo/lib/ 69, scripts/20260808T0000_restaurant/ 67, app-expo/__tests__/ 56, app-expo/components/ 54"}
+Ayato-kosaka/nanitabeyo	review	order	./	issue.measure.longFiles	{"count":27,"lines":1000,"kib":100,"files":"shared/prisma/index.d.ts 73446 / 2994 KiB, shared/prisma/runtime/client.d.ts 3180 / 100 KiB, app-expo/app/[locale]/contribution-tasks/dish-category-image-review.tsx 2229 / 68 KiB, app-expo/features/map/components/ReviewForm.tsx 2157 / 99 KiB, app-expo/features/dishMedia/components/ExternalEmbedPlayer.tsx 2091 / 106 KiB, …"}
+Ayato-kosaka/nanitabeyo	review	order	CLAUDE.md	issue.measure.instructions	{"lines":712,"limit":300}
+Ayato-kosaka/nanitabeyo	smell	cleanliness	docs/detailed_design/	issue.leftover.ignoredTracked	{"count":6}
+Ayato-kosaka/nanitabeyo	smell	cleanliness	e2e-web/ui-preview-shots/	issue.leftover.ignoredTracked	{"count":24}
+Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (@types∕dotenv)	issue.deps.deprecated	{"name":"@types/dotenv","version":"8.2.3","message":"This is a stub types definition. dotenv provides its own type definitions, so you do not need this installed."}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (@types∕jimp)	issue.deps.deprecated	{"name":"@types/jimp","version":"0.2.28","message":"This is a stub types definition for jimp (https://github.com/oliver-moran/jimp#readme). jimp provides its own type definitions, so you don't need @types/jimp installed!"}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (prom-client)	issue.deps.deprecated	{"name":"prom-client","version":"15.1.3","message":"prom-client has been replaced by @prometheus-io/client"}
+Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
+Ayato-kosaka/nanitabeyo	smell	order	app-expo/lib/	issue.twins.styles	{"styles":"camelCase ×59 + kebab-case ×1","examples":"addressFormat.test.ts, frontend-utils.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	e2e-web/utils/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"consoleHarness.ts, preload-assets.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	package.json (eslint)	issue.workspace.drift	{"name":"eslint","versions":"api: ^9.18.0; app-expo: ^8.57.1"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/api/v1/constants/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×1","examples":"contentReports.ts, build-meta.ts"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+Ayato-kosaka/nanitabeyo	smell	order	shared/prisma/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"index-browser.js, query_compiler_bg.js"}
+Ayato-kosaka/nanitabeyo	smell	order	shared/utils/	issue.twins.styles	{"styles":"camelCase ×9 + snake_case ×2","examples":"devDB.types.ts, geo_search.ts"}
+Beeta-inc/nbheditor.apps.beeta.com	review	order	./	issue.measure.copies	{"count":2,"groups":"3 × 1.2 MiB: appdata/Android/nbheditor/app/src/main/res/drawable/logo_beeta.png, assets/logo-beeta.png, logo-beeta.png_original; 2 × 6 KiB: appdata/Android/nbheditor/app/src/main/res/layout-w1240dp/app_bar_main.xml, appdata/Android/nbheditor/app/src/main/res/layout-w600dp/app_bar_main.xml"}
+Beeta-inc/nbheditor.apps.beeta.com	review	order	./	issue.measure.crowdedRoot	{"count":56,"limit":30}
+Beeta-inc/nbheditor.apps.beeta.com	review	order	./	issue.measure.longFiles	{"count":5,"lines":1000,"kib":100,"files":"appdata/Android/nbheditor/app/src/main/java/com/beeta/nbheditor/MainActivity.kt 8346 / 381 KiB, appdata/linux/texteditor.java 1800 / 61 KiB, appdata/Android/nbheditor/app/src/main/java/com/beeta/nbheditor/CollaborativeSessionManager.kt 1603 / 65 KiB, appdata/Android/nbheditor/app/src/main/java/com/beeta/nbheditor/SimpleMathHelper.kt 1153 / 44 KiB, appdata/Android/nbheditor/app/src/main/java/com/beeta/nbheditor/CollabChatFragment.kt 1123 / 52 KiB"}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.gradle/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.idea/shelf/	issue.leftover.ignoredTracked	{"count":8}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.idea/workspace.xml	issue.leftover.ignoredTracked	{"count":1}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	.idea/workspace.xml	issue.no.because	{"reason":{"t":"reason.ideaWorkspace"}}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v1.0.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.0.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.1.2-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v2.2.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v3.1.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v4.2.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NBHEditor-v4.3.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v4.5.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v4.5.1-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v5.0.0-release.apk	issue.leftover.installer	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	backend/node_modules/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	build/	issue.leak.artifact	{}
+Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	local.properties	issue.no.because	{"reason":{"t":"reason.localProperties"}}
+Beeta-inc/nbheditor.apps.beeta.com	smell	modernity	backend/package.json (uuid)	issue.deps.deprecated	{"name":"uuid","version":"9.0.1","message":"uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028)."}
+Beeta-inc/nbheditor.apps.beeta.com	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"API_37_UPDATE.md, BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, …"}
+BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
+BurntSushi/ripgrep	review	order	./	issue.measure.longFiles	{"count":19,"lines":1000,"kib":100,"files":"crates/core/flags/defs.rs 8153 / 241 KiB, crates/printer/src/standard.rs 4016 / 134 KiB, crates/ignore/src/walk.rs 3051 / 103 KiB, crates/globset/src/glob.rs 1936 / 70 KiB, tests/regression.rs 1910 / 59 KiB, …"}
+BurntSushi/ripgrep	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":10}
+BurntSushi/ripgrep	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"AI_POLICY.md, FAQ.md, GUIDE.md, RELEASE-CHECKLIST.md"}
+CarGuo/gsy_github_app_flutter	review	order	./	issue.measure.copies	{"count":4,"groups":"2 × 904 KiB: android/app/src/main/res/mipmap-mdpi/launch_image.png, android/app/src/main/res/mipmap-xxxhdpi/launch_image.png; 2 × 884 KiB: ios/Runner/Assets.xcassets/LaunchImage.imageset/Default@3x-2.png, ios/Runner/Assets.xcassets/LaunchImage.imageset/Default@3x-4.png; 5 × 29 KiB: android/app/src/main/res/mipmap-hdpi/ic_launcher.png, android/app/src/main/res/mipmap-mdpi/ic_launcher.png, android/app/src/main/res/mipmap-xhdpi/ic_launcher.png, …; …"}
+CarGuo/gsy_github_app_flutter	review	order	./	issue.measure.crowdedRoot	{"count":36,"limit":30}
+CarGuo/gsy_github_app_flutter	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"lib/model/ 66"}
+CarGuo/gsy_github_app_flutter	review	order	./	issue.measure.longFiles	{"count":8,"lines":1000,"kib":100,"files":"lib/common/localization/l10n/app_localizations.dart 2690 / 78 KiB, lib/common/localization/l10n/app_localizations_en.dart 1519 / 34 KiB, lib/common/localization/l10n/app_localizations_ja.dart 1487 / 37 KiB, lib/common/localization/l10n/app_localizations_ko.dart 1486 / 36 KiB, test/common/style/gsy_adaptive_shell_test.dart 1485 / 60 KiB, …"}
+CarGuo/gsy_github_app_flutter	smell	cleanliness	debug-issue-timeline-flash.md	issue.leftover.ignoredTracked	{"count":1}
+CarGuo/gsy_github_app_flutter	smell	cleanliness	docs/05-ai/feature-playbooks/debug-change.md	issue.leftover.ignoredTracked	{"count":1}
+CarGuo/gsy_github_app_flutter	smell	cleanliness	ios/Flutter/ephemeral/	issue.leftover.ignoredTracked	{"count":2}
+CarGuo/gsy_github_app_flutter	smell	cleanliness	tool/dbg/replay_issue_timeline_flash.dart	issue.leftover.ignoredTracked	{"count":1}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/db/provider/repos/repository_commitInfo_detail_db_provider.dart	issue.contract.dartFileName	{"name":"repository_commitInfo_detail_db_provider","count":1}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/model/commitFile.dart	issue.contract.dartFileName	{"name":"commitFile","count":1}
+CarGuo/gsy_github_app_flutter	smell	convention	lib/page/issue/issue_edit_dIalog.dart	issue.contract.dartFileName	{"name":"issue_edit_dIalog","count":1}
+CarGuo/gsy_github_app_flutter	smell	order	./	issue.leftover.rootDocs	{"count":4,"limit":3,"names":"RECORD.md, UISCENE_PLUGIN_RISK.md, VERSION.md, debug-issue-timeline-flash.md"}
+FouadMagdy01/RNCopilot	review	order	AGENTS.md	issue.measure.instructions	{"lines":644,"limit":300}
+FouadMagdy01/RNCopilot	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+FouadMagdy01/RNCopilot	smell	order	src/theme/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"dark-theme.ts, themeManager.ts"}
+JuanPabloGilA/your-saas-starterkit	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 214 KiB: apps/landing/src/assets/fonts/logo.ttf, apps/web/src/assets/fonts/logo.ttf"}
+JuanPabloGilA/your-saas-starterkit	review	order	CLAUDE.md	issue.measure.instructions	{"lines":348,"limit":300}
+JuanPabloGilA/your-saas-starterkit	smell	order	apps/web/bun.lock	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+JuanPabloGilA/your-saas-starterkit	smell	order	package.json (typescript)	issue.workspace.drift	{"name":"typescript","versions":"apps/api: ^7.0.2; apps/web: ^7.0.2; packages/config: ^7.0.2; packages/database: ^7.0.2; packages/shared: ^7.0.2; apps/landing: 6.0.3"}
+M-ElSibaii/pdtspt	review	order	./	issue.measure.copies	{"count":8,"groups":"3 × 1.1 MiB: public/img/Fastening system.png, public/img/Rail.png, public/img/Sleeper.png; 3 × 580 KiB: public/img/Anomalies In Tunnel Lining.png, public/img/Fibre-reinforced shotcrete layer.png, public/img/Tunnel lining.png; 2 × 147 KiB: public/img/Stair flight.png, public/img/Stair.png; …"}
+M-ElSibaii/pdtspt	review	order	./	issue.measure.longFiles	{"count":4,"lines":1000,"kib":100,"files":"app/Services/Iso23387Exporter.php 1728 / 65 KiB, app/Http/Controllers/ProductdatatemplatesController.php 1548 / 63 KiB, app/Services/UriService.php 1132 / 44 KiB, app/Services/DictionaryDedupeService.php 1055 / 41 KiB"}
+M-ElSibaii/pdtspt	smell	cleanliness	public/img/ifc-4.3.json	issue.measure.hugeFile	{"size":57}
+M-ElSibaii/pdtspt	smell	modernity	.github/workflows/ci.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+M-ElSibaii/pdtspt	smell	modernity	package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+MUKUL-PRASAD-SIGH/AetherSentrix	review	order	./	issue.measure.copies	{"count":2,"groups":"2 × 22.6 MiB: data/model_registry/versions/v20260414T142728Z/classifier.pkl, data/model_registry/versions/v20260414T143615Z/classifier.pkl; 3 × 3.5 MiB: data/model_registry/versions/v20260414T142508Z/anomaly.pkl, data/model_registry/versions/v20260414T142728Z/anomaly.pkl, data/model_registry/versions/v20260414T143615Z/anomaly.pkl"}
+MUKUL-PRASAD-SIGH/AetherSentrix	review	order	./	issue.measure.longFiles	{"count":1,"lines":1000,"kib":100,"files":"pipeline/simulation/attack_simulator.py 1774 / 77 KiB"}
+MUKUL-PRASAD-SIGH/AetherSentrix	smell	modernity	.github/workflows/tests.yml (Python 3.10)	issue.lifecycle.ended	{"name":"Python 3.10","date":"2026-10-01","use":{"t":"eol.python"}}
+MUKUL-PRASAD-SIGH/AetherSentrix	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"ADAPTIVE_TRUST_DECEPTION_PLAN.md, CODEBASE.md, COMPLETION_SUMMARY.md, IMPLEMENTATION_COMPLETE.md, PRODUCTION_READINESS_PLAN.md"}
+MohammadShamchi/ai-bookmark-enhancer	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 19 KiB: options.css, popup.css"}
+MohammadShamchi/ai-bookmark-enhancer	review	order	./	issue.measure.crowdedRoot	{"count":37,"limit":30}
+MohammadShamchi/ai-bookmark-enhancer	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"AI_PROMPTS.md, AUDIT_REPORT.md, BOOKMARK_AI_PLAN.md, BOOKMARK_PROCESSING_ANALYSIS.md, CLAUDE_INSTRUCTIONS.md, …"}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/src/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/src/main/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+Monisha-JR/Task_Management_With_AI	smell	cleanliness	backend/target/	issue.leak.artifact	{}
+Neve77/comandaflow	review	cleanliness	comandaflow.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	installed/comandaflow.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win32/nssm.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	cleanliness	nssm/nssm-2.24/win64/nssm.exe	issue.leftover.executable	{}
+Neve77/comandaflow	review	order	./	issue.measure.longFiles	{"count":3,"lines":1000,"kib":100,"files":"nssm/nssm-2.24/src/service.cpp 1976 / 68 KiB, nssm/nssm-2.24/src/gui.cpp 1176 / 47 KiB, nssm/nssm-2.24/src/settings.cpp 1061 / 40 KiB"}
+Neve77/comandaflow	smell	modernity	.nvmrc (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+Neve77/comandaflow	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+Neve77/comandaflow	smell	modernity	frontend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+Neve77/comandaflow	smell	order	./	issue.leftover.rootDocs	{"count":13,"limit":3,"names":"DEPLOYMENT.md, GERENCIADOR_PEDIDOS_GUIDE.md, GETTING_STARTED.md, IMPLEMENTATION_COMPLETE.md, ORDER_MANAGEMENT_IMPLEMENTATION.md, …"}
+QuantumNous/new-api	review	order	./	issue.measure.flatDirs	{"count":6,"limit":50,"dirs":"controller/ 142, model/ 123, service/ 108, common/ 70, web/src/components/ui/ 63, …"}
+QuantumNous/new-api	review	order	./	issue.measure.longFiles	{"count":85,"lines":1000,"kib":100,"files":"web/src/features/channels/components/drawers/channel-mutate-drawer.tsx 5469 / 192 KiB, web/src/features/channels/components/__tests__/channel-configuration.test.tsx 3739 / 135 KiB, web/src/features/channels/components/dialogs/param-override-editor-dialog.tsx 3338 / 110 KiB, relay/channel/task/jsplugin/adaptor_test.go 3030 / 148 KiB, relay/common/override_test.go 2816 / 78 KiB, …"}
+QuantumNous/new-api	smell	convention	relay/channel/baidu_v2/	issue.contract.goPackageName	{"name":"baidu_v2","count":2}
+QuantumNous/new-api	smell	convention	relay/channel/zhipu_4v/	issue.contract.goPackageName	{"name":"zhipu_4v","count":6}
+QuantumNous/new-api	smell	convention	relay/common_handler/rerank.go	issue.contract.goPackageName	{"name":"common_handler","count":1}
+QuantumNous/new-api	smell	convention	setting/billing_setting/	issue.contract.goPackageName	{"name":"billing_setting","count":4}
+QuantumNous/new-api	smell	convention	setting/console_setting/	issue.contract.goPackageName	{"name":"console_setting","count":2}
+QuantumNous/new-api	smell	convention	setting/model_setting/	issue.contract.goPackageName	{"name":"model_setting","count":7}
+QuantumNous/new-api	smell	convention	setting/operation_setting/	issue.contract.goPackageName	{"name":"operation_setting","count":17}
+QuantumNous/new-api	smell	convention	setting/perf_metrics_setting/config.go	issue.contract.goPackageName	{"name":"perf_metrics_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/performance_setting/config.go	issue.contract.goPackageName	{"name":"performance_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/ratio_setting/	issue.contract.goPackageName	{"name":"ratio_setting","count":6}
+QuantumNous/new-api	smell	convention	setting/request_plugin_setting/config.go	issue.contract.goPackageName	{"name":"request_plugin_setting","count":1}
+QuantumNous/new-api	smell	convention	setting/system_setting/	issue.contract.goPackageName	{"name":"system_setting","count":12}
+QuantumNous/new-api	smell	convention	setting/task_pricing_setting/	issue.contract.goPackageName	{"name":"task_pricing_setting","count":2}
+QuantumNous/new-api	smell	order	common/	issue.twins.styles	{"styles":"snake_case ×35 + kebab-case ×7","examples":"account_password.go, custom-event.go"}
+QuantumNous/new-api	smell	order	controller/	issue.twins.styles	{"styles":"snake_case ×106 + kebab-case ×2","examples":"access_token.go, channel-billing.go"}
+QuantumNous/new-api	smell	order	middleware/	issue.twins.styles	{"styles":"snake_case ×21 + kebab-case ×6","examples":"access_token_routes.go, disable-cache.go"}
+QuantumNous/new-api	smell	order	relay/channel/aws/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"relay-aws.go, relay_aws_test.go"}
+QuantumNous/new-api	smell	order	relay/channel/claude/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×1","examples":"message_delta_usage_patch_test.go, relay-claude.go"}
+QuantumNous/new-api	smell	order	relay/channel/gemini/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"adaptor_responses_test.go, relay-gemini-native.go"}
+QuantumNous/new-api	smell	order	relay/channel/openai/	issue.twins.styles	{"styles":"snake_case ×12 + kebab-case ×1","examples":"chat_via_responses.go, relay-openai.go"}
+QuantumNous/new-api	smell	order	relay/channel/vertex/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×1","examples":"adaptor_api_key_url_test.go, relay-vertex.go"}
+QuantumNous/new-api	smell	order	router/	issue.twins.styles	{"styles":"snake_case ×10 + kebab-case ×9","examples":"access_token_scope_test.go, api-router.go"}
+QuantumNous/new-api	smell	order	service/	issue.twins.styles	{"styles":"snake_case ×88 + kebab-case ×1","examples":"access_token_scope.go, notify-limit.go"}
+RoniAbravaya/ai-stock-summary-app	review	order	./	issue.measure.copies	{"count":7,"groups":"3 × 268 KiB: mobile-app/assets/icons/app_icon_foreground.png, mobile-app/assets/icons/app_icon.png, mobile-app/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png; 2 × 21 KiB: backend/web/icons/Icon-maskable-512.png, mobile-app/web/icons/Icon-maskable-512.png; 2 × 12 KiB: mobile-app/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png, mobile-app/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png; …"}
+RoniAbravaya/ai-stock-summary-app	review	order	./	issue.measure.crowdedRoot	{"count":62,"limit":30}
+RoniAbravaya/ai-stock-summary-app	review	order	./	issue.measure.longFiles	{"count":6,"lines":1000,"kib":100,"files":"mobile-app/lib/main.dart 4596 / 149 KiB, mobile-app/lib/services/firebase_service.dart 2411 / 85 KiB, example_ai_stock_summary/lib/widgets/custom_icon_widget.dart 2189 / 87 KiB, mobile-app/lib/services/language_service.dart 1180 / 51 KiB, mobile-app/lib/screens/stocks_screen.dart 1104 / 34 KiB, …"}
+RoniAbravaya/ai-stock-summary-app	smell	cleanliness	core	issue.no.because	{"reason":{"t":"reason.coreDump"}}
+RoniAbravaya/ai-stock-summary-app	smell	cleanliness	example_ai_stock_summary/env.json	issue.leftover.ignoredTracked	{"count":1}
+RoniAbravaya/ai-stock-summary-app	smell	cleanliness	mobile-app/ios/Runner/GoogleService-Info.plist	issue.leftover.ignoredTracked	{"count":1}
+RoniAbravaya/ai-stock-summary-app	smell	cleanliness	mobile-app/pubspec.lock	issue.leftover.ignoredTracked	{"count":1}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	.github/workflows/deploy-play-store.yml (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/node/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/node/package.json (multer)	issue.deps.deprecated	{"name":"multer","version":"1.4.5-lts.2","message":"Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version."}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/package.json (multer)	issue.deps.deprecated	{"name":"multer","version":"1.4.5-lts.2","message":"Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version."}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (engines.node)	issue.lifecycle.declared	{"versions":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
+SankrityaT/InstaCare	smell	modernity	package.json (@types∕maplibre-gl)	issue.deps.deprecated	{"name":"@types/maplibre-gl","version":"1.14.0","message":"This is a stub types definition. maplibre-gl provides its own type definitions, so you do not need this installed."}
+SankrityaT/InstaCare	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/helper/customRoute.dart	issue.contract.dartFileName	{"name":"customRoute","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/model/	issue.contract.dartFileName	{"name":"bookmarkModel","count":4}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/	issue.contract.dartFileName	{"name":"appState","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/base/tweetBaseState.dart	issue.contract.dartFileName	{"name":"tweetBaseState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/state/chats/chatState.dart	issue.contract.dartFileName	{"name":"chatState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/	issue.contract.dartDirectoryName	{"name":"Auth","count":5}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/	issue.contract.dartFileName	{"name":"forgetPasswordPage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/Auth/widget/googleLoginButton.dart	issue.contract.dartFileName	{"name":"googleLoginButton","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/bookmark/bookmarkPage.dart	issue.contract.dartFileName	{"name":"bookmarkPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/common/	issue.contract.dartFileName	{"name":"updateApp","count":2}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/common/widget/userListWidget.dart	issue.contract.dartFileName	{"name":"userListWidget","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/	issue.contract.dartFileName	{"name":"feedPage","count":4}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/	issue.contract.dartDirectoryName	{"name":"composeTweet","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/composeTweet.dart	issue.contract.dartFileName	{"name":"composeTweet","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/state/composeTweetState.dart	issue.contract.dartFileName	{"name":"composeTweetState","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/feed/composeTweet/widget/	issue.contract.dartFileName	{"name":"composeBottomIconWidget","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/homePage.dart	issue.contract.dartFileName	{"name":"homePage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/	issue.contract.dartFileName	{"name":"chatListPage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/conversationInformation/	issue.contract.dartDirectoryName	{"name":"conversationInformation","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/message/conversationInformation/conversationInformation.dart	issue.contract.dartFileName	{"name":"conversationInformation","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/notification/notificationPage.dart	issue.contract.dartFileName	{"name":"notificationPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/	issue.contract.dartFileName	{"name":"EditProfilePage","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/follow/	issue.contract.dartFileName	{"name":"followListState","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/qrCode/	issue.contract.dartDirectoryName	{"name":"qrCode","count":2}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/profile/widgets/tabPainter.dart	issue.contract.dartFileName	{"name":"tabPainter","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/search/SearchPage.dart	issue.contract.dartFileName	{"name":"SearchPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/	issue.contract.dartDirectoryName	{"name":"accountSettings","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/about/aboutTwitter.dart	issue.contract.dartFileName	{"name":"aboutTwitter","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/accountSettingsPage.dart	issue.contract.dartFileName	{"name":"accountSettingsPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/	issue.contract.dartDirectoryName	{"name":"contentPrefrences","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/contentPreference.dart	issue.contract.dartFileName	{"name":"contentPreference","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/contentPrefrences/trends/trendsPage.dart	issue.contract.dartFileName	{"name":"trendsPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/dataUsage/	issue.contract.dartDirectoryName	{"name":"dataUsage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/dataUsage/dataUsagePage.dart	issue.contract.dartFileName	{"name":"dataUsagePage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/displaySettings/	issue.contract.dartDirectoryName	{"name":"displaySettings","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/displaySettings/displayAndSoundPage.dart	issue.contract.dartFileName	{"name":"displayAndSoundPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/notifications/notificationPage.dart	issue.contract.dartFileName	{"name":"notificationPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/	issue.contract.dartDirectoryName	{"name":"privacyAndSafety","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/directMessage/	issue.contract.dartDirectoryName	{"name":"directMessage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/directMessage/directMessage.dart	issue.contract.dartFileName	{"name":"directMessage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/privacyAndSafety/privacyAndSafetyPage.dart	issue.contract.dartFileName	{"name":"privacyAndSafetyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/accountSettings/proxy/proxyPage.dart	issue.contract.dartFileName	{"name":"proxyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/settingsAndPrivacyPage.dart	issue.contract.dartFileName	{"name":"settingsAndPrivacyPage","count":1}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/ui/page/settings/widgets/	issue.contract.dartFileName	{"name":"headerWidget","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/	issue.contract.dartFileName	{"name":"customAppBar","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/bottomMenuBar/	issue.contract.dartDirectoryName	{"name":"bottomMenuBar","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/bottomMenuBar/	issue.contract.dartFileName	{"name":"HalfPainter","count":3}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/newWidget/	issue.contract.dartDirectoryName	{"name":"newWidget","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/newWidget/	issue.contract.dartFileName	{"name":"customCheckBox","count":6}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/tweet/widgets/	issue.contract.dartFileName	{"name":"parentTweet","count":7}
+TheAlphamerc/flutter_twitter_clone	smell	convention	lib/widgets/url_text/customUrlText.dart	issue.contract.dartFileName	{"name":"customUrlText","count":1}
+Walbrkt/HackBerlin_Solar	review	order	./	issue.measure.copies	{"count":2,"groups":"2 × 6.9 MiB: public/solar_panels/solar_panel_flat.glb, solar_panels/solar_panel_flat.glb; 2 × 4.3 MiB: public/solar_panels/solar_panel_slanted.glb, solar_panels/solar_panel_slanted.glb"}
+Walbrkt/HackBerlin_Solar	review	order	./	issue.measure.longFiles	{"count":1,"lines":1000,"kib":100,"files":"src/components/SolarViewer.tsx 2338 / 81 KiB"}
+Walbrkt/HackBerlin_Solar	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+Walbrkt/HackBerlin_Solar	smell	order	./	issue.leftover.rootDocs	{"count":10,"limit":3,"names":"AGENT_PROMPTS.md, API_DOCUMENTATION.md, DATA_QUALITY_REPORT.md, END_TO_END_PHILOSOPHY.md, INFERENCE_SERVER_SUMMARY.md, …"}
+ai-assist-org/ai-assist	review	order	./	issue.measure.flatDirs	{"count":2,"limit":50,"dirs":"tests/ 161, ai_assist/ 93"}
+ai-assist-org/ai-assist	review	order	./	issue.measure.longFiles	{"count":10,"lines":1000,"kib":100,"files":"ai_assist/agent.py 3644 / 168 KiB, ai_assist/filesystem_tools.py 3169 / 127 KiB, tests/test_awl_runtime.py 2484 / 89 KiB, ai_assist/tui_interactive.py 2195 / 91 KiB, tests/test_filesystem_security.py 2157 / 81 KiB, …"}
+ai-assist-org/ai-assist	smell	cleanliness	eval/dataset/cases/report-read/fixtures/reports/	issue.leftover.ignoredTracked	{"count":1}
+android/nowinandroid	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 4 KiB: core/designsystem/src/test/screenshots/Background/Background_light_androidTheme_notDynamic.png, core/designsystem/src/test/screenshots/Background/GradientBackground_light_androidTheme_notDynamic.png"}
+android/nowinandroid	smell	cleanliness	.idea/	issue.leftover.ignoredTracked	{"count":2}
+anomalyco/opencode	review	order	./	issue.measure.copies	{"count":22,"groups":"2 × 1.0 MiB: packages/app/public/assets/JetBrainsMonoNerdFontMono-Regular.woff2, packages/ui/src/assets/fonts/JetBrainsMonoNerdFontMono-Regular.woff2; 2 × 854 KiB: packages/app/public/assets/Inter.ttf, packages/ui/src/assets/fonts/Inter.ttf; 2 × 64 KiB: services/site/public/product-videos/card-hover/cinematic/desktop.jpg, services/site/public/product-videos/locked/desktop-portrait.jpg; …"}
+anomalyco/opencode	review	order	./	issue.measure.crowdedRoot	{"count":44,"limit":30}
+anomalyco/opencode	review	order	./	issue.measure.flatDirs	{"count":38,"limit":50,"dirs":"packages/core/test/ 229, packages/gui-plugins/src/browser/ 209, services/site/src/component/site/ 124, packages/ai/test/provider/ 119, packages/ui/src/components/ 91, …"}
+anomalyco/opencode	review	order	./	issue.measure.longFiles	{"count":322,"lines":1000,"kib":100,"files":"packages/plugins/figma/skills/figma-use/references/plugin-api-standalone.d.ts 10191 / 388 KiB, packages/core/test/session-runner.test.ts 7859 / 306 KiB, packages/ai/test/provider/openai-responses.test.ts 5414 / 196 KiB, packages/tui/test/mini/stream-v2.transport.test.ts 4705 / 143 KiB, packages/cli-rs/crates/plugin-abi/src/lib.rs 4261 / 174 KiB, …"}
+anomalyco/opencode	smell	cleanliness	.opencode/skills/opencode-dev/	issue.leftover.ignoredTracked	{"count":1}
+anomalyco/opencode	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":2}
+anomalyco/opencode	smell	modernity	sdks/vscode/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+anomalyco/opencode	smell	order	package.json (vite)	issue.workspace.drift	{"name":"vite","versions":"packages/app: 8.2.4; packages/data/app: 8.2.4; packages/desktop: 8.2.4; services/site: 8.2.4; packages/stories: 7.3.7"}
+anomalyco/opencode	smell	order	services/site/test/	issue.twins.styles	{"styles":"kebab-case ×28 + camelCase ×4","examples":"changelog-highlights.test.ts, consoleMarketing.test.ts"}
+antfu/ni	smell	order	test/programmatic/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"catalog-interactive.spec.ts, runCli.spec.ts"}
+antfu/taze	smell	order	test/	issue.twins.styles	{"styles":"camelCase ×17 + kebab-case ×2","examples":"bunCatalog.test.ts, package-manager.test.ts"}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-aarch64-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-aarch64-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-i686-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-i686-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-console.exe	issue.leftover.executable	{}
+astral-sh/uv	review	cleanliness	crates/uv-trampoline-builder/trampolines/uv-trampoline-x86_64-gui.exe	issue.leftover.executable	{}
+astral-sh/uv	review	order	./	issue.measure.copies	{"count":6,"groups":"3 × 61 KiB: crates/uv/tests/project/snapshots/project__workflow__packse_add_remove_existing_package_noop-2.snap, crates/uv/tests/project/snapshots/project__workflow__packse_add_remove_one_package-2.snap, crates/uv/tests/project/snapshots/project__workflow__packse_promote_transitive_to_direct_then_remove-2.snap; 3 × 7 KiB: crates/uv-lock/src/lock/snapshots/uv_lock__lock__tests__missing_dependency_source_unambiguous.snap, crates/uv-lock/src/lock/snapshots/uv_lock__lock__tests__missing_dependency_source_version_unambiguous.snap, crates/uv-lock/src/lock/snapshots/uv_lock__lock__tests__missing_dependency_version_unambiguous.snap; 2 × 6 KiB: crates/uv-requirements-txt/src/snapshots/uv_requirements_txt__test__line-endings-poetry-with-hashes.txt.snap, crates/uv-requirements-txt/src/snapshots/uv_requirements_txt__test__parse-poetry-with-hashes.txt.snap; …"}
+astral-sh/uv	review	order	./	issue.measure.longFiles	{"count":125,"lines":1000,"kib":100,"files":"crates/uv/tests/lock/lock.rs 51376 / 2114 KiB, crates/uv/tests/pip_compile/pip_compile.rs 20597 / 691 KiB, crates/uv/tests/sync/sync.rs 19957 / 618 KiB, crates/uv/tests/pip_install/pip_install.rs 19515 / 630 KiB, crates/uv/tests/project/edit.rs 15649 / 527 KiB, …"}
+astral-sh/uv	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":91}
+astral-sh/uv	smell	modernity	.github/workflows/test-system.yml (Python 3.6)	issue.lifecycle.ended	{"name":"Python 3.6","date":"2021-12-23","use":{"t":"eol.python"}}
+astral-sh/uv	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×8","examples":"assemble-release-artifacts.py, build_uv_pgo.py"}
+calcom/cal.com	review	order	./	issue.measure.copies	{"count":14,"groups":"13 × 2.2 MiB: packages/app-store/demodesk/static/3.jpeg, packages/app-store/templates/basic/static/1.jpeg, packages/app-store/templates/basic/static/3.jpeg, …; 7 × 425 KiB: packages/app-store/demodesk/static/2.jpeg, packages/app-store/templates/basic/static/2.jpeg, packages/app-store/templates/booking-pages-tag/static/2.jpeg, …; 2 × 870 KiB: packages/app-store/feishucalendar/static/3.png, packages/app-store/larkcalendar/static/3.png; …"}
+calcom/cal.com	review	order	./	issue.measure.crowdedRoot	{"count":38,"limit":30}
+calcom/cal.com	review	order	./	issue.measure.flatDirs	{"count":2,"limit":50,"dirs":"packages/lib/ 153, packages/emails/templates/ 51"}
+calcom/cal.com	review	order	./	issue.measure.longFiles	{"count":58,"lines":1000,"kib":100,"files":"packages/features/watchlist/lib/freeEmailDomainCheck/freeEmailDomains.ts 4768 / 89 KiB, packages/features/bookings/lib/handleNewBooking/test/fresh-booking.test.ts 4074 / 128 KiB, apps/web/test/lib/getSchedule.test.ts 3888 / 114 KiB, packages/features/bookings/lib/handleNewBooking/test/reschedule.test.ts 3395 / 124 KiB, apps/api/v2/src/platform/event-types/event-types_2024_06_14/controllers/event-types.controller.e2e-spec.ts 3192 / 123 KiB, …"}
+calcom/cal.com	review	order	.claude/skills/vercel-react-best-practices/AGENTS.md	issue.measure.instructions	{"lines":2249,"limit":300}
+calcom/cal.com	review	order	.opencode/skill/vercel-react-best-practices/AGENTS.md	issue.measure.instructions	{"lines":2249,"limit":300}
+calcom/cal.com	smell	cleanliness	apps/web/public/app-store/	issue.leftover.ignoredTracked	{"count":6}
+calcom/cal.com	smell	cleanliness	apps/web/test/.env.test.example	issue.leftover.ignoredTracked	{"count":1}
+calcom/cal.com	smell	cleanliness	packages/app-store/tsconfig.build.tsbuildinfo	issue.leak.tsbuildinfo	{}
+calcom/cal.com	smell	cleanliness	packages/app-store/tsconfig.build.tsbuildinfo	issue.leftover.ignoredTracked	{"count":1}
+calcom/cal.com	smell	cleanliness	packages/lib/test/.env.test	issue.leftover.ignoredTracked	{"count":1}
+calcom/cal.com	smell	cleanliness	packages/trpc/tsconfig.server.build.tsbuildinfo	issue.leak.tsbuildinfo	{}
+calcom/cal.com	smell	cleanliness	packages/trpc/tsconfig.server.build.tsbuildinfo	issue.leftover.ignoredTracked	{"count":1}
+calcom/cal.com	smell	order	./	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"i18n-unused.config.js, setupVitest.ts"}
+calcom/cal.com	smell	order	apps/api/v2/src/lib/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"api-versions.ts, filterReqHeaders.ts"}
+calcom/cal.com	smell	order	apps/web/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"getNextjsOrgRewriteConfig.ts, cron-tester.ts"}
+calcom/cal.com	smell	order	apps/web/lib/	issue.twins.styles	{"styles":"camelCase ×16 + kebab-case ×2","examples":"buildLegacyCtx.ts, app-providers-app-dir.tsx"}
+calcom/cal.com	smell	order	apps/web/playwright/lib/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×2","examples":"loadJSON.ts, chart-helpers.ts"}
+calcom/cal.com	smell	order	apps/web/test/lib/	issue.twins.styles	{"styles":"camelCase ×9 + kebab-case ×1","examples":"availabilityAsString.test.ts, next-config.test.ts"}
+calcom/cal.com	smell	order	apps/web/test/lib/getSchedule/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×1","examples":"calendarEvents.test.ts, delegation-credential.test.ts"}
+calcom/cal.com	smell	order	package.json (@faker-js/faker)	issue.workspace.drift	{"name":"@faker-js/faker","versions":".: 9.2.0; packages/lib: 7.6.0"}
+calcom/cal.com	smell	order	package.json (@testing-library/react)	issue.workspace.drift	{"name":"@testing-library/react","versions":".: 16.0.1; apps/web: 13.3.0"}
+calcom/cal.com	smell	order	package.json (@types/react)	issue.workspace.drift	{"name":"@types/react","versions":"apps/docs: ^19.0.0; apps/web: 18.0.26; example-apps/credential-sync: 18.0.26; packages/app-store-cli: 18.0.26; packages/embeds/embed-react: 18.0.26; packages/platform/atoms: 18.0.26; packages/platform/examples/base: 18.0.26; packages/ui: 18.0.26"}
+calcom/cal.com	smell	order	package.json (@types/uuid)	issue.workspace.drift	{"name":"@types/uuid","versions":"apps/web: 8.3.1; packages/trpc: 8.3.4; packages/ui: 10.0.0"}
+calcom/cal.com	smell	order	package.json (dotenv)	issue.workspace.drift	{"name":"dotenv","versions":"apps/api/v2: 16.6.1; example-apps/credential-sync: 16.6.1; packages/platform/examples/base: 17.2.2"}
+calcom/cal.com	smell	order	package.json (next)	issue.workspace.drift	{"name":"next","versions":"apps/docs: ^15.5.28; example-apps/credential-sync: 15.5.28; apps/web: 16.4.3; packages/platform/examples/base: 16.4.3"}
+calcom/cal.com	smell	order	package.json (react)	issue.workspace.drift	{"name":"react","versions":"apps/docs: ^19.0.0; apps/web: 18.2.0; example-apps/credential-sync: 18.2.0; packages/app-store-cli: 18.2.0; packages/platform/examples/base: 18.2.0"}
+calcom/cal.com	smell	order	package.json (react-dom)	issue.workspace.drift	{"name":"react-dom","versions":"apps/docs: ^19.0.0; apps/web: 18.2.0; example-apps/credential-sync: 18.2.0; packages/platform/examples/base: 18.2.0"}
+calcom/cal.com	smell	order	package.json (react-easy-crop)	issue.workspace.drift	{"name":"react-easy-crop","versions":"apps/web: 3.5.3; packages/ui: 5.0.0"}
+calcom/cal.com	smell	order	package.json (stripe)	issue.workspace.drift	{"name":"stripe","versions":"apps/api/v2: 15.4.0; apps/web: 9.16.0; packages/app-store/stripepayment: 9.16.0; packages/features: 9.16.0"}
+calcom/cal.com	smell	order	package.json (tailwind-merge)	issue.workspace.drift	{"name":"tailwind-merge","versions":"packages/coss-ui: 3.4.0; packages/platform/atoms: 1.13.2; packages/ui: 1.13.2"}
+calcom/cal.com	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"apps/web: 4.1.17; packages/embeds/embed-core: 4.1.17; packages/platform/atoms: 4.1.17; packages/platform/examples/base: 4.1.17; example-apps/credential-sync: 3.4.1"}
+calcom/cal.com	smell	order	package.json (uuid)	issue.workspace.drift	{"name":"uuid","versions":"apps/api/v2: 8.3.2; apps/web: 8.3.2; packages/app-store/stripepayment: 8.3.2; packages/lib: 8.3.2; packages/prisma: 8.3.2; packages/trpc: 8.3.2; packages/ui: 11.1.0"}
+calcom/cal.com	smell	order	packages/app-store/	issue.twins.styles	{"styles":"camelCase ×9 + kebab-case ×3","examples":"_appRegistry.ts, redirect-apps.generated.ts"}
+calcom/cal.com	smell	order	packages/app-store/_utils/	issue.twins.styles	{"styles":"camelCase ×31 + kebab-case ×1","examples":"bulkUpdateEventsToDefaultLocation.test.ts, paid-apps.ts"}
+calcom/cal.com	smell	order	packages/app-store/googlecalendar/tests/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"google-calendar.e2e.ts, testUtils.ts"}
+calcom/cal.com	smell	order	packages/app-store/stripepayment/lib/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"currencyOptions.ts, team-billing.ts"}
+calcom/cal.com	smell	order	packages/embeds/embed-core/bun.lockb	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+calcom/cal.com	smell	order	packages/embeds/embed-core/src/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×2","examples":"embed-iframe.ts, tailwindCss.ts"}
+calcom/cal.com	smell	order	packages/embeds/embed-core/src/embed-iframe/__tests__/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"react-hooks.test.ts, isLinkReady.test.ts"}
+calcom/cal.com	smell	order	packages/features/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×2","examples":"handleMarkNoShow.test.ts, get-cal-video-reference.test.ts"}
+calcom/cal.com	smell	order	packages/features/auth/lib/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×3","examples":"checkAdminOrOwner.ts, next-auth-custom-adapter.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/Booker/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"framer-features.tsx, useSlotReservationId.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/Booker/utils/	issue.twins.styles	{"styles":"camelCase ×18 + kebab-case ×2","examples":"areDifferentValidMonths.test.ts, query-param.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/	issue.twins.styles	{"styles":"camelCase ×40 + kebab-case ×3","examples":"bookingCreateBodySchema.ts, create-booking.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/	issue.twins.styles	{"styles":"camelCase ×25 + kebab-case ×1","examples":"checkActiveBookingsLimitForBooker.ts, global-booking-limits.test.ts"}
+calcom/cal.com	smell	order	packages/features/bookings/lib/handleNewBooking/test/	issue.twins.styles	{"styles":"kebab-case ×13 + camelCase ×4","examples":"booking-flags.test.ts, buildDryRunBooking.test.ts"}
+calcom/cal.com	smell	order	packages/features/calendars/lib/	issue.twins.styles	{"styles":"camelCase ×5 + kebab-case ×2","examples":"getAvailableDatesInMonth.timezone.test.ts, timezone-conversion.test.ts"}
+calcom/cal.com	smell	order	packages/features/form-builder/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"fieldTypes.ts, widget-types.ts"}
+calcom/cal.com	smell	order	packages/lib/	issue.twins.styles	{"styles":"camelCase ×99 + kebab-case ×10","examples":"buildCalEventFromBooking.ts, default-cookies.ts"}
+calcom/cal.com	smell	order	packages/lib/schedules/transformers/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"for-atom.ts, getScheduleListItemData.ts"}
+calcom/cal.com	smell	order	packages/trpc/server/routers/viewer/apiKeys/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×1","examples":"findKeyOfType.handler.ts, _auth-middleware.ts"}
+chatwoot/chatwoot	review	order	./	issue.measure.copies	{"count":29,"groups":"2 × 84 KiB: app/javascript/shared/assets/audio/bell.mp3, public/audio/dashboard/bell.mp3; 2 × 79 KiB: public/dashboard/images/integrations/dashboard_apps-dark.png, public/dashboard/images/integrations/dashboard_apps.png; 2 × 76 KiB: app/javascript/dashboard/assets/images/auth/auth--bg.svg, public/assets/images/auth/auth--bg.svg; …"}
+chatwoot/chatwoot	review	order	./	issue.measure.crowdedRoot	{"count":54,"limit":30}
+chatwoot/chatwoot	review	order	./	issue.measure.flatDirs	{"count":5,"limit":50,"dirs":"db/migrate/ 226, app/models/ 59, spec/factories/ 57, app/javascript/dashboard/api/ 53, app/javascript/dashboard/composables/ 52"}
+chatwoot/chatwoot	review	order	./	issue.measure.longFiles	{"count":29,"lines":1000,"kib":100,"files":"app/javascript/dashboard/store/modules/conversations/helpers/specs/filterHelpers.spec.js 1991 / 63 KiB, spec/services/data_imports/intercom/importer_spec.rb 1981 / 86 KiB, db/schema.rb 1938 / 88 KiB, spec/controllers/api/v1/accounts/inboxes_controller_spec.rb 1902 / 80 KiB, app/javascript/dashboard/helper/specs/snoozeDateParser.spec.js 1810 / 61 KiB, …"}
+chatwoot/chatwoot	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":2}
+chatwoot/chatwoot	smell	cleanliness	public/assets/administrate/	issue.leftover.ignoredTracked	{"count":2}
+chatwoot/chatwoot	smell	cleanliness	vendor/db/sentiment-analysis.onnx	issue.measure.hugeFile	{"size":65}
+chatwoot/chatwoot	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+chatwoot/chatwoot	smell	modernity	package.json (vue-i18n)	issue.deps.deprecated	{"name":"vue-i18n","version":"9.14.5","message":"v9 and v10 no longer supported. please migrate to v11. about maintenance status, see https://vue-i18n.intlify.dev/guide/maintenance.html"}
+chatwoot/chatwoot	smell	modernity	tests/playwright/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+chatwoot/chatwoot	smell	order	app/javascript/dashboard/api/	issue.twins.styles	{"styles":"camelCase ×25 + snake_case ×1","examples":"accountActions.js, notion_auth.js"}
+chatwoot/chatwoot	smell	order	app/javascript/dashboard/store/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"storeFactory.js, mutation-types.js"}
+comfyanonymous/ComfyUI	review	order	./	issue.measure.crowdedRoot	{"count":31,"limit":30}
+comfyanonymous/ComfyUI	review	order	./	issue.measure.flatDirs	{"count":5,"limit":50,"dirs":"comfy_extras/ 151, tests-unit/assets_test/services/ 71, comfy/text_encoders/ 60, comfy_api_nodes/ 53, comfy_api_nodes/apis/ 51"}
+comfyanonymous/ComfyUI	review	order	./	issue.measure.longFiles	{"count":83,"lines":1000,"kib":100,"files":"comfy_api_nodes/nodes_bytedance.py 4114 / 172 KiB, comfy_extras/nodes_mesh_postprocess.py 3597 / 173 KiB, comfy_api_nodes/nodes_kling.py 3597 / 147 KiB, comfy/model_base.py 3221 / 153 KiB, comfy_api_nodes/nodes_minimax.py 2824 / 119 KiB, …"}
+comfyanonymous/ComfyUI	review	order	AGENTS.md	issue.measure.instructions	{"lines":404,"limit":300}
+comfyanonymous/ComfyUI	smell	cleanliness	custom_nodes/	issue.leftover.ignoredTracked	{"count":2}
+comfyanonymous/ComfyUI	smell	cleanliness	input/	issue.leftover.ignoredTracked	{"count":1}
+comfyanonymous/ComfyUI	smell	cleanliness	models/	issue.leftover.ignoredTracked	{"count":11}
+comfyanonymous/ComfyUI	smell	cleanliness	tests/execution/extra_model_paths.yaml	issue.leftover.ignoredTracked	{"count":1}
+comfyanonymous/ComfyUI	smell	modernity	.github/workflows/openapi-lint.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+comfyanonymous/ComfyUI	smell	modernity	.github/workflows/test-launch.yml (Python 3.10)	issue.lifecycle.ended	{"name":"Python 3.10","date":"2026-10-01","use":{"t":"eol.python"}}
+comfyanonymous/ComfyUI	smell	modernity	.github/workflows/update-api-stubs.yml (Python 3.10)	issue.lifecycle.ended	{"name":"Python 3.10","date":"2026-10-01","use":{"t":"eol.python"}}
+curtmorgan3/quest-bound	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 27 KiB: packages/core-engine/game-assets/icon.png, packages/core-engine/public/icons/game-icon.png"}
+curtmorgan3/quest-bound	review	order	./	issue.measure.flatDirs	{"count":2,"limit":50,"dirs":"packages/remote-db/supabase/migrations/ 71, packages/core-ui/src/ui/ 52"}
+curtmorgan3/quest-bound	review	order	./	issue.measure.longFiles	{"count":13,"lines":1000,"kib":100,"files":"packages/qbscript/src/worker/qbscript-worker.ts 2614 / 81 KiB, packages/local-db/src/api-hooks/export/use-import-ruleset.ts 2490 / 94 KiB, packages/remote-db/supabase/migrations/20260324120000_organizations_phase1.sql 2480 / 71 KiB, packages/qbscript/src/runtime/script-runner.ts 1651 / 64 KiB, packages/qbscript/src/worker/client.ts 1403 / 46 KiB, …"}
+curtmorgan3/quest-bound	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	review	order	./	issue.measure.copies	{"count":13,"groups":"2 × 23 KiB: Frontend/src/app/components/ui_backup/sidebar.tsx, Frontend/src/components/ui/sidebar.tsx; 3 × 10 KiB: Frontend/src/app/components/ui_backup/chart.tsx, Frontend/src/app/components/ui/chart.tsx, Frontend/src/components/ui/chart.tsx; 3 × 8 KiB: Frontend/src/app/components/ui_backup/menubar.tsx, Frontend/src/app/components/ui/menubar.tsx, Frontend/src/components/ui/menubar.tsx; …"}
+dennislee928/Carbon_Trading_For_Individuals	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"Frontend/src/app/components/ui_backup/ 54"}
+dennislee928/Carbon_Trading_For_Individuals	smell	cleanliness	.next/	issue.leftover.ignoredTracked	{"count":1}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Frontend/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (critters)	issue.deps.deprecated	{"name":"critters","version":"0.0.25","message":"Ownership of Critters has moved to the Nuxt team, who will be maintaining the project going forward. If you'd like to keep using Critters, please switch to the actively-maintained fork at https://github.com/danielroe/beasties"}
+denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-aarch64	issue.leftover.executable	{}
+denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-x86_64	issue.leftover.executable	{}
+denoland/deno	review	cleanliness	tests/specs/compile/cross_compile_intel_mac/denort_intel	issue.leftover.executable	{}
+denoland/deno	review	order	./	issue.measure.copies	{"count":5,"groups":"15 × 4 KiB: libs/core/clippy.toml, libs/crypto/clippy.toml, libs/dcore/clippy.toml, …; 3 × 5 KiB: libs/cache_dir/clippy.toml, libs/cli_parser/clippy.toml, libs/print/clippy.toml; 3 × 4 KiB: tests/specs/npm/info_chalk_json_node_modules_dir/main_info_json.out, tests/specs/npm/info_chalk_json/main_info_json.out, tests/specs/npm/node_modules_dir_with_deps/main_info_json.out; …"}
+denoland/deno	review	order	./	issue.measure.flatDirs	{"count":3,"limit":50,"dirs":"cli/tsc/dts/ 134, tests/unit/ 107, ext/node/polyfills/ 102"}
+denoland/deno	review	order	./	issue.measure.longFiles	{"count":284,"lines":1000,"kib":100,"files":"cli/tsc/dts/lib.dom.d.ts 45126 / 2295 KiB, tests/integration/lsp_tests.rs 22748 / 614 KiB, cli/tsc/dts/lib.webworker.d.ts 15607 / 769 KiB, runtime/permissions/lib.rs 11756 / 334 KiB, cli/tsc/dts/typescript.d.ts 11510 / 578 KiB, …"}
+denoland/deno	review	order	.github/copilot-instructions.md	issue.measure.instructions	{"lines":352,"limit":300}
+denoland/deno	review	order	CLAUDE.md	issue.measure.instructions	{"lines":433,"limit":300}
+denoland/deno	smell	cleanliness	tests/specs/fmt/gitignore/dist/	issue.leftover.ignoredTracked	{"count":1}
+denoland/deno	smell	cleanliness	tests/specs/lint/gitignore/dist/	issue.leftover.ignoredTracked	{"count":1}
+denoland/deno	smell	cleanliness	tests/specs/run/env_file_parent_traversal/.env	issue.leftover.ignoredTracked	{"count":1}
+denoland/deno	smell	cleanliness	tests/specs/run/env_file_precedence/.env	issue.leftover.ignoredTracked	{"count":1}
+denoland/deno	smell	cleanliness	tests/specs/task/env_file/.env	issue.leftover.ignoredTracked	{"count":1}
+denoland/deno	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":78}
+denoland/deno	smell	order	ext/node/polyfills/internal/streams/	issue.twins.styles	{"styles":"snake_case ×6 + kebab-case ×3","examples":"duplex_esm.js, add-abort-signal.js"}
+denoland/deno	smell	order	ext/node/polyfills/internal_binding/	issue.twins.styles	{"styles":"snake_case ×15 + camelCase ×1","examples":"_libuv_winerror.ts, _timingSafeEqual.ts"}
+denoland/deno	smell	order	tests/specs/clean/entrypoint/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"jsr_http1.ts, print-dir.ts"}
+denoland/deno	smell	order	tests/specs/node/node_test_mock_module/	issue.twins.styles	{"styles":"snake_case ×7 + kebab-case ×3","examples":"main_cache.mjs, basic-cjs.cjs"}
+element-plus/element-plus	review	order	./	issue.measure.crowdedRoot	{"count":31,"limit":30}
+element-plus/element-plus	review	order	./	issue.measure.flatDirs	{"count":3,"limit":50,"dirs":"docs/.vitepress/vitepress/components/overview-icons/ 80, packages/locale/lang/ 68, ssr-testing/cases/ 62"}
+element-plus/element-plus	review	order	./	issue.measure.longFiles	{"count":21,"lines":1000,"kib":100,"files":"packages/components/select/__tests__/select.test.ts 4854 / 131 KiB, packages/components/date-picker/__tests__/date-picker.test.ts 4260 / 124 KiB, packages/components/table/__tests__/table.test.ts 3798 / 115 KiB, packages/components/select-v2/__tests__/select.test.ts 3239 / 88 KiB, packages/components/tree/__tests__/tree.test.ts 2484 / 72 KiB, …"}
+element-plus/element-plus	smell	order	docs/.vitepress/vitepress/composables/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×1","examples":"back-top.ts, useDynamicClass.ts"}
+element-plus/element-plus	smell	order	packages/components/dropdown/src/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"dropdown-item-impl.vue, useDropdown.ts"}
+element-plus/element-plus	smell	order	packages/components/message-box/src/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"message-box.type.ts, messageBox.ts"}
+element-plus/element-plus	smell	order	packages/components/select-v2/src/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"useAllowCreate.ts, group-item.vue"}
+element-plus/element-plus	smell	order	packages/components/select/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×2","examples":"option-group.vue, useOption.ts"}
+element-plus/element-plus	smell	order	packages/components/table/src/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"filter-panel.vue, tableColumn.ts"}
+element-plus/element-plus	smell	order	packages/components/tree/src/model/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"useDragNode.ts, tree-store.ts"}
+eryngordon/quiz-lead-magnet-maker	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 794 KiB: public/lovable-uploads/3c20af29-6bc7-45eb-b6c0-2dabae92f53b.png, public/lovable-uploads/dd8d3b51-537e-4238-9eca-e4792c13ce42.png"}
+eryngordon/quiz-lead-magnet-maker	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+facebook/react	review	order	./	issue.measure.copies	{"count":12,"groups":"7 × 24 KiB: fixtures/attribute-behavior/public/favicon.ico, fixtures/dom/public/favicon.ico, fixtures/fiber-debugger/public/favicon.ico, …; 4 × 45 KiB: fixtures/packaging/webpack-alias/dev/yarn.lock, fixtures/packaging/webpack-alias/prod/yarn.lock, fixtures/packaging/webpack/dev/yarn.lock, …; 6 × 5 KiB: packages/react-devtools-shared/src/hooks/__tests__/__source__/__compiled__/external/fb-sources-extended/index-map/ToDoList.js, packages/react-devtools-shared/src/hooks/__tests__/__source__/__compiled__/external/fb-sources-extended/ToDoList.js, packages/react-devtools-shared/src/hooks/__tests__/__source__/__compiled__/external/index-map/ToDoList.js, …; …"}
+facebook/react	review	order	./	issue.measure.flatDirs	{"count":7,"limit":50,"dirs":"compiler/packages/babel-plugin-react-compiler/src/__tests__/fixtures/compiler/ 1369, packages/react-dom/src/__tests__/ 123, compiler/packages/babel-plugin-react-compiler/src/__tests__/fixtures/compiler/rules-of-hooks/ 95, packages/react-reconciler/src/ 82, packages/react-reconciler/src/__tests__/ 78, …"}
+facebook/react	review	order	./	issue.measure.longFiles	{"count":165,"lines":1000,"kib":100,"files":"packages/react-dom/src/__tests__/ReactDOMFizzServer-test.js 10973 / 296 KiB, packages/react-dom/src/__tests__/ReactDOMFloat-test.js 10356 / 321 KiB, packages/eslint-plugin-react-hooks/__tests__/ESLintRuleExhaustiveDeps-test.js 8781 / 260 KiB, packages/react-devtools-shared/src/backend/fiber/renderer.js 8082 / 284 KiB, packages/react-server/src/ReactFlightServer.js 7783 / 259 KiB, …"}
+facebook/react	smell	cleanliness	compiler/apps/playground/.vscode/	issue.leftover.ignoredTracked	{"count":1}
+facebook/react	smell	modernity	.github/workflows/runtime_build_and_test.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+facebook/react	smell	modernity	compiler/apps/playground/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/attribute-behavior/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/concurrent/time-slicing/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/dom/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/eslint-v6/package.json (ESLint 6)	issue.lifecycle.ended	{"name":"ESLint 6","date":"2020-11-08","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v7/package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v8/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/eslint-v9/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	fixtures/expiration/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/fiber-debugger/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/flight-esm/.nvmrc (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+facebook/react	smell	modernity	fixtures/flight/.nvmrc (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+facebook/react	smell	modernity	fixtures/owner-stacks/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/ssr/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	fixtures/view-transition/package.json (react-scripts)	issue.deps.obsolete	{"name":"react-scripts","why":{"t":"dep.react-scripts"},"use":"a framework, or Vite / Parcel / Rsbuild"}
+facebook/react	smell	modernity	package.json (ESLint 7)	issue.lifecycle.ended	{"name":"ESLint 7","date":"2022-04-09","use":{"t":"eol.eslint"}}
+facebook/react	smell	modernity	packages/jest-react/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
+facebook/react	smell	modernity	packages/react-devtools/package.json (Electron 39)	issue.lifecycle.ended	{"name":"Electron 39","date":"2026-05-05","use":{"t":"eol.electron"}}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/scripts/jest/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×3","examples":"e2e-classic.config.js, makeE2EConfig.js"}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/e2e/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"constant-prop.e2e.js, expectLogs.js"}
+facebook/react	smell	order	compiler/packages/babel-plugin-react-compiler/src/__tests__/fixtures/compiler/	issue.twins.styles	{"styles":"kebab-case ×1012 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
+facebook/react	smell	order	compiler/packages/snap/src/sprout/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"shared-runtime-type-provider.ts, useEffectWrapper.ts"}
+facebook/react	smell	order	fixtures/legacy-jsx-runtimes/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"lint-runtimes.js, setupTests.js"}
+facebook/react	smell	order	package.json (babel-eslint)	issue.workspace.drift	{"name":"babel-eslint","versions":"packages/eslint-plugin-react-hooks: ^10.0.3; packages/react-devtools-extensions: ^9.0.0; packages/react-devtools-inline: ^9.0.0; packages/react-devtools-shell: ^9.0.0"}
+facebook/react	smell	order	package.json (chalk)	issue.workspace.drift	{"name":"chalk","versions":".: ^3.0.0; packages/react-devtools-extensions: ^4.1.1"}
+facebook/react	smell	order	package.json (rimraf)	issue.workspace.drift	{"name":"rimraf","versions":".: ^3.0.0; packages/react-devtools-extensions: ^6.1.4"}
+facebook/react	smell	order	package.json (semver)	issue.workspace.drift	{"name":"semver","versions":".: ^7.1.1; packages/react-devtools-shell: ^6.3.1"}
+facebook/react	smell	order	packages/react-devtools-shared/src/__tests__/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2","examples":"backend-test.js, optimisticKeyDevToolsIntegration.js"}
+facebook/react	smell	order	packages/react-dom/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"unstable_testing.experimental.js, test-utils.js"}
+facebook/react	smell	order	packages/react-dom/npm/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×2","examples":"react-dom.react-server.js, unstable_testing.js"}
+facebook/react	smell	order	scripts/babel/	issue.twins.styles	{"styles":"kebab-case ×5 + camelCase ×1","examples":"transform-lazy-jsx-import.js, getComments.js"}
+facebook/react	smell	order	scripts/ci/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"download_devtools_regression_build.js, merge-build-weights.js"}
+facebook/react	smell	order	scripts/error-codes/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"extract-errors.js, invertObject.js"}
+facebook/react	smell	order	scripts/flow/	issue.twins.styles	{"styles":"camelCase ×2 + kebab-case ×2","examples":"createFlowConfigs.js, react-devtools.js"}
+facebook/react	smell	order	scripts/jest/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×2","examples":"patchMessageChannel.js, dont-run-jest-directly.js"}
+filamentphp/filament	review	order	./	issue.measure.copies	{"count":18,"groups":"2 × 211 KiB: docs-assets/screenshots/images/light/tables/layout/stack-hidden-on-mobile.jpg, docs-assets/screenshots/images/light/tables/layout/stack.jpg; 2 × 177 KiB: docs-assets/screenshots/images/light/tables/layout/split-desktop.jpg, docs-assets/screenshots/images/light/tables/layout/split.jpg; 2 × 174 KiB: docs-assets/screenshots/images/dark/tables/layout/split-desktop.jpg, docs-assets/screenshots/images/dark/tables/layout/split.jpg; …"}
+filamentphp/filament	review	order	./	issue.measure.crowdedRoot	{"count":31,"limit":30}
+filamentphp/filament	review	order	./	issue.measure.flatDirs	{"count":3,"limit":50,"dirs":"tests/src/Fixtures/Pages/ 77, packages/actions/src/Concerns/ 51, packages/forms/src/Components/Concerns/ 51"}
+filamentphp/filament	review	order	./	issue.measure.longFiles	{"count":60,"lines":1000,"kib":100,"files":"docs-assets/screenshots/schema.js 7736 / 232 KiB, tests/src/Tables/Filters/QueryBuilderTest.php 5721 / 237 KiB, tests/src/Forms/Components/SelectTest.php 4636 / 160 KiB, tests/src/Forms/Components/RepeaterTest.php 4314 / 148 KiB, tests/src/Forms/Components/RichEditorTest.php 3659 / 144 KiB, …"}
+filamentphp/filament	smell	convention	tests/src/Actions/CreateActionTest.php	issue.contract.psr4FileName	{"name":"CreateActionTest","className":"CreateActionPostPolicy","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Exports/ContentGenerators/XlsxExportContentGeneratorTest.php	issue.contract.psr4FileName	{"name":"XlsxExportContentGeneratorTest","className":"TestXlsxExportContentGeneratorExporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Exports/ExportColumnTest.php	issue.contract.psr4FileName	{"name":"ExportColumnTest","className":"FakeStateExportColumn","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/ContentGenerators/CsvImportFailureContentGeneratorTest.php	issue.contract.psr4FileName	{"name":"CsvImportFailureContentGeneratorTest","className":"TestCsvImportFailureContentGeneratorImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/ImportColumnTest.php	issue.contract.psr4FileName	{"name":"ImportColumnTest","className":"ImportColumnTeamImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Imports/Jobs/ImportCsvTest.php	issue.contract.psr4FileName	{"name":"ImportCsvTest","className":"AccountingPostImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Actions/Testing/TestableImportTest.php	issue.contract.psr4FileName	{"name":"TestableImportTest","className":"UserRowTestImporter","count":1}
+filamentphp/filament	smell	convention	tests/src/Forms/	issue.contract.psr4FileName	{"name":"ActionTest","className":"TestComponentWithActionState","count":2}
+filamentphp/filament	smell	convention	tests/src/Forms/Components/	issue.contract.psr4FileName	{"name":"FieldTest","className":"IdField","count":2}
+filamentphp/filament	smell	convention	tests/src/Infolists/Components/	issue.contract.psr4FileName	{"name":"EntryTest","className":"IdEntry","count":2}
+filamentphp/filament	smell	convention	tests/src/Infolists/LivewireTest.php	issue.contract.psr4FileName	{"name":"LivewireTest","className":"LivewireInfolists","count":1}
+filamentphp/filament	smell	convention	tests/src/Notifications/NotificationTest.php	issue.contract.psr4FileName	{"name":"NotificationTest","className":"NotificationWithLazyIconSize","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Auth/MultiFactor/MultiFactorChallengeTest.php	issue.contract.psr4FileName	{"name":"MultiFactorChallengeTest","className":"AlternateMultiFactorChallengeUser","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Auth/Pages/EditProfileTest.php	issue.contract.psr4FileName	{"name":"EditProfileTest","className":"EditProfileWithCustomEmailField","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Commands/Fixtures/MakeThemeCommandTest/panel-provider/standard.php	issue.contract.psr4FileName	{"name":"standard","className":"StandardPanelProvider","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Navigation/NavigationTest.php	issue.contract.psr4FileName	{"name":"NavigationTest","className":"CollapsibleNavigationGroupEnum","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Pages/Tenancy/RegisterTenantTest.php	issue.contract.psr4FileName	{"name":"RegisterTenantTest","className":"AuthorizableRegisterTeam","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Panel/Concerns/HasMiddlewareTest.php	issue.contract.psr4FileName	{"name":"HasMiddlewareTest","className":"HasMiddlewareTestCase","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Resources/Pages/ViewRecordTest.php	issue.contract.psr4FileName	{"name":"ViewRecordTest","className":"CombinedContentViewTicket","count":1}
+filamentphp/filament	smell	convention	tests/src/Panels/Resources/ResourceTest.php	issue.contract.psr4FileName	{"name":"ResourceTest","className":"EditDepartmentWithResponseAuthorization","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/Components/Utilities/GetTest.php	issue.contract.psr4FileName	{"name":"GetTest","className":"GetTestStatus","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/Concerns/ResolvesDynamicLivewirePropertiesTest.php	issue.contract.psr4FileName	{"name":"ResolvesDynamicLivewirePropertiesTest","className":"ComputedPropertySchema","count":1}
+filamentphp/filament	smell	convention	tests/src/Schemas/StateTest.php	issue.contract.psr4FileName	{"name":"StateTest","className":"StateTestLivewire","count":1}
+filamentphp/filament	smell	convention	tests/src/SpatieSettingsPlugin/Pages/SettingsPageTest.php	issue.contract.psr4FileName	{"name":"SettingsPageTest","className":"DerivedGeneralSettings","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Assets/AssetTest.php	issue.contract.psr4FileName	{"name":"AssetTest","className":"TestAsset","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Commands/CanConfigureViteTest.php	issue.contract.psr4FileName	{"name":"CanConfigureViteTest","className":"ViteInputSetupCommand","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Concerns/MacroableTest.php	issue.contract.psr4FileName	{"name":"MacroableTest","className":"FieldMixin","count":1}
+filamentphp/filament	smell	convention	tests/src/Support/Services/RelationshipOrdererTest.php	issue.contract.psr4FileName	{"name":"RelationshipOrdererTest","className":"RelationshipOrdererUser","count":1}
+filamentphp/filament	smell	convention	tests/src/Tables/Columns/	issue.contract.psr4FileName	{"name":"BadgeColumnTest","className":"TestTableWithBadgeColumn","count":5}
+filamentphp/filament	smell	convention	tests/src/Tables/RecordTest.php	issue.contract.psr4FileName	{"name":"RecordTest","className":"AggregateRecordTable","count":1}
+ghostfolio/ghostfolio	review	order	./	issue.measure.copies	{"count":1,"groups":"3 × 304 KiB: apps/client/src/assets/images/blog/black-weeks-2024.jpg, apps/client/src/assets/images/blog/black-weeks-2025.jpg, apps/client/src/assets/images/blog/black-weeks-2026.jpg"}
+ghostfolio/ghostfolio	review	order	./	issue.measure.flatDirs	{"count":2,"limit":50,"dirs":"libs/common/src/lib/interfaces/responses/ 52, libs/common/src/lib/interfaces/ 51"}
+ghostfolio/ghostfolio	review	order	./	issue.measure.longFiles	{"count":11,"lines":1000,"kib":100,"files":"libs/common/src/lib/personal-finance-tools.ts 4595 / 130 KiB, apps/api/src/helper/object.helper.spec.ts 3435 / 114 KiB, apps/api/src/app/portfolio/portfolio.service.ts 2677 / 82 KiB, apps/api/src/app/portfolio/calculator/portfolio-calculator.ts 2430 / 79 KiB, apps/api/src/app/portfolio/portfolio.service.spec.ts 1900 / 59 KiB, …"}
+ghostfolio/ghostfolio	review	order	.agents/skills/nestjs-best-practices/AGENTS.md	issue.measure.instructions	{"lines":5958,"limit":300}
+ghostfolio/ghostfolio	smell	modernity	package.json (@angular-devkit∕build-angular)	issue.deps.deprecated	{"name":"@angular-devkit/build-angular","version":"22.1.4","message":"Angular's Webpack support is deprecated. Use the esbuild and Vite-based \"@angular/build\" package instead."}
+ghostfolio/ghostfolio	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ghostfolio/ghostfolio	smell	order	libs/ui/src/lib/mocks/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"entity-logo-image-source.service.mock.ts, httpClient.mock.ts"}
+hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+honojs/hono	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 15 KiB: adapters/bun/test/favicon.ico, adapters/deno/test/favicon.ico"}
+honojs/hono	review	order	./	issue.measure.longFiles	{"count":17,"lines":1000,"kib":100,"files":"src/types.test.ts 4139 / 125 KiB, src/hono.test.ts 3920 / 112 KiB, src/jsx/dom/index.test.tsx 3764 / 120 KiB, src/types.ts 2782 / 88 KiB, src/client/client.test.ts 2327 / 66 KiB, …"}
+immich-app/immich	review	order	./	issue.measure.copies	{"count":26,"groups":"2 × 4.6 MiB: docs/static/fonts/GoogleSans/GoogleSans.ttf, web/src/lib/assets/fonts/GoogleSans/GoogleSans.ttf; 2 × 4.0 MiB: mobile/android/metadata/en-US/images/sevenInchScreenshots/5_en-US.png, mobile/android/metadata/en-US/images/tenInchScreenshots/5_en-US.png; 2 × 3.7 MiB: fastlane/metadata/android/en-US/images/sevenInchScreenshots/4_en-US.png, fastlane/metadata/android/en-US/images/tenInchScreenshots/4_en-US.png; …"}
+immich-app/immich	review	order	./	issue.measure.flatDirs	{"count":8,"limit":50,"dirs":"server/src/schema/migrations/ 107, server/src/services/ 107, server/src/controllers/ 87, web/src/lib/modals/ 74, server/src/repositories/ 69, …"}
+immich-app/immich	review	order	./	issue.measure.longFiles	{"count":31,"lines":1000,"kib":100,"files":"server/src/services/media.service.spec.ts 4610 / 178 KiB, machine-learning/test_main.py 2623 / 118 KiB, server/src/services/metadata.service.spec.ts 2341 / 94 KiB, server/src/services/person.service.spec.ts 2202 / 93 KiB, server/src/queries/search.repository.sql 2029 / 44 KiB, …"}
+immich-app/immich	smell	cleanliness	.vscode/settings.json	issue.leftover.ignoredTracked	{"count":1}
+immich-app/immich	smell	cleanliness	design/.DS_Store	issue.leftover.ignoredTracked	{"count":1}
+immich-app/immich	smell	cleanliness	design/.DS_Store	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+immich-app/immich	smell	modernity	server/package.json (fluent-ffmpeg)	issue.deps.deprecated	{"name":"fluent-ffmpeg","version":"2.1.3","message":"Package no longer supported. Contact Support at https://www.npmjs.com/support for more info."}
+immich-app/immich	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"docs: ^3.2.4; server: ^3.4.0; web: ^4.2.4"}
+immich-app/immich	smell	order	packages/e2e-auth-server/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	packages/plugin-sdk/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	packages/scripts/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
+immich-app/immich	smell	order	web/src/lib/utils/	issue.twins.styles	{"styles":"kebab-case ×47 + camelCase ×1","examples":"adaptive-image-loader.spec.ts, invocationTracker.ts"}
+kartikramachandrula/thynk	review	order	./	issue.measure.longFiles	{"count":1,"lines":1000,"kib":100,"files":"dist/assets/index-dd81af9a.js 54 / 186 KiB"}
+kartikramachandrula/thynk	smell	cleanliness	backend/__pycache__/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	cleanliness	backend/ocr_models/__pycache__/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	cleanliness	bun.lock	issue.leftover.ignoredTracked	{"count":1}
+kartikramachandrula/thynk	smell	cleanliness	dist/	issue.leak.artifact	{}
+kartikramachandrula/thynk	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+koel/koel	review	order	./	issue.measure.copies	{"count":36,"groups":"2 × 368 KiB: docs/.vitepress/assets/videos/search.webm, docs/assets/videos/search.webm; 2 × 207 KiB: docs/.vitepress/assets/img/theme-jungle.webp, docs/assets/img/theme-jungle.webp; 2 × 179 KiB: docs/.vitepress/assets/img/home.webp, docs/assets/img/interface/home.webp; …"}
+koel/koel	review	order	./	issue.measure.flatDirs	{"count":9,"limit":50,"dirs":"database/migrations/ 133, resources/assets/js/composables/ 97, resources/assets/js/components/ui/ 78, tests/Feature/ 76, app/Http/Controllers/API/ 71, …"}
+koel/koel	review	order	./	issue.measure.longFiles	{"count":2,"lines":1000,"kib":100,"files":"resources/assets/js/services/QueuePlaybackService.spec.ts 1168 / 43 KiB, resources/assets/js/types.d.ts 1019 / 22 KiB"}
+koel/koel	review	order	AGENTS.md	issue.measure.instructions	{"lines":377,"limit":300}
+koel/koel	smell	cleanliness	storage/framework/cache/data/.gitkeep	issue.leftover.ignoredTracked	{"count":1}
+koel/koel	smell	modernity	package.json (lucide-vue-next)	issue.deps.deprecated	{"name":"lucide-vue-next","version":"0.577.0","message":"Package deprecated. Please use @lucide/vue instead."}
+koel/koel	smell	order	resources/assets/js/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"service-worker.spec.ts, registerHooks.ts"}
+ktorio/ktor	review	order	./	issue.measure.longFiles	{"count":21,"lines":1000,"kib":100,"files":"ktor-client/ktor-client-curl/desktop/interop/include/curl/curl.h 3343 / 132 KiB, ktor-server/ktor-server-tests/common/test/io/ktor/tests/server/plugins/CORSTest.kt 1683 / 52 KiB, ktor-shared/ktor-openapi-schema/common/src/io/ktor/openapi/Operation.kt 1652 / 64 KiB, ktor-server/ktor-server-tests/jvm/test/io/ktor/server/plugins/StaticContentTest.kt 1562 / 60 KiB, ktor-client/ktor-client-core/common/src/io/ktor/client/HttpClient.kt 1494 / 48 KiB, …"}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/common/src/io/ktor/client/engine/cio/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/jvm/src/io/ktor/client/plugins/websocket/cio/buildersCio.kt	issue.contract.kotlinFileName	{"name":"buildersCio","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/sse/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/plugins/websocket/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/request/	issue.contract.kotlinFileName	{"name":"builders","count":3}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/request/forms/	issue.contract.kotlinFileName	{"name":"formBuilders","count":2}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/common/src/io/ktor/client/utils/headers.kt	issue.contract.kotlinFileName	{"name":"headers","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/jvm/src/io/ktor/client/request/buildersJvm.kt	issue.contract.kotlinFileName	{"name":"buildersJvm","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/jvmAndPosix/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-core/web/src/io/ktor/client/call/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-jetty-jakarta/jvm/src/io/ktor/client/engine/jetty/jakarta/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-jetty/jvm/src/io/ktor/client/engine/jetty/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-client/ktor-client-plugins/ktor-client-resources/common/src/io/ktor/client/plugins/resources/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-http/common/src/io/ktor/http/header/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
+ktorio/ktor	smell	convention	ktor-network/js/src/io/ktor/network/sockets/nodejs/node.js.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-network/ktor-network-tls/ktor-network-tls-certificates/jvm/src/io/ktor/network/tls/certificates/builders.kt	issue.contract.kotlinFileName	{"name":"builders","count":1}
+ktorio/ktor	smell	convention	ktor-network/wasmJs/src/io/ktor/network/sockets/nodejs/node.wasmJs.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-network/web/src/io/ktor/network/sockets/nodejs/node.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
+ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/runTestWithData.kt	issue.contract.kotlinFileName	{"name":"runTestWithData","count":1}
+laravel/framework	review	cleanliness	bin/splitsh-lite	issue.leftover.executable	{}
+laravel/framework	review	order	./	issue.measure.flatDirs	{"count":5,"limit":50,"dirs":"tests/Database/ 129, tests/Integration/Database/ 101, src/Illuminate/Foundation/Console/ 68, tests/View/Blade/ 63, src/Illuminate/Validation/Rules/ 59"}
+laravel/framework	review	order	./	issue.measure.longFiles	{"count":95,"lines":1000,"kib":100,"files":"tests/Validation/ValidationValidatorTest.php 10597 / 457 KiB, tests/Database/DatabaseQueryBuilderTest.php 8270 / 412 KiB, tests/Support/SupportCollectionTest.php 6694 / 234 KiB, tests/Http/HttpClientTest.php 5382 / 178 KiB, src/Illuminate/Database/Query/Builder.php 5030 / 148 KiB, …"}
+laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
+laravel/framework	smell	convention	tests/Auth/Fixtures/Enums.php	issue.contract.psr4FileName	{"name":"Enums","className":"AbilitiesEnum","count":1}
+laravel/framework	smell	convention	tests/Broadcasting/Fixtures/PusherStub.php	issue.contract.psr4FileName	{"name":"PusherStub","className":"Pusher","count":1}
+laravel/framework	smell	convention	tests/Foundation/Fixtures/PailServiceProviderStub.php	issue.contract.psr4FileName	{"name":"PailServiceProviderStub","className":"PailServiceProvider","count":1}
+laravel/framework	smell	convention	tests/Routing/Fixtures/app.php	issue.contract.psr4FileName	{"name":"app","className":"AppCache","count":1}
+localsend/localsend	review	cleanliness	support/build/windows/x64/msvcp140.dll	issue.leftover.executable	{}
+localsend/localsend	review	cleanliness	support/build/windows/x64/vcruntime140.dll	issue.leftover.executable	{}
+localsend/localsend	review	cleanliness	support/build/windows/x64/vcruntime140_1.dll	issue.leftover.executable	{}
+localsend/localsend	review	order	./	issue.measure.copies	{"count":7,"groups":"3 × 107 KiB: app/assets/img/logo.ico, app/assets/packaging/logo.ico, app/windows/runner/resources/app_icon.ico; 2 × 58 KiB: support/build/msix/content/Images/SplashScreen.scale-200.png, support/build/msix/content/Images/Wide310x150Logo.scale-400.png; 3 × 15 KiB: support/build/msix/content/Images/Square44x44Logo.altform-lightunplated_targetsize-256.png, support/build/msix/content/Images/Square44x44Logo.altform-unplated_targetsize-256.png, support/build/msix/content/Images/Square44x44Logo.targetsize-256.png; …"}
+localsend/localsend	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"app/lib/gen/ 61"}
+localsend/localsend	review	order	./	issue.measure.longFiles	{"count":3,"lines":1000,"kib":100,"files":"packages/core/tests/v2_server.rs 1526 / 46 KiB, packages/core/src/webrtc/webrtc.rs 1428 / 49 KiB, packages/core/src/discovery/store.rs 1287 / 44 KiB"}
+lohanidamodar/flutter_ui_challenges	review	order	./	issue.measure.copies	{"count":2,"groups":"2 × 47 KiB: assets/icon/icon.png, snap/gui/icon.png; 2 × 5 KiB: ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-40x40@3x.png, ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-60x60@2x.png"}
+longbridge/gpui-component	review	order	./	issue.measure.flatDirs	{"count":3,"limit":50,"dirs":"crates/story/src/stories/ 86, crates/base/src/ 73, crates/component/src/ 58"}
+longbridge/gpui-component	review	order	./	issue.measure.longFiles	{"count":104,"lines":1000,"kib":100,"files":"crates/base/src/input/base/state.rs 14338 / 565 KiB, crates/shell/src/engine/quickjs/mod.rs 12288 / 475 KiB, crates/shell/src/tests/render.rs 11951 / 422 KiB, crates/base/src/input/base/element.rs 10243 / 402 KiB, crates/base/src/text/node.rs 7256 / 276 KiB, …"}
+longbridge/gpui-component	review	order	AGENTS.md	issue.measure.instructions	{"lines":395,"limit":300}
+longbridge/gpui-component	smell	cleanliness	docs/superpowers/	issue.leftover.ignoredTracked	{"count":6}
+longbridge/gpui-component	smell	convention	examples/fixtures/test.kt	issue.contract.kotlinFileName	{"name":"test","count":1}
+matevzpoljanc/revolut-savings-account-tax-reports	review	order	./	issue.measure.longFiles	{"count":1,"lines":1000,"kib":100,"files":"components/file-upload.tsx 1007 / 54 KiB"}
+matevzpoljanc/revolut-savings-account-tax-reports	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+matomo-org/matomo	review	order	./	issue.measure.copies	{"count":59,"groups":"2 × 107 KiB: tests/PHPUnit/System/expected/test_TimezonesTest_range_utc__Live.getLastVisitsDetails_range.xml, tests/PHPUnit/System/expected/test_TimezonesTest_today_utc__Live.getLastVisitsDetails_day.xml; 2 × 104 KiB: tests/PHPUnit/System/expected/test_TimezonesTest_range_ast__Live.getLastVisitsDetails_range.xml, tests/PHPUnit/System/expected/test_TimezonesTest_today_ast__Live.getLastVisitsDetails_day.xml; 5 × 23 KiB: plugins/Contents/tests/System/expected/test_Contents__Live.getLastVisitsDetails_day.xml, plugins/Contents/tests/System/expected/test_Contents__Live.getLastVisitsDetails_month.xml, plugins/Contents/tests/System/expected/test_Contents_contentInteractionMatch__Live.getLastVisitsDetails_day.xml, …; …"}
+matomo-org/matomo	review	order	./	issue.measure.crowdedRoot	{"count":40,"limit":30}
+matomo-org/matomo	review	order	./	issue.measure.flatDirs	{"count":4,"limit":50,"dirs":"core/Updates/ 185, core/ 78, tests/PHPUnit/System/ 57, tests/PHPUnit/Integration/ 54"}
+matomo-org/matomo	review	order	./	issue.measure.longFiles	{"count":88,"lines":1000,"kib":100,"files":"plugins/GeoIp2/data/isoRegionNames.php 48726 / 806 KiB, plugins/CoreVue/polyfills/dist/MatomoPolyfills.js 17139 / 660 KiB, js/piwik.js 8491 / 346 KiB, tests/javascript/index.php 6390 / 338 KiB, plugins/GeoIp2/data/regionMapping.php 4635 / 132 KiB, …"}
+matomo-org/matomo	smell	cleanliness	misc/cron/.htaccess	issue.leftover.ignoredTracked	{"count":1}
+matomo-org/matomo	smell	cleanliness	robots.txt	issue.leftover.ignoredTracked	{"count":1}
+matomo-org/matomo	smell	convention	core/Policy/Exceptions/CompliancyPolicyNotFoundException.php	issue.contract.psr4FileName	{"name":"CompliancyPolicyNotFoundException","className":"CompliancePolicyNotFoundException","count":1}
+matomo-org/matomo	smell	convention	plugins/Actions/tests/Unit/ArchiverTest.php	issue.contract.psr4FileName	{"name":"ArchiverTest","className":"ArchiverTests","count":1}
+matomo-org/matomo	smell	convention	plugins/FeatureFlags/tests/Integration/FeatureFlagManagerTest.php	issue.contract.psr4FileName	{"name":"FeatureFlagManagerTest","className":"FeatureFlagManagerTests","count":1}
+matomo-org/matomo	smell	convention	plugins/LanguagesManager/tests/Unit/TranslationWriter/Filter/UnnecassaryWhitespacesTest.php	issue.contract.psr4FileName	{"name":"UnnecassaryWhitespacesTest","className":"UnnecassaryWhitepsacesTest","count":1}
+matomo-org/matomo	smell	convention	plugins/UserCountry/tests/System/StaticAPITest.php	issue.contract.psr4FileName	{"name":"StaticAPITest","className":"StaticApiTest","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Framework/Mock/Category/Categeories.php	issue.contract.psr4FileName	{"name":"Categeories","className":"Categories","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Integration/Report/ReportsTest.php	issue.contract.psr4FileName	{"name":"ReportsTest","className":"ReportTest","count":1}
+matomo-org/matomo	smell	convention	tests/PHPUnit/Unit/DataTable/Filter/	issue.contract.psr4FileName	{"name":"AddSegmentFilterByLabelMappingTest","className":"AddSegmentByLabelMappingTest","count":4}
+matomo-org/matomo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+matomo-org/matomo	smell	order	plugins/CoreHome/javascripts/	issue.twins.styles	{"styles":"camelCase ×4 + snake_case ×2 + kebab-case ×2","examples":"dataTable.js, color_manager.js, materialize-bc.js"}
+mitesh77/Best-Flutter-UI-Templates	smell	cleanliness	assets/app-release.apk	issue.leftover.installer	{}
+mitesh77/Best-Flutter-UI-Templates	smell	cleanliness	assets/app-release.apk	issue.measure.hugeFile	{"size":54}
+mitesh77/Best-Flutter-UI-Templates	smell	convention	best_flutter_ui_templates/lib/fitness_app/models/tabIcon_data.dart	issue.contract.dartFileName	{"name":"tabIcon_data","count":1}
+nisrulz/flutter-examples	review	order	./	issue.measure.copies	{"count":11,"groups":"8 × 46 KiB: dropdown_button/android/gradle/wrapper/gradle-wrapper.jar, enabling_splash_screen/android/gradle/wrapper/gradle-wrapper.jar, expense_planner/android/gradle/wrapper/gradle-wrapper.jar, …; 24 × 11 KiB: analytics_integration/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, animation_example/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, bottom_sheet/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, …; 7 × 11 KiB: dropdown_button/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, google_signin/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, grid_layout/ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024@1x.png, …; …"}
+nisrulz/flutter-examples	smell	cleanliness	using_listwheelscrollview/android/	issue.leftover.ignoredTracked	{"count":2}
+nisrulz/flutter-examples	smell	cleanliness	using_listwheelscrollview/ios/Flutter/flutter_export_environment.sh	issue.leftover.ignoredTracked	{"count":1}
+nisrulz/flutter-examples	smell	cleanliness	using_listwheelscrollview/usinglistwheelscrollview.iml	issue.leftover.ignoredTracked	{"count":1}
+nisrulz/flutter-examples	smell	convention	bottom_sheet/lib/models/ListTileModel.dart	issue.contract.dartFileName	{"name":"ListTileModel","count":1}
+nisrulz/flutter-examples	smell	convention	covid19_mobile_app/lib/screens/searchCountry.dart	issue.contract.dartFileName	{"name":"searchCountry","count":1}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Screens/	issue.contract.dartDirectoryName	{"name":"Screens","count":3}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Screens/	issue.contract.dartFileName	{"name":"HomePage","count":3}
+nisrulz/flutter-examples	smell	convention	firebase_google_authentication/lib/Services/	issue.contract.dartDirectoryName	{"name":"Services","count":1}
+nisrulz/flutter-examples	smell	convention	image_editor/lib/	issue.contract.dartFileName	{"name":"ApplyFilters","count":5}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/Screens/	issue.contract.dartDirectoryName	{"name":"Screens","count":3}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/Screens/	issue.contract.dartFileName	{"name":"HomePage","count":3}
+nisrulz/flutter-examples	smell	convention	news_memes_app/lib/services/	issue.contract.dartFileName	{"name":"getMemes","count":2}
+nisrulz/flutter-examples	smell	convention	unit_testing/lib/api/Places.dart	issue.contract.dartFileName	{"name":"Places","count":1}
+nisrulz/flutter-examples	smell	convention	unit_testing/test/unit/formValidator_test.dart	issue.contract.dartFileName	{"name":"formValidator_test","count":1}
+nisrulz/flutter-examples	smell	convention	view_pdf_file/lib/viewPDF.dart	issue.contract.dartFileName	{"name":"viewPDF","count":1}
+nuxt/nuxt	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"packages/nuxt/test/ 143"}
+nuxt/nuxt	review	order	./	issue.measure.longFiles	{"count":13,"lines":1000,"kib":100,"files":"test/basic.test.ts 2793 / 122 KiB, packages/schema/src/types/schema.ts 2585 / 89 KiB, test/nuxt/use-async-data.test.ts 2438 / 79 KiB, test/nuxt/composables.test.ts 1989 / 70 KiB, packages/nitro-server/test/compat.test.ts 1702 / 90 KiB, …"}
+nuxt/nuxt	smell	cleanliness	.idea/	issue.leftover.ignoredTracked	{"count":3}
+nuxt/nuxt	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":1}
+nuxt/nuxt	smell	cleanliness	packages/ui-templates/README.md	issue.leftover.ignoredTracked	{"count":1}
+nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
+nuxt/nuxt.com	review	order	./	issue.measure.copies	{"count":22,"groups":"4 × 646 KiB: public/assets/enterprise/agencies/full/dark/keith-mifsud.png, public/assets/enterprise/agencies/full/light/keith-mifsud.png, public/assets/enterprise/agencies/square/dark/keith-mifsud.png, …; 2 × 262 KiB: public/assets/enterprise/agencies/full/dark/mirahi.png, public/assets/enterprise/agencies/full/light/mirahi.png; 2 × 48 KiB: public/assets/enterprise/agencies/square/dark/curotec.jpeg, public/assets/enterprise/agencies/square/light/curotec.jpeg; …"}
+nuxt/nuxt.com	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"test/unit/ 77"}
+nuxt/nuxt.com	smell	modernity	package.json (evalite)	issue.deps.deprecated	{"name":"evalite","version":"1.0.0-beta.16","message":"No longer maintained. Recommended replacement: Langfuse. Migration notes: https://github.com/mattpocock/evalite#migrating-to-langfuse"}
+nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
+ollama/ollama	review	order	./	issue.measure.flatDirs	{"count":7,"limit":50,"dirs":"mlx/ 76, server/ 76, model/renderers/ 75, create/ 65, cmd/launch/ 62, …"}
+ollama/ollama	review	order	./	issue.measure.longFiles	{"count":89,"lines":1000,"kib":100,"files":"app/webview/WebView2.h 57256 / 2414 KiB, cmd/launch/launch_test.go 4530 / 146 KiB, llm/llama_server_test.go 4259 / 129 KiB, app/webview/webview.h 3997 / 129 KiB, cmd/launch/codex_app_test.go 3773 / 128 KiB, …"}
+ollama/ollama	smell	convention	mlxrunner/model/cohere2_moe/	issue.contract.goPackageName	{"name":"cohere2_moe","count":2}
+ollama/ollama	smell	convention	mlxrunner/model/glm4_moe_lite/	issue.contract.goPackageName	{"name":"glm4_moe_lite","count":6}
+ollama/ollama	smell	convention	mlxrunner/model/nemotron_h/	issue.contract.goPackageName	{"name":"nemotron_h","count":8}
+ollama/ollama	smell	convention	mlxrunner/model/qwen3_5/	issue.contract.goPackageName	{"name":"qwen3_5","count":11}
+ollama/ollama	smell	convention	mlxrunner/model/qwen3_5_moe/qwen3_5_moe.go	issue.contract.goPackageName	{"name":"qwen3_5_moe","count":1}
+ollama/ollama	smell	convention	mlxrunner/model/qwen4_exp/	issue.contract.goPackageName	{"name":"qwen4_exp","count":21}
+ollama/ollama	smell	modernity	.github/workflows/release.yaml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ollama/ollama	smell	modernity	.github/workflows/test-llamacpp-update.yaml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ollama/ollama	smell	modernity	.github/workflows/test.yaml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ollama/ollama	smell	modernity	app/ui/app/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ollama/ollama	smell	modernity	app/ui/app/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
+ollama/ollama	smell	order	app/ui/app/src/lib/	issue.twins.styles	{"styles":"camelCase ×11 + kebab-case ×1","examples":"chatPreload.test.ts, ollama-client.ts"}
+open-webui/open-webui	review	order	./	issue.measure.copies	{"count":9,"groups":"3 × 21 KiB: backend/open_webui/static/favicon.png, static/favicon.png, static/static/favicon.png; 2 × 29 KiB: backend/open_webui/static/logo.png, static/static/logo.png; 2 × 28 KiB: backend/open_webui/static/favicon.svg, static/static/favicon.svg; …"}
+open-webui/open-webui	review	order	./	issue.measure.crowdedRoot	{"count":67,"limit":30}
+open-webui/open-webui	review	order	./	issue.measure.flatDirs	{"count":5,"limit":50,"dirs":"src/lib/components/icons/ 195, backend/open_webui/migrations/versions/ 76, src/lib/components/common/ 73, backend/open_webui/utils/ 63, src/lib/utils/ 51"}
+open-webui/open-webui	review	order	./	issue.measure.longFiles	{"count":77,"lines":1000,"kib":100,"files":"backend/open_webui/static/swagger-ui/swagger-ui-bundle.js 76448 / 2331 KiB, src/lib/components/chat/Chat.svelte 6942 / 217 KiB, backend/open_webui/utils/middleware.py 6792 / 312 KiB, backend/open_webui/tools/builtin.py 5271 / 200 KiB, src/lib/components/chat/FileNav.svelte 3447 / 112 KiB, …"}
+open-webui/open-webui	smell	cleanliness	backend/data/readme.txt	issue.leftover.ignoredTracked	{"count":1}
+open-webui/open-webui	smell	cleanliness	backend/open_webui/data/readme.txt	issue.leftover.ignoredTracked	{"count":1}
+open-webui/open-webui	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+open-webui/open-webui	smell	modernity	package.json (i18next-parser)	issue.deps.deprecated	{"name":"i18next-parser","version":"9.4.0","message":"Project is deprecated, use i18next-cli instead"}
+open-webui/open-webui	smell	order	src/lib/utils/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×10","examples":"channelMentions.ts, google-drive-picker.ts"}
+oven-sh/bun	review	order	./	issue.measure.copies	{"count":40,"groups":"2 × 69 KiB: test/snapshots/jsx-entities.debug.jsx, test/snapshots/jsx-entities.jsx; 9 × 5 KiB: test/aot/parallel-test-runs/heap-snapshots/a-function-made-in-a-module-that-keeps-no-object-nothing-to-run/walk.ts, test/aot/parallel-test-runs/heap-snapshots/each-function-leads-to-a-scope-of-its-module/walk.ts, test/aot/parallel-test-runs/heap-snapshots/from-the-module-loader-to-a-variable/walk.ts, …; 3 × 16 KiB: test/js/bun/http/fixture.html.gz, test/js/node/zlib/fixture.html.gz, test/js/web/fetch/fixture.html.gz; …"}
+oven-sh/bun	review	order	./	issue.measure.crowdedRoot	{"count":43,"limit":30}
+oven-sh/bun	review	order	./	issue.measure.flatDirs	{"count":120,"limit":50,"dirs":"test/js/node/test/parallel/ 3707, test/bundler/transpiler/react-compiler-fixtures/ 1332, test/aot/ 1287, test/aot/answers/ 552, test/aot/fuzz/ 442, …"}
+oven-sh/bun	review	order	./	issue.measure.longFiles	{"count":1191,"lines":1000,"kib":100,"files":"test/bundler/transpiler/fixtures/lots-of-for-loop.js 80002 / 8828 KiB, bench/react-hello-world/react-hello-world.node.js 46168 / 1471 KiB, test/cli/check/check.test.ts 25731 / 1465 KiB, test/cli/lint/lint.test.ts 22394 / 1139 KiB, test/cli/install/bun-install.test.ts 17819 / 680 KiB, …"}
+oven-sh/bun	review	order	scripts/build/CLAUDE.md	issue.measure.instructions	{"lines":338,"limit":300}
+oven-sh/bun	review	order	src/AGENTS.md	issue.measure.instructions	{"lines":526,"limit":300}
+oven-sh/bun	review	order	src/format/CLAUDE.md	issue.measure.instructions	{"lines":428,"limit":300}
+oven-sh/bun	review	order	src/jsc/bindings/v8/AGENTS.md	issue.measure.instructions	{"lines":331,"limit":300}
+oven-sh/bun	review	order	src/jsc/bindings/v8/CLAUDE.md	issue.measure.instructions	{"lines":331,"limit":300}
+oven-sh/bun	review	order	src/lint/CLAUDE.md	issue.measure.instructions	{"lines":345,"limit":300}
+oven-sh/bun	smell	cleanliness	.cargo/	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/async/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/ffi/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/gzip/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/log/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/modules/node_os/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	bench/sqlite/.env	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	packages/bun-build-mdx-rs/.cargo/	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	cleanliness	packages/bun-release/.npmrc	issue.leftover.ignoredTracked	{"count":1}
+oven-sh/bun	smell	convention	src/bun_core/Global.rs	issue.contract.rustModuleName	{"name":"Global","count":1}
+oven-sh/bun	smell	convention	src/bundler/	issue.contract.rustModuleName	{"name":"AstBuilder","count":8}
+oven-sh/bun	smell	convention	src/event_loop/	issue.contract.rustModuleName	{"name":"AnyTaskWithExtraContext","count":4}
+oven-sh/bun	smell	convention	src/http_types/	issue.contract.rustModuleName	{"name":"ETag","count":8}
+oven-sh/bun	smell	convention	src/install_types/NodeLinker.rs	issue.contract.rustModuleName	{"name":"NodeLinker","count":1}
+oven-sh/bun	smell	order	bench/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×2","examples":"aes-gcm-throughput.mjs, asymmetricCipher.js"}
+oven-sh/bun	smell	order	bench/snippets/	issue.twins.styles	{"styles":"kebab-case ×122 + camelCase ×3","examples":"abort-signal.mjs, byteLength.mjs"}
+oven-sh/bun	smell	order	scripts/build/	issue.twins.styles	{"styles":"kebab-case ×12 + camelCase ×4","examples":"aot-paths.ts, buildOptionsRs.ts"}
+oven-sh/bun	smell	order	src/js/ahead-of-time/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"end-of-stream.ts, load_all.ts"}
+oven-sh/bun	smell	order	src/js/internal/fs/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"cp-sync.ts, file_handles.ts"}
+oven-sh/bun	smell	order	src/js/internal/net/	issue.twins.styles	{"styles":"camelCase ×1 + snake_case ×1","examples":"isIP.ts, server_abort_signal.ts"}
+oven-sh/bun	smell	order	src/js/internal/streams/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"add-abort-signal.ts, lazy_transform.ts"}
+oven-sh/bun	smell	order	src/js/thirdparty/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"isomorphic-fetch.ts, vercel_fetch.js"}
+oven-sh/bun	smell	order	src/node-fallbacks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"build-fallbacks.ts, string_decoder.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/a-preload-has-left-an-unrelated-ended-mock-behind/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/a-preload-has-left-an-unrelated-ended-mock-with-the-same-name-behind/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-barrel-over-a-mock-that-takes-its-original-shows-what-the-original-shows/the-ended-mock-of-a-preload-lay-on-the-file-itself/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-extra.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-factory-imports-a-module-whose-own-factory-is-still-running/the-load-that-started-a-third-factory-leads-to-both-so-it-waits-for-the-mock/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"a-and-d.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-factory-imports-a-module-whose-own-factory-is-still-running/the-running-factory-waits-for-the-one-that-called-it-so-it-gets-the-original/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"b-and-r.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-hook-of-the-loader-laid-through-an-object-that-was-handed-on/a-package-that-only-hands-the-module-of-the-loader-on-leaves-the-imports-alone/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, reads-names.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-ring-of-three-mocks-below-two-compiled-roots-and-one-that-runs-from-its-text/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"a-and-d.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-above-two-compiled-files-each-above-one-mock/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-above-two-texts-each-above-a-compiled-file/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-a-compiled-file-above-both/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-both.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-a-text-above-both/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-both.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-calls-import-on-two-texts-with-nothing-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/a-text-that-has-run-is-no-importer-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/two-roots-with-no-importer-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-below-a-file-that-runs-from-its-text/two-texts-each-above-a-compiled-file-with-nothing-in-common/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-one.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-over-a-mock-whose-factory-still-runs/it-waits-for-the-next-load/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-r-again.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-over-a-mock-whose-factory-still-runs/the-mocks-of-the-next-test-over-two-modules-are-applied/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"both-again.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-while-the-body-of-the-module-is-behind-its-top-level-await/second-import-fails-behind-first/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"job-1.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-mock-laid-while-the-body-of-the-module-is-behind-its-top-level-await/second-import-settles-with-first/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"job-1.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/an-async-mock-is-laid-over-it/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-answer-of-a-mock-laid-over-it-has-a-getter-that-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-answers-at-once/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-is-async/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-patched-json-is-imported-as-text-under-the-mock/the-factory-of-a-mock-laid-over-it-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/a-factory-that-takes-the-original/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/nothing-is-mocked/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/one-mock-below-a-ring-that-comes-round-through-the-reader/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/a-statement-over-a-barrel-whose-names-the-run-finds-names-the-barrel-that-is-written/the-mocked-file-stars-nothing/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/an-answer-that-asked-the-path-is-not-kept-for-another-path/a-ring-hands-the-name-on-under-another-name-and-back-and-a-mock-adds-it/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"a-s.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/a-second-mock-is-laid-over-the-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-answers-at-once-and-the-mocks-are-restored/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-is-async/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/both-forms-of-a-file-are-loaded-and-then-it-is-mocked/the-factory-of-the-second-throws/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"late-behind.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/own-file-and-folder/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/two-folder-urls/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/created-require-with-escaped-global/variable-swapped-between-folders/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, kind-of.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-that-ends-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/mock-that-ends-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/no-mock-yet-first/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories-beside-files-that-do-not-parse/no-mock-yet-last/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"uses-first.mjs, a_test.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-late-late-import-loaded-before/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-require-require-import-late-nothing-loaded/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-the-body-runs-once/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/a-commonjs-file-fails-behind-an-await-then-unmock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/fails-behind-an-await-import-require-import-late-late-loaded-before/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/factories/fails-behind-an-await-late-late-import-nothing-loaded/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/hooks-for-the-react-compiler/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"use-sum.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/mocks-stay-where-they-are-written/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×4","examples":"config-a.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/preloads-ask-for-the-names/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, setup-without-the-mark.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/the-names-of-vitest-lie-on-the-global-object/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"under-the-mark.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/files-under-the-mark-of-a-build/what-else-the-parser-writes-anew/	issue.twins.styles	{"styles":"kebab-case ×8 + snake_case ×1","examples":"chai-under-the-mark.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/import-actual-inside-running-factory/commonjs-mocked-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, uses-cjs.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/dependency-evaluated-by-import-actual/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/dependency-evaluated-by-import/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/factory-imports-other-mocked-module/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×1","examples":"leads-to-all.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/leftover-importer-imported-directly/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-after-failed-load/mock-module-patches-evaluated-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, later-compiled.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/file-above-inner/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/file-between-originals/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/hoisted-import-isolated/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/imported-directly-too/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-below-running-factory/third-factory/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, inner-mock.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-imports-it-in-two-runs/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-imports-it/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-registered-during-a-fetch/next-file-mocks-it-again/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, describe-import.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-and-changed-under-the-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-under-a-mock-of-bun/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/a-commonjs-file-required-alone-under-a-mock-of-vitest/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/behind-a-mock-that-ended-it-was-laid-over/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"t_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/behind-a-mock-that-ended-twice/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"t_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/left-by-an-earlier-file-the-user-is-loaded-by-this-one/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/left-by-an-earlier-file-three-tests-the-middle-one-real/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mock-views/let-go-and-held-beside-a-file-that-is-loaded-again/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.ts, user-late.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/both-modules-reexport-commonjs/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/bypassed-factory-is-not-called/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/commonjs-file-runs-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/commonjs-star-listed-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/export-added-after-require/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/not-called-beside-active-mocks/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-before-it-exports/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-into-the-cycle/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-nothing/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/requires-the-reexporting-hub/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/throws-after-the-require/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-commonjs-star-export-cycle/unmocked-file-adds-export-later/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/name-of-next-star/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/one-binding-by-two-stars/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/original-read-after-mock-two-stars/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocked-stars-on-reexport-cycles/original-read-after-mock/	issue.twins.styles	{"styles":"kebab-case ×6 + snake_case ×1","examples":"named-far.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-change-linked-modules/import-waits-for-preload-factory/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"mocks-region.ts, a_test.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/one-mock-in-the-preload-and-none-in-the-test-files/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/one-mock-in-the-preload-and-two-in-the-first-test-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/the-same-with-two-mocks-in-the-preload-and-a-mock-that-waits/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/the-test-takes-its-mock-off-and-the-preloads-comes-back-for-the-old-reader-at-once/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-a-built-in-module-in-the-preload-and-in-test-files/two-mocks-in-the-preload-and-a-third-in-the-first-test-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.mjs, fresh-a.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-barrels-from-source/commonjs-dependency/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.ts, made-barrel.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-barrels-from-source/given-by-a-plugin/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.ts, made-barrel.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/a-name-is-imported-below-the-first-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/the-namespace-is-imported-below-the-first-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/mocks-of-built-in-modules-in-one-test-file-after-another/the-real-module-is-loaded-between-two-mocks/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"a_test.js, below-a.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-behind-linked-stars/mock-between-lacks-name/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"named-n0.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-behind-linked-stars/static-star-beside-two-views/	issue.twins.styles	{"styles":"snake_case ×1 + camelCase ×1","examples":"a_test.js, asksMiddle.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-imported-through-getters-of-commonjs-files/a-settled-name-and-a-spy-on-the-door/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"fixed-door.cjs, t_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-imported-through-getters-of-commonjs-files/a-settled-name-in-two-test-files/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, fixed-door.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-commonjs-files-that-barrels-hand-on-beside-a-mock/a-namespace-read-off-what-require-gives/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, by-name.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/built-in-twice/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/default/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/folder/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/named/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-hoisted-imports/namespace/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, two-parts.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-mocks-behind-stars/mock-adds-name/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, named-n1.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/names-of-the-runner-that-loads-a-file/helpers-below-a-test-file-that-imports-vitest/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"imports-bun-test.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/concurrent-load-keeps-its-link/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/fails-then-mocked-again/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/old-link-after-failed-relink/new-importer-requests-missing-name/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, asks-for-nothing.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/originals-of-built-in-objects/a-factory-that-keeps-the-rest/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, place-of-the-run.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/importer-without-instances/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/throwing-factory-of-unrequested-mock/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/two-importers-without-instances/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/packages-mocked-behind-resets/unrequested-mock-behind-two-files/	issue.twins.styles	{"styles":"snake_case ×5 + kebab-case ×2","examples":"a_test.mjs, again-above.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/pending-import-under-replaced-mock/earlier-import-gets-new-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, uses-again.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/released-commonjs-files/importers-of-run-set-aside-again/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"user-late.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/released-commonjs-files/importers-of-run-set-aside/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/jest-mock-behind-do-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/jest-mock-behind-loaded-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-awaited-original/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-do-mock/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/module-behind-throwing-factory/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.js, user-top.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/patch-over-second-run/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"user-late.js, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/replaced-mocks-over-commonjs-files/restored-mocks-before-next-file/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×2","examples":"a_test.js, user-late.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-a-file-makes-for-itself/the-name-of-the-file-is-stored-or-is-not/	issue.twins.styles	{"styles":"kebab-case ×13 + snake_case ×1","examples":"added-to.cjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-mock-in-one-test-file-and-none-in-the-next/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-mock-over-the-default/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/requires-that-another-file-exports/a-spy-on-the-object-of-the-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, own-require.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/both-mocks-removed/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/commonjs-member-mocked-too/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/cycle-member-imports-other/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/held-reader-is-called-again/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/no-commonjs-module/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/one-member-and-commonjs-mocked/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/project-reads-commonjs-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/star-export-cycle-under-mocks/tail-imported-first/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, new-reader.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-links-of-a-load-go-back-where-a-body-below-it-throws/a-body-below-begins-a-load-of-its-own-that-fails/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"asks-for-nothing.mjs, cell_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-links-of-a-load-go-back-where-a-body-below-it-throws/the-load-that-fails-is-a-require/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"asks-for-nothing.mjs, cell_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-awaits-below-two-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-imports-its-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-file-written-in-the-run-lies-below-two-compiled-importers/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, path-one.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-member-of-the-cycle-awaits/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-name-below-the-closed-cycle-is-not-exported/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/a-request-below-the-closed-cycle-finds-no-file/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/the-job-of-the-file-imports-a-member/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"ring-a.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-loader-walks-compiled-records-on-a-cycle/the-second-importer-comes-while-the-graph-below-is-loaded-and-its-last-request-finds-no-file/	issue.twins.styles	{"styles":"kebab-case ×2 + snake_case ×1","examples":"path-one.mjs, a_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-eight-times-and-the-factory-stands-between/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-nine-times-and-the-original-has-imports/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/a-sibling-awaits-seven-times-and-ends-first/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"mocks-tax.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-awaits-at-its-top/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-imports-the-module-that-mocks-it-and-awaits/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-original-of-a-module-that-is-linked-and-has-yet-to-run/it-imports-the-module-that-mocks-it/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.ts, lays-the-mock.ts"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-require-behind-a-late-failure-answers-the-body-that-has-run/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-require-between-two-factories-that-fail-late-gets-the-original/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/a-second-factory-laid-over-one-that-failed-late-is-called-by-the-next-import/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"user-late.js, x_test.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/the-walk-is-not-held-up-by-a-mock-that-needs-its-original/the-module-in-front-removes-the-mock/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, mocks-tax.js"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/two-readers-of-one-barrel-one-under-the-mock-and-one-behind-its-end/a-ring-of-barrel-and-reader-a-refused-load-and-then-a-root-over-the-reader/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, wants-more.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/two-readers-of-one-barrel-one-under-the-mock-and-one-behind-its-end/the-same-without-the-ring/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.js, wants-more.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/types-of-one-file-that-test-files-ask-for/a-call-comes-before-statements-of-two-types/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, as-yaml.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/types-of-one-file-that-test-files-ask-for/a-text-that-one-type-refuses/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"a_test.mjs, as-toml.mjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-module-imports-in-front-is-read-when-the-file-behind-it-runs/two-files-behind-it-hold-a-require-of-it/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.mjs, other-real.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/exports-defined-anew-on-the-entry-of-a-commonjs-file/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"by-a-getter.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/exports-deleted-on-the-entry-of-a-commonjs-file/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"by-reflect.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-a-program-defines-on-an-entry-of-the-cache/on-an-entry-under-a-key-that-the-build-cannot-read/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"a_test.cjs, only-read.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-function/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-function.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel-test-runs/what-import-mock-answers/a-commonjs-file-that-exports-a-text/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"a-text.cjs, a_test.cjs"}
+oven-sh/bun	smell	order	test/aot/parallel/packages/commonjs-interop/many-1/	issue.twins.styles	{"styles":"kebab-case ×42 + snake_case ×24","examples":"class-statics.default.mjs, reexport_of_array.mjs"}
+oven-sh/bun	smell	order	test/aot/tools/	issue.twins.styles	{"styles":"kebab-case ×118 + snake_case ×2","examples":"draw-names-handed-on-by-stars.py, exact_counts.py"}
+oven-sh/bun	smell	order	test/bundler/	issue.twins.styles	{"styles":"kebab-case ×58 + snake_case ×42 + camelCase ×2","examples":"bun-build-api-dts.test.ts, bundler_allow_unresolved.test.ts, buildNoThrow.ts"}
+oven-sh/bun	smell	order	test/bundler/css/wpt/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"background-computed.test.ts, relative_color_out_of_gamut.test.ts"}
+oven-sh/bun	smell	order	test/bundler/transpiler/react-compiler-fixtures/	issue.twins.styles	{"styles":"kebab-case ×990 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
+oven-sh/bun	smell	order	test/cli/	issue.twins.styles	{"styles":"kebab-case ×20 + snake_case ×3","examples":"aot-builtin-modules-and-computed-paths.test.ts, update_interactive_formatting.test.ts"}
+oven-sh/bun	smell	order	test/cli/run/	issue.twins.styles	{"styles":"kebab-case ×49 + snake_case ×1","examples":"as-node.test.ts, run_command.test.ts"}
+oven-sh/bun	smell	order	test/integration/bun-types/fixture/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×1","examples":"array-buffer.ts, perf_hooks.ts"}
+oven-sh/bun	smell	order	test/internal/	issue.twins.styles	{"styles":"kebab-case ×50 + snake_case ×1","examples":"address-sanitizer-sees-wtf-allocations.test.ts, int_from_float.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/crypto/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"cipheriv-decipheriv.test.ts, webcryptoTestHelpers.ts"}
+oven-sh/bun	smell	order	test/js/bun/css/	issue.twins.styles	{"styles":"kebab-case ×17 + snake_case ×1","examples":"angle-serialization-hang.test.ts, doesnt_crash.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/http/	issue.twins.styles	{"styles":"kebab-case ×79 + camelCase ×2","examples":"async-iterator-stream.test.ts, decodeURIComponentSIMD.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/jsc-stress/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"jsc-stress.test.ts, testFFI.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/json5/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_json5_test_suite.ts, json5-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/resolve/	issue.twins.styles	{"styles":"kebab-case ×48 + camelCase ×2","examples":"build-error.test.ts, esModule.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/shell/	issue.twins.styles	{"styles":"kebab-case ×18 + snake_case ×2","examples":"assignments-in-pipeline.test.ts, pipeline_stack.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/spawn/	issue.twins.styles	{"styles":"kebab-case ×52 + camelCase ×1 + snake_case ×1","examples":"bun-ipc-child-respond.js, spawnSync.test.ts, spawn_waiter_thread.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/test/	issue.twins.styles	{"styles":"kebab-case ×53 + snake_case ×7 + camelCase ×1","examples":"bun-jest-arguments.test.ts, bun_test.fixture.ts, spyMatchers.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/test/expect/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"huge-failure-message.test.ts, toHaveReturnedWith.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/toml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_toml_test_suite.ts, toml-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/util/	issue.twins.styles	{"styles":"kebab-case ×40 + camelCase ×14 + snake_case ×1","examples":"base64-url-safe-encode.test.ts, escapeHTML.test.js, filesystem_router.test.ts"}
+oven-sh/bun	smell	order	test/js/bun/xml/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"generate_xml_test_suite.ts, xml-test-suite.test.ts"}
+oven-sh/bun	smell	order	test/js/node/async_hooks/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"async-local-storage-thenable.test.ts, async_hooks.node.test.ts"}
+oven-sh/bun	smell	order	test/js/node/child_process/	issue.twins.styles	{"styles":"kebab-case ×5 + snake_case ×5","examples":"child-process-exec.test.ts, child_process.test.ts"}
+oven-sh/bun	smell	order	test/js/node/child_process/fixtures/	issue.twins.styles	{"styles":"kebab-case ×9 + snake_case ×1","examples":"child-process-echo-argv.js, ipc_fixture.js"}
+oven-sh/bun	smell	order	test/js/node/module/	issue.twins.styles	{"styles":"kebab-case ×10 + camelCase ×2 + snake_case ×1","examples":"esm-registry-concurrent-gc.test.ts, modulePrototypeOverwrite.cjs, esm_to_cjs_interop.mjs"}
+oven-sh/bun	smell	order	test/js/node/readline/	issue.twins.styles	{"styles":"snake_case ×8 + kebab-case ×4 + camelCase ×1","examples":"pause_stdin_should_exit.js, child-reader.mjs, getStringWidth.test.ts"}
+oven-sh/bun	smell	order	test/js/node/test/common/	issue.twins.styles	{"styles":"kebab-case ×7 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
+oven-sh/bun	smell	order	test/js/node/url/	issue.twins.styles	{"styles":"kebab-case ×15 + camelCase ×1","examples":"url-domain-ascii-unicode.test.js, pathToFileURL.test.ts"}
+oven-sh/bun	smell	order	test/js/node/worker_threads/	issue.twins.styles	{"styles":"kebab-case ×14 + snake_case ×4","examples":"fixture-argv.js, worker_destruction.test.ts"}
+oven-sh/bun	smell	order	test/js/node/zlib/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×1","examples":"deflate-streaming.test.ts, bytesWritten.test.ts"}
+oven-sh/bun	smell	order	test/js/third_party/jsonwebtoken/	issue.twins.styles	{"styles":"kebab-case ×13 + snake_case ×9 + camelCase ×2","examples":"claim-aud.test.js, async_sign.test.js, noTimestamp.test.js"}
+oven-sh/bun	smell	order	test/js/web/fetch/	issue.twins.styles	{"styles":"kebab-case ×57 + snake_case ×1","examples":"abort-signal-leak.test.ts, fetch_headers.test.js"}
+oven-sh/bun	smell	order	test/js/web/timers/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"setImmediate.test.js, performance-entries.test.ts"}
+oven-sh/bun	smell	order	test/js/web/workers/	issue.twins.styles	{"styles":"kebab-case ×16 + snake_case ×1","examples":"a-read-of-a-file-descriptor-is-the-last-thing-pending.test.ts, worker_blob.test.ts"}
+oven-sh/bun	smell	order	test/napi/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×1","examples":"addon-allocations.test.ts, uv_stub.test.ts"}
+oven-sh/bun	smell	order	test/napi/napi-app/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"external-buffer-worker.js, test_experimental_crash.js"}
+oven-sh/bun	smell	order	test/napi/node-napi-tests/test/common/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×1 + snake_case ×1","examples":"cpu-prof.js, assertSnapshot.js, child_process.js"}
+oven-sh/bun	smell	order	test/napi/node-napi-tests/test/node-api/test_buffer/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"test-external-buffer.js, test_finalizer.js"}
+oven-sh/bun	smell	order	test/regression/issue/	issue.twins.styles	{"styles":"kebab-case ×41 + snake_case ×1","examples":"atomics-waitasync-wtftimer-uaf.test.ts, test_env_loader_threading.test.ts"}
+oven-sh/bun	smell	order	test/snapshots/	issue.twins.styles	{"styles":"kebab-case ×105 + snake_case ×4","examples":"array-args-with-default-values.debug.js, spread_with_key.debug.tsx"}
+oven-sh/bun	smell	order	test/snippets/	issue.twins.styles	{"styles":"kebab-case ×30 + snake_case ×1","examples":"array-args-with-default-values.js, spread_with_key.tsx"}
+oxc-project/oxc	review	order	./	issue.measure.copies	{"count":5,"groups":"2 × 84 KiB: crates/oxc_minifier/src/traverse_context/scopes_collector.rs, crates/oxc_traverse/src/generated/scopes_collector.rs; 6 × 6 KiB: napi/minify/wasi-worker.mjs, napi/parser/src-js/wasi-worker.mjs, napi/playground/wasi-worker.mjs, …; 2 × 16 KiB: crates/oxc_minifier/src/traverse_context/uid.rs, crates/oxc_traverse/src/context/uid.rs; …"}
+oxc-project/oxc	review	order	./	issue.measure.flatDirs	{"count":19,"limit":50,"dirs":"crates/oxc_react_compiler/fixtures/ 1664, tasks/coverage/misc/fail/ 291, crates/oxc_linter/src/rules/eslint/ 184, tasks/coverage/misc/pass/ 148, crates/oxc_linter/src/rules/unicorn/ 137, …"}
+oxc-project/oxc	review	order	./	issue.measure.longFiles	{"count":235,"lines":1000,"kib":100,"files":"apps/oxfmt/test/cli/stdin_pipe/fixtures/parser.ts 13715 / 487 KiB, apps/oxlint/src-js/package/config.generated.ts 7553 / 256 KiB, crates/oxc_react_compiler/src/react_compiler_lowering/build_hir.rs 7156 / 300 KiB, napi/minify/test/terser.test.ts 5969 / 213 KiB, tasks/coverage/src/runtime/babelHelpers.js 4741 / 174 KiB, …"}
+oxc-project/oxc	review	order	AGENTS.md	issue.measure.instructions	{"lines":344,"limit":300}
+oxc-project/oxc	review	order	crates/oxc_formatter/AGENTS.md	issue.measure.instructions	{"lines":364,"limit":300}
+oxc-project/oxc	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":48}
+oxc-project/oxc	smell	modernity	apps/oxfmt/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	apps/oxlint/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/minify/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/parser/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/playground/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform-react/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform-relay/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	napi/transform/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	tasks/codegen_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	tasks/e2e/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+oxc-project/oxc	smell	modernity	tasks/sprout/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	modernity	tasks/transform_conformance/Cargo.toml	issue.contract.cargoAuthors	{"count":1}
+oxc-project/oxc	smell	order	apps/oxfmt/conformance/	issue.twins.styles	{"styles":"snake_case ×4 + kebab-case ×1","examples":"live_worker.ts, download-externals.ts"}
+oxc-project/oxc	smell	order	apps/oxfmt/src-js/cli/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, worker-proxy.ts"}
+oxc-project/oxc	smell	order	apps/oxlint/src-js/	issue.twins.styles	{"styles":"snake_case ×1 + kebab-case ×1","examples":"js_config.ts, plugins-dev.ts"}
+oxc-project/oxc	smell	order	apps/oxlint/test/	issue.twins.styles	{"styles":"snake_case ×4 + camelCase ×1","examples":"compile_visitor.test.ts, isSpaceBetween.test.ts"}
+oxc-project/oxc	smell	order	crates/oxc_formatter/tests/jsdoc/fixtures/files/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×2","examples":"typeScript.js, create-ignorer.js"}
+oxc-project/oxc	smell	order	crates/oxc_linter/fixtures/import/no-unused-modules/	issue.twins.styles	{"styles":"kebab-case ×44 + snake_case ×2","examples":"arbitrary-module-namespace-identifier-name-a.js, empty_file.js"}
+oxc-project/oxc	smell	order	crates/oxc_react_compiler/fixtures/	issue.twins.styles	{"styles":"kebab-case ×1192 + snake_case ×10","examples":"alias-capture-in-method-receiver-and-mutate.js, aliased_usememo.js"}
+oxc-project/oxc	smell	order	tasks/sprout/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"compiler-runtime.ts, useEffectWrapper.ts"}
+phoenixframework/phoenix	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 14 KiB: installer/templates/phx_static/phoenix.png, priv/static/phoenix.png"}
+phoenixframework/phoenix	review	order	./	issue.measure.longFiles	{"count":16,"lines":1000,"kib":100,"files":"assets/test/socket_test.js 2663 / 88 KiB, lib/phoenix/controller.ex 2010 / 62 KiB, priv/static/phoenix.js 1992 / 64 KiB, priv/static/phoenix.cjs.js 1975 / 59 KiB, priv/static/phoenix.mjs 1953 / 58 KiB, …"}
+pisces19860207/zhengdao	review	cleanliness	native-core/src/main/jniLibs/arm64-v8a/libzhengdao_core.so	issue.leftover.executable	{}
+pisces19860207/zhengdao	review	order	./	issue.measure.flatDirs	{"count":10,"limit":50,"dirs":"app/src/test/java/com/example/zhengdao/baopu/ 254, app/src/test/java/com/example/zhengdao/baopu/agent/ 168, app/src/main/java/com/example/zhengdao/baopu/ 160, app/src/main/java/com/example/zhengdao/ui/baopu/ 114, app/src/test/java/com/example/zhengdao/ui/baopu/ 95, …"}
+pisces19860207/zhengdao	review	order	./	issue.measure.longFiles	{"count":31,"lines":1000,"kib":100,"files":"app/src/main/java/com/example/zhengdao/ui/baopu/BaopuChatController.kt 6371 / 330 KiB, app/src/main/java/com/example/zhengdao/baopu/agent/RunEngine.kt 6193 / 356 KiB, app/src/main/java/com/example/zhengdao/baopu/BaopuDb.kt 2404 / 119 KiB, app/src/main/assets/mermaid/mermaid.min.js 2314 / 2512 KiB, app/src/main/java/com/example/zhengdao/ui/baopu/BaopuSettingsScreen.kt 2262 / 124 KiB, …"}
+pisces19860207/zhengdao	smell	order	./	issue.leftover.rootDocs	{"count":5,"limit":3,"names":"CLA.md, PROVENANCE.md, THIRD-PARTY-LICENSES.md, release-notes.md, 制度总账.md"}
+pisces19860207/zhengdao	smell	order	tools/	issue.twins.styles	{"styles":"kebab-case ×54 + snake_case ×2","examples":"character-track-parity.py, wiring_report_test.py"}
+plausible/analytics	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 15 KiB: priv/static/favicon.ico, priv/static/images/ee/favicon.ico"}
+plausible/analytics	review	order	./	issue.measure.flatDirs	{"count":2,"limit":50,"dirs":"priv/repo/migrations/ 249, priv/ingest_repo/migrations/ 56"}
+plausible/analytics	review	order	./	issue.measure.longFiles	{"count":38,"lines":1000,"kib":100,"files":"test/plausible_web/controllers/api/external_stats_controller/query_test.exs 5331 / 168 KiB, test/plausible_web/controllers/api/external_stats_controller/breakdown_test.exs 3680 / 109 KiB, test/plausible_web/controllers/api/stats_controller/pages_test.exs 3308 / 102 KiB, test/plausible/stats/query/query_parse_and_build_test.exs 2804 / 92 KiB, test/plausible_web/controllers/api/stats_controller/sources_test.exs 2797 / 82 KiB, …"}
+plausible/analytics	smell	convention	priv/repo/migrations/20230406110926_associate-goals-with-sites.exs	issue.contract.elixirFileName	{"name":"20230406110926_associate-goals-with-sites","count":1}
+plausible/analytics	smell	modernity	assets/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+plausible/analytics	smell	order	assets/js/liveview/	issue.twins.styles	{"styles":"kebab-case ×3 + snake_case ×2","examples":"combo-box.js, live_socket.js"}
+rust-lang/rust	review	order	./	issue.measure.copies	{"count":49,"groups":"2 × 202 KiB: src/doc/rustc-dev-guide/src/img/llvm-cov-show-01.png, src/doc/rustc/src/images/llvm-cov-show-01.png; 3 × 43 KiB: tests/ui/lint/lint-overflowing-ops.noopt.stderr, tests/ui/lint/lint-overflowing-ops.opt_with_overflow_checks.stderr, tests/ui/lint/lint-overflowing-ops.opt.stderr; 3 × 41 KiB: tests/ui/consts/overflowing-consts.noopt.stderr, tests/ui/consts/overflowing-consts.opt_with_overflow_checks.stderr, tests/ui/consts/overflowing-consts.opt.stderr; …"}
+rust-lang/rust	review	order	./	issue.measure.crowdedRoot	{"count":32,"limit":30}
+rust-lang/rust	review	order	./	issue.measure.flatDirs	{"count":139,"limit":50,"dirs":"src/tools/clippy/tests/ui/ 1013, src/tools/rustfmt/tests/target/ 556, tests/ui/consts/ 488, tests/ui/borrowck/ 474, tests/ui/macros/ 450, …"}
+rust-lang/rust	review	order	./	issue.measure.longFiles	{"count":666,"lines":1000,"kib":100,"files":"library/stdarch/crates/core_arch/src/x86/avx512f.rs 62676 / 2904 KiB, library/stdarch/crates/core_arch/src/x86/avx512fp16.rs 27502 / 1228 KiB, library/stdarch/crates/core_arch/src/x86/avx512bw.rs 21977 / 993 KiB, library/stdarch/crates/core_arch/src/mips/msa.rs 18260 / 586 KiB, library/stdarch/crates/core_arch/src/x86_64/avx512f.rs 13206 / 487 KiB, …"}
+rust-lang/rust	smell	cleanliness	compiler/rustc_codegen_cranelift/.vscode/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	compiler/rustc_codegen_cranelift/.zed/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	compiler/rustc_codegen_gcc/doc/gimple.md	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	src/doc/rustc-dev-guide/mermaid.min.js	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	src/tools/clippy/.cargo/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	src/tools/clippy/tests/ui-cargo/multiple_crate_versions/fail/Cargo.lock	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	src/tools/rust-analyzer/.cargo/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	src/tools/rust-analyzer/.vscode/	issue.leftover.ignoredTracked	{"count":3}
+rust-lang/rust	smell	cleanliness	src/tools/rust-analyzer/crates/ide/src/syntax_highlighting/tags.rs	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	tests/run-make-cargo/thumb-none-qemu/example/.cargo/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	cleanliness	tests/rustdoc-gui/src/settings/.cargo/	issue.leftover.ignoredTracked	{"count":1}
+rust-lang/rust	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":65}
+rust-lang/rust	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+rust-lang/rust	smell	order	src/etc/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×1","examples":"dec2flt_table.py, generate-keyword-tests.py"}
+rust-lang/rust	smell	order	tests/rustdoc-js-std/	issue.twins.styles	{"styles":"kebab-case ×55 + snake_case ×1","examples":"alias-1.js, from_u.js"}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cubinonly	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cuda128	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-cuda128-all	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-default	issue.leftover.executable	{}
+ruvnet/ruflo	review	cleanliness	v3/@claude-flow/cli/__tests__/fixtures/cuda/host-multiarch	issue.leftover.executable	{}
+ruvnet/ruflo	review	order	./	issue.measure.copies	{"count":151,"groups":"2 × 504 KiB: plugins/ruflo-console/catalog/command-catalog.json, v3/@claude-flow/cli/src/mods/command-registry/catalog.generated.json; 2 × 323 KiB: chatgpt-plugin/assets/ruflo-water-icon-512.png, plugins/ruflo-ai-team/assets/ruflo-ai-team-icon-512.png; 17 × 15 KiB: plugins/ruflo-adr/hooks/screen.ts, plugins/ruflo-agent/hooks/screen.ts, plugins/ruflo-agntcy/hooks/screen.ts, …; …"}
+ruvnet/ruflo	review	order	./	issue.measure.flatDirs	{"count":11,"limit":50,"dirs":"v3/@claude-flow/cli/__tests__/ 740, plugins/ruflo-console/tests/ 288, scripts/ 152, plugins/ruflo-console/hooks/ 130, plugins/ruflo-console/hooks/data/ 111, …"}
+ruvnet/ruflo	review	order	./	issue.measure.longFiles	{"count":147,"lines":1000,"kib":100,"files":"v3/@claude-flow/cli/src/mcp-tools/hooks-tools.ts 6006 / 255 KiB, v3/@claude-flow/cli/src/commands/hooks.ts 5690 / 214 KiB, v3/@claude-flow/cli/src/commands/neural.ts 4716 / 234 KiB, v3/@claude-flow/cli/src/memory/memory-bridge.ts 4606 / 188 KiB, v3/@claude-flow/cli/src/memory/memory-initializer.ts 4574 / 164 KiB, …"}
+ruvnet/ruflo	review	order	AGENTS.md	issue.measure.instructions	{"lines":707,"limit":300}
+ruvnet/ruflo	review	order	CLAUDE.md	issue.measure.instructions	{"lines":1562,"limit":300}
+ruvnet/ruflo	review	order	v3/@claude-flow/cli/CLAUDE.md	issue.measure.instructions	{"lines":731,"limit":300}
+ruvnet/ruflo	review	order	v3/@claude-flow/mcp/CLAUDE.md	issue.measure.instructions	{"lines":711,"limit":300}
+ruvnet/ruflo	smell	cleanliness	plugins/ruflo-ai-team/directory/.mcp.json	issue.leftover.ignoredTracked	{"count":1}
+ruvnet/ruflo	smell	cleanliness	plugins/ruflo-x-gateway/directory/.mcp.json	issue.leftover.ignoredTracked	{"count":1}
+ruvnet/ruflo	smell	cleanliness	v3/.agentic-flow/	issue.leftover.ignoredTracked	{"count":1}
+ruvnet/ruflo	smell	modernity	.github/workflows/all-plugins-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/business-pods-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/codex-integration-audit.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/cost-tracker-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/cve-audit.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/metaharness-ci.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/metaharness-pin-drift.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/mod-guidance.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/neural-trader-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/no-agentbbs-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/no-metaharness-smoke.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/oia-audit-weekly.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/plugin-version-bump.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/status-badges.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	.github/workflows/validate-marketplace.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+ruvnet/ruflo	smell	modernity	ruflo/src/ruvocal/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+ruvnet/ruflo	smell	modernity	tests/docker-regression/Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/ruflo	smell	modernity	v3/@claude-flow/codex/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+ruvnet/ruflo	smell	modernity	v3/goal_ui/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+ruvnet/ruflo	smell	modernity	v3/plugins/teammate-plugin/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+ruvnet/ruflo	smell	order	docs/assets/readme/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×2","examples":"generate-learning-cosmos.py, theme_artwork.py"}
+ruvnet/ruflo	smell	order	package.json (agentic-flow)	issue.workspace.drift	{"name":"agentic-flow","versions":".: ^3.0.0; v3/@claude-flow/plugin-agent-federation: 2.0.14"}
+ruvnet/ruflo	smell	order	package.json (vitest)	issue.workspace.drift	{"name":"vitest","versions":".: ^3.2.6; v3/@claude-flow/codex: ^4.1.0; v3/@claude-flow/mcp: ^4.1.0; v3/@claude-flow/plugin-agent-federation: ^4.1.0; v3/@claude-flow/security: ^4.1.0"}
+ruvnet/ruflo	smell	order	ruflo/src/ruvocal/scripts/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"generate-welcome.mjs, updateLocalEnv.ts"}
+ruvnet/ruflo	smell	order	ruflo/src/ruvocal/src/lib/server/api/__tests__/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×1","examples":"conversations-id.spec.ts, testHelpers.ts"}
+ruvnet/ruflo	smell	order	v3/@claude-flow/mcp/pnpm-lock.yaml	issue.no.because	{"reason":{"t":"reason.nestedLockfile"}}
+ruvnet/symbolic-scribe	smell	modernity	.github/workflows/pages.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/symbolic-scribe	smell	modernity	Dockerfile (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+ruvnet/symbolic-scribe	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+shadcn-ui/taxonomy	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 112 KiB: app/opengraph-image.jpg, public/og.jpg"}
+shadcn-ui/taxonomy	smell	modernity	.nvmrc (Node 16)	issue.lifecycle.ended	{"name":"Node 16","date":"2023-09-11","use":{"t":"eol.node"}}
+shadcn-ui/taxonomy	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+sindresorhus/execa	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"test-d/stdio/option/ 75"}
+sindresorhus/ky	review	order	./	issue.measure.longFiles	{"count":7,"lines":1000,"kib":100,"files":"test/hooks.ts 8063 / 191 KiB, test/retry.ts 5414 / 140 KiB, test/main.ts 4366 / 118 KiB, test/stream.ts 1528 / 46 KiB, source/core/Ky.ts 1376 / 52 KiB, …"}
+sqlite/sqlite	review	order	./	issue.measure.flatDirs	{"count":3,"limit":50,"dirs":"src/ 149, ext/misc/ 62, test/ 56"}
+sqlite/sqlite	review	order	./	issue.measure.longFiles	{"count":116,"lines":1000,"kib":100,"files":"autosetup/jimsh0.c 25494 / 637 KiB, ext/wasm/libcmpp.c 20065 / 651 KiB, ext/vec1/vec1.c 13180 / 372 KiB, src/btree.c 11682 / 400 KiB, ext/fts5/fts5_index.c 9794 / 302 KiB, …"}
+sqlite/sqlite	smell	cleanliness	tool/win/sqlite.vsix	issue.leftover.installer	{}
+theaiautomators/insights-lm-public	smell	modernity	.github/workflows/deploy.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+theaiautomators/insights-lm-public	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+theaiautomators/insights-lm-public	smell	order	src/hooks/	issue.twins.styles	{"styles":"camelCase ×13 + kebab-case ×2","examples":"useAudioOverview.tsx, use-mobile.tsx"}
+tokio-rs/tokio	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"tokio/tests/ 189"}
+tokio-rs/tokio	review	order	./	issue.measure.longFiles	{"count":37,"lines":1000,"kib":100,"files":"tokio/src/net/windows/named_pipe.rs 2743 / 98 KiB, tokio/src/net/udp.rs 2358 / 87 KiB, tokio/src/runtime/builder.rs 2276 / 81 KiB, tokio/src/sync/mpsc/bounded.rs 1967 / 65 KiB, tokio/src/process/mod.rs 1862 / 59 KiB, …"}
+tokio-rs/tokio	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":8}
+unocss/unocss	review	order	./	issue.measure.longFiles	{"count":8,"lines":1000,"kib":100,"files":"test/transformer-directives.test.ts 1842 / 46 KiB, test/preset-wind4.test.ts 1772 / 66 KiB, test/assets/preset-mini-targets.ts 1378 / 29 KiB, packages-engine/core/src/generator.ts 1294 / 45 KiB, packages-presets/preset-typography/src/constants.ts 1286 / 29 KiB, …"}
+unocss/unocss	smell	cleanliness	examples/astro-vue/src/components/Card.astro	issue.leftover.ignoredTracked	{"count":1}
+unocss/unocss	smell	cleanliness	examples/astro-vue/src/layouts/Layout.astro	issue.leftover.ignoredTracked	{"count":1}
+unocss/unocss	smell	cleanliness	examples/astro-vue/src/pages/	issue.leftover.ignoredTracked	{"count":2}
+unocss/unocss	smell	cleanliness	examples/astro/src/components/Button.astro	issue.leftover.ignoredTracked	{"count":1}
+unocss/unocss	smell	cleanliness	examples/astro/src/layouts/main.astro	issue.leftover.ignoredTracked	{"count":1}
+unocss/unocss	smell	cleanliness	examples/astro/src/pages/index.astro	issue.leftover.ignoredTracked	{"count":1}
+unocss/unocss	smell	cleanliness	examples/sveltekit-preprocess/dist/	issue.leak.artifact	{}
+unocss/unocss	smell	order	packages-integrations/svelte-scoped/src/_vite/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"createCssTransformerPlugins.ts, config-hmr.ts"}
+v833/q-code	review	order	./	issue.measure.copies	{"count":4,"groups":"2 × 539 KiB: docs/public/q-code-duck-round.png, docs/public/q-code-duck.png; 2 × 231 KiB: docs/public/q-code-duck-512.png, docs/public/q-code-duck-round-512.png; 2 × 21 KiB: docs/public/q-code-duck-128.png, docs/public/q-code-duck-round-128.png; …"}
+v833/q-code	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"tests/unit/ 70"}
+v833/q-code	review	order	./	issue.measure.longFiles	{"count":8,"lines":1000,"kib":100,"files":"src/cli/main.ts 5117 / 172 KiB, src/session/store.ts 1707 / 57 KiB, tests/unit/terminal.test.ts 1518 / 53 KiB, src/terminal/App.tsx 1274 / 44 KiB, src/agent/loop.ts 1167 / 39 KiB, …"}
+vbenjs/vue-vben-admin	review	order	./	issue.measure.copies	{"count":3,"groups":"7 × 5 KiB: apps/web-antd/public/favicon.ico, apps/web-antdv-next/public/favicon.ico, apps/web-ele/public/favicon.ico, …; 5 × 6 KiB: apps/web-antd/src/layouts/basic.vue, apps/web-antdv-next/src/layouts/basic.vue, apps/web-ele/src/layouts/basic.vue, …; 4 × 7 KiB: apps/web-antdv-next/src/views/dashboard/workspace/index.vue, apps/web-ele/src/views/dashboard/workspace/index.vue, apps/web-naive/src/views/dashboard/workspace/index.vue, …"}
+vbenjs/vue-vben-admin	review	order	./	issue.measure.longFiles	{"count":4,"lines":1000,"kib":100,"files":"packages/effects/layouts/src/authentication/icons/slogan.vue 4568 / 162 KiB, packages/effects/common-ui/src/components/resize/resize.vue 1269 / 27 KiB, packages/@core/ui-kit/form-ui/__tests__/form-integration.test.ts 1256 / 36 KiB, packages/@core/ui-kit/form-ui/src/types.ts 1054 / 30 KiB"}
+vercel/next-learn	review	order	./	issue.measure.copies	{"count":14,"groups":"2 × 487 KiB: dashboard/final-example/public/hero-desktop.png, dashboard/starter-example/public/hero-desktop.png; 2 × 422 KiB: seo/demo/public/large-image.jpg, seo/public/large-image.jpg; 6 × 61 KiB: basics/api-routes-starter/public/images/profile.jpg, basics/basics-final/public/images/profile.jpg, basics/data-fetching-starter/public/images/profile.jpg, …; …"}
+vercel/next-learn	smell	modernity	.github/workflows/test.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+vercel/next-learn	smell	modernity	basics/learn-starter/.nvmrc (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
+vercel/next-learn	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+vitejs/vite	review	order	./	issue.measure.copies	{"count":9,"groups":"16 × 13 KiB: packages/create-vite/template-lit-ts/src/assets/hero.png, packages/create-vite/template-lit/src/assets/hero.png, packages/create-vite/template-preact-ts/src/assets/hero.png, …; 15 × 9 KiB: packages/create-vite/template-lit-ts/public/favicon.svg, packages/create-vite/template-lit/public/favicon.svg, packages/create-vite/template-preact-ts/public/favicon.svg, …; 16 × 9 KiB: packages/create-vite/template-lit-ts/src/assets/vite.svg, packages/create-vite/template-lit/src/assets/vite.svg, packages/create-vite/template-preact-ts/src/assets/vite.svg, …; …"}
+vitejs/vite	review	order	./	issue.measure.longFiles	{"count":20,"lines":1000,"kib":100,"files":"packages/vite/src/node/plugins/css.ts 3780 / 117 KiB, packages/vite/src/node/config.ts 2969 / 90 KiB, packages/vite/src/node/__tests__/config.spec.ts 2547 / 68 KiB, packages/vite/src/node/__tests__/build.spec.ts 2460 / 68 KiB, packages/vite/src/node/utils.ts 2206 / 64 KiB, …"}
+vitejs/vite	smell	cleanliness	packages/vite/src/node/__tests__/optimizer/fixtures/lockfile-hash/yarn-patches/node_modules/	issue.leak.artifact	{}
+vitejs/vite	smell	cleanliness	packages/vite/src/node/__tests__/optimizer/fixtures/lockfile-hash/yarn-state/node_modules/	issue.leak.artifact	{}
+vitejs/vite	smell	order	packages/vite/src/node/server/__tests__/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"htmlSafeModulePaths.spec.ts, search-root.spec.ts"}
+vitejs/vite	smell	order	packages/vite/src/shared/	issue.twins.styles	{"styles":"camelCase ×6 + kebab-case ×1","examples":"bundledDevHmr.ts, pretty-format.ts"}
+vitejs/vite	smell	order	packages/vite/src/shared/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"forwardConsole.spec.ts, pretty-format.spec.ts"}
+vitejs/vite	smell	order	playground/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"vitestGlobalSetup.ts, test-utils.ts"}
+vitejs/vite	smell	order	playground/alias/dir/	issue.twins.styles	{"styles":"kebab-case ×1 + snake_case ×1","examples":"from-script-src.js, url_conflict.js"}
+vitejs/vite	smell	order	playground/fs-serve/__tests__/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"commonTests.ts, fs-serve.spec.ts"}
+vitejs/vite	smell	order	playground/hmr-ssr/accept-exports/export-from/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"depA.ts, export-from.ts"}
+vitejs/vite	smell	order	playground/hmr/accept-exports/export-from/	issue.twins.styles	{"styles":"camelCase ×1 + kebab-case ×1","examples":"depA.ts, export-from.ts"}
+vitejs/vite	smell	order	playground/ssr-html/src/	issue.twins.styles	{"styles":"kebab-case ×4 + camelCase ×1","examples":"error-js.js, importedVirtual.js"}
+vitejs/vite	smell	order	playground/worker/	issue.twins.styles	{"styles":"kebab-case ×33 + camelCase ×2","examples":"classic-esm.js, importMetaGlob.worker.js"}
+vitejs/vite	smell	order	playground/worker/modules/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"test-plugin.js, workerImport.ts"}
+vitejs/vite	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×3","examples":"detect-release.ts, mergeChangelog.ts"}
+vuejs/core	review	order	./	issue.measure.longFiles	{"count":35,"lines":1000,"kib":100,"files":"packages/runtime-core/__tests__/components/Suspense.spec.ts 6581 / 178 KiB, packages/runtime-core/__tests__/hydration.spec.ts 4777 / 148 KiB, packages/vue/__tests__/e2e/Transition.spec.ts 4402 / 137 KiB, packages/compiler-core/__tests__/parse.spec.ts 3471 / 99 KiB, packages/runtime-core/src/renderer.ts 2714 / 76 KiB, …"}
+vuejs/core	smell	modernity	package.json (esbuild-plugin-polyfill-node)	issue.deps.deprecated	{"name":"esbuild-plugin-polyfill-node","version":"0.3.0","message":"Package no longer supported. Contact Support at https://www.npmjs.com/support for more info."}
+vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
+vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
+wilsonzlin/fastrender	review	order	./	issue.measure.copies	{"count":161,"groups":"2 × 1.0 MiB: tests/pages/fixtures/quora.com/assets/ea61b1fb643e6324dc16cbb13b9d95ee.png, tests/pages/fixtures/quora.com/assets/ea61b1fb643e6324dc16cbb13b9d95ee.webp; 2 × 972 KiB: tests/pages/fixtures/gitlab.com/assets/a5817ad513817e667025d73720b8f0b0.svg, tests/pages/fixtures/gitlab.io/assets/a5817ad513817e667025d73720b8f0b0.svg; 6 × 152 KiB: tests/pages/fixtures/developer.mozilla.org_en-US_docs_Learn_Forms_Your_first_form/assets/17c7d389bfc70abce77cf834151f358e.woff2, tests/pages/fixtures/developer.mozilla.org_en-US_docs_Web_CSS_CSS_multicol_layout_Using_multi-column_layouts/assets/17c7d389bfc70abce77cf834151f358e.woff2, tests/pages/fixtures/developer.mozilla.org_en-US_docs_Web_CSS_text-combine-upright/assets/17c7d389bfc70abce77cf834151f358e.woff2, …; …"}
+wilsonzlin/fastrender	review	order	./	issue.measure.flatDirs	{"count":18,"limit":50,"dirs":"src/layout/tests/ 463, tests/browser_integration/ 290, src/paint/tests/paint/ 278, src/style/tests/style/ 210, src/ui/ 131, …"}
+wilsonzlin/fastrender	review	order	./	issue.measure.longFiles	{"count":443,"lines":1000,"kib":100,"files":"src/js/vmjs/window_realm.rs 77266 / 2605 KiB, src/style/cascade.rs 41374 / 1304 KiB, src/style/properties.rs 39952 / 1224 KiB, src/api.rs 36344 / 1234 KiB, src/bin/browser.rs 32936 / 1155 KiB, …"}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/MotionEST/	issue.contract.pythonModuleName	{"name":"Anandan","count":7}
+wilsonzlin/fastrender	smell	convention	crates/libvpx-sys-bundled/upstream/libvpx/tools/3D-Reconstruction/genY4M/genY4M.py	issue.contract.pythonModuleName	{"name":"genY4M","count":1}
+wilsonzlin/fastrender	smell	modernity	.github/workflows/typecheck_ts_conformance_upstream.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/resources/	issue.twins.styles	{"styles":"snake_case ×9 + kebab-case ×2","examples":"eventtarget_shim.js, testdriver-actions.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/	issue.twins.styles	{"styles":"snake_case ×59 + kebab-case ×11 + camelCase ×1","examples":"assert_throws_dom_legacy_domexception_names.window.js, cross-document-appendchild-adopts.window.js, getDomExceptionName.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/dom/collections/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×1","examples":"getelementsbyclassname-live.window.js, length_readonly.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/domparsing/	issue.twins.styles	{"styles":"snake_case ×3 + kebab-case ×3","examples":"domparser_parsefromstring_html.window.js, innerhtml-comments.window.js"}
+wilsonzlin/fastrender	smell	order	tests/wpt_dom/tests/html_integration/resources/	issue.twins.styles	{"styles":"kebab-case ×4 + snake_case ×3","examples":"defer-1.js, import_meta_resolve_foo.js"}
+zed-industries/zed	review	cleanliness	crates/zed/resources/windows/bin/x64/OpenConsole.exe	issue.leftover.executable	{}
+zed-industries/zed	review	order	./	issue.measure.copies	{"count":8,"groups":"2 × 164 KiB: crates/gpui/examples/image/app-icon.png, crates/zed/resources/app-icon.png; 2 × 12 KiB: crates/agent/src/tools/evals/fixtures/delete_run_git_blame/before.rs, crates/agent/src/tools/evals/fixtures/extract_handle_command_output/before.rs; 2 × 12 KiB: crates/zed/contents/dev/embedded.provisionprofile, crates/zed/contents/nightly/embedded.provisionprofile; …"}
+zed-industries/zed	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"crates/editor/src/ 58"}
+zed-industries/zed	review	order	./	issue.measure.longFiles	{"count":445,"lines":1000,"kib":100,"files":"crates/editor/src/editor_tests.rs 51867 / 1635 KiB, crates/acp_thread/src/acp_thread.rs 26628 / 1024 KiB, crates/project/tests/integration/project_tests.rs 23478 / 782 KiB, crates/agent_ui/src/conversation_view.rs 22379 / 857 KiB, crates/workspace/src/workspace.rs 21569 / 798 KiB, …"}
+zed-industries/zed	review	order	docs/AGENTS.md	issue.measure.instructions	{"lines":587,"limit":300}
+zed-industries/zed	smell	cleanliness	.agents/	issue.leftover.ignoredTracked	{"count":4}
+zed-industries/zed	smell	cleanliness	crates/project_panel/benches/linux_repo_snapshot.txt	issue.leftover.ignoredTracked	{"count":1}
+zed-industries/zed	smell	order	script/	issue.twins.styles	{"styles":"kebab-case ×10 + snake_case ×2","examples":"github-assign-contributor-issue.py, github_helpers.py"}
+ziglang/zig	review	order	./	issue.measure.copies	{"count":1,"groups":"2 × 156 KiB: lib/zig.h, stage1/zig.h"}
+ziglang/zig	review	order	./	issue.measure.flatDirs	{"count":7,"limit":50,"dirs":"test/cases/compile_errors/ 961, lib/compiler_rt/ 294, doc/langref/ 288, test/behavior/ 116, test/cases/safety/ 104, …"}
+ziglang/zig	review	order	./	issue.measure.longFiles	{"count":229,"lines":1000,"kib":100,"files":"src/codegen/x86_64/CodeGen.zig 190207 / 10685 KiB, lib/compiler_rt/udivmodti4_test.zig 65300 / 10009 KiB, src/Sema.zig 37745 / 1573 KiB, lib/compiler_rt/udivmoddi4_test.zig 20613 / 1851 KiB, src/codegen/aarch64/encoding.zig 16597 / 651 KiB, …"}
+ziglang/zig	smell	cleanliness	test/cases/compile_errors/zon/desktop.ini	issue.no.because	{"reason":{"t":"reason.osJunk"}}
+ziglang/zig	smell	order	lib/compiler/	issue.twins.styles	{"styles":"snake_case ×2 + kebab-case ×1","examples":"build_runner.zig, std-docs.zig"}
+ziglang/zig	smell	order	lib/compiler_rt/	issue.twins.styles	{"styles":"snake_case ×71 + camelCase ×3","examples":"aarch64_outline_atomics.zig, mulXi3.zig"}
+ziglang/zig	smell	order	test/behavior/	issue.twins.styles	{"styles":"snake_case ×48 + kebab-case ×2","examples":"addrspace_and_linksection.zig, packed-struct.zig"}
+ziglang/zig	smell	order	test/cases/compile_errors/	issue.twins.styles	{"styles":"snake_case ×705 + kebab-case ×1","examples":"access_inactive_union_field_comptime.zig, non-comptime-parameter-used-as-array-size.zig"}
+ziglang/zig	smell	order	tools/	issue.twins.styles	{"styles":"snake_case ×16 + kebab-case ×3","examples":"fetch_them_macos_headers.zig, dump-cov.zig"}
+zopefoundation/ZODB	review	order	./	issue.measure.flatDirs	{"count":1,"limit":50,"dirs":"src/ZODB/tests/ 60"}
+zopefoundation/ZODB	review	order	./	issue.measure.longFiles	{"count":7,"lines":1000,"kib":100,"files":"src/ZODB/FileStorage/FileStorage.py 2238 / 76 KiB, src/ZODB/interfaces.py 1467 / 54 KiB, src/ZODB/tests/testConnection.py 1446 / 43 KiB, src/ZODB/Connection.py 1366 / 49 KiB, src/ZODB/scripts/tests/test_repozo.py 1304 / 51 KiB, …"}
+zopefoundation/ZODB	smell	convention	src/ZODB/	issue.contract.pythonModuleName	{"name":"ActivityMonitor","count":11}
+zopefoundation/ZODB	smell	convention	src/ZODB/	issue.contract.pythonPackageName	{"name":"ZODB","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/FileStorage/	issue.contract.pythonPackageName	{"name":"FileStorage","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/FileStorage/FileStorage.py	issue.contract.pythonModuleName	{"name":"FileStorage","count":1}
+zopefoundation/ZODB	smell	convention	src/ZODB/tests/	issue.contract.pythonModuleName	{"name":"BasicStorage","count":37}

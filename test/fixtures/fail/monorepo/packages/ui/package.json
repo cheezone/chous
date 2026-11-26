@@ -1,0 +1,9 @@
+{
+  "name": "@demo/ui",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "vue": "^3.5.0",
+    "zod": "^4.0.0"
+  }
+}

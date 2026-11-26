@@ -1,3 +1,0 @@
-# Test: Basic allow rule in nested directory
-in docs:
-  allow *.md

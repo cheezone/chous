@@ -1,42 +1,29 @@
-import { MoveRuleValidator } from "./move";
-import { ThoseOnlyRuleValidator } from "./thoseOnly";
-import { RenameDirRuleValidator } from "./renameDir";
-import { RenameGlobRuleValidator } from "./renameGlob";
 import { NoFilesRuleValidator } from "./no";
-import { HasFileRuleValidator } from "./has";
-import { AllowRuleValidator } from "./allow";
-import { OptionalRuleValidator } from "./optional";
-import { NamingRuleValidator } from "./naming";
-import { InDirOnlyRuleValidator } from "./inDirOnly";
-import { StackRuleValidator } from "./deps";
-import { RoleRuleValidator } from "./role";
+import { DepsRuleValidator, LockedDeprecationsValidator } from "./deps";
+import { ManifestRuleValidator, WorkspaceRuleValidator } from "./manifest";
+import { LifecycleRuleValidator } from "./lifecycle";
+import { ContractsRuleValidator } from "./contracts";
+import { ArtifactsRuleValidator, LeftoverRuleValidator, TwinsRuleValidator } from "./hygiene";
+import { MeasuresRuleValidator } from "./measures";
+import type { Rule } from "../../types";
 import type { RuleValidator } from "./types";
 
-/**
- * All available rule validators
- */
-export const validators: RuleValidator[] = [
-  new MoveRuleValidator(),
-  new ThoseOnlyRuleValidator(),
-  new RenameDirRuleValidator(),
-  new RenameGlobRuleValidator(),
+const validators: RuleValidator[] = [
   new NoFilesRuleValidator(),
-  new HasFileRuleValidator(),
-  new AllowRuleValidator(),
-  new OptionalRuleValidator(),
-  new NamingRuleValidator(),
-  new InDirOnlyRuleValidator(),
-  new StackRuleValidator(),
-  new RoleRuleValidator(),
+  new DepsRuleValidator(),
+  new LockedDeprecationsValidator(),
+  new ManifestRuleValidator(),
+  new WorkspaceRuleValidator(),
+  new LifecycleRuleValidator(),
+  new ContractsRuleValidator(),
+  new ArtifactsRuleValidator(),
+  new LeftoverRuleValidator(),
+  new MeasuresRuleValidator(),
+  new TwinsRuleValidator(),
 ];
 
-/**
- * Find a validator that can handle the given rule
- */
-export function findValidator(rule: any): RuleValidator | undefined {
-  return validators.find(v => v.canHandle(rule));
+export function findValidator(rule: Rule): RuleValidator | undefined {
+  return validators.find((v) => v.canHandle(rule));
 }
 
 export type { RuleValidator, RuleValidatorContext } from "./types";
-export { processInDirOnlyGroup } from "./inDirOnly";
-export { BaseRuleValidator, RuleStatisticsCollector, type RuleMetrics } from "./base";

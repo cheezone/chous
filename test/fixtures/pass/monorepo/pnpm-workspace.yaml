@@ -1,0 +1,6 @@
+packages:
+  - apps/*
+  - packages/*
+
+catalog:
+  vue: ^3.5.0

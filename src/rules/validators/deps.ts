@@ -1,16 +1,13 @@
-import type { DepsRule, PackageManagerRule, ReplaceDepRule, Rule } from "../../types";
+import { existsSync, statSync } from "node:fs";
+import { dirname, join, relative, resolve, sep } from "node:path";
+import type { DeprecatedRule, DepsRule, Rule } from "../../types";
+import { readText } from "../../fsutil";
+import { npmLocked, pnpmLocked, type Locked } from "../../vfs/lockfile";
+import { DEPRECATED } from "../../taste/deps";
+import { FACT_EOL } from "../../facts";
 import type { RuleValidatorContext } from "./types";
 import { issueFromRule } from "./types";
 import { BaseRuleValidator } from "./base";
-import { readPackageManifestSnapshot } from "../../vfs/snapshot";
-
-type StackRule = PackageManagerRule | DepsRule | ReplaceDepRule;
-
-/** Re-export for tests that import the old helper. */
-export function readPackageManifest(root: string) {
-  const snap = readPackageManifestSnapshot(root);
-  return { exists: snap.exists, manager: snap.manager, deps: snap.deps };
-}
 
 /** `name` or a scope wildcard such as `@scope/*`. */
 export function depMatches(pattern: string, name: string): boolean {
@@ -21,98 +18,87 @@ export function depMatches(pattern: string, name: string): boolean {
   return name === pattern;
 }
 
-function namesMatching(pattern: string, deps: Set<string>): string[] {
-  const matched: string[] = [];
-  for (const name of deps) {
-    if (depMatches(pattern, name)) matched.push(name);
-  }
-  return matched.sort();
-}
-
 function safeLabel(label: string): string {
   return label.replaceAll("/", "∕");
 }
 
-export class StackRuleValidator extends BaseRuleValidator<StackRule> {
-  canHandle(rule: Rule): rule is StackRule {
-    return rule.kind === "packageManager" || rule.kind === "deps" || rule.kind === "replaceDep";
+/** Dependencies their authors ended, or the platform replaced, with what to use instead. */
+export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
+  canHandle(rule: Rule): rule is DepsRule {
+    return rule.kind === "deps";
   }
 
-  protected async validateInternal(
-    rule: StackRule,
-    context: RuleValidatorContext,
-  ): Promise<{ hitCount: number }> {
+  protected async validateInternal(rule: DepsRule, context: RuleValidatorContext) {
     const manifest = context.snapshot.manifest;
     let hitCount = 0;
-
-    if (rule.kind === "packageManager") {
-      if (manifest.manager === rule.manager) return { hitCount: 0 };
-      hitCount = 1;
-      context.rawIssues.push(issueFromRule(rule, {
-        path: `${manifest.path}#manager:${rule.manager}`,
-        displayPath: `package.json (${safeLabel(rule.manager)})`,
-        message: manifest.manager
-          ? { key: "issue.packageManager.wrong", params: { expected: rule.manager, actual: manifest.manager } }
-          : { key: "issue.packageManager.missing", params: { expected: rule.manager } },
-        category: manifest.manager ? "forbidden" : "missing",
-        severity: "error",
-        fix: { type: "pkgSetManager", pkgJsonPath: manifest.path, manager: rule.manager },
-      })); // resolution:auto via issueFromRule when fix is set
-      return { hitCount };
-    }
-
-    if (rule.kind === "deps" && rule.mode === "must") {
-      for (const pattern of rule.names) {
-        if (namesMatching(pattern, manifest.deps).length > 0) {
-          hitCount++;
-          continue;
-        }
+    for (const pattern of rule.names) {
+      for (const name of [...manifest.deps].filter((dep) => depMatches(pattern, dep)).sort()) {
         hitCount++;
         context.rawIssues.push(issueFromRule(rule, {
-          path: `${manifest.path}#missing:${pattern}`,
-          displayPath: `package.json (${safeLabel(pattern)})`,
-          message: { key: "issue.deps.missing", params: { name: pattern } },
-          category: "missing",
-          severity: "error",
+          path: `${manifest.path}#forbidden:${name}`,
+          displayPath: `package.json (${safeLabel(name)})`,
+          message: { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
+          // The authors' own words are in the message already.
+          reason: false,
         }));
       }
-      return { hitCount };
     }
+    return { hitCount };
+  }
+}
 
-    if (rule.kind === "deps" && rule.mode === "no") {
-      const replaceFrom = context.config.rules
-        .filter((r): r is ReplaceDepRule => r.kind === "replaceDep")
-        .map((r) => r.from);
+/** What the project's lockfile recorded, read once per lockfile per process. */
+const LOCKFILES = ["pnpm-lock.yaml", "package-lock.json", "npm-shrinkwrap.json"];
+const lockCache = new Map<string, string>();
 
-      for (const pattern of rule.names) {
-        for (const name of namesMatching(pattern, manifest.deps)) {
-          if (replaceFrom.some((from) => depMatches(from, name))) continue;
-          hitCount++;
-          context.rawIssues.push(issueFromRule(rule, {
-            path: `${manifest.path}#forbidden:${name}`,
-            displayPath: `package.json (${safeLabel(name)})`,
-            message: { key: "issue.deps.forbidden", params: { name } },
-            category: "forbidden",
-            severity: "error",
-          }));
-        }
-      }
-      return { hitCount };
+/**
+ * The project's direct dependencies as its lockfile has them: the lockfile in
+ * the project's directory or above it (a workspace root's), up to the
+ * repository's root, and only one that lists this project.
+ */
+function lockedDependencies(root: string): Map<string, Locked> | undefined {
+  let dir = resolve(root);
+  for (let depth = 0; depth < 16; depth++) {
+    for (const name of LOCKFILES) {
+      const path = join(dir, name);
+      if (!existsSync(path)) continue;
+      const stamp = statSync(path);
+      const key = `${path}\u0000${stamp.size}\u0000${stamp.mtimeMs}`;
+      const text = lockCache.get(key) ?? readText(path, 128 * 1024 * 1024);
+      lockCache.set(key, text);
+      const importer = relative(dir, root).split(sep).join("/") || ".";
+      return name === "pnpm-lock.yaml" ? pnpmLocked(text, importer) : npmLocked(text, importer);
     }
+    if (existsSync(join(dir, ".git"))) return undefined;
+    const parent = dirname(dir);
+    if (parent === dir) return undefined;
+    dir = parent;
+  }
+  return undefined;
+}
 
-    if (rule.kind !== "replaceDep") return { hitCount };
-    for (const name of namesMatching(rule.from, manifest.deps)) {
+/** Packages chous already knows with a replacement (src/facts/packages/npm.ts) or by their end-of-life schedule. */
+const KNOWN = new Set(DEPRECATED.flatMap((d) => d.names));
+const SCHEDULED = new Set(FACT_EOL.flatMap((e) => (e.dep ? [e.dep] : [])));
+
+/** Direct dependencies whose authors set a deprecation on the npm registry, in their own words. */
+export class LockedDeprecationsValidator extends BaseRuleValidator<DeprecatedRule> {
+  canHandle(rule: Rule): rule is DeprecatedRule {
+    return rule.kind === "deprecated";
+  }
+
+  protected async validateInternal(rule: DeprecatedRule, context: RuleValidatorContext) {
+    const manifest = context.snapshot.manifest;
+    if (!manifest.exists) return { hitCount: 0 };
+    const locked = lockedDependencies(context.root);
+    let hitCount = 0;
+    for (const [name, { version, deprecated }] of [...(locked ?? [])].sort(([a], [b]) => a.localeCompare(b))) {
+      if (!deprecated || !manifest.deps.has(name) || KNOWN.has(name) || SCHEDULED.has(name)) continue;
       hitCount++;
-      const canFix = !rule.from.endsWith("/*");
       context.rawIssues.push(issueFromRule(rule, {
-        path: `${manifest.path}#replace:${name}`,
-        displayPath: `package.json (replace ${safeLabel(name)})`,
-        message: { key: "issue.replaceDep.replace", params: { from: name, to: rule.to } },
-        category: "forbidden",
-        severity: "error",
-        ...(canFix
-          ? { fix: { type: "pkgReplaceDep" as const, pkgJsonPath: manifest.path, from: name, to: rule.to } }
-          : {}),
+        path: `${manifest.path}#deprecated:${name}`,
+        displayPath: `package.json (${safeLabel(name)})`,
+        message: { key: "issue.deps.deprecated", params: { name, version, message: deprecated.slice(0, 300) } },
       }));
     }
     return { hitCount };

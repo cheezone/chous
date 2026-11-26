@@ -1,11 +1,6 @@
-export { parseFsLintConfig } from "./config/parser";
-export { compileConfig } from "./config/compiler";
-export { resolveWorkspaceRoots } from "./config/where";
 export { lintWorkspace } from "./rules/lint";
-export { applySafeFixes } from "./rules/autofix";
-export { renderReport } from "./rules/report";
+export { renderReport, reportToJSON } from "./rules/report";
+export { resolveTaste, type Taste } from "./taste";
 export { buildWorkspaceSnapshot, createMemorySnapshot } from "./vfs/snapshot";
-export { getKnowledge, knowledgeToJSON, detectKinds, detectRoleOccupancy } from "./knowledge";
 export { scanDirectory, findGitRepos, formatScanText } from "./scan";
-export type { FsLintConfig, Issue, LintResult, Rule, SafeFix, Severity, Resolution, RoleRule } from "./types";
-
+export type { Issue, LintResult, Rule, Value, Verdict } from "./types";

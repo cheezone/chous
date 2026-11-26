@@ -1,0 +1,23 @@
+// Written by `pnpm run sync` from https://www.djangoproject.com/download/ — do not edit.
+export default [
+  { version: "1.3", date: "2013-02-26" },
+  { version: "1.4", date: "2015-10-01" },
+  { version: "1.5", date: "2014-09-02" },
+  { version: "1.6", date: "2015-04-01" },
+  { version: "1.7", date: "2015-12-01" },
+  { version: "1.8", date: "2018-04-01" },
+  { version: "1.9", date: "2017-04-04" },
+  { version: "1.10", date: "2017-12-02" },
+  { version: "1.11", date: "2020-04-01" },
+  { version: "2.0", date: "2019-04-01" },
+  { version: "2.1", date: "2019-12-02" },
+  { version: "2.2", date: "2022-04-11" },
+  { version: "3.0", date: "2021-04-06" },
+  { version: "3.1", date: "2021-12-07" },
+  { version: "3.2", date: "2024-04-01" },
+  { version: "4.0", date: "2023-04-01" },
+  { version: "4.1", date: "2023-12-01" },
+  { version: "4.2", date: "2026-04-07" },
+  { version: "5.0", date: "2025-04-02" },
+  { version: "5.1", date: "2025-12-03" },
+] as const;

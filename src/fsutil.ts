@@ -1,9 +1,8 @@
-import { stat, readFile } from "node:fs/promises";
-import { existsSync } from "node:fs";
-import { basename, dirname, relative, resolve, sep } from "node:path";
+import { stat } from "node:fs/promises";
+import { closeSync, constants, existsSync, fstatSync, openSync, readSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { dirname, relative, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
-import ignore from "ignore";
-import { APP_IGNORE_FILE_NAME } from "./constants";
 
 export const DEFAULT_IGNORE_DIRS = new Set([
   "node_modules",
@@ -11,16 +10,68 @@ export const DEFAULT_IGNORE_DIRS = new Set([
   "build",
 ]);
 
+/** What chous reads of any one file. The checks need a file's start, or a manifest; nothing needs more. */
+export const READ_LIMIT = 16 * 1024 * 1024;
+
+/**
+ * The first `limit` bytes of a regular file, or nothing. A device, FIFO or
+ * socket is never read: a committed symlink to /dev/zero would never end, and
+ * /dev/tty would wait for a keypress. Opened non-blocking, checked after open.
+ */
+export function readBytes(path: string, limit = READ_LIMIT, fromEnd = false): Buffer {
+  let fd: number | undefined;
+  try {
+    fd = openSync(path, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
+    const stat = fstatSync(fd);
+    if (!stat.isFile()) return Buffer.alloc(0);
+    const size = Math.min(stat.size, limit);
+    const start = fromEnd ? stat.size - size : 0;
+    const buf = Buffer.alloc(size);
+    let read = 0;
+    while (read < size) {
+      const n = readSync(fd, buf, read, size - read, start + read);
+      if (n === 0) break;
+      read += n;
+    }
+    return buf.subarray(0, read);
+  } catch {
+    return Buffer.alloc(0);
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
+
+/**
+ * A regular file's content hash, read in chunks so a large file never sits in
+ * memory; undefined for anything that is not a regular file. The same caution
+ * as readBytes: opened non-blocking, checked after open.
+ */
+export function hashFile(path: string): string | undefined {
+  let fd: number | undefined;
+  try {
+    fd = openSync(path, constants.O_RDONLY | (constants.O_NONBLOCK ?? 0));
+    if (!fstatSync(fd).isFile()) return undefined;
+    const hash = createHash("sha256");
+    const chunk = Buffer.alloc(1024 * 1024);
+    for (let n = readSync(fd, chunk, 0, chunk.length, null); n > 0; n = readSync(fd, chunk, 0, chunk.length, null)) hash.update(chunk.subarray(0, n));
+    return hash.digest("hex");
+  } catch {
+    return undefined;
+  } finally {
+    if (fd !== undefined) closeSync(fd);
+  }
+}
+
+/** The last `bytes` bytes of a regular file: where a disk image keeps its signature. */
+export const readTail = (path: string, bytes: number) => readBytes(path, bytes, true);
+
+/** A regular file's text (UTF-8), up to `limit` bytes; "" when it cannot be read as one. */
+export const readText = (path: string, limit = READ_LIMIT) => readBytes(path, limit).toString("utf8");
+
 export function toDisplayPath(absPath: string, root: string): string {
   const rel = relative(root, absPath) || ".";
   // Uniformly display as posix style to avoid inconsistent output on Windows/Mac
   return rel.split(sep).join("/");
-}
-
-export function pickTopLevelName(rel: string): string {
-  const cleaned = rel.replace(/^\.\//, "");
-  const seg = cleaned.split("/")[0];
-  return seg && seg !== "." ? seg : ".";
 }
 
 export function exists(p: string): boolean {
@@ -49,8 +100,9 @@ function appendGitIgnoreFile(
     const hasSlash = line.slice(0, -1).includes("/");
     let p = line;
     if (hasSlash || p.startsWith("/")) {
-      // Has slash or starts with slash → relative to this .gitignore's directory
-      if (p.startsWith("/")) p = p.slice(1);
+      // Has slash or starts with slash → relative to this .gitignore's directory.
+      // At the root the leading slash stays: `/*.js` is the root's files only, `*.js` would be every directory's.
+      if (p.startsWith("/") && prefix) p = p.slice(1);
       p = prefix + p;
     } else {
       // No slash → match this name in current directory and any subdirectories
@@ -76,7 +128,7 @@ export async function loadGitIgnorePatterns(
       const abs = resolve(root, ".gitignore");
       if (existsSync(abs)) {
         try {
-          appendGitIgnoreFile(allPatterns, await readFile(abs, "utf-8"), "");
+          appendGitIgnoreFile(allPatterns, readText(abs), "");
         } catch { /* ignore */ }
       }
       return allPatterns;
@@ -86,6 +138,7 @@ export async function loadGitIgnorePatterns(
       cwd: root,
       dot: true,
       ignore: ["**/node_modules/**", "**/.git/**"],
+      followSymbolicLinks: false,
     });
 
     for (const relFile of gitignoreFiles) {
@@ -93,97 +146,10 @@ export async function loadGitIgnorePatterns(
       const dir = dirname(relFile);
       const prefix = dir === "." ? "" : dir + "/";
       try {
-        appendGitIgnoreFile(allPatterns, await readFile(absFile, "utf-8"), prefix);
+        appendGitIgnoreFile(allPatterns, readText(absFile), prefix);
       } catch { /* ignore */ }
     }
   } catch { /* ignore */ }
   return allPatterns;
 }
 
-export async function walkFiles(dir: string, opts?: { gitignore?: boolean; root?: string }): Promise<string[]> {
-  const root = opts?.root ?? dir;
-  const ignorePatterns = Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`);
-
-  const matches = await glob("**/*", {
-    cwd: dir,
-    absolute: true,
-    dot: true,
-    onlyFiles: true,
-    ignore: ignorePatterns,
-  });
-
-  const absMatches = matches.map((p) => resolve(p));
-  if (opts?.gitignore === false) return absMatches;
-
-  const patterns = await loadGitIgnorePatterns(root);
-  const ig = ignore().add(patterns);
-
-  return absMatches.filter(abs => {
-    const rel = relative(root, abs).split(sep).join("/");
-    return !ig.ignores(rel);
-  });
-}
-
-export async function listTopLevel(root: string, opts?: { gitignore?: boolean }): Promise<{ name: string; abs: string; isDir: boolean }[]> {
-  const ignorePatterns = Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`);
-  const matches = await glob("*", {
-    cwd: root,
-    absolute: true,
-    dot: true,
-    onlyFiles: false,
-    ignore: ignorePatterns,
-  });
-
-  let absMatches = matches.map((p) => resolve(p));
-
-  if (opts?.gitignore !== false) {
-    const patterns = await loadGitIgnorePatterns(root);
-    const ig = ignore().add(patterns);
-    absMatches = absMatches.filter(abs => {
-      const rel = relative(root, abs).split(sep).join("/");
-      return !ig.ignores(rel);
-    });
-  }
-
-  const out = [];
-  for (const abs of absMatches) {
-    const s = await stat(abs);
-    out.push({ name: basename(abs), abs, isDir: s.isDirectory() });
-  }
-  return out;
-}
-
-/**
- * Load .chousignore patterns from project root
- */
-export async function loadChousIgnorePatterns(root: string): Promise<string[]> {
-  const patterns: string[] = [];
-  try {
-    const chousignorePath = resolve(root, APP_IGNORE_FILE_NAME);
-    if (!existsSync(chousignorePath)) return patterns;
-
-    const content = await readFile(chousignorePath, "utf-8");
-    const lines = content.split(/\r?\n/).filter((l) => l.trim() && !l.startsWith("#"));
-
-    for (const line of lines) {
-      const trimmed = line.trim();
-      if (trimmed) {
-        patterns.push(trimmed);
-      }
-    }
-  } catch {
-    // Ignore errors (e.g., file doesn't exist, permission issues)
-  }
-  return patterns;
-}
-
-export async function isPathIgnored(absPath: string, root: string): Promise<boolean> {
-  const base = basename(absPath);
-  if (DEFAULT_IGNORE_DIRS.has(base)) return true;
-
-  const rel = relative(root, absPath).split(sep).join("/");
-  const patterns = await loadGitIgnorePatterns(root);
-  const ig = ignore().add(patterns);
-
-  return ig.ignores(rel);
-}

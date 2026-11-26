@@ -14,15 +14,18 @@
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint ./src",
-    "typesafe-i18n": "typesafe-i18n --no-watch",
     "prepare": "simple-git-hooks",
-    "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog"
+    "release": "pnpm run test && pnpm run build && changelogen --release --push --no-output --no-changelog",
+    "sources": "tsx scripts/sources.ts",
+    "sync": "tsx scripts/sync.ts",
+    "docs": "tsx scripts/docs.ts",
+    "corpus": "tsx scripts/corpus.ts"
   },
   "simple-git-hooks": {
     "pre-commit": "pnpm run typecheck",
     "commit-msg": "pnpm exec commitlint --edit"
   },
-  "description": "Opinionated taste linter. Follow a real person's layout and stack.",
+  "description": "Opinionated taste linter. No config: sniffs out what has rotten, not what is out of fashion.",
   "author": "Cheez Lin <https://cheez.tech>",
   "license": "MIT",
   "repository": {
@@ -37,11 +40,11 @@
     "lint",
     "linter",
     "taste",
-    "persona",
+    "opinionated",
+    "zero-config",
     "filesystem",
     "file-structure",
-    "cli",
-    "i18n"
+    "cli"
   ],
   "engines": {
     "node": ">=22",
@@ -58,11 +61,11 @@
     "@types/picomatch": "^4.0.3",
     "changelogen": "^0.6.2",
     "commitlint-plugin-function-rules": "^5.0.1",
+    "i18next": "^27.2.6",
     "oxlint": "^1.82.0",
     "simple-git-hooks": "^2.14.0",
     "tsdown": "^0.23.0",
     "tsx": "^4.23.13",
-    "typesafe-i18n": "^5.27.1",
     "typescript": "^7.0.2",
     "vitest": "^5.0.0"
   },
@@ -75,19 +78,18 @@
   },
   "files": [
     "dist",
-    "presets",
-    "templates",
     "README.md",
     "README.zh.md",
     "public",
-    "LICENSE"
+    "LICENSE",
+    "docs/manifesto.md",
+    "docs/rules.md",
+    "docs/rules.zh.md",
+    "docs/manifesto.zh.md"
   ],
   "dependencies": {
     "@manypkg/get-packages": "^3.1.0",
-    "@specfy/stack-analyser": "^1.27.6",
-    "compare-versions": "^6.1.1",
     "ignore": "^7.0.9",
-    "module-replacements": "^3.4.0",
     "picomatch": "^4.0.7",
     "tinyglobby": "^0.2.17"
   }

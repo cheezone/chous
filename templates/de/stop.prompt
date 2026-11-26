@@ -1,5 +1,0 @@
-Die Projektregeln haben Probleme in der Dateistruktur gefunden.
-
-1. Behebe die unten aufgeführten Probleme
-2. Führe `chous --verbose` aus und bestätige, dass keine Probleme mehr bleiben
-3. Behaupte nicht, dass alles behoben ist, bevor dieser Befehl keine Probleme mehr meldet

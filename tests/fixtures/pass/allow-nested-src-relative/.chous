@@ -1,2 +1,0 @@
-in src:
-  allow subdir/*.ts

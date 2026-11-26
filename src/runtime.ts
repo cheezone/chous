@@ -1,8 +1,7 @@
-import type { Locales } from "./i18n/i18n-types";
+import type { Locale } from "./i18n";
 
-// Supported languages are exactly the locales provided by the i18n dictionaries.
-// Deriving the type from the generated `Locales` keeps a single source of truth.
-type SupportedLang = Locales;
+/** The languages chous speaks: exactly the locales in src/locales/. */
+type SupportedLang = Locale;
 
 export type SystemLangInput = {
   platform: NodeJS.Platform;
@@ -20,14 +19,6 @@ function mapToSupportedLang(localeTag: string): SupportedLang | undefined {
 
   if (tag.startsWith("zh")) return "zh";
   if (tag.startsWith("en")) return "en";
-  if (tag.startsWith("es")) return "es";
-  if (tag.startsWith("de")) return "de";
-  if (tag.startsWith("fr")) return "fr";
-  if (tag.startsWith("ja")) return "ja";
-  if (tag.startsWith("ko")) return "ko";
-
-  if (tag.startsWith("pt")) return "pt-BR"; // Currently only supports pt-BR
-
   return undefined;
 }
 

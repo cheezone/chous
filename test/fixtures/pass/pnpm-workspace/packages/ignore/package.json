@@ -1,0 +1,5 @@
+{
+  "name": "@demo/ignore",
+  "type": "module",
+  "private": true
+}

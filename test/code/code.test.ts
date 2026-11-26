@@ -1,0 +1,69 @@
+import { describe, expect, it } from "vitest";
+import { spawnSync } from "node:child_process";
+import { resolve } from "node:path";
+import { readdirSync } from "node:fs";
+
+const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
+const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
+const FIXTURES = resolve(PROJECT_ROOT, "test/fixtures");
+
+function runCli(cwd: string, verbose = false) {
+  const args = ["--import", "tsx", CLI_PATH, "--no-color", "-l", "en", ...(verbose ? ["-v"] : [])];
+  const proc = spawnSync(process.execPath, args, {
+    cwd,
+    encoding: "utf8",
+    env: { ...process.env, NO_COLOR: "1" },
+  });
+  return { code: proc.status, stdout: proc.stdout ?? "", stderr: proc.stderr ?? "" };
+}
+
+function fixtures(kind: "pass" | "fail"): string[] {
+  return readdirSync(resolve(FIXTURES, kind), { withFileTypes: true })
+    .filter((e) => e.isDirectory())
+    .map((e) => e.name)
+    .sort();
+}
+
+/** What each failing fixture must report — failing for the wrong reason is a bug. */
+const EXPECTED: Record<string, string[]> = {
+  eol: [
+    ".nvmrc (Node 16) → Node 16 reached end of life on 2023-09-11",
+    "Dockerfile (Python 2.7) → Python 2.7 reached end of life on 2020-01-01",
+    "package.json (Vue 2) → Vue 2 reached end of life on 2023-12-31",
+  ],
+  garbage: [
+    "moment: Its maintainers call it a legacy project in maintenance mode. → dayjs",
+    "node-sass 9.0.0, deprecated by its authors on npm: “Node Sass is no longer supported. Please use `sass` or `sass-embedded` instead.”",
+  ],
+  js: ["src/ → mixes camelCase ×1 + kebab-case ×1 names"],
+  monorepo: [
+    "zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)",
+    "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
+  ],
+};
+
+describe("fixtures that match the taste", () => {
+  for (const name of fixtures("pass")) {
+    it(name, () => {
+      const r = runCli(resolve(FIXTURES, "pass", name));
+      if (r.code !== 0) console.log(r.stdout, r.stderr);
+      expect(r.code).toBe(0);
+      expect(r.stdout).toContain("Nothing smells");
+    });
+  }
+});
+
+describe("fixtures that break the taste", () => {
+  for (const name of fixtures("fail")) {
+    it(name, () => {
+      const r = runCli(resolve(FIXTURES, "fail", name), true);
+      expect(r.code, r.stdout + r.stderr).toBe(1);
+      const expected = EXPECTED[name];
+      expect(expected, `add an EXPECTED entry for fail/${name}`).toBeDefined();
+      // Verbose mode lists every finding once, flat. Each must be expected — nothing more.
+      const errors = r.stdout.split("\n").filter((line) => /^\s+✗ /.test(line)).map((line) => line.trim().replace(/ +/g, " "));
+      for (const text of expected!) expect(errors.some((line) => line.includes(text)), text).toBe(true);
+      expect(errors, "unexpected findings").toHaveLength(expected!.length);
+    });
+  }
+});

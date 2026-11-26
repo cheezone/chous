@@ -1,178 +1,105 @@
-import { relative, sep } from "node:path";
-import type { FsLintConfig, Issue, LintResult, MoveRule, Rule } from "../types";
-import { toDisplayPath } from "../fsutil";
-import { buildWorkspaceSnapshot } from "../vfs/snapshot";
-import { compileConfig } from "../config/compiler";
-import {
-  findValidator,
-  processInDirOnlyGroup,
-  RuleStatisticsCollector,
-  type RuleValidatorContext,
-} from "./validators";
-import { applyKindImports } from "./apply-kind-imports";
-import { collectRottenDepIssues } from "./validators/rotten";
+import { relative, resolve, sep } from "node:path";
+import type { Issue, LintResult, Rule } from "../types";
+import { buildWorkspaceSnapshot, subSnapshot, type WorkspaceSnapshot } from "../vfs/snapshot";
+import { resolveTaste } from "../taste";
+import { IN_TESTS, LOCKFILES } from "../taste/js";
+import { findValidator, type RuleValidatorContext } from "./validators";
 
-function hasRootLevelOnlyRules(rules: Rule[]): boolean {
-  return rules.every((rule) => {
-    if (rule.kind === "inDirOnly") {
-      return rule.dir === "." || rule.dir === "";
+/** Validate one root (the repo, or one workspace package) against its rules. */
+async function checkRoot(root: string, rules: Rule[], snapshot: WorkspaceSnapshot, today?: string): Promise<Issue[]> {
+  const context: RuleValidatorContext = { root, snapshot, rawIssues: [], today };
+  for (const rule of rules) {
+    try {
+      await findValidator(rule)?.validate(rule, context);
+    } catch (error) {
+      // One check failing on a strange file must not take the others down; say so, and go on.
+      process.stderr.write(`chous: the ${rule.kind} check stopped on ${root}: ${error instanceof Error ? error.message : String(error)}\n`);
     }
-    if (rule.kind === "thoseOnly") {
-      const pattern = rule.pattern.trim();
-      return (pattern.startsWith("./") || (!pattern.includes("/") && !pattern.includes("**"))) &&
-        !pattern.startsWith("**");
-    }
-    if (rule.kind === "has" || rule.kind === "no" || rule.kind === "allow") {
-      return rule.names.every((name) => {
-        const trimmed = name.trim();
-        return !trimmed.includes("/") && !trimmed.includes("**") &&
-          (trimmed.startsWith("./") || trimmed.match(/^\.?\/?[^/]*$/));
-      });
-    }
-    if (
-      rule.kind === "packageManager" ||
-      rule.kind === "deps" ||
-      rule.kind === "replaceDep" ||
-      rule.kind === "role"
-    ) {
-      return true;
-    }
-    if (rule.kind === "naming") {
-      const pattern = rule.pattern.trim();
-      return pattern === "." || pattern === "" ||
-        (pattern.startsWith("./") && !pattern.includes("**") && !pattern.includes("*")) ||
-        (!pattern.includes("/") && !pattern.startsWith("**") && pattern.includes("*"));
-    }
-    return false;
+  }
+
+  // Drop findings on gitignored paths and exact duplicates.
+  const seen = new Set<string>();
+  return context.rawIssues.filter((issue) => {
+    // `path#contract` marks a finding about a file; a `#` may also be part of a real name (`foo#bar/`).
+    const full = relative(root, issue.path).split(sep).join("/");
+    const hash = issue.path.lastIndexOf("#");
+    const rel = snapshot.byRel.has(full) || hash < 0 ? full : relative(root, issue.path.slice(0, hash)).split(sep).join("/");
+    if (rel && !rel.startsWith("..") && snapshot.ig.ignores(rel)) return false;
+    const key = issueKey(issue);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
   });
 }
 
 /**
- * Lint a workspace: snapshot → compile → validate → dedup.
+ * Lint a project: taste → snapshot → validate. In a monorepo every workspace
+ * package is linted as its own project with its own taste.
  */
 export async function lintWorkspace(opts: {
   root: string;
-  config: FsLintConfig;
-  configPath: string;
-  strict?: boolean;
   relevantDirs?: Set<string>;
+  /** YYYY-MM-DD; defaults to today. End-of-life checks compare against it. */
+  today?: string;
 }): Promise<LintResult> {
   const startTime = performance.now();
-  const { root, config, configPath, strict: forceStrict, relevantDirs } = opts;
-  const rawIssues: Issue[] = [];
+  const { root, relevantDirs, today } = opts;
+  const snapshot = await buildWorkspaceSnapshot({ root, relevantDirs });
+  // A pnpm-workspace.yaml may only hold settings; packages make it a monorepo.
+  const monorepo = snapshot.workspace.packages.length > 0;
+  const taste = resolveTaste(root, { monorepo });
+  const issues = await checkRoot(root, taste.rules, snapshot, today);
 
-  const rootOnly = !relevantDirs && hasRootLevelOnlyRules(config.rules);
-  const snapshot = await buildWorkspaceSnapshot({
-    root,
-    rootOnly,
-    relevantDirs,
-  });
-
-  const effectiveConfig = applyKindImports(config, snapshot);
-
-  const compiled = compileConfig(effectiveConfig, snapshot.workspace, { forceStrict, root });
-
-  // Track files claimed by move rules so strict whitelist skips them
-  const moveRules = compiled.rules.filter((r): r is MoveRule => r.kind === "move");
-  const filesMatchedByMoveRules = new Set<string>();
-  for (const rule of moveRules) {
-    for (const abs of snapshot.match(rule.from, { onlyFiles: true })) {
-      if (!toDisplayPath(abs, root).startsWith(`${rule.toDir}/`)) {
-        filesMatchedByMoveRules.add(abs);
-      }
+  const seen = new Set(issues.map(issueKey));
+  // A fixture package is a test input, not the project's own code.
+  for (const pkg of snapshot.workspace.packages.filter((p) => !snapshot.notOurs.test(`${p}/`))) {
+    const pkgRoot = resolve(root, pkg);
+    const pkgTaste = resolveTaste(pkgRoot, { workspacePackage: true });
+    for (const issue of await checkRoot(pkgRoot, pkgTaste.rules, subSnapshot(snapshot, pkg), today)) {
+      // The same finding reached from the root and from a package is reported once.
+      if (seen.has(issueKey(issue))) continue;
+      seen.add(issueKey(issue));
+      issues.push(fromProject(pkg, issue));
     }
   }
 
-  const rootAllowedSet = new Set<string>();
-  const matchedGlobFiles = new Set<string>();
-  const statisticsCollector = new RuleStatisticsCollector();
-  const processedThoseOnlyPatterns = new Map<string, number>();
-
-  const cachedGlobScan = async (
-    pattern: string | string[],
-    cwd: string,
-    _root: string,
-    opts?: { onlyFiles?: boolean },
-  ): Promise<string[]> => {
-    return snapshot.match(pattern, { cwd, onlyFiles: opts?.onlyFiles ?? true });
-  };
-
-  const validatorContext: RuleValidatorContext = {
-    root,
-    snapshot,
-    cachedGlobScan,
-    ig: snapshot.ig,
-    rawIssues,
-    statisticsCollector,
-    inDirGroups: compiled.inDirGroups,
-    rootAllowedSet,
-    filesMatchedByMoveRules,
-    forceStrict,
-    config: { rules: compiled.rules },
-    processedThoseOnlyPatterns,
-    matchedGlobFiles,
-  };
-
-  // 1. Directory whitelist groups (single path — no duplicated loop)
-  for (const [dir, group] of compiled.inDirGroups.entries()) {
-    const firstRuleIndex = compiled.rules.findIndex((r) => r.kind === "inDirOnly" && r.dir === dir);
-    const start = performance.now();
-    const result = await processInDirOnlyGroup(dir, group, validatorContext, filesMatchedByMoveRules);
-    const duration = Math.round(performance.now() - start);
-    if (firstRuleIndex >= 0) {
-      for (let i = 0; i < compiled.rules.length; i++) {
-        const r = compiled.rules[i]!;
-        if (r.kind === "inDirOnly" && r.dir === dir) {
-          statisticsCollector.record(i, { duration, hitCount: result.hitCount });
-        }
-      }
+  // Projects of their own inside the repository, outside the workspace: a package.json with its own lockfile.
+  const packages = snapshot.workspace.packages;
+  const nested = [...snapshot.byRel.values()]
+    .filter((e) => !e.isDir && e.name === "package.json" && e.relPath.includes("/") && !snapshot.notOurs.test(e.relPath) && !IN_TESTS.test(e.relPath))
+    .map((e) => e.relPath.slice(0, e.relPath.lastIndexOf("/")))
+    .filter((dir) => LOCKFILES.some((lock) => snapshot.byRel.has(`${dir}/${lock}`)))
+    .filter((dir) => !packages.some((p) => dir === p || dir.startsWith(`${p}/`)));
+  for (const dir of nested) {
+    const projectRoot = resolve(root, dir);
+    const projectTaste = resolveTaste(projectRoot, { nestedProject: true });
+    for (const issue of await checkRoot(projectRoot, projectTaste.rules, subSnapshot(snapshot, dir), today)) {
+      if (seen.has(issueKey(issue))) continue;
+      seen.add(issueKey(issue));
+      issues.push(fromProject(dir, issue));
     }
   }
-
-  // 2. All other rules via validators
-  for (let ruleIndex = 0; ruleIndex < compiled.rules.length; ruleIndex++) {
-    const rule = compiled.rules[ruleIndex]!;
-    if (rule.kind === "inDirOnly") continue;
-    const validator = findValidator(rule);
-    if (validator) {
-      await validator.validate(rule, validatorContext, ruleIndex);
-    }
-  }
-
-  // 3. Built-in rotten dep knowledge (e18e module-replacements)
-  const rotten = await collectRottenDepIssues(snapshot);
-  rawIssues.push(...rotten);
-
-  // 4. Dedup + gitignore filter
-  const finalIssues: Issue[] = [];
-  const seen = new Set<string>();
-  for (const i of rawIssues) {
-    const rel = relative(root, i.path.split("#")[0]!).split(sep).join("/");
-    if (rel && !rel.startsWith("..") && snapshot.ig.ignores(rel)) continue;
-    const key = `${i.ruleKind}:${i.path}:${i.message.key}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    finalIssues.push(i);
-  }
-
-  const requiredTopLevelNames = Array.from(
-    new Set([...compiled.requiredTopLevelNames, ...matchedGlobFiles]),
-  ).sort();
 
   return {
     root,
-    configPath,
-    issues: finalIssues,
-    requiredTopLevelNames,
-    visibleSet: snapshot.visibleAbs,
-    listDir: (absDir) =>
-      snapshot.listDir(absDir).map((e) => ({ name: e.name, absPath: e.absPath, isDir: e.isDir })),
-    imports: effectiveConfig.imports,
-    persona: effectiveConfig.persona,
-    ...(compiled.workspacePackages.length > 0 ? { workspacePackages: compiled.workspacePackages } : {}),
+    tastes: taste.ids,
+    issues,
+    ...(monorepo ? { workspacePackages: snapshot.workspace.packages } : {}),
     fileCount: snapshot.fileCount,
     duration: Math.round(performance.now() - startTime),
-    ruleMetrics: statisticsCollector.getAllMetrics(),
-    rules: compiled.rules,
   };
+}
+
+/** A path inside a package or nested project, as seen from the repository: its own root `./` is `pkg/`. */
+const within = (dir: string, path: string) => (path === "./" ? `${dir}/` : `${dir}/${path}`);
+
+/** A finding of a package or nested project, its paths as seen from the repository (the files a grouped finding lists too). */
+function fromProject(dir: string, issue: Issue): Issue {
+  const files = issue.details?.files;
+  const details = Array.isArray(files) && files.every((f) => typeof f === "string") ? { ...issue.details, files: files.map((f: string) => within(dir, f)) } : issue.details;
+  return { ...issue, displayPath: within(dir, issue.displayPath), ...(details ? { details } : {}) };
+}
+
+function issueKey(issue: Issue): string {
+  return `${issue.path}:${issue.message.key}`;
 }

@@ -1,10 +1,14 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, realpathSync, statSync } from "node:fs";
 import { basename, dirname, join, resolve, sep } from "node:path";
 import { glob } from "tinyglobby";
 import ignore from "ignore";
 import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
-import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, toDisplayPath } from "../fsutil";
+import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
+import { tracked as gitTracked } from "./git-index";
+import { gitignoreMatcher } from "./gitignore";
+import { declaredNotOurs } from "./gitattributes";
+import { NOT_OURS } from "../taste/hygiene";
 import type { PackageManagerName } from "../types";
 
 /** Always skip VCS / dependency trees even if a project gitignore forgets them. */
@@ -37,6 +41,7 @@ export type VfsEntry = {
   /** Path relative to root, posix separators */
   relPath: string;
   isDir: boolean;
+  /** Always 0: sizes are not read while walking. Stat the file when a rule needs it. */
   size: number;
   name: string;
 };
@@ -64,6 +69,24 @@ export type WorkspaceInfo = {
   tool: string;
 };
 
+/** A file's size, or undefined when it cannot be read. */
+function sizeOf(path: string): number | undefined {
+  try {
+    return statSync(path).size;
+  } catch {
+    return undefined;
+  }
+}
+
+/** NOT_OURS, refined by what the repository declares in its .gitattributes files. */
+function notOursOf(byRel: Map<string, VfsEntry>): { test(rel: string): boolean } {
+  const files = new Map<string, string>();
+  for (const [rel, entry] of byRel) if (!entry.isDir && entry.name === ".gitattributes") files.set(rel, readText(entry.absPath, 1024 * 1024));
+  const declared = declaredNotOurs(files);
+  // A directory is not ours when a file directly in it would not be.
+  return { test: (rel) => declared(rel.endsWith("/") ? `${rel}\u0001` : rel) ?? NOT_OURS.test(rel) };
+}
+
 export type WorkspaceSnapshot = {
   root: string;
   /** Absolute paths of all visible entries (files + dirs) */
@@ -73,7 +96,20 @@ export type WorkspaceSnapshot = {
   /** Absolute -> entry */
   byAbs: Map<string, VfsEntry>;
   fileCount: number;
-  ig: ReturnType<typeof ignore>;
+  /** Gitignore matcher for paths relative to `root`. */
+  ig: { ignores(relPath: string): boolean };
+  /**
+   * Code and data that are not the project's: the names their tools define
+   * (`NOT_OURS`), and what the repository's .gitattributes marks
+   * `linguist-vendored` or `linguist-generated`. A directory ends in `/`.
+   */
+  notOurs: { test(rel: string): boolean };
+  /**
+   * What git tracks although the repository's own .gitignore ignores it (a
+   * repository root only): an ignored directory once (`dist/`, with its file
+   * count); otherwise the file, or its directory when several share one.
+   */
+  ignoredTracked?: Array<{ path: string; files: string[] }>;
   manifest: PackageManifestSnapshot;
   workspace: WorkspaceInfo;
   exists(relOrAbs: string): boolean;
@@ -116,10 +152,14 @@ function collectDepNames(
   key: "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies",
 ): void {
   if (!section || typeof section !== "object") return;
-  for (const name of Object.keys(section as Record<string, unknown>)) {
-    if (!name) continue;
-    into.add(name);
-    if (!sections.has(name)) sections.set(name, key);
+  for (const [alias, spec] of Object.entries(section as Record<string, unknown>)) {
+    if (!alias) continue;
+    // `"http": "npm:request@2"` installs request under another name: the package is request.
+    const target = typeof spec === "string" ? /^npm:((?:@[^/@]+\/)?[^@]+)/.exec(spec)?.[1] : undefined;
+    for (const name of target ? [alias, target] : [alias]) {
+      into.add(name);
+      if (!sections.has(name)) sections.set(name, key);
+    }
   }
 }
 
@@ -158,7 +198,7 @@ export function readPackageManifestSnapshot(root: string): PackageManifestSnapsh
     return { exists: false, path: pkgPath, manager: managerFromLockfile(root), deps: new Set(), depSections: new Map() };
   }
   try {
-    const raw = readFileSync(pkgPath, "utf8");
+    const raw = readText(pkgPath);
     const pkg = JSON.parse(raw) as Record<string, unknown>;
     const deps = new Set<string>();
     const depSections = new Map<string, "dependencies" | "devDependencies" | "peerDependencies" | "optionalDependencies">();
@@ -183,13 +223,13 @@ export function readPackageManifestSnapshot(root: string): PackageManifestSnapsh
 }
 
 /** True when the root looks like a monorepo — skip @manypkg otherwise (large repos). */
-function looksLikeMonorepo(root: string): boolean {
+export function looksLikeMonorepo(root: string): boolean {
   if (existsSync(resolve(root, "pnpm-workspace.yaml"))) return true;
   if (existsSync(resolve(root, "lerna.json"))) return true;
   if (existsSync(resolve(root, "nx.json"))) return true;
   if (existsSync(resolve(root, "turbo.json"))) return true;
   try {
-    const raw = readFileSync(resolve(root, "package.json"), "utf8");
+    const raw = readText(resolve(root, "package.json"));
     const pkg = JSON.parse(raw) as { workspaces?: unknown };
     return pkg.workspaces != null;
   } catch {
@@ -204,7 +244,8 @@ async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
     if (resolve(result.rootDir) !== resolve(root)) return { packages: [], tool: result.tool.type };
     const packages = result.packages
       .map((p) => p.relativeDir.split(sep).join("/"))
-      .filter((rel) => Boolean(rel) && rel !== ".")
+      // `packages: ['../*']` lists projects outside the root: not this repository's to lint.
+      .filter((rel) => Boolean(rel) && rel !== "." && !rel.startsWith("../") && !rel.startsWith("/"))
       .sort();
     return { packages, tool: result.tool.type };
   } catch {
@@ -212,8 +253,9 @@ async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
   }
 }
 
+/** A path relative to the root, with `/`. A backslash is a separator only on Windows; elsewhere `a\\b` is one name. */
 function normalizeRel(rel: string): string {
-  return rel.replace(/\\/g, "/").replace(/^\.\//, "").replace(/\/+$/, "") || ".";
+  return (sep === "\\" ? rel.replace(/\\/g, "/") : rel).replace(/^\.\//, "").replace(/\/+$/, "") || ".";
 }
 
 function toAbs(root: string, relOrAbs: string): string {
@@ -371,6 +413,8 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   // Walker ignores must stay tiny — same idea as the old engine (3 hard dirs).
   // Pushing the full gitignore (100+ rules) into tinyglobby makes every path
   // pay micromatch×N during the walk and was a major remaining regression.
+  // Every walk below passes `followSymbolicLinks: false`: a symlink is committed as a link, so chous
+  // never walks into what it points to (`/`, `~`, `../secret`).
   const walkIgnore = [
     ...HARD_IGNORE,
     ...Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`),
@@ -405,6 +449,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
       dot: true,
       onlyFiles: true,
       ignore: walkIgnore,
+      followSymbolicLinks: false,
     }),
     shallow
       ? glob(rootOnly ? "*" : globPattern, {
@@ -413,12 +458,47 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
           dot: true,
           onlyDirectories: true,
           ignore: walkIgnore,
+          followSymbolicLinks: false,
         })
       : Promise.resolve([] as string[]),
     // looksLikeMonorepo short-circuits @manypkg on single-package repos
     listWorkspacePackages(root),
   ]);
-  const ig = ignore().add(patterns);
+  // A pattern stacking `**/` segments makes the matcher backtrack for every deep path; git users never need more than a few.
+  const gitignore = gitignoreMatcher(patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3));
+  // What git tracks is committed, whatever .gitignore says: a force-added file counts.
+  const index = shallow || rootOnly ? undefined : gitTracked(root);
+  const tracked = index?.files;
+  const trackedDirs = new Set<string>();
+  for (const rel of tracked ?? []) {
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
+  }
+  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && gitignore.ignores(rel) };
+  const ignoredTracked = new Map<string, string[]>();
+  for (const rel of tracked ?? []) {
+    if (!gitignore.ignores(rel)) continue;
+    // A directory's own .gitignore, or an empty placeholder, keeps the directory and commits nothing.
+    if (rel === ".gitignore" || rel.endsWith("/.gitignore") || sizeOf(resolve(root, rel)) === 0) continue;
+    let at = rel;
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      if (gitignore.ignores(`${rel.slice(0, i)}/`)) {
+        at = `${rel.slice(0, i)}/`;
+        break;
+      }
+    }
+    ignoredTracked.set(at, [...(ignoredTracked.get(at) ?? []), rel]);
+  }
+  const byDir = new Map<string, string[]>();
+  for (const at of ignoredTracked.keys()) {
+    if (at.endsWith("/") || !at.includes("/")) continue;
+    const dir = `${at.slice(0, at.lastIndexOf("/"))}/`;
+    byDir.set(dir, [...(byDir.get(dir) ?? []), at]);
+  }
+  for (const [dir, files] of byDir) {
+    if (files.length < 2 || ignoredTracked.has(dir)) continue;
+    for (const f of files) ignoredTracked.delete(f);
+    ignoredTracked.set(dir, files);
+  }
 
   const byRel = new Map<string, VfsEntry>();
   const byAbs = new Map<string, VfsEntry>();
@@ -479,6 +559,33 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     ensureDir(abs, normalizeRel(toDisplayPath(abs, root)));
   }
   for (const raw of fileMatches) addFile(resolve(String(raw)));
+  // Tracked files the walk skipped: under node_modules/, dist/ or build/ (never walked, for speed).
+  for (const rel of tracked ?? []) {
+    if (byRel.has(rel)) continue;
+    const abs = resolve(root, rel);
+    if (existsSync(abs)) addFile(abs);
+  }
+  // Tracked symlinks pointing inside the repository: tools read through them (CLAUDE.md -> AGENTS.md,
+  // .cursor/rules -> ../agents/rules), so chous does too. Anything else (/, ~, a device) is never followed.
+  if (index?.links.size) {
+    const realRoot = realpathSync(root);
+    for (const rel of index.links) {
+      const abs = resolve(root, rel);
+      let real: string;
+      try {
+        real = realpathSync(abs);
+      } catch {
+        continue; // dangling
+      }
+      if (!real.startsWith(realRoot + sep)) continue;
+      const stat = statSync(real);
+      if (stat.isFile()) addFile(abs);
+      else if (stat.isDirectory()) {
+        const inside = await glob("**/*", { cwd: real, dot: true, onlyFiles: true, ignore: walkIgnore, followSymbolicLinks: false });
+        for (const file of inside) addFile(join(abs, file));
+      }
+    }
+  }
 
   if (workspace.packages.length > 0) {
     for (const pkg of workspace.packages) {
@@ -494,6 +601,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
             dot: true,
             onlyFiles: true,
             ignore: walkIgnore,
+            followSymbolicLinks: false,
           });
           for (const raw of pkgFiles) addFile(resolve(String(raw)));
           // Also surface empty package-root subdirs (shallow) for allow/has rules
@@ -503,6 +611,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
             dot: true,
             onlyDirectories: true,
             ignore: walkIgnore,
+            followSymbolicLinks: false,
           });
           for (const raw of pkgDirs) {
             const abs = resolve(String(raw));
@@ -524,9 +633,45 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     byAbs,
     fileCount,
     ig,
+    notOurs: notOursOf(byRel),
+    ignoredTracked: [...ignoredTracked].sort(([a], [b]) => a.localeCompare(b)).map(([path, files]) => ({ path, files: files.sort() })),
     manifest,
     workspace,
     ...api,
+  };
+}
+
+/**
+ * View of one workspace package inside an already-built root snapshot.
+ * No rescan, and the root's .gitignore keeps applying.
+ */
+export function subSnapshot(parent: WorkspaceSnapshot, pkgRel: string): WorkspaceSnapshot {
+  const prefix = `${normalizeRel(pkgRel)}/`;
+  const root = resolve(parent.root, pkgRel);
+  const byRel = new Map<string, VfsEntry>();
+  const byAbs = new Map<string, VfsEntry>();
+  const visibleAbs = new Set<string>();
+  let fileCount = 0;
+  for (const entry of parent.byRel.values()) {
+    if (!entry.relPath.startsWith(prefix)) continue;
+    const child = { ...entry, relPath: entry.relPath.slice(prefix.length) };
+    byRel.set(child.relPath, child);
+    byAbs.set(child.absPath, child);
+    visibleAbs.add(child.absPath);
+    if (!child.isDir) fileCount++;
+  }
+  const ig = { ignores: (rel: string) => parent.ig.ignores(prefix + rel) };
+  return {
+    root,
+    visibleAbs,
+    byRel,
+    byAbs,
+    fileCount,
+    ig,
+    notOurs: { test: (rel: string) => parent.notOurs.test(prefix + rel) },
+    manifest: readPackageManifestSnapshot(root),
+    workspace: { packages: [], tool: "root" },
+    ...buildMatchers(root, byRel, byAbs),
   };
 }
 
@@ -587,6 +732,7 @@ export function createMemorySnapshot(
     byAbs,
     fileCount,
     ig,
+    notOurs: notOursOf(byRel),
     manifest,
     workspace: opts?.workspace ?? { packages: [], tool: "root" },
     ...api,

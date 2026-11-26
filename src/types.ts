@@ -1,255 +1,144 @@
-export type WhereDirective =
-  | { type: "config"; implicit?: boolean } // Default: use rule file's directory as root; implicit when no [where:] was written
-  | { type: "cwd" } // Explicit: use process cwd as root
-  | { type: "glob"; patterns: string[] } // Scan multiple workspaces: match marker files/directories
-  | { type: "paths"; paths: string[] }; // Explicitly specify root directories (can write relative paths/multiple)
+import type { MessageKey } from "./i18n";
 
+/** Which built-in taste produced a rule (e.g. `base`, `js`, `monorepo`). */
 export type RuleSource = {
-  file: string; // .chous 文件的绝对路径
-  line: number; // 定义所在的行号
+  taste: string;
 };
 
-export type Severity = "error" | "warn";
+/**
+ * What chous knows, not how bad it is.
+ * - smell: a fact chous is sure of, against a stated taste. Nothing to decide.
+ * - review: a fact worth a look, whose meaning needs context chous does not
+ *   have (what a file is for). A person or an agent decides.
+ */
+export type Verdict = "smell" | "review";
 
-/** Shared metadata on every rule produced by the DSL parser. */
+/** The taste a rule stands for (see docs/manifesto.md). */
+export type Value = "modernity" | "order" | "convention" | "cleanliness";
+
+/** Shared metadata on every rule. */
 export type RuleBase = {
   source: RuleSource;
-  /** Explicit severity from `warn` / `error` prefix; undefined means engine default. */
-  severity?: Severity;
-  /** Why this rule exists — from `because "..."` or adjacent comments. */
-  reason?: string;
-  when?: Condition[];
+  value: Value;
+  /** Overrides the validator's default verdict. */
+  verdict?: Verdict;
+  /** Why this rule exists: a message in `src/locales`. */
+  reason?: MessageKey;
 };
-
-export type Condition =
-  | { type: "isEmpty" } // 是否为空目录
-  | { type: "fileSize"; op: ">" | "<"; value: string } // 大小 (如 "1MB")
-  | { type: "contains"; pattern: string } // 包含
-  | { type: "parentMatches"; style: NamingStyle } // 父目录匹配
-  | { type: "exists"; pattern: string }; // 模式存在
-
-export type NamingStyle =
-  | "PascalCase"
-  | "camelCase"
-  | "kebab-case"
-  | "snake_case"
-  | "SCREAMING_SNAKE_CASE"
-  | "flatcase";
 
 export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
 
 export type Rule =
-  | MoveRule
-  | ThoseOnlyRule
-  | RenameDirRule
-  | RenameGlobRule
-  | InDirOnlyRule
-  | NamingRule
   | NoFilesRule
-  | HasFileRule
-  | AllowRule
-  | OptionalRule
-  | PackageManagerRule
   | DepsRule
-  | ReplaceDepRule
-  | RoleRule;
+  | DeprecatedRule
+  | LifecycleRule
+  | ArtifactsRule
+  | LeftoverRule
+  | MeasuresRule
+  | TwinsRule
+  | ContractsRule
+  | ManifestRule
+  | WorkspaceRule;
 
-export type MoveRule = RuleBase & {
-  kind: "move";
-  from: string; // glob (root-level)
-  toDir: string; // directory name relative to root
-};
-
-export type ThoseOnlyRule = RuleBase & {
-  kind: "thoseOnly";
-  pattern: string; // glob (root-level)
-  only: string[]; // globs (root-level)
-};
-
-export type RenameDirRule = RuleBase & {
-  kind: "renameDir";
-  fromNames: string[]; // directory names (root-level)
-  toName: string; // directory name (root-level)
-};
-
-export type RenameGlobRule = RuleBase & {
-  kind: "renameGlob";
-  from: string; // glob (root-relative, may include **)
-  to: string; // glob-like target pattern (best-effort support)
-};
-
-export type InDirOnlyRule = RuleBase & {
-  kind: "inDirOnly";
-  dir: string; // directory (root-level)
-  only: string[]; // globs relative to that dir (usually **/*.ts)
-  mode?: "strict" | "permissive"; // strict = enforce whitelist, permissive = suggest only
-  fileType?: "files" | "dirs"; // Optional filter for files or directories
-};
-
-export type AllowRule = RuleBase & {
-  kind: "allow";
-  names: string[]; // file/directory names (root-level) - permissive suggestions
-};
-
-export type NamingRule = RuleBase & {
-  kind: "naming";
-  target: "in" | "those";
-  pattern: string; // dir (for "in") or glob (for "those")
-  style: NamingStyle;
-  fileType?: "files" | "dirs"; // Optional filter for files or directories only
-  prefix?: string; // Optional regex pattern to remove from the start (e.g., "/^\\d+\\./")
-  suffix?: string; // Optional regex pattern to remove from the end (e.g., "/\\.(get|post)$/i")
-  except?: string[]; // Optional list of names to exclude from naming checks (only for naming, not directory whitelist)
-  // Conditional rules (deprecated, use when instead)
-  ifContains?: string; // For dirs: only apply this rule if the directory contains this file (e.g., "index.vue")
-  ifParentStyle?: NamingStyle; // For files: only apply this rule if the parent directory matches this naming style
-};
-
+/** Paths (globs) that must not exist. */
 export type NoFilesRule = RuleBase & {
   kind: "no";
-  names: string[]; // file names (root-level)
+  names: string[];
 };
 
-export type HasFileRule = RuleBase & {
-  kind: "has";
-  names: string[]; // file names (root-level)
-};
-
-export type OptionalRule = RuleBase & {
-  kind: "optional";
-  names: string[]; // file names (root-level) - makes has rules optional
-};
-
-export type PackageManagerRule = RuleBase & {
-  kind: "packageManager";
-  manager: PackageManagerName;
+/** Dependencies that are rotten, or redundant because the platform ships them. */
+/** Direct dependencies their authors deprecated on the npm registry, as the lockfile recorded it. */
+export type DeprecatedRule = RuleBase & {
+  kind: "deprecated";
 };
 
 export type DepsRule = RuleBase & {
   kind: "deps";
-  mode: "must" | "no";
-  names: string[]; // package names, or a scope wildcard such as @scope/*
+  /** Package names, or a scope wildcard such as `@scope/*`. */
+  names: string[];
+  /** What to use instead. */
+  use: string;
+  /** The platform ships something similar: whether it fully replaces the package is for review. */
 };
 
-export type ReplaceDepRule = RuleBase & {
-  kind: "replaceDep";
-  from: string;
-  to: string;
+/** A package.json field that must not exist. */
+export type ManifestRule = RuleBase & {
+  kind: "manifest";
+  field: string;
 };
 
-/**
- * Stack-layer role declaration: which tool(s) occupy a role.
- * First name is the preferred migration target when others are detected.
- * DSL: `linter oxlint` / `test runner vitest, node:test`
- */
-export type RoleRule = RuleBase & {
-  kind: "role";
-  /** Stable role id, e.g. `linter`, `test-runner`. */
-  role: string;
-  /** Preferred tool first; additional names are also accepted. */
-  tools: string[];
+/** Runtimes and frameworks past their published end of life (each tool's `eol` in src/facts/). */
+export type LifecycleRule = RuleBase & {
+  kind: "lifecycle";
+  /** At the repository's root: GitHub runs only the root's `.github/workflows`. */
+  workflows?: boolean;
 };
 
-export type Persona = {
-  name: string;
-  url?: string;
+/** Build output that is not gitignored (see `taste/hygiene.ts`). */
+export type ArtifactsRule = RuleBase & {
+  kind: "artifacts";
 };
 
-/** Kind-scoped preset import: `for cli import antfu/cli`. */
-export type KindScopedImport = {
-  kind: string;
-  importName: string;
-  /** Absolute path resolved at parse time (when available). */
-  resolvedPath?: string;
-  source: RuleSource;
+/** What tools state about the files they read (src/facts/). */
+export type ContractsRule = RuleBase & {
+  kind: "contracts";
 };
 
-export type FsLintConfig = {
-  where: WhereDirective;
-  rules: Rule[];
-  imports?: string[]; // Resolved paths of imported presets
-  persona?: Persona;
-  /** Applied only when the workspace matches the kind. */
-  kindImports?: KindScopedImport[];
+/** One thing twice: two names for it, or two identical copies. */
+export type TwinsRule = RuleBase & {
+  kind: "twins";
 };
 
-/** How to act on a finding — derived from knowledge, not authored in DSL. */
-export type Resolution = "auto" | "agent" | "info";
+/** OS junk, installers, binaries and a crowded root, known by content (see `taste/hygiene.ts`). */
+/** Sizes and counts any repository has (see `MEASURES` in `taste/hygiene.ts`). */
+export type MeasuresRule = RuleBase & {
+  kind: "measures";
+};
 
-/** Machine-executable, zero-data-loss fixes for `--fix`. */
-export type SafeFix =
-  | { type: "rename"; fromPath: string; toPath: string }
-  | { type: "deleteEmptyDir"; path: string }
-  | { type: "pkgSetManager"; pkgJsonPath: string; manager: string }
-  | { type: "pkgReplaceDep"; pkgJsonPath: string; from: string; to: string };
+export type LeftoverRule = RuleBase & {
+  kind: "leftover";
+  /** Count docs at the root (repository root only). */
+  rootDocs: boolean;
+};
 
-export type IssueMessage =
-  | { key: "issue.move.shouldMoveToDir"; params: { dir: string } }
-  | { key: "issue.move.destDirMustExist"; params: { from: string; toDir: string } }
-  | { key: "issue.move.destMustBeDir"; params: { from: string; toDir: string } }
-  | { key: "issue.move.unsafeManual"; params: { dir: string } }
-  | { key: "issue.thoseOnly.forbiddenOnlyAllowed"; params: { only: string | string[]; pattern?: string } }
-  | { key: "issue.renameDir.shouldRenameTo"; params: { to: string } }
-  | { key: "issue.renameDir.shouldMigrateTo"; params: { to: string } }
-  | { key: "issue.renameDir.removeEmptyDir"; params: { dir: string; to: string } }
-  | { key: "issue.renameGlob.shouldRenameTo"; params: { to: string } }
-  | { key: "issue.renameGlob.targetExistsManual"; params: { to: string } }
-  | { key: "issue.renameGlob.cannotInferTarget" }
-  | { key: "issue.inDirOnly.dirMustExist"; params: { only: string | string[] } }
-  | { key: "issue.inDirOnly.forbiddenOnlyAllowed"; params: { dir: string; only: string | string[] } }
-  | { key: "issue.no.forbidden"; params: { name: string } }
-  | { key: "issue.has.mustExist"; params: { name: string } }
-  | { key: "issue.packageManager.wrong"; params: { expected: string; actual: string } }
-  | { key: "issue.packageManager.missing"; params: { expected: string } }
-  | { key: "issue.deps.missing"; params: { name: string } }
-  | { key: "issue.deps.forbidden"; params: { name: string } }
-  | { key: "issue.replaceDep.replace"; params: { from: string; to: string } }
-  | { key: "issue.role.mismatch"; params: { role: string; expected: string; actual: string } }
-  | { key: "issue.role.missing"; params: { role: string; expected: string } }
-  | { key: "issue.role.deprecated"; params: { tool: string } }
-  | { key: "issue.rotten.dep"; params: { name: string; replacement: string } }
-  | { key: "issue.naming.invalid"; params: { style: string } }
-  | { key: "issue.naming.invalidPrefix"; params: { pattern: string } }
-  | { key: "issue.naming.invalidSuffix"; params: { pattern: string } }
-  | { key: "issue.merged.forbiddenOnlyAllowed"; params: { whitelists: Array<{ label: string; only: string[] }> } }
-  | { key: "issue.merged.forbiddenBlacklist"; params: { blacklists: Array<{ label: string; patterns: string[] }> } };
+/** Monorepo root: one major version per dependency across packages. */
+export type WorkspaceRule = RuleBase & {
+  kind: "workspace";
+};
+
+/** A param that is itself a message: translated, then interpolated. */
+export type MessageRef = { t: MessageKey };
+
+/** A message in `src/locales` and its params. */
+export type IssueMessage = {
+  key: MessageKey;
+  params?: Record<string, string | number | MessageRef>;
+};
 
 export type Issue = {
   ruleKind: Rule["kind"];
   ruleSource: RuleSource;
-  reason?: string;
-  path: string; // absolute
-  displayPath: string; // relative to root (posix-ish for display)
+  reason?: MessageKey;
+  /** Absolute; synthetic findings append `#something`. */
+  path: string;
+  /** Relative to the linted root. */
+  displayPath: string;
   message: IssueMessage;
-  category: "missing" | "forbidden"; // Missing vs violation/forbidden
-  severity: Severity;
-  /** Present only when the fix is 100% safe (no overwrite / no data loss). */
-  fix?: SafeFix;
-  /** How an agent / CI consumer should treat this finding. */
-  resolution?: Resolution;
-  /** Optional doc link from the migration knowledge base. */
-  see?: string;
-};
-
-export type RuleMetrics = {
-  duration: number; // Duration in milliseconds
-  hitCount: number; // Number of files/directories matched by this rule
+  verdict: Verdict;
+  value: Value;
+  /** Every fact behind the finding, in full: the message shows a few, an agent gets them all (`--json`). */
+  details?: Record<string, unknown>;
 };
 
 export type LintResult = {
   root: string;
-  configPath: string;
+  /** Tastes applied to this root, broadest first. */
+  tastes: string[];
   issues: Issue[];
-  requiredTopLevelNames: string[];
-  visibleSet?: Set<string>;
-  /** Prefer over readdir/stat when rendering the report tree (avoids Windows stat tax). */
-  listDir?: (absDir: string) => Array<{ name: string; absPath: string; isDir: boolean }>;
-  imports?: string[]; // Propagated from config
-  persona?: Persona;
-  workspacePackages?: string[]; // Packages discovered via @manypkg/get-packages
-  fileCount?: number; // Number of files scanned
-  duration?: number; // Duration in milliseconds
-  ruleMetrics?: Map<number, RuleMetrics>; // Metrics for each rule by rule index
-  rules?: Rule[]; // Rules from config for statistics display
-  fixedCount?: number; // Number of issues auto-fixed when --fix was used
+  /** Packages discovered via @manypkg/get-packages. */
+  workspacePackages?: string[];
+  fileCount?: number;
+  /** Milliseconds. */
+  duration?: number;
 };
