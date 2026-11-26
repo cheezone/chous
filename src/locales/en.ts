@@ -71,6 +71,7 @@ export default {
     deps: {
       obsolete: "{{name}}: {{why}} → {{use}}",
       native: "the platform ships {{use}}: whether it fully replaces {{name}} depends on how you use it",
+      deprecated: "{{name}} {{version}}, deprecated by its authors on npm: “{{message}}”",
     },
     manifest: {
       remove: "remove \"{{field}}\": {{reason}}",

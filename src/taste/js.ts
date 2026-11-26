@@ -28,6 +28,7 @@ export function js(project: JsProject = {}) {
     t.noField("packageManager", "reason.nestedPackageManager");
   }
 
+  t.deprecations();
   for (const dep of NATIVE) t.obsolete(dep.names, dep.use, depReason(dep), { native: true });
   for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, depReason(dep));
   // Config of tools their authors ended: src/facts/tools/js/retired-linters.ts.

@@ -31,6 +31,7 @@ export type PackageManagerName = "npm" | "pnpm" | "yarn" | "bun";
 export type Rule =
   | NoFilesRule
   | DepsRule
+  | DeprecatedRule
   | LifecycleRule
   | ArtifactsRule
   | LeftoverRule
@@ -46,6 +47,11 @@ export type NoFilesRule = RuleBase & {
 };
 
 /** Dependencies that are rotten, or redundant because the platform ships them. */
+/** Direct dependencies their authors deprecated on the npm registry, as the lockfile recorded it. */
+export type DeprecatedRule = RuleBase & {
+  kind: "deprecated";
+};
+
 export type DepsRule = RuleBase & {
   kind: "deps";
   /** Package names, or a scope wildcard such as `@scope/*`. */

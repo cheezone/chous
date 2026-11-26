@@ -28,7 +28,10 @@ Ayato-kosaka/nanitabeyo	smell	cleanliness	docs/detailed_design/	issue.leftover.i
 Ayato-kosaka/nanitabeyo	smell	cleanliness	e2e-web/ui-preview-shots/	issue.leftover.ignoredTracked	{"count":24}
 Ayato-kosaka/nanitabeyo	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":712,"limit":200}
 Ayato-kosaka/nanitabeyo	smell	convention	scripts/20251213T0000_wikidata_food_graph/	issue.contract.pythonPackageName	{"name":"20251213T0000_wikidata_food_graph","count":1}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (@types∕dotenv)	issue.deps.deprecated	{"name":"@types/dotenv","version":"8.2.3","message":"This is a stub types definition. dotenv provides its own type definitions, so you do not need this installed."}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (@types∕jimp)	issue.deps.deprecated	{"name":"@types/jimp","version":"0.2.28","message":"This is a stub types definition for jimp (https://github.com/oliver-moran/jimp#readme). jimp provides its own type definitions, so you don't need @types/jimp installed!"}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
+Ayato-kosaka/nanitabeyo	smell	modernity	api/package.json (prom-client)	issue.deps.deprecated	{"name":"prom-client","version":"15.1.3","message":"prom-client has been replaced by @prometheus-io/client"}
 Ayato-kosaka/nanitabeyo	smell	modernity	api/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \"./\""}
 Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 Ayato-kosaka/nanitabeyo	smell	modernity	app-expo/package.json (react-test-renderer)	issue.deps.obsolete	{"name":"react-test-renderer","why":{"t":"dep.react-test-renderer"},"use":"@testing-library/react"}
@@ -60,6 +63,7 @@ Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	NbhEditor-v5.0.0-release.ap
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	backend/node_modules/	issue.leak.artifact	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	build/	issue.leak.artifact	{}
 Beeta-inc/nbheditor.apps.beeta.com	smell	cleanliness	local.properties	issue.no.because	{"reason":{"t":"reason.localProperties"}}
+Beeta-inc/nbheditor.apps.beeta.com	smell	modernity	backend/package.json (uuid)	issue.deps.deprecated	{"name":"uuid","version":"9.0.1","message":"uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028)."}
 Beeta-inc/nbheditor.apps.beeta.com	smell	order	./	issue.leftover.rootDocs	{"count":21,"limit":3,"names":"API_37_UPDATE.md, BUILD_FIXED.md, BUILD_SUMMARY_v4.5.0.md, BUILD_SUMMARY_v4.5.1.md, DEEP_LINK_IMPLEMENTATION.md, …"}
 BrianTran24/screen_record	smell	order	./	issue.leftover.rootDocs	{"count":7,"limit":3,"names":"API_DOCUMENTATION.md, BUGFIX_TIMESTAMP_ISSUE.md, IMPLEMENTATION_COMPLETE.md, IMPLEMENTATION_SUMMARY.md, MIGRATION_GUIDE.md, …"}
 BurntSushi/ripgrep	smell	modernity	**/Cargo.toml	issue.contract.cargoAuthors	{"count":10}
@@ -142,11 +146,14 @@ RoniAbravaya/ai-stock-summary-app	smell	cleanliness	mobile-app/pubspec.lock	issu
 RoniAbravaya/ai-stock-summary-app	smell	modernity	.github/workflows/deploy-play-store.yml (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/node/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/node/package.json (multer)	issue.deps.deprecated	{"name":"multer","version":"1.4.5-lts.2","message":"Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version."}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/package.json (moment)	issue.deps.obsolete	{"name":"moment","why":{"t":"dep.moment"},"use":"dayjs / date-fns / Temporal"}
+RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/package.json (multer)	issue.deps.deprecated	{"name":"multer","version":"1.4.5-lts.2","message":"Multer 1.x is impacted by a number of vulnerabilities, which have been patched in 2.x. You should upgrade to the latest 2.x version."}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	functions/package.json (engines.node)	issue.lifecycle.declared	{"versions":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
 SankrityaT/InstaCare	smell	modernity	bun.lockb	issue.no.because	{"reason":{"t":"reason.bunLockb"}}
+SankrityaT/InstaCare	smell	modernity	package.json (@types∕maplibre-gl)	issue.deps.deprecated	{"name":"@types/maplibre-gl","version":"1.14.0","message":"This is a stub types definition. maplibre-gl provides its own type definitions, so you do not need this installed."}
 SankrityaT/InstaCare	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 TheAlphamerc/flutter_twitter_clone	smell	convention	lib/helper/customRoute.dart	issue.contract.dartFileName	{"name":"customRoute","count":1}
 TheAlphamerc/flutter_twitter_clone	smell	convention	lib/model/	issue.contract.dartFileName	{"name":"bookmarkModel","count":4}
@@ -330,6 +337,7 @@ chatwoot/chatwoot	smell	modernity	docker-compose.test.yaml	issue.contract.compos
 chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
 chatwoot/chatwoot	smell	modernity	docker-compose.yaml	issue.contract.composeVersion	{}
 chatwoot/chatwoot	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+chatwoot/chatwoot	smell	modernity	package.json (vue-i18n)	issue.deps.deprecated	{"name":"vue-i18n","version":"9.14.5","message":"v9 and v10 no longer supported. please migrate to v11. about maintenance status, see https://vue-i18n.intlify.dev/guide/maintenance.html"}
 chatwoot/chatwoot	smell	modernity	tests/playwright/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"moduleResolution: \"node\", baseUrl: \".\""}
 chatwoot/chatwoot	smell	order	app/javascript/dashboard/api/	issue.twins.styles	{"styles":"camelCase ×25 + snake_case ×1","examples":"accountActions.js, notion_auth.js"}
 chatwoot/chatwoot	smell	order	app/javascript/dashboard/store/	issue.twins.styles	{"styles":"camelCase ×3 + kebab-case ×1","examples":"storeFactory.js, mutation-types.js"}
@@ -349,6 +357,7 @@ dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/package.js
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", baseUrl: \".\""}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Frontend/package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (critters)	issue.deps.deprecated	{"name":"critters","version":"0.0.25","message":"Ownership of Critters has moved to the Nuxt team, who will be maintaining the project going forward. If you'd like to keep using Critters, please switch to the actively-maintained fork at https://github.com/danielroe/beasties"}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
 dennislee928/Carbon_Trading_For_Individuals	smell	order	Frontend/yarn.lock	issue.contract.yarnNpmLock	{"files":"yarn.lock, package-lock.json"}
 denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-aarch64	issue.leftover.executable	{}
@@ -453,6 +462,7 @@ ghostfolio/ghostfolio	smell	convention	libs/ui/src/lib/mocks/httpClient.mock.ts	
 ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.build.yml	issue.contract.composeName	{}
 ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.dev.yml	issue.contract.composeName	{}
 ghostfolio/ghostfolio	smell	modernity	docker/docker-compose.yml	issue.contract.composeName	{}
+ghostfolio/ghostfolio	smell	modernity	package.json (@angular-devkit∕build-angular)	issue.deps.deprecated	{"name":"@angular-devkit/build-angular","version":"22.1.4","message":"Angular's Webpack support is deprecated. Use the esbuild and Vite-based \"@angular/build\" package instead."}
 ghostfolio/ghostfolio	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
 ghostfolio/ghostfolio	smell	modernity	tools/tsconfig.tools.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\""}
 hassana123/tailorpal	smell	modernity	package.json (ESLint 9)	issue.lifecycle.ended	{"name":"ESLint 9","date":"2026-08-06","use":{"t":"eol.eslint"}}
@@ -471,6 +481,7 @@ immich-app/immich	smell	modernity	docker/docker-compose.rootless.yml	issue.contr
 immich-app/immich	smell	modernity	docker/docker-compose.yml	issue.contract.composeName	{}
 immich-app/immich	smell	modernity	e2e/docker-compose.dev.yml	issue.contract.composeName	{}
 immich-app/immich	smell	modernity	e2e/docker-compose.yml	issue.contract.composeName	{}
+immich-app/immich	smell	modernity	server/package.json (fluent-ffmpeg)	issue.deps.deprecated	{"name":"fluent-ffmpeg","version":"2.1.3","message":"Package no longer supported. Contact Support at https://www.npmjs.com/support for more info."}
 immich-app/immich	smell	order	package.json (tailwindcss)	issue.workspace.drift	{"name":"tailwindcss","versions":"docs: ^3.2.4; server: ^3.4.0; web: ^4.2.4"}
 immich-app/immich	smell	order	packages/e2e-auth-server/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
 immich-app/immich	smell	order	packages/plugin-sdk/package.json (packageManager)	issue.manifest.remove	{"field":"packageManager","reason":{"t":"reason.nestedPackageManager"}}
@@ -486,6 +497,7 @@ koel/koel	smell	cleanliness	storage/framework/cache/data/.gitkeep	issue.leftover
 koel/koel	smell	convention	AGENTS.md	issue.contract.agentsMdBytes	{"kib":36,"limit":32}
 koel/koel	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":377,"limit":200}
 koel/koel	smell	modernity	.github/workflows/release.yml	issue.contract.workflowCommands	{"command":"set-output"}
+koel/koel	smell	modernity	package.json (lucide-vue-next)	issue.deps.deprecated	{"name":"lucide-vue-next","version":"0.577.0","message":"Package deprecated. Please use @lucide/vue instead."}
 koel/koel	smell	order	resources/assets/js/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"service-worker.spec.ts, registerHooks.ts"}
 ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/common/src/io/ktor/client/engine/cio/utils.kt	issue.contract.kotlinFileName	{"name":"utils","count":1}
 ktorio/ktor	smell	convention	ktor-client/ktor-client-cio/jvm/src/io/ktor/client/plugins/websocket/cio/buildersCio.kt	issue.contract.kotlinFileName	{"name":"buildersCio","count":1}
@@ -559,6 +571,7 @@ nuxt/nuxt	smell	cleanliness	.idea/	issue.leftover.ignoredTracked	{"count":3}
 nuxt/nuxt	smell	cleanliness	.vscode/	issue.leftover.ignoredTracked	{"count":1}
 nuxt/nuxt	smell	cleanliness	packages/ui-templates/README.md	issue.leftover.ignoredTracked	{"count":1}
 nuxt/nuxt	smell	order	packages/nuxt/src/app/composables/	issue.twins.styles	{"styles":"kebab-case ×6 + camelCase ×2","examples":"lazy-hydration.ts, asyncContext.ts"}
+nuxt/nuxt.com	smell	modernity	package.json (evalite)	issue.deps.deprecated	{"name":"evalite","version":"1.0.0-beta.16","message":"No longer maintained. Recommended replacement: Langfuse. Migration notes: https://github.com/mattpocock/evalite#migrating-to-langfuse"}
 nuxt/nuxt.com	smell	order	layers/nuxi/agent/tools/	issue.twins.styles	{"styles":"snake_case ×19 + kebab-case ×3","examples":"check_showcase_sites.ts, ai-gateway.ts"}
 ollama/ollama	smell	convention	app/ui/app/tailwind.config.js	issue.contract.tailwindConfig	{"version":4}
 ollama/ollama	smell	convention	mlxrunner/model/cohere2_moe/	issue.contract.goPackageName	{"name":"cohere2_moe","count":2}
@@ -585,6 +598,7 @@ open-webui/open-webui	smell	modernity	docker-compose.otel.yaml	issue.contract.co
 open-webui/open-webui	smell	modernity	docker-compose.playwright.yaml	issue.contract.composeName	{}
 open-webui/open-webui	smell	modernity	docker-compose.yaml	issue.contract.composeName	{}
 open-webui/open-webui	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
+open-webui/open-webui	smell	modernity	package.json (i18next-parser)	issue.deps.deprecated	{"name":"i18next-parser","version":"9.4.0","message":"Project is deprecated, use i18next-cli instead"}
 open-webui/open-webui	smell	order	src/lib/utils/	issue.twins.styles	{"styles":"camelCase ×19 + kebab-case ×10","examples":"channelMentions.ts, google-drive-picker.ts"}
 oven-sh/bun	review	modernity	bench/package.json (strip-ansi)	issue.deps.native	{"name":"strip-ansi","use":"util.stripVTControlCharacters"}
 oven-sh/bun	smell	cleanliness	.cargo/	issue.leftover.ignoredTracked	{"count":1}
@@ -1154,6 +1168,7 @@ vitejs/vite	smell	order	playground/worker/	issue.twins.styles	{"styles":"kebab-c
 vitejs/vite	smell	order	playground/worker/modules/	issue.twins.styles	{"styles":"kebab-case ×1 + camelCase ×1","examples":"test-plugin.js, workerImport.ts"}
 vitejs/vite	smell	order	scripts/	issue.twins.styles	{"styles":"kebab-case ×3 + camelCase ×3","examples":"detect-release.ts, mergeChangelog.ts"}
 vuejs/core	review	modernity	package.json (rimraf)	issue.deps.native	{"name":"rimraf","use":"fs.rm(path, { recursive: true, force: true })"}
+vuejs/core	smell	modernity	package.json (esbuild-plugin-polyfill-node)	issue.deps.deprecated	{"name":"esbuild-plugin-polyfill-node","version":"0.3.0","message":"Package no longer supported. Contact Support at https://www.npmjs.com/support for more info."}
 vuejs/core	smell	order	packages/vue-compat/src/	issue.twins.styles	{"styles":"kebab-case ×2 + camelCase ×1","examples":"esm-index.ts, createCompatVue.ts"}
 vuejs/core	smell	order	packages/vue/__tests__/e2e/	issue.twins.styles	{"styles":"camelCase ×4 + kebab-case ×3","examples":"e2eBrowserUtils.ts, memory-leak.spec.ts"}
 wilsonzlin/fastrender	smell	modernity	.github/workflows/typecheck_ts_conformance_upstream.yml (Node 20)	issue.lifecycle.ended	{"name":"Node 20","date":"2026-04-30","use":{"t":"eol.node"}}

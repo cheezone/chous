@@ -70,6 +70,7 @@ export default {
       because: "不允许：{{reason}}",
     },
     deps: {
+      deprecated: "{{name}} {{version}}，作者已在 npm 上宣布废弃：「{{message}}」",
       obsolete: "{{name}}：{{why}} → {{use}}",
       native: "平台已经自带 {{use}}：能否完全替代 {{name}}，取决于你怎么用它",
     },

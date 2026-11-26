@@ -14,7 +14,7 @@
 - **不读名字里的词。** `FIXES_SUMMARY.md`、`index.ts.bak`、`src copy/`、`plugin/` 和 `plugins/`、`test/` 和 `tests/`、`报告-最终版.md`、`백업.ts`：靠英文单词、词形、同义词推断含义的规则，换一种语言就得再猜一遍，不是事实，一律不写（备份、工作日志、一次性脚本、单复数、同义目录、`*.log` 都已删除）。名字只在两种情况下算证据：工具或操作系统规定的确切名字（`eslint.config.js`、`.DS_Store`），并且有内容佐证；或者名字本身就是事实（只差大小写、语言规定的命名风格）。其余证据只能来自内容：文件头签名、工具写下的标记文件、OS 写的内容、git 索引与 .gitignore 的矛盾。
 - **事实错了才是误报，审美不同不是。** 知名项目被报不是误报。事实错了就改证据标准（例如 Deno 手写的 `dist/` 要求有构建脚本才算构建产物），不是加豁免。
 - 只收官方文档里写明的东西：位置、命名、上限、旧格式、停止维护日期。官方没写的不推断（Angular 只说「不再支持」，就只报这句，不编日期）。引用以原文为准，例如 `.env` 可以提交，只有 `.env*.local` 不行。
-- 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
+- 「作者宣布废弃」只认作者原话（npm `deprecated` 字段、README、安全公告）。npm 的 `deprecated` 不维护名单：pnpm、npm 安装时把它原样记进 `pnpm-lock.yaml`、`package-lock.json`，chous 从那里读（`src/vfs/lockfile.ts`），只报 `package.json` 直接写的依赖；`src/facts/packages/npm.ts` 只放 lockfile 读不到的（README、安全公告、带替代品的）。Bower（README 说仍在维护）和 JSHint（从未宣布废弃）不算。
 - 版本只取实际运行环境（`.nvmrc`、`.node-version`、`.python-version`、`.tool-versions`、项目里任何 Dockerfile 的 `FROM`（展开 `ARG`、允许任意镜像仓库）、workflow 里 `actions/setup-node`/`setup-python` 的单个版本和 `container`/`image`、devcontainer 的镜像和 features、`volta.node`、框架依赖；CI 矩阵是兼容测试，不读；Node 代号按 `schedule.json` 的 `codename` 换算）。`engines.node` 是兼容承诺，只有声明的范围全部停止维护才报。
 - 不按职责数工具（「一件事两个工具」已删除）：用几个工具是用户的事。只有工具自己说不该并存的才报（Yarn 对 `package-lock.json` 的警告）。
 - 命名：语言或框架规定了风格的（`src/facts/kinds/naming.ts`），由它的工具文件管，通用的「同一目录一种风格」（`mixedStyles`）不再重复报这些文件。官方说「unclear」「unopinionated」的不报。名字本身不合法、不可能是模块的（带连字符的 Python 脚本、`lib.miri.rs`）不归模块命名管；被 `#[path]` 改名的 Rust 文件，模块名以 `mod` 声明为准。

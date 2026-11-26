@@ -95,7 +95,7 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 |---|---|---|---|---|
 | Runtimes and frameworks past end of life | The version that runs, and the end-of-life date in its makers' data; where they say only "no longer supported" (Angular), chous says just that | Past end of life stinks | Modernity | Smell |
 | `engines.node` that allows only ended versions | The declared range, and each of its versions' end-of-life date | Promise nothing only to the dead | Modernity | Smell |
-| Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
+| Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words: npm's deprecated field (copied into the lockfile by pnpm and npm at install time; chous reads it there, for the dependencies package.json names), the README, a security advisory | Build nothing on what is dead | Modernity | Smell |
 | Files, fields and options a tool itself calls deprecated, obsolete or legacy (an old config format, a retired linter's config, a deprecated manifest field or tsconfig option) | The file or field, the version in use, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Dependencies the platform now ships | The version from which the platform ships it | Whether it fully replaces the package depends on how the project uses it | Modernity | Review |
 | Names that differ only in case or Unicode form | Both names exist | One thing, one name | Order | Smell |
