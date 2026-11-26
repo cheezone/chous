@@ -185,16 +185,7 @@ export default {
     colors: "Its author published an infinite loop in January 2022 (GHSA-5rqg-jm4f-cqx7).",
     faker: "Its author deleted the package in January 2022; the community fork lives on.",
   },
-  eol: {
-    ...eolMessages("en"),
-    electron: "one of the three latest stable Electron releases",
-    django: "a supported Django release",
-    angular: "a supported Angular release",
-    node: "a supported LTS release",
-    python: "a supported Python 3 release",
-    vue: "Vue 3",
-    nuxt: "Nuxt 4",
-  },
+  eol: eolMessages("en"),
   role: {
     "package-manager": "package manager",
     runtime: "runtime",

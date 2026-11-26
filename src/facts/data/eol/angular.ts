@@ -1,0 +1,21 @@
+// Written by `pnpm run sync` from https://raw.githubusercontent.com/angular/angular/main/adev/src/content/reference/releases.md — do not edit.
+export default [
+  { version: "2", date: "" },
+  { version: "3", date: "" },
+  { version: "4", date: "" },
+  { version: "5", date: "" },
+  { version: "6", date: "" },
+  { version: "7", date: "" },
+  { version: "8", date: "" },
+  { version: "9", date: "" },
+  { version: "10", date: "" },
+  { version: "11", date: "" },
+  { version: "12", date: "" },
+  { version: "13", date: "" },
+  { version: "14", date: "" },
+  { version: "15", date: "" },
+  { version: "16", date: "" },
+  { version: "17", date: "" },
+  { version: "18", date: "" },
+  { version: "19", date: "" },
+] as const;

@@ -103,9 +103,9 @@ function findVersions(context: RuleValidatorContext): Found[] {
     }
     if (typeof pkg.volta?.node === "string") add("node", pkg.volta.node, "package.json (volta)");
     const deps = { ...pkg.devDependencies, ...pkg.dependencies };
-    const byDep: Array<readonly [Product, string]> = [["vue", "vue"], ["nuxt", "nuxt"], ["electron", "electron"], ["angular", "@angular/core"], ...FACT_EOL.flatMap((e) => (e.dep ? [[e.product, e.dep] as const] : []))];
-    for (const [product, name] of byDep) {
-      if (typeof deps[name] === "string") add(product, deps[name].split(".")[0], "package.json");
+    // Frameworks whose schedule names the package that carries their version.
+    for (const { product, dep } of FACT_EOL) {
+      if (dep && typeof deps[dep] === "string") add(product, deps[dep].split(".")[0], "package.json");
     }
   }
 

@@ -186,16 +186,7 @@ export default {
     colors: "作者在 2022 年 1 月发布了死循环（GHSA-5rqg-jm4f-cqx7）。",
     faker: "作者在 2022 年 1 月删掉了这个包；社区分支还在维护。",
   },
-  eol: {
-    ...eolMessages("zh"),
-    electron: "最新的三个稳定版 Electron 之一",
-    django: "仍受支持的 Django 版本",
-    angular: "仍受支持的 Angular 版本",
-    node: "仍在维护的 LTS 版本",
-    python: "仍在维护的 Python 3 版本",
-    vue: "Vue 3",
-    nuxt: "Nuxt 4",
-  },
+  eol: eolMessages("zh"),
   role: {
     "package-manager": "包管理器",
     runtime: "运行时",

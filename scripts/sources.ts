@@ -3,7 +3,6 @@
  * Run it when a source might have moved: `pnpm run sources`.
  */
 import { SOURCES } from "../src/taste/sources";
-import { EOL } from "../src/taste/eol";
 import { FACT_EOL } from "../src/facts";
 
 /** Text of a page; tags are stripped only from HTML — Markdown keeps a literal `<name>`. */
@@ -35,50 +34,14 @@ for (const [key, sources] of Object.entries(SOURCES)) {
     console.log(`${ok ? "✓" : "✗"} ${key}  ${source.url}${ok ? "" : `\n    missing: "${source.quote}"${why}`}`);
   }
 }
-// Every end-of-life date, against the project's own data.
-const json = async (url: string) => (await fetch(url)).json() as Promise<Record<string, any>>;
-const node = await json("https://raw.githubusercontent.com/nodejs/Release/main/schedule.json");
-const python = await json("https://peps.python.org/api/release-cycle.json");
-// Raw text: the patterns below match the markup itself.
-const raw = async (url: string) => (await fetch(url)).text();
-const vue = await raw("https://raw.githubusercontent.com/vuejs/v2.vuejs.org/master/src/eol/index.md");
-const nuxt = await raw("https://raw.githubusercontent.com/nuxt/nuxt/main/docs/5.community/6.roadmap.md");
-const plain = (html: string) => html.replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, " ").replace(/<[^>]+>/g, " ").replace(/&nbsp;|\s+/g, " ");
-const electron = plain(await raw("https://releases.electronjs.org/schedule"));
-const django = plain(await raw("https://www.djangoproject.com/download/"));
-const angular = await raw("https://raw.githubusercontent.com/angular/angular/main/adev/src/content/reference/releases.md");
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-/** "Oct 20, 2026" or "October 20, 2026" → 2026-10-20 */
-const isoDate = (m: string, d: string, y: string) => `${y}-${String(MONTHS.indexOf(m.slice(0, 3)) + 1).padStart(2, "0")}-${d.padStart(2, "0")}`;
-const official: Record<string, (version: string) => string | undefined> = {
-  node: (v) => node[`v${v}`]?.end,
-  python: (v) => python[v]?.end_of_life,
-  vue: (v) => (v === "2" && vue.includes("Vue 2 has reached End of Life on December 31st, 2023") ? "2023-12-31" : undefined),
-  electron: (v) => {
-    // Release, Alpha, Beta, Stable, End of Life: the fourth date after "<v>.0.0"; dates marked † are tentative.
-    const m = new RegExp(`\\b${v}\\.0\\.0 ((?:(?:[A-Z][a-z]{2} \\d{1,2}, \\d{4})(?: †)? |— ){3})([A-Z][a-z]{2}) (\\d{1,2}), (\\d{4})( †)?`).exec(electron);
-    return m && !m[5] ? isoDate(m[2]!, m[3]!, m[4]!) : undefined;
-  },
-  django: (v) => {
-    const m = new RegExp(`\\b${v.replace(".", "\\.")} (?:LTS (?:\\d )?)?${v.replace(".", "\\.")}\\.\\d+ [A-Z][a-z]+ \\d{1,2}, \\d{4} ([A-Z][a-z]+) (\\d{1,2}), (\\d{4})`).exec(django);
-    return m ? isoDate(m[1]!, m[2]!, m[3]!) : undefined;
-  },
-  angular: (v) => {
-    const m = /Angular versions v(\d+) to v(\d+) are no longer supported\./.exec(angular);
-    return m && Number(v) >= Number(m[1]) && Number(v) <= Number(m[2]) ? "" : undefined;
-  },
-  nuxt: (v) => new RegExp(`\\*\\*${v}\\.x\\*\\* \\(\\w+\\) \\|[^|]*\\|[^|]*\\| (\\d{4}-\\d{2}-\\d{2}) `).exec(nuxt)?.[1],
-};
-// Schedules a tool file declares bring their own reader of the official data.
-const declared = new Map(
-  await Promise.all(FACT_EOL.map(async (e) => [e.product as string, new Map(e.parse(await raw(e.data)).map((l) => [l.version, l.date]))] as const)),
-);
-for (const [product, { versions }] of Object.entries(EOL)) {
-  for (const { version, date } of versions) {
-    const theirs = declared.has(product) ? declared.get(product)!.get(version) : official[product]!(version);
+// Every end-of-life date, against the makers' own data, read by each schedule's own parser.
+for (const e of FACT_EOL) {
+  const published = new Map(e.parse(await (await fetch(e.data)).text()).map((l) => [l.version, l.date]));
+  for (const { version, date } of e.versions) {
+    const theirs = published.get(version);
     const ok = theirs === date;
     if (!ok) failed++;
-    console.log(`${ok ? "✓" : "✗"} eol.${product} ${version} ${date}${ok ? "" : `  official: ${theirs}`}`);
+    console.log(`${ok ? "✓" : "✗"} eol.${e.product} ${version} ${date}${ok ? "" : `  official: ${theirs}`}`);
   }
 }
 

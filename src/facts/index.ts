@@ -3,7 +3,14 @@
  * a tool: write `tools/<ecosystem>/<tool>.ts`, list it here, run the tests.
  */
 import type { EolDef, Fact, Source, Tool } from "./define";
+import angular from "./tools/js/angular";
+import electron from "./tools/js/electron";
 import eslint from "./tools/js/eslint";
+import node from "./tools/js/node";
+import nuxt from "./tools/js/nuxt";
+import vue from "./tools/js/vue";
+import django from "./tools/python/django";
+import python from "./tools/python/python";
 import npm from "./tools/js/npm";
 import oxlint from "./tools/js/oxlint";
 import pnpm from "./tools/js/pnpm";
@@ -31,6 +38,7 @@ import devin from "./tools/ai/devin";
 
 export const TOOLS = [
   // JavaScript and TypeScript
+  node,
   npm,
   pnpm,
   yarn,
@@ -41,10 +49,16 @@ export const TOOLS = [
   vite,
   vitest,
   tailwind,
+  vue,
+  nuxt,
+  angular,
+  electron,
   // Rust
   cargo,
   rustup,
   // Python
+  python,
+  django,
   poetry,
   pytest,
   ruff,
