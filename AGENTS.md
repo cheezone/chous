@@ -31,6 +31,7 @@
   - 共用的读取函数在 `src/facts/kit.ts`。别处需要这个工具的文件列表（如 `knowledge/tools/eslint.ts`）时从工具文件引用，不要再抄一份。
   - `test/code/facts.test.ts` 对每个工具跑同一套检查：每条事实有原话、中英文都有且占位符一致、正例必报、反例必不报。加工具不用另写测试。
   - 停止维护日期不手写：工具的 `eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `src/facts/data/eol/`（禁止手改）。已记录的日期和官方数据不一致时只报告、不覆盖，交给人判断。
+  - `docs/facts.md`、`docs/facts.zh.md`（「chous 知道什么」）由 `pnpm run docs` 从注册表生成，不要手改；过期时 `test/code/docs.test.ts` 失败。README 和宣言里不再逐个列工具名，只写种类，并链接到它。
   - `.github/workflows/sources.yml` 每周跑 `pnpm run sync --check` 和 `pnpm run sources`，失败就说明官方文档变了。
   - 迁移进行中：已迁 JS 生态（npm、pnpm、Yarn、TypeScript、ESLint、Oxlint、Prettier、Vite、Vitest、Tailwind）、Rust（Cargo、rustup）、Python（Poetry、pytest、Ruff、mypy）、GitHub、Docker Compose、AI 工具（Agent Skills、Codex、Claude Code、Copilot、Cursor、Devin、Cline）。`contracts.ts` 只剩 chous 自己的观察 `nodeVersions`（同一事实写两遍且不一致，不需要别人的原话）。停止维护时间表已全部迁入（Node、Python、Vue、Nuxt、Angular、Electron、Django、ESLint，各自带读取官方数据的 `parse`，`eol.ts` 只剩查询函数）。npm 包（平台自带、作者废弃、作者破坏）在 `src/facts/packages/npm.ts`，每条带原因的中英文和作者原话。工具说「不该提交」的路径（`.cursorrules`、`CLAUDE.local.md`、`.env*.local`、`bun.lockb`、`.dev.vars`……）写成工具文件里的 `absent`，带作用域（`base`/`js`/`bun`/`cloudflare`），由 `t.absent(scope)` 变成 `no` 规则。`sources.ts` 只剩 chous 自己规则的来源和 Next.js、Nuxt 的目录规则（等框架目录调研时一起迁）。每批迁完 `pnpm run corpus` 必须零差异。
 - 品味规则在 `src/taste/*.ts`（`base` / `js`（含 monorepo、bun、cloudflare）/ `frameworks`（next、nuxt）/ `deps` / `eol` / `hygiene` / `sources`）。`resolveTaste(root)` 按项目形态叠加。
@@ -59,6 +60,7 @@ pnpm run build       # tsdown
 node dist/cli.mjs    # 用 chous 检查本仓库（CI 也会跑）
 pnpm run test        # vitest run
 pnpm run sync        # 从官方数据追加停止维护日期（需联网）
+pnpm run docs        # 从注册表重新生成 docs/facts*.md
 ```
 
 ## CI（.github/workflows/ci.yml）

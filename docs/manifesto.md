@@ -89,9 +89,11 @@ Some taste needs the code read and understood. That is not written into chous's 
 
 ## Appendix: what each rule knows, and what it claims
 
+What each tool says, and which files chous checks for it: [what chous knows](facts.md), generated from the registry. The table below lists the kinds of rule.
+
 | Rule | What chous knows | What chous claims | Taste | Finding |
 |---|---|---|---|---|
-| Runtimes and frameworks past end of life (Node, Python, Vue, Nuxt, ESLint, Electron, Django, Angular) | The version that runs, and the end-of-life date in the official data; where Angular says only "no longer supported" with no date, chous quotes that | Past end of life stinks | Modernity | Smell |
+| Runtimes and frameworks past end of life | The version that runs, and the end-of-life date in the official data; where Angular says only "no longer supported" with no date, chous quotes that | Past end of life stinks | Modernity | Smell |
 | `engines.node` that allows only ended versions | The declared range, and each of its versions' end-of-life date | Promise nothing only to the dead | Modernity | Smell |
 | Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
 | Config of dead tools (`tslint.json`, `.jscsrc`), legacy formats (`.cursorrules`, `bun.lockb`, `middleware.ts` on Next.js 16) | The file exists; its author deprecated it or called it legacy | Use what the author recommends | Modernity | Smell |
@@ -109,8 +111,8 @@ Some taste needs the code read and understood. That is not written into chous's 
 | GitHub's size limits: files over 50 MiB, a README over 500 KiB, a CODEOWNERS of 3 MB or more | The size, and GitHub's docs | Keep to the platform's limits | Convention | Smell |
 | Files a tool itself calls an older format or location | The file exists, and the tool's own docs | Use what the tool recommends | Modernity | Smell |
 | tsconfig options TypeScript 6 deprecated | The tsconfig, and the TypeScript 6.0 release notes | TypeScript 7 drops them; change now | Modernity | Smell |
-| Cargo's deprecated `authors` field (one finding per repository, counted) and `[replace]`; Poetry fields handed over to `[project]` | The manifest's content, and the Cargo and Poetry docs' own words | Use what the tool recommends | Modernity | Smell |
-| A second config of one tool in one directory (Prettier, ESLint, Vite, Oxlint, Cargo, pytest, Ruff, mypy) | Which configs exist, and the tool's documented precedence | One tool, one config | Order | Smell |
+| Manifest fields and tables a tool deprecated (Cargo's `authors`, for one: one finding per repository, counted) | The manifest's content, and the tool's own words | Use what the tool recommends | Modernity | Smell |
+| A second config of one tool in one directory | Which configs exist, and the tool's documented precedence | One tool, one config | Order | Smell |
 | Node pinned twice to different versions | `.nvmrc`, `.node-version`, `.tool-versions` | One fact, said once | Order | Smell |
 | Files and fields a package manager no longer reads; package names npm refuses | Files, fields, the pinned `packageManager` version, and npm's, pnpm's and Yarn's docs | Write what the package manager reads | Convention | Smell |
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
