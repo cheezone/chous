@@ -1,5 +1,7 @@
 import type { Rule, RuleBase, Value } from "../types";
 import type { MessageKey } from "../i18n";
+import type { Scope } from "../facts/define";
+import { absentIn } from "../facts";
 
 type Extra = Pick<RuleBase, "reason" | "verdict" | "value">;
 
@@ -29,6 +31,11 @@ export function taste(id: string) {
     /** In these roles, a second tool is a bug. */
     oneToolPer(roles: string[]) {
       push({ kind: "stack", roles, value: "order" });
+    },
+
+    /** Paths the tools of this kind of project say should not be there (src/facts/tools/, `absent`). */
+    absent(scope: Scope) {
+      for (const a of absentIn(scope)) push({ kind: "no", names: [...a.names], reason: `reason.${a.id}` as MessageKey, value: a.value });
     },
 
     /** A package.json field must not exist. */

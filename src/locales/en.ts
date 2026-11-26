@@ -1,4 +1,4 @@
-import { depMessages, eolMessages, factMessages } from "../facts";
+import { absentMessages, depMessages, eolMessages, factMessages } from "../facts";
 
 /** English messages. The source of truth: every other locale mirrors these keys. */
 export default {
@@ -121,20 +121,13 @@ export default {
     },
   },
   reason: {
+    ...absentMessages("en"),
     chousConfig: "chous has no config, delete it",
     osJunk: "OS junk, delete it and gitignore it",
-    envLocal: "local env file that may hold secrets; Vite and Next.js say to gitignore *.local",
     logs: "logs, gitignore them",
     nestedLockfile: "one lockfile, at the workspace root",
     nestedPackageManager: "set it once, in the workspace root",
-    deadToolConfig: "leftover config of a dead tool",
-    bunLockb: "binary lockfile, run `bun install --save-text-lockfile` and commit bun.lock",
     bunRunsTs: "Bun runs TypeScript directly.",
-    devVars: "Worker secrets, gitignore it and commit .dev.vars.example instead",
-    wranglerState: "local Wrangler state, gitignore it",
-    claudeLocal: "personal Claude Code file; its docs say to keep it out of git",
-    ideaWorkspace: "personal IDE state; JetBrains says workspace.xml should not be shared, the rest of .idea may be",
-    cursorrules: "legacy: Cursor says .cursorrules will be deprecated, move it to .cursor/rules or AGENTS.md",
     localProperties: "machine-specific Android SDK path; the file's own header says it must NOT be checked in",
     nextSrcIgnored: "Next.js ignores src/app and src/pages when app/ or pages/ is at the root",
     nextCase: "Next.js looks for lowercase app/, pages/ and public/; this name works on macOS and vanishes on Linux",

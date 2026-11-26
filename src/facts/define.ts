@@ -78,6 +78,24 @@ export type EolDef<P extends string = string> = {
   examples: Examples;
 };
 
+/** Which projects an absent fact applies to: every one, JavaScript ones, those on Bun, or on Cloudflare Workers. */
+export type Scope = "base" | "js" | "bun" | "cloudflare";
+
+/**
+ * A path the tool says should not be in the repository: personal, local or
+ * legacy. Reported as `issue.no.because` with `reason.<id>`.
+ */
+export type AbsentFact<Id extends string = string> = {
+  id: Id;
+  scope: Scope;
+  /** Globs, relative to the project root; a leading `**` matches anywhere. */
+  names: readonly string[];
+  value: Value;
+  message: Text;
+  sources: Source[];
+  examples: Examples;
+};
+
 export type Tool = {
   id: string;
   name: string;
@@ -88,8 +106,15 @@ export type Tool = {
   /** Config files it used to read. */
   legacy?: readonly string[];
   facts: readonly Fact[];
+  /** Paths it says should not be committed. */
+  absent?: readonly AbsentFact[];
   eol?: EolDef;
 };
+
+/** A path that should not be there; `const` keeps the id literal. */
+export function absent<const Id extends string>(fact: AbsentFact<Id>): AbsentFact<Id> {
+  return fact;
+}
 
 /** Declare a tool. `const` keeps fact ids and product names literal, so message keys stay typed. */
 export function tool<const T extends Tool>(def: T): T {

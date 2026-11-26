@@ -26,24 +26,6 @@ const GH = "https://raw.githubusercontent.com";
 export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ...FACT_SOURCES,
   ...DEP_SOURCES,
-  "reason.envLocal": [
-    { url: "https://vite.dev/guide/env-and-mode", check: `${GH}/vitejs/vite/main/docs/guide/env-and-mode.md`, quote: "loaded in all cases, ignored by git" },
-    {
-      url: "https://nextjs.org/docs/app/guides/environment-variables",
-      check: `${GH}/vercel/next.js/canary/docs/01-app/02-guides/environment-variables.mdx`,
-      quote: ".env*.local are intended to be ignored through .gitignore",
-    },
-  ],
-  "reason.claudeLocal": [
-    { url: "https://code.claude.com/docs/en/memory", check: "https://code.claude.com/docs/en/memory.md", quote: "Add CLAUDE.local.md to your .gitignore so it isn't committed." },
-    { url: "https://code.claude.com/docs/en/settings", check: "https://code.claude.com/docs/en/settings.md", quote: "Claude Code keeps it out of git when it creates the file" },
-  ],
-  "reason.ideaWorkspace": [
-    { url: "https://www.jetbrains.com/help/webstorm/configure-project-settings.html", quote: "The workspace.xml file stores user-specific settings that should not be shared." },
-  ],
-  "reason.cursorrules": [
-    { url: "https://cursor.com/help/customization/rules#how-do-i-migrate-from-cursorrules", check: "https://cursor.com/help/customization/rules", quote: "cursorrules file in your project root is legacy and will be deprecated." },
-  ],
   "reason.nextSrcIgnored": [
     {
       url: "https://nextjs.org/docs/app/api-reference/file-conventions/src-folder",
@@ -68,34 +50,8 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   "issue.workspace.listsDiffer": [
     { url: "https://pnpm.io/workspaces", check: `${GH}/pnpm/pnpm.io/main/docs/workspaces.md`, quote: "If the workspaces field later lists different patterns than packages in pnpm-workspace.yaml, pnpm prints a warning, since only pnpm-workspace.yaml is read." },
   ],
-  "reason.bunLockb": [
-    { url: "https://bun.com/docs/pm/lockfile", check: `${GH}/oven-sh/bun/main/docs/pm/lockfile.mdx`, quote: "To migrate an existing binary bun.lockb, run bun install --save-text-lockfile" },
-  ],
-  "reason.devVars": [
-    {
-      url: "https://developers.cloudflare.com/workers/configuration/secrets/",
-      check: `${GH}/cloudflare/cloudflare-docs/production/src/content/partials/workers/secrets-in-dev.mdx`,
-      quote: "The .dev.vars and .env files should not be committed to git.",
-    },
-    {
-      url: "https://developers.cloudflare.com/workers/platform/deploy-buttons/",
-      check: `${GH}/cloudflare/cloudflare-docs/production/src/content/docs/workers/platform/deploy-buttons.mdx`,
-      quote: "can be defined in a .dev.vars.example or .env.example file",
-    },
-  ],
   // Dependencies their authors deprecated, called legacy or broke (taste/deps.ts).
-  "reason.deadToolConfig": [
-    { url: "https://github.com/palantir/tslint/issues/4534", check: "https://registry.npmjs.org/tslint", quote: "TSLint has been deprecated in favor of ESLint" },
-    { url: "https://www.npmjs.com/package/jscs", check: "https://registry.npmjs.org/jscs", quote: "JSCS has merged with ESLint!" },
-  ],
   "reason.bunRunsTs": [{ url: "https://bun.com/docs/runtime", check: `${GH}/oven-sh/bun/main/docs/runtime/index.mdx`, quote: "Bun supports TypeScript and JSX with no configuration." }],
-  "reason.wranglerState": [
-    {
-      url: "https://developers.cloudflare.com/workers/vite-plugin/",
-      check: `${GH}/cloudflare/cloudflare-docs/production/src/content/partials/workers/vite-plugin/update-gitignore.mdx`,
-      quote: "additional files are used and/or generated that should not be stored in Git",
-    },
-  ],
   // Files with a claim to the root (taste/hygiene.ts ROOT_CONTRACT_DOCS).
   "issue.leftover.rootDocs": [
     {

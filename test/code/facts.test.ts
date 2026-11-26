@@ -49,6 +49,26 @@ for (const tool of TOOLS) {
       expect(tool.researched).toMatch(/^\d{4}-(0[1-9]|1[0-2])$/);
     });
 
+    for (const fact of "absent" in tool ? (tool.absent ?? []) : []) {
+      describe(`${fact.id} (absent)`, () => {
+        const hits = async (example: Example) =>
+          (await findings(example)).filter((i) => i.ruleKind === "no" && (i.message.params?.reason as { t?: string } | undefined)?.t === `reason.${fact.id}`);
+
+        it("rests on the tool's own words, in both languages", () => {
+          expect(fact.sources.length).toBeGreaterThan(0);
+          for (const source of fact.sources) expect(source.quote?.trim()).toBeTruthy();
+          complete(fact.message);
+        });
+
+        it("is reported on every smell example and on no clean one", async () => {
+          expect(fact.examples.smell.length).toBeGreaterThan(0);
+          expect(fact.examples.clean.length).toBeGreaterThan(0);
+          for (const example of fact.examples.smell) expect((await hits(example)).length, JSON.stringify(example)).toBeGreaterThan(0);
+          for (const example of fact.examples.clean) expect((await hits(example)).map((i) => i.displayPath), JSON.stringify(example)).toEqual([]);
+        });
+      });
+    }
+
     for (const fact of tool.facts) {
       describe(fact.id, () => {
         it("rests on the tool's own words, in both languages, with the same placeholders", () => {

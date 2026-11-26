@@ -1,5 +1,5 @@
 import type { Messages } from "./types";
-import { depMessages, eolMessages, factMessages } from "../facts";
+import { absentMessages, depMessages, eolMessages, factMessages } from "../facts";
 
 /** 简体中文。键与 en.ts 一一对应，缺一个就是类型错误。 */
 export default {
@@ -122,20 +122,13 @@ export default {
     },
   },
   reason: {
+    ...absentMessages("zh"),
     chousConfig: "chous 没有配置，删掉它",
     osJunk: "系统垃圾文件，删掉并加进 .gitignore",
-    envLocal: "本地环境变量文件，可能含密钥；Vite 和 Next.js 官方都要求把 *.local 加进 .gitignore",
     logs: "日志文件，加进 .gitignore",
     nestedLockfile: "只能有一个 lockfile，放在工作区根目录",
     nestedPackageManager: "只在工作区根目录设置一次",
-    deadToolConfig: "已死工具的残留配置",
-    bunLockb: "二进制 lockfile，运行 `bun install --save-text-lockfile`，改为提交 bun.lock",
     bunRunsTs: "Bun 直接运行 TypeScript。",
-    devVars: "Worker 密钥，加进 .gitignore，改为提交 .dev.vars.example",
-    wranglerState: "Wrangler 本地状态，加进 .gitignore",
-    claudeLocal: "Claude Code 的个人文件；官方文档要求不提交",
-    ideaWorkspace: "个人的 IDE 状态；JetBrains 说 workspace.xml 不应共享，.idea 里其余文件可以提交",
-    cursorrules: "旧格式：Cursor 说 .cursorrules 将被废弃，迁到 .cursor/rules 或 AGENTS.md",
     localProperties: "本机的 Android SDK 路径；文件自带的注释就写着「绝不能提交」",
     nextSrcIgnored: "根目录有 app/ 或 pages/ 时，Next.js 会忽略 src/app 和 src/pages",
     nextCase: "Next.js 只认小写的 app/、pages/、public/；在 macOS 上能跑，到了 Linux 就找不到",

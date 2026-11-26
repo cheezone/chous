@@ -36,9 +36,8 @@ export function js(project: JsProject = {}) {
 
   for (const dep of NATIVE) t.obsolete(dep.names, dep.use, depReason(dep), { native: true });
   for (const dep of [...DEPRECATED, ...SABOTAGED]) t.obsolete(dep.names, dep.use, depReason(dep));
-  // Tools their authors ended: TSLint (deprecated), JSCS (merged into ESLint).
-  // JSHint and Bower are not here: neither was ever declared dead.
-  t.no([".jscsrc", "tslint.json"], { reason: "reason.deadToolConfig", value: "modernity" });
+  // Config of tools their authors ended: src/facts/tools/js/retired-linters.ts.
+  t.absent("js");
 
   return t.rules;
 }
@@ -53,7 +52,7 @@ export function monorepo() {
 /** Bun as runtime. */
 export function bun() {
   const t = taste("bun");
-  t.no(["bun.lockb"], { reason: "reason.bunLockb", value: "modernity" });
+  t.absent("bun");
   t.obsolete(["tsx", "ts-node"], "bun", "reason.bunRunsTs", { native: true });
   return t.rules;
 }
@@ -61,7 +60,6 @@ export function bun() {
 /** Cloudflare Workers / Pages projects (a wrangler config at the root). */
 export function cloudflare() {
   const t = taste("cloudflare");
-  t.no(["**/.dev.vars", "**/.dev.vars.!(example)"], { reason: "reason.devVars", value: "cleanliness" });
-  t.no([".wrangler"], { reason: "reason.wranglerState", value: "cleanliness" });
+  t.absent("cloudflare");
   return t.rules;
 }

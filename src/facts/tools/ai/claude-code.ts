@@ -1,4 +1,4 @@
-import { tool } from "../../define";
+import { absent, tool } from "../../define";
 import { custom, legacy, limit, measure } from "../../kinds";
 
 const SKILLS = { url: "https://code.claude.com/docs/en/skills", check: "https://code.claude.com/docs/en/skills.md" };
@@ -57,6 +57,20 @@ export default tool({
         smell: [{ ".claude/commands/deploy.md": "Deploy.", ".claude/skills/deploy/SKILL.md": skill("deploy") }],
         clean: [{ ".claude/commands/test.md": "Test.", ".claude/skills/deploy/SKILL.md": skill("deploy") }],
       },
+    }),
+  ],
+  absent: [
+    absent({
+      id: "claudeLocal",
+      scope: "base",
+      names: ["**/CLAUDE.local.md", "**/.claude/settings.local.json"],
+      value: "cleanliness",
+      message: { en: "personal Claude Code file; its docs say to keep it out of git", zh: "Claude Code 的个人文件；官方文档要求不提交" },
+      sources: [
+        { url: "https://code.claude.com/docs/en/memory", check: "https://code.claude.com/docs/en/memory.md", quote: "Add CLAUDE.local.md to your .gitignore so it isn't committed." },
+        { url: "https://code.claude.com/docs/en/settings", check: "https://code.claude.com/docs/en/settings.md", quote: "Claude Code keeps it out of git when it creates the file" },
+      ],
+      examples: { smell: [{ "CLAUDE.local.md": "Mine." }, { ".claude/settings.local.json": "{}" }], clean: [{ "CLAUDE.md": "Ours.", ".claude/settings.json": "{}" }] },
     }),
   ],
 });

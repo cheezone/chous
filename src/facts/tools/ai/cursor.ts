@@ -1,4 +1,4 @@
-import { tool } from "../../define";
+import { absent, tool } from "../../define";
 import { limit, measure, unread } from "../../kinds";
 
 const RULES = ".cursor/rules/";
@@ -30,6 +30,17 @@ export default tool({
       message: { en: "{{lines}} lines: Cursor says to keep rules under {{limit}}", zh: "{{lines}} 行：Cursor 建议规则不超过 {{limit}} 行" },
       sources: [{ url: DOCS, quote: "Keep rules under 500 lines" }],
       examples: { smell: [{ ".cursor/rules/long.mdc": "x\n".repeat(501) }], clean: [{ ".cursor/rules/style.mdc": "Use tabs." }] },
+    }),
+  ],
+  absent: [
+    absent({
+      id: "cursorrules",
+      scope: "base",
+      names: ["**/.cursorrules"],
+      value: "modernity",
+      message: { en: "legacy: Cursor says .cursorrules will be deprecated, move it to .cursor/rules or AGENTS.md", zh: "旧格式：Cursor 说 .cursorrules 将被废弃，迁到 .cursor/rules 或 AGENTS.md" },
+      sources: [{ url: "https://cursor.com/help/customization/rules#how-do-i-migrate-from-cursorrules", check: "https://cursor.com/help/customization/rules", quote: "cursorrules file in your project root is legacy and will be deprecated." }],
+      examples: { smell: [{ ".cursorrules": "Be nice." }], clean: [{ ".cursor/rules/style.mdc": "Be nice." }] },
     }),
   ],
 });
