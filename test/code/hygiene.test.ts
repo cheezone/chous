@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { lintWorkspace } from "../../src/rules/lint";
@@ -260,7 +260,7 @@ describe("twins", () => {
     expect(await findings({ ".idea/workspace.xml": "", ".idea/vcs.xml": "", ".cursorrules": "" })).toEqual([".cursorrules", ".idea/workspace.xml"]);
   });
 
-  it("finds one concept under two names in any directory, whatever the case, and the two Unicode forms of one name", async () => {
+  it("finds one concept under two names in any directory, whatever the case", async () => {
     expect(
       await findings({
         "src/test/a.ts": "",
@@ -269,10 +269,21 @@ describe("twins", () => {
         "lib/categories/b.ts": "",
         "lib/box/a.ts": "",
         "lib/boxes/b.ts": "",
-        "docs/caf\u00e9.md": "# a",
-        "docs/cafe\u0301.md": "# b",
       }),
-    ).toEqual(expect.arrayContaining(["src/test/ + Tests/", "lib/category/", "lib/box/", "docs/caf\u00e9.md"]));
+    ).toEqual(expect.arrayContaining(["src/test/ + Tests/", "lib/category/", "lib/box/"]));
+  });
+
+  it("finds the two Unicode forms of one name, where the file system keeps both", async () => {
+    const files = { "docs/caf\u00e9.md": "# a", "docs/cafe\u0301.md": "# b" };
+    const root = mkdtempSync(join(tmpdir(), "chous-unicode-"));
+    for (const [path, content] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content, "utf8");
+    }
+    // macOS folds the two forms itself and keeps one file: then there is nothing to find.
+    const kept = readdirSync(join(root, "docs")).length;
+    const found = (await lintWorkspace({ root })).issues.map((i) => i.displayPath);
+    expect(found).toEqual(kept === 2 ? ["docs/caf\u00e9.md"] : []);
   });
 
   it("flags a plural next to its singular", async () => {
