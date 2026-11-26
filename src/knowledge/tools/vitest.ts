@@ -10,7 +10,6 @@ export default defineTool({
         { type: "deps", names: ["vitest"] },
         { type: "scripts", commands: ["vitest"] },
       ],
-      files: ["vitest.config.*", "vitest.workspace.*"],
     },
   },
 });

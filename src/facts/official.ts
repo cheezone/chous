@@ -1,7 +1,7 @@
 /**
  * Readers for the data projects publish about themselves: release schedules,
- * support tables. Only `pnpm run sync` and `pnpm run sources` call them; the
- * CLI itself never goes online.
+ * support tables. Only `pnpm run sync` calls them; the CLI itself never goes
+ * online.
  */
 import type { EolLine } from "./define";
 

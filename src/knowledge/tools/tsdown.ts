@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["tsdown.config.*"] },
         { type: "deps", names: ["tsdown"] },
       ],
-      files: ["tsdown.config.*"],
     },
   },
 });

@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["turbo.json"] },
         { type: "deps", names: ["turbo"] },
       ],
-      files: ["turbo.json"],
     },
   },
 });

@@ -74,7 +74,6 @@ export default {
       because: "not allowed: {{reason}}",
     },
     deps: {
-      forbidden: "dependency {{name}} is not allowed",
       obsolete: "{{name}}: {{why}} → {{use}}",
       native: "the platform ships {{use}}: whether it fully replaces {{name}} depends on how you use it",
     },

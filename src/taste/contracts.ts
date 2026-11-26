@@ -9,10 +9,9 @@
  */
 import type { Value } from "../types";
 import { FACTS, type FactId } from "../facts";
-import { type ContractFile, field, frontmatter, major, parseJsonc, tomlTableKeys } from "../facts/kit";
+import { type ContractFile, major } from "../facts/kit";
 
 export type { ContractFile };
-export { field, frontmatter, parseJsonc, tomlTableKeys };
 
 export type Contract = {
   id: ContractId;

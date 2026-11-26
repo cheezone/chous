@@ -77,7 +77,7 @@ export function getKnowledge(): KnowledgeBundle {
   return knowledge;
 }
 
-/** JSON-serializable dump for `chous knowledge --json` and external agents. */
+/** What `chous knowledge` prints, for agents and other tools. */
 export function knowledgeToJSON(): unknown {
   return {
     roles: [...knowledge.roles],

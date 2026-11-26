@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["nx.json"] },
         { type: "deps", names: ["nx", "@nx/devkit"] },
       ],
-      files: ["nx.json", "project.json"],
     },
   },
 });

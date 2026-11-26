@@ -9,7 +9,6 @@ export default defineTool({
         { type: "deps", names: ["changelogen"] },
         { type: "scripts", commands: ["changelogen"] },
       ],
-      files: [],
     },
   },
 });

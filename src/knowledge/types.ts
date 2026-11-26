@@ -1,7 +1,5 @@
 import type { RoleId } from "./roles";
 
-export type ToolStatus = "active" | "deprecated" | "beta";
-
 /** Detection signals — filenames, deps, package.json fields, scripts. No source parsing. */
 export type Signal =
   | { type: "files"; patterns: string[] }
@@ -12,17 +10,11 @@ export type Signal =
 export type RolePresence = {
   /** Any matching signal marks the tool as occupying this role. */
   signals: Signal[];
-  /**
-   * Config / lock / marker files owned by this tool in this role.
-   * Declared tools auto-allow these; siblings in the same role auto-forbid theirs.
-   */
-  files?: string[];
 };
 
 export type ToolDef = {
   id: string;
   name: string;
-  status?: ToolStatus;
   roles: Partial<Record<RoleId, RolePresence>>;
 };
 

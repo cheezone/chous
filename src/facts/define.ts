@@ -129,7 +129,7 @@ export type PackageFact = {
   /** What to use instead. */
   use: string;
   why: Text;
-  /** The authors' own words. Native entries rest on the platform's docs instead. */
+  /** The authors' own words: required, except for what the platform ships. */
   sources?: Source[];
 };
 

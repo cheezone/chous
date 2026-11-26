@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["yarn.lock", ".yarnrc.yml", ".yarnrc"] },
         { type: "pkgField", field: "packageManager", equals: "yarn" },
       ],
-      files: ["yarn.lock", ".yarnrc.yml", ".yarnrc"],
     },
   },
 });

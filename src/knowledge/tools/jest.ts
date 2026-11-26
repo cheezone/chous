@@ -10,7 +10,6 @@ export default defineTool({
         { type: "deps", names: ["jest"] },
         { type: "scripts", commands: ["jest"] },
       ],
-      files: ["jest.config.*"],
     },
   },
 });

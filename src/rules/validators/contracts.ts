@@ -24,7 +24,7 @@ function statSize(path: string): number {
   }
 }
 
-/** The official rules tools set for the files they read (see taste/contracts.ts). */
+/** Runs every contract over each file: the facts in src/facts/ and chous's own (taste/contracts.ts). */
 export class ContractsRuleValidator extends BaseRuleValidator<ContractsRule> {
   canHandle(rule: Rule): rule is ContractsRule {
     return rule.kind === "contracts";

@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["package-lock.json", "npm-shrinkwrap.json"] },
         { type: "pkgField", field: "packageManager", equals: "npm" },
       ],
-      files: ["package-lock.json", "npm-shrinkwrap.json"],
     },
   },
 });

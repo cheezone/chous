@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: [".husky"] },
         { type: "deps", names: ["husky"] },
       ],
-      files: [".husky"],
     },
   },
 });

@@ -83,9 +83,9 @@ npx chous
 
 不检查缺失（没有测试、没有 CI、没有许可证都不报）；不按行数、体积、文件数量判，除非官方文档给了具体限制；也不检查正确性和安全。测试夹具和 `vendor/` 不查，`tests/`、`examples/` 是你自己的代码，照常检查。
 
-每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。原话和各自的工具放在一起，在 [`src/facts/tools/`](src/facts/tools/)（chous 自己规则的来源在 [`src/taste/sources.ts`](src/taste/sources.ts)）；`pnpm run sources` 会逐条核对原话还在不在页面上，并把每个停止维护日期和官方数据比对。`pnpm run corpus` 会核对 chous 对 57 个真实仓库（锁定在 [`test/corpus.json`](test/corpus.json)）说的每一句话，和 [已记录的结论](test/corpus.claims.txt) 比对。
+每一条引用别人说法的原因都附有来源：加 `--verbose` 会在每条结果下面显示出处，加 `--json` 会以数据形式给出。每周有一个任务核对每句原话还在不在页面上、每个停止维护日期和官方数据是否一致；`pnpm run corpus` 会把 chous 对 57 个真实仓库说的每一句话和[已记录的结论](test/corpus.claims.txt)比对。
 
-规则在 [`src/taste/`](src/taste)：`base` 总是生效；`js`、`monorepo`、`bun`、`cloudflare`、`next`、`nuxt` 按项目的样子叠加。
+chous 对一个工具的全部知识都在 [`src/facts/tools/`](src/facts/tools/) 下的一个文件里：它的文件、它的原话、chous 用各语言怎么说，以及必须报和必须不报的例子。
 
 ### 命令
 
@@ -96,7 +96,7 @@ npx chous manifesto       # 输出品味宣言，给 agent 读完再审视整个
 npx chous claude install  # 在 Claude Code hooks 里运行 chous
 npx chous cursor install  # 在 Cursor hooks 里运行 chous
 npx chous scan .          # 找 git 仓库，识别项目类型 / 技术栈角色
-npx chous knowledge       # 导出内置工具 / 类型 / 迁移知识 JSON
+npx chous knowledge       # 以 JSON 导出 chous 识别的工具、角色和项目类型
 ```
 
 输出支持英文和中文（`-l en` / `-l zh`，默认跟随系统）。

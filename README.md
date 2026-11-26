@@ -83,9 +83,9 @@ Which tools, which files and which words: [the catalogue of what chous knows](do
 
 Nothing missing is reported (no tests, no CI, no license), nothing is judged by line count, size or file count unless official docs set the limit, and neither correctness nor security is checked. Test fixtures and `vendor/` are skipped; `tests/` and `examples/` are your own code and are checked.
 
-Every reason that rests on someone else's word links to it: run with `--verbose` to see the source under each finding, or `--json` to get them as data. The quotes live with each tool in [`src/facts/tools/`](src/facts/tools/) (chous's own rules keep theirs in [`src/taste/sources.ts`](src/taste/sources.ts)); `pnpm run sources` checks each one is still on its page and every end-of-life date against the official data. `pnpm run corpus` checks every claim chous makes about 57 real repositories, pinned in [`test/corpus.json`](test/corpus.json), against [the recorded claims](test/corpus.claims.txt).
+Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every quote is still on its page and every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 57 real repositories against [the recorded claims](test/corpus.claims.txt).
 
-The rules live in [`src/taste/`](src/taste): `base` always applies; `js`, `monorepo`, `bun`, `cloudflare`, `next` and `nuxt` add up by the shape of the project.
+Everything chous knows about a tool lives in one file under [`src/facts/tools/`](src/facts/tools/): its files, its words, what chous says in each language, and examples it must and must not report.
 
 ### Commands
 
@@ -96,7 +96,7 @@ npx chous manifesto       # print the manifesto, for an agent to read before rev
 npx chous claude install  # run chous in Claude Code hooks
 npx chous cursor install  # run chous in Cursor hooks
 npx chous scan .          # find git repos, detect project kinds / stack roles
-npx chous knowledge       # dump built-in tool / kind / migration knowledge as JSON
+npx chous knowledge       # dump the tools, roles and project kinds chous detects, as JSON
 ```
 
 Output is in English or Chinese (`-l en` / `-l zh`; default follows the system).

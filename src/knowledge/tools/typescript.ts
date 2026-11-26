@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["tsconfig.json", "tsconfig.*.json", "jsconfig.json"] },
         { type: "deps", names: ["typescript"] },
       ],
-      files: ["tsconfig.json", "tsconfig.*.json", "jsconfig.json"],
     },
   },
 });

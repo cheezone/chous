@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["playwright.config.*"] },
         { type: "deps", names: ["@playwright/test", "playwright"] },
       ],
-      files: ["playwright.config.*"],
     },
   },
 });

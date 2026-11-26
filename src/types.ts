@@ -49,11 +49,10 @@ export type NoFilesRule = RuleBase & {
 /** Dependencies that are rotten, or redundant because the platform ships them. */
 export type DepsRule = RuleBase & {
   kind: "deps";
-  mode: "no";
   /** Package names, or a scope wildcard such as `@scope/*`. */
   names: string[];
   /** What to use instead. */
-  use?: string;
+  use: string;
   /** The platform ships something similar: whether it fully replaces the package is for review. */
   native?: boolean;
 };
@@ -64,7 +63,7 @@ export type ManifestRule = RuleBase & {
   field: string;
 };
 
-/** Runtimes and frameworks past their published end of life (see `taste/eol.ts`). */
+/** Runtimes and frameworks past their published end of life (each tool's `eol` in src/facts/). */
 export type LifecycleRule = RuleBase & {
   kind: "lifecycle";
 };
@@ -74,12 +73,12 @@ export type ArtifactsRule = RuleBase & {
   kind: "artifacts";
 };
 
-/** Rules tools state for the files they read (see `taste/contracts.ts`). */
+/** What tools state about the files they read (src/facts/). */
 export type ContractsRule = RuleBase & {
   kind: "contracts";
 };
 
-/** One name written two ways (see `TwinsRuleValidator`). */
+/** One thing twice: two names for it, or two identical copies. */
 export type TwinsRule = RuleBase & {
   kind: "twins";
 };

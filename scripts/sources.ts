@@ -1,9 +1,8 @@
 /**
- * Checks that every quote in src/taste/sources.ts is still on its page.
- * Run it when a source might have moved: `pnpm run sources`.
+ * Checks that every quote chous cites (tool files and chous's own rules) is
+ * still on its page. End-of-life dates are `pnpm run sync --check`'s job.
  */
 import { SOURCES } from "../src/taste/sources";
-import { FACT_EOL } from "../src/facts";
 
 /** Text of a page; tags are stripped only from HTML — Markdown keeps a literal `<name>`. */
 const normalize = (text: string) => {
@@ -34,17 +33,6 @@ for (const [key, sources] of Object.entries(SOURCES)) {
     console.log(`${ok ? "✓" : "✗"} ${key}  ${source.url}${ok ? "" : `\n    missing: "${source.quote}"${why}`}`);
   }
 }
-// Every end-of-life date, against the makers' own data, read by each schedule's own parser.
-for (const e of FACT_EOL) {
-  const published = new Map(e.parse(await (await fetch(e.data)).text()).map((l) => [l.version, l.date]));
-  for (const { version, date } of e.versions) {
-    const theirs = published.get(version);
-    const ok = theirs === date;
-    if (!ok) failed++;
-    console.log(`${ok ? "✓" : "✗"} eol.${e.product} ${version} ${date}${ok ? "" : `  official: ${theirs}`}`);
-  }
-}
-
 if (failed) {
   console.log(`\n${failed} quote(s) not found: the page moved or changed its words.`);
   process.exit(1);

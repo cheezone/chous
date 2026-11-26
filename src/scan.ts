@@ -42,7 +42,7 @@ export function findGitRepos(dir: string, maxDepth = DEFAULT_MAX_DEPTH): string[
     }
     if (entries.includes(".git")) {
       found.push(current);
-      // Still peek one level for nested worktrees? Usually stop — a repo is a unit.
+      // A repository is a unit: its nested folders are not searched.
       return;
     }
     for (const name of entries) {
@@ -108,7 +108,7 @@ export function createVfsProvider(snapshot: WorkspaceSnapshot) {
 async function detectSpecfyComponents(snapshot: WorkspaceSnapshot): Promise<ScanRepoResult["components"]> {
   try {
     const sa = await import("@specfy/stack-analyser");
-    // Load default rules
+    // The analyser's built-in detection rules register themselves on import.
     await import("@specfy/stack-analyser/dist/autoload.js");
     const provider = createVfsProvider(snapshot);
     const result = await sa.analyser({ provider });

@@ -5,7 +5,6 @@ export {
   type ToolDef,
   type KindDef,
   type Signal,
-  type ToolStatus,
   type RolePresence,
 } from "./types";
 export { knowledge, getKnowledge, knowledgeToJSON, type KnowledgeBundle } from "./registry";

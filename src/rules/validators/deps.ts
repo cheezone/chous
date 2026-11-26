@@ -16,7 +16,7 @@ function safeLabel(label: string): string {
   return label.replaceAll("/", "∕");
 }
 
-/** Banned dependencies, with the replacement when there is one. */
+/** Dependencies their authors ended, or the platform replaced, with what to use instead. */
 export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
   canHandle(rule: Rule): rule is DepsRule {
     return rule.kind === "deps";
@@ -31,11 +31,9 @@ export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
         context.rawIssues.push(issueFromRule(rule, {
           path: `${manifest.path}#forbidden:${name}`,
           displayPath: `package.json (${safeLabel(name)})`,
-          message: !rule.use
-            ? { key: "issue.deps.forbidden", params: { name } }
-            : rule.native
-              ? { key: "issue.deps.native", params: { name, use: rule.use } }
-              : { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
+          message: rule.native
+            ? { key: "issue.deps.native", params: { name, use: rule.use } }
+            : { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
           verdict: rule.native ? "review" : "smell",
           // The authors' own words are in the message already.
           ...(rule.native ? {} : { reason: false as const }),

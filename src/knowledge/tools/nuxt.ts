@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["nuxt.config.*"] },
         { type: "deps", names: ["nuxt"] },
       ],
-      files: ["nuxt.config.*"],
     },
   },
 });

@@ -5,7 +5,8 @@ import { BaseRuleValidator } from "./base";
 import { detectRoleOccupancy, roleLabel, type RoleId } from "../../knowledge";
 
 /**
- * Two tools doing the same job is a bug, whichever two they are.
+ * Two tools holding one job, whichever two they are. chous does not claim they
+ * break each other.
  * Only strong signals count (config files, lockfiles, package.json fields, scripts),
  * so a stray dependency alone never triggers it.
  */

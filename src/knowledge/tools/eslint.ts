@@ -1,9 +1,6 @@
 import { defineTool } from "../types";
 import facts from "../../facts/tools/js/eslint";
 
-/** Detected by the files the facts declare: one list, no copy to drift. */
-const FILES = [...facts.legacy, ...facts.configs];
-
 export default defineTool({
   id: "eslint",
   name: "ESLint",
@@ -12,11 +9,10 @@ export default defineTool({
       signals: [
         {
           type: "files",
-          patterns: FILES,
+          patterns: [...facts.legacy, ...facts.configs],
         },
         { type: "deps", names: ["eslint"] },
       ],
-      files: FILES,
     },
   },
 });

@@ -10,7 +10,6 @@ export default defineTool({
         { type: "deps", names: ["simple-git-hooks"] },
         { type: "pkgField", field: "simple-git-hooks", exists: true },
       ],
-      files: [".githooks"],
     },
   },
 });

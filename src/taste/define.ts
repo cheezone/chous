@@ -28,7 +28,7 @@ export function taste(id: string) {
       push({ kind: "no", names, ...extra });
     },
 
-    /** In these roles, a second tool is a bug. */
+    /** In these roles, a second tool holding the same job is a smell. */
     oneToolPer(roles: string[]) {
       push({ kind: "stack", roles, value: "order" });
     },
@@ -48,9 +48,9 @@ export function taste(id: string) {
       push({ kind: "workspace", value: "order" });
     },
 
-    /** Rotten deps (an error), or with `native` redundant ones the platform now ships (a warning). */
+    /** Dependencies their authors ended (a smell), or with `native` ones the platform now ships (for review). */
     obsolete(names: string[], use: string, why: MessageKey, opts?: { native?: boolean }) {
-      push({ kind: "deps", mode: "no", names, use, reason: why, value: "modernity", ...opts });
+      push({ kind: "deps", names, use, reason: why, value: "modernity", ...opts });
     },
 
     /** Runtimes and frameworks past their published end of life. */
@@ -68,16 +68,14 @@ export function taste(id: string) {
       push({ kind: "leftover", value: "cleanliness", ...opts });
     },
 
-    /** The rules tools state for the files they read: places, names, sizes, legacy formats. */
+    /** What tools state about the files they read (src/facts/): places, names, sizes, legacy formats. */
     contracts() {
       push({ kind: "contracts", value: "convention" });
     },
 
-    /** One name written two ways: only case differs, or singular next to plural. */
+    /** One thing twice: names that differ only by case, number or synonym, or two identical files. */
     twins() {
       push({ kind: "twins", value: "order" });
     },
   };
 }
-
-export type TasteBuilder = ReturnType<typeof taste>;

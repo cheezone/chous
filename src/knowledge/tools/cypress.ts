@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["cypress.config.*", "cypress"] },
         { type: "deps", names: ["cypress"] },
       ],
-      files: ["cypress.config.*", "cypress"],
     },
   },
 });

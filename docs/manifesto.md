@@ -11,7 +11,7 @@ There is one taste. It cannot be configured or switched off. chous has the right
 ### Modernity
 
 - What has reached end of life stinks, from the day it ends. There is no grace period. That it still runs has nothing to do with it.
-- What its authors deprecated, broke on purpose, or call legacy or in maintenance mode themselves: all of it stinks — tsconfig options TypeScript 6 deprecated (`baseUrl`, `moduleResolution: "node"`, …), ESLint, Electron and Django releases past end of life, Angular majors no longer supported, Vue CLI, Cargo's deprecated `authors` field and `[replace]`, and the `[tool.poetry]` fields Poetry hands over to `[project]`.
+- What its authors deprecated, broke on purpose, or call legacy or in maintenance mode themselves: all of it stinks — tsconfig options TypeScript 6 deprecated, Vue CLI in maintenance mode, Cargo's deprecated `authors` field.
 - A healthy old technology does not stink. No chasing the new, no pecking order: slow, old or unfashionable is not a smell, and neither is silence nobody announced.
 
 ### Order
@@ -23,17 +23,16 @@ There is one taste. It cannot be configured or switched off. chous has the right
 - Configuration as gathered as it can be without crossing responsibilities: one tool's config in one place, each tool its own.
 - Nothing laid out flat. Hundreds of files in one directory, every responsibility in one file: neither is organised. But a count proves nothing by itself, so chous does not judge counts; the agent does (see below).
 - One job, one tool: two package managers, two formatters, two git-hook managers or two release tools at once stink. chous does not claim they break each other, only that one job has two tools.
-- One tool, one config per directory. Prettier, ESLint, Vite, Oxlint, pytest, Ruff and mypy each read one by their own precedence; the rest are never read. With both `.cargo/config` and `.cargo/config.toml`, Cargo reads only the latter.
+- One tool, one config per directory. A tool reads one of them by its own precedence (ESLint takes `eslint.config.js` before `.ts`); the rest are never read.
 - One fact, said once: a dependency on two major versions, two instruction files with the same text, two workspace lists that disagree, Node pinned twice to different versions.
 - How many files or dependencies a project has is not a smell.
 
 ### Convention
 
 - Where a framework documents a convention, follow it. A file the framework never reads (`src/app` beside a root `app/` in Next.js, `pages/` outside `app/` in Nuxt 4) is dead code that looks alive, and stinks worst.
-- Where the vendor gives a limit, keep to it: Codex reads only the first 32 KiB of AGENTS.md, Claude Code targets under 200 lines per CLAUDE.md and 500 per SKILL.md, GitHub warns on files over 50 MiB.
-- Where a package manager says what it reads, write that: npm 12 no longer reads `npm-shrinkwrap.json`, pnpm 11 reads only auth from `.npmrc` and no longer the `pnpm` field of package.json, Yarn 2 reads only `.yarnrc.yml`; package names follow npm's rules.
-- Where a tool says where a file lives, what it is called or what format it takes, follow it: Copilot reads only `*.instructions.md` from `.github/instructions/`, Cursor takes only `.mdc` files as rules, GitHub Actions reads only `.github/workflows/`. A file in the wrong place is never read.
-- What a tool itself calls an older format or location stinks: `.claude/commands/` (merged into skills), `.windsurfrules` and `.windsurf/` (legacy to Devin), `.clinerules/` (Cline's older layout), `.chatmode.md`, `.eslintrc` from ESLint 9, `vitest.workspace` (replaced by `projects` since Vitest 3.2), `docker-compose.yml` and Compose's `version` field.
+- Where the vendor gives a limit, keep to it: Codex reads only the first 32 KiB of AGENTS.md, GitHub warns on files over 50 MiB.
+- Where a tool says what it reads, where a file lives or what it is called, follow it: pnpm 11 no longer reads the `pnpm` field of package.json, GitHub Actions reads only `.github/workflows/`. What a tool does not read never takes effect.
+- What a tool itself calls an older format or location stinks: `.eslintrc` from ESLint 9, `docker-compose.yml`, `.claude/commands/` (merged into skills).
 - Supporting several runtimes is fine, and so is the duplication it needs: `workspaces` in package.json alongside `pnpm-workspace.yaml` lets npm, Yarn and Bun read the workspace too. Only when the two disagree does it stink.
 - The convention is what the official docs say, word for word, and every rule cites them.
 
@@ -60,7 +59,7 @@ How chous makes sure of a fact:
 - End-of-life dates exist only for the versions the official data lists. A version missing from it is not reported, and no date is ever inferred.
 - Versions come from what actually runs: `.nvmrc`, `.node-version`, `.python-version`, `.tool-versions`, `FROM` in a Dockerfile, `volta.node`, framework dependencies. `engines.node` is a promise of compatibility, not a runtime; it is reported only when every version it allows has ended, as with `^16`.
 - A file is known by its content, not its name: `Bud1` in a `.DS_Store`, the "must NOT be checked in" Android writes into `local.properties`, the signature at the start of an installer or executable, the marker files a build tool leaves.
-- When chous quotes someone, the quote is in `src/taste/sources.ts`, and `pnpm run sources` checks each one on its page and every end-of-life date against the official data.
+- When chous quotes someone, the quote lives with its tool (`src/facts/tools/`) and is checked on its page every week. End-of-life dates are written from the makers' data by a program, and compared every week too.
 
 ## What chous does not do
 
@@ -93,31 +92,25 @@ What each tool says, and which files chous checks for it: [what chous knows](fac
 
 | Rule | What chous knows | What chous claims | Taste | Finding |
 |---|---|---|---|---|
-| Runtimes and frameworks past end of life | The version that runs, and the end-of-life date in the official data; where Angular says only "no longer supported" with no date, chous quotes that | Past end of life stinks | Modernity | Smell |
+| Runtimes and frameworks past end of life | The version that runs, and the end-of-life date in its makers' data; where they say only "no longer supported" (Angular), chous says just that | Past end of life stinks | Modernity | Smell |
 | `engines.node` that allows only ended versions | The declared range, and each of its versions' end-of-life date | Promise nothing only to the dead | Modernity | Smell |
 | Dependencies deprecated, called legacy or sabotaged by their authors | The name, and the authors' public words (npm's deprecated field, the README, a security advisory) | Build nothing on what is dead | Modernity | Smell |
-| Config of dead tools (`tslint.json`, `.jscsrc`), legacy formats (`.cursorrules`, `bun.lockb`, `middleware.ts` on Next.js 16) | The file exists; its author deprecated it or called it legacy | Use what the author recommends | Modernity | Smell |
+| Files, fields and options a tool itself calls deprecated, obsolete or legacy (an old config format, a retired linter's config, a deprecated manifest field or tsconfig option) | The file or field, the version in use, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Dependencies the platform now ships | The version from which the platform ships it | Whether it fully replaces the package depends on how the project uses it | Modernity | Review |
 | Directories that differ only in case, plural, or synonym | Both names exist | One thing, one name | Order | Smell |
 | Mixed naming styles in one directory | Each name's style | One directory, one style | Order | Smell |
 | A crowded root | How many docs without a claim to the root it holds | The root is an entrance | Order | Smell |
 | Tools that share a job | Both tools' config, lockfile or scripts | One job, one tool | Order | Smell |
-| Major-version drift, nested lockfiles, workspace lists that disagree, in a monorepo | Versions, file locations, the two lists | One fact, said once | Order | Smell |
+| A second config of one tool in one directory | Which configs exist, and the order in which the tool's docs say it reads them | One tool, one config | Order | Smell |
+| One fact said twice, disagreeing: Node pinned to two versions; in a monorepo, major-version drift, nested lockfiles, workspace lists that differ | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | `CLAUDE.md` identical to `AGENTS.md` | Both files have the same text | Keep one; symlink the other or import it with `@AGENTS.md` | Order | Smell |
-| Files a framework never reads; capitalised directories it cannot find | The rule as the framework's docs state it | Follow the framework's convention | Convention | Smell |
-| Agent instruction files over their vendor's limit: AGENTS.md over 32 KiB (Codex), CLAUDE.md over 200 lines, SKILL.md over 500 lines, Cursor rules over 500 lines, Copilot agent prompts over 30,000 characters | Bytes, lines, characters, and the tool's own docs | Keep to the vendor's limit | Convention | Smell |
-| Skills that break the Agent Skills spec: a malformed name, a name unlike its folder, a description over 1,024 characters | The frontmatter | Follow the spec | Convention | Smell |
-| Files in the wrong place or under the wrong name, never read: Cursor rules that are not `.mdc`, Copilot instructions that are not `*.instructions.md`, a command a skill of the same name shadows, a second CODEOWNERS, a dependabot.yml outside `.github/`, a workflow outside `.github/workflows/`, a `tailwind.config` Tailwind 4 never loads | Place, name, package version, and the tool's own docs | Put files where the tool reads them | Convention | Smell |
-| GitHub's size limits: files over 50 MiB, a README over 500 KiB, a CODEOWNERS of 3 MB or more | The size, and GitHub's docs | Keep to the platform's limits | Convention | Smell |
-| Files a tool itself calls an older format or location | The file exists, and the tool's own docs | Use what the tool recommends | Modernity | Smell |
-| tsconfig options TypeScript 6 deprecated | The tsconfig, and the TypeScript 6.0 release notes | TypeScript 7 drops them; change now | Modernity | Smell |
-| Manifest fields and tables a tool deprecated (Cargo's `authors`, for one: one finding per repository, counted) | The manifest's content, and the tool's own words | Use what the tool recommends | Modernity | Smell |
-| A second config of one tool in one directory | Which configs exist, and the tool's documented precedence | One tool, one config | Order | Smell |
-| Node pinned twice to different versions | `.nvmrc`, `.node-version`, `.tool-versions` | One fact, said once | Order | Smell |
-| Files and fields a package manager no longer reads; package names npm refuses | Files, fields, the pinned `packageManager` version, and npm's, pnpm's and Yarn's docs | Write what the package manager reads | Convention | Smell |
+| Files and fields a tool does not read: in the wrong place, under the wrong name, shadowed by another, or dropped from some version on | Place, name, the version in use, and the tool's own words | Write what the tool reads, where it reads it | Convention | Smell |
+| Sizes past a limit a tool or platform states (GitHub's file sizes, Codex's AGENTS.md, line limits of agent instructions) | Bytes, lines or characters, and the stated limit | Keep to the stated limit | Convention | Smell |
+| Names and fields that break a stated spec (npm package names, the Agent Skills spec) | The name or the frontmatter | Follow the spec | Convention | Smell |
+| Directories a framework never reads; capitalised directories it cannot find | The rule as the framework's docs state it | Follow the framework's convention | Convention | Smell |
 | Build output | A marker file its tool writes, or a build script | Build output is not committed | Cleanliness | Smell |
 | OS junk, `local.properties` | The content the OS or Android Studio writes | No OS junk or machine settings committed | Cleanliness | Smell |
-| `.env*.local`, personal IDE and agent settings | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |
+| Files their own tools say not to commit (`.env*.local`, personal IDE and agent settings, local Worker secrets) | The name, and the tool's own words: do not commit it | Nothing personal or local is committed | Cleanliness | Smell |
 | A backup next to its original (`package.json.bak`) | The original is right there | Git already keeps the old version | Cleanliness | Smell |
 | Installers (`.apk`, `.ipa`, `.msi`, `.deb`, …) | The file's signature confirms the format | What users get belongs in releases | Cleanliness | Smell |
 | Executables and libraries (`.exe`, `.dll`, `.so`, `.dylib`) | The file's signature confirms the format | Built by this project: releases. Read by a build: keep it | Cleanliness | Review |

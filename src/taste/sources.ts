@@ -1,31 +1,24 @@
 /**
- * Where each claim comes from. Every reason chous gives that rests on someone
- * else's word is listed here with the words themselves, so it can be checked
- * and kept current: `pnpm run sources` fetches every page (`check`, the raw
- * source when the page is rendered in the browser) and confirms each quote is
- * still there.
+ * Every source chous cites, by message key: the tools' words come from their
+ * files in src/facts/; below are the words behind chous's own rules. Each
+ * quote is checked on its page by `pnpm run sources`.
  *
  * Reasons that need no source are facts about the machine itself: a
  * case-insensitive file system keeps one of `README.md` / `Readme.md`.
  */
 import type { MessageKey } from "../i18n";
+import type { Source } from "../facts/define";
 import { EOL } from "./eol";
 import { DEP_SOURCES, FACT_SOURCES } from "../facts";
 
-export type Source = {
-  /** The page a person reads. */
-  url: string;
-  /** Words from that page, verbatim (markup removed). Absent where the data itself is checked (end-of-life dates). */
-  quote?: string;
-  /** Raw text to verify against, when `url` is rendered client-side or blocked. */
-  check?: string;
-};
+export type { Source };
 
 const GH = "https://raw.githubusercontent.com";
 
 export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ...FACT_SOURCES,
   ...DEP_SOURCES,
+  // Framework directories (taste/frameworks.ts).
   "reason.nextSrcIgnored": [
     {
       url: "https://nextjs.org/docs/app/api-reference/file-conventions/src-folder",
@@ -47,12 +40,13 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "the new Nuxt default srcDir is app/ by default",
     },
   ],
+  // Two workspace lists (taste/js.ts, monorepo).
   "issue.workspace.listsDiffer": [
     { url: "https://pnpm.io/workspaces", check: `${GH}/pnpm/pnpm.io/main/docs/workspaces.md`, quote: "If the workspaces field later lists different patterns than packages in pnpm-workspace.yaml, pnpm prints a warning, since only pnpm-workspace.yaml is read." },
   ],
-  // Dependencies their authors deprecated, called legacy or broke (taste/deps.ts).
+  // Bun runs TypeScript itself (taste/js.ts, bun).
   "reason.bunRunsTs": [{ url: "https://bun.com/docs/runtime", check: `${GH}/oven-sh/bun/main/docs/runtime/index.mdx`, quote: "Bun supports TypeScript and JSX with no configuration." }],
-  // Files with a claim to the root (taste/hygiene.ts ROOT_CONTRACT_DOCS).
+  // Files with a claim to the root, and where builds and releases belong (taste/hygiene.ts).
   "issue.leftover.rootDocs": [
     {
       url: "https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-readmes",
@@ -83,13 +77,13 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
       quote: "the latter are transient files Gradle uses to support features like incremental builds",
     },
   ],
-  // Contracts: rules tools state for the files they read (taste/contracts.ts).
+  // CLAUDE.md can import AGENTS.md instead of copying it (the twins rule).
   "issue.twins.copy": [
     { url: "https://code.claude.com/docs/en/memory#agents-md", check: "https://code.claude.com/docs/en/memory.md", quote: "imports AGENTS.md" },
   ],
 };
 
-// End-of-life dates: each product's own schedule; `pnpm run sources` compares every date.
+// End-of-life dates: each product's own schedule (checked by `pnpm run sync --check`).
 for (const [product, { source }] of Object.entries(EOL)) {
   SOURCES[`eol.${product}` as MessageKey] = [{ url: source }];
 }

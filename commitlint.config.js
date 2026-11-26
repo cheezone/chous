@@ -2,11 +2,8 @@ export default {
   extends: ['@commitlint/config-conventional'],
   plugins: ['commitlint-plugin-function-rules'],
   rules: {
-    // Type must be lowercase
     'type-case': [2, 'always', 'lower-case'],
-    // Type cannot be empty
     'type-empty': [2, 'never'],
-    // Type enum
     'type-enum': [
       2,
       'always',
@@ -24,15 +21,10 @@ export default {
         'revert'
       ],
     ],
-    // Subject cannot be empty
     'subject-empty': [2, 'never'],
-    // Subject max length
     'subject-max-length': [2, 'always', 30],
-    // Subject min length
     'subject-min-length': [2, 'always', 3],
-    // Disable default subject-case rule
     'subject-case': [0],
-    // Custom function rule for subject-case
     'function-rules/subject-case': [
       2,
       'always',

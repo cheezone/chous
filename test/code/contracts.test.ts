@@ -3,7 +3,7 @@ import { mkdirSync, mkdtempSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
 import { lintWorkspace } from "../../src/rules/lint";
-import { field, frontmatter } from "../../src/taste/contracts";
+import { field, frontmatter } from "../../src/facts/kit";
 
 /** `<contract id> <path>` for every contract finding. */
 async function contracts(files: Record<string, string>) {

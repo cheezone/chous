@@ -75,7 +75,6 @@ export default {
       because: "不允许：{{reason}}",
     },
     deps: {
-      forbidden: "不允许依赖 {{name}}",
       obsolete: "{{name}}：{{why}} → {{use}}",
       native: "平台已经自带 {{use}}：能否完全替代 {{name}}，取决于你怎么用它",
     },

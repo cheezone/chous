@@ -9,7 +9,6 @@ export default defineTool({
         { type: "files", patterns: ["tsup.config.*"] },
         { type: "deps", names: ["tsup"] },
       ],
-      files: ["tsup.config.*"],
     },
   },
 });

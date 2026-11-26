@@ -8,7 +8,6 @@ export default defineTool({
     formatter: {
       // antfu eslint-config also formats — prettier is the sibling to forbid
       signals: [{ type: "deps", names: ["@antfu/eslint-config"] }],
-      files: [],
     },
   },
 });
