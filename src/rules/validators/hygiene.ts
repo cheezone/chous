@@ -10,6 +10,7 @@ import {
   BUNDLER_CONFIG,
   EXECUTABLES,
   INSTALLERS,
+  isCoreDump,
   DECISION_RECORD,
   DOC_FILE,
   NAME_EXEMPT,
@@ -208,7 +209,9 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
         continue;
       }
       const executable = EXECUTABLES.find((b) => b.ext.test(name));
-      if (executable && executable.magic.some((m) => head(entry.absPath, 8, true).startsWith(m))) {
+      const header = executable ? head(entry.absPath, 18, true) : "";
+      if (executable && isCoreDump(header)) report(rel, { key: "issue.no.because", params: { reason: { t: "reason.coreDump" } } });
+      else if (executable && executable.magic.some((m) => header.startsWith(m))) {
         report(rel, { key: "issue.leftover.executable" }, "review");
       }
     }

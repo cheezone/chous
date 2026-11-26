@@ -136,6 +136,7 @@ QuantumNous/new-api	smell	order	router/	issue.twins.styles	{"styles":"snake_case
 QuantumNous/new-api	smell	order	service/	issue.twins.styles	{"styles":"snake_case ×88 + kebab-case ×1","examples":"access_token_scope.go, notify-limit.go"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	./	issue.leftover.worklogs	{"count":16,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, DEPLOYMENT_FIX.md, …"}
 RoniAbravaya/ai-stock-summary-app	review	cleanliness	check-git-status.bat	issue.leftover.script	{}
+RoniAbravaya/ai-stock-summary-app	smell	cleanliness	core	issue.no.because	{"reason":{"t":"reason.coreDump"}}
 RoniAbravaya/ai-stock-summary-app	smell	modernity	backend/Dockerfile (Node 18)	issue.lifecycle.ended	{"name":"Node 18","date":"2025-04-30","use":{"t":"eol.node"}}
 RoniAbravaya/ai-stock-summary-app	smell	order	./	issue.leftover.rootDocs	{"count":29,"limit":3,"names":"ACCOUNT_LINKING_DEBUG_GUIDE.md, ACCOUNT_LINKING_FIX.md, AI_SUMMARY_README.md, AI_SUMMARY_USAGE_IMPLEMENTATION.md, Ai summery app.md, …"}
 SankrityaT/InstaCare	smell	cleanliness	package.json.backup	issue.leftover.backup	{"original":"package.json"}
@@ -357,6 +358,9 @@ dennislee928/Carbon_Trading_For_Individuals	review	cleanliness	IMPLEMENTATION_SU
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	Backstage/tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", baseUrl: \".\""}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 dennislee928/Carbon_Trading_For_Individuals	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"baseUrl: \".\""}
+denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-aarch64	issue.leftover.executable	{}
+denoland/deno	review	cleanliness	cli/tools/appimage_runtime/runtime-x86_64	issue.leftover.executable	{}
+denoland/deno	review	cleanliness	tests/specs/compile/cross_compile_intel_mac/denort_intel	issue.leftover.executable	{}
 denoland/deno	review	cleanliness	tests/specs/lockfile/out_of_date_npm_info/deno.lock.old	issue.leftover.maybeBackup	{}
 denoland/deno	smell	convention	CLAUDE.md	issue.contract.claudeMdLines	{"lines":433,"limit":200}
 denoland/deno	smell	convention	tests/registry/npm/@denotest/CAPITALS/1.0.0/package.json	issue.contract.npmName	{"name":"@denotest/CAPITALS"}
@@ -499,6 +503,7 @@ ktorio/ktor	smell	convention	ktor-network/ktor-network-tls/ktor-network-tls-cert
 ktorio/ktor	smell	convention	ktor-network/wasmJs/src/io/ktor/network/sockets/nodejs/node.wasmJs.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
 ktorio/ktor	smell	convention	ktor-network/web/src/io/ktor/network/sockets/nodejs/node.kt	issue.contract.kotlinFileName	{"name":"node","count":1}
 ktorio/ktor	smell	convention	ktor-shared/ktor-test-base/common/src/io/ktor/test/runTestWithData.kt	issue.contract.kotlinFileName	{"name":"runTestWithData","count":1}
+laravel/framework	review	cleanliness	bin/splitsh-lite	issue.leftover.executable	{}
 laravel/framework	smell	cleanliness	src/Illuminate/Foundation/resources/exceptions/renderer/dist/	issue.leak.artifact	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeName	{}
 laravel/framework	smell	modernity	docker-compose.yml	issue.contract.composeVersion	{}
@@ -1094,6 +1099,7 @@ shadcn-ui/taxonomy	smell	modernity	.nvmrc (Node 16)	issue.lifecycle.ended	{"name
 shadcn-ui/taxonomy	smell	modernity	package.json (ESLint 8)	issue.lifecycle.ended	{"name":"ESLint 8","date":"2024-10-05","use":{"t":"eol.eslint"}}
 shadcn-ui/taxonomy	smell	modernity	tsconfig.json	issue.contract.tsconfigDeprecated	{"options":"target: \"es5\", moduleResolution: \"node\", baseUrl: \".\""}
 sindresorhus/execa	review	modernity	package.json (path-exists)	issue.deps.native	{"name":"path-exists","use":"fs.existsSync / fs.access"}
+sqlite/sqlite	smell	cleanliness	tool/win/sqlite.vsix	issue.leftover.installer	{}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/DOC (1).png	issue.leftover.maybeBackup	{}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/MP3 (1).png	issue.leftover.maybeBackup	{}
 theaiautomators/insights-lm-public	review	cleanliness	public/file-types/PDF (1).svg	issue.leftover.maybeBackup	{}

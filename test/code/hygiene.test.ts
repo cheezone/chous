@@ -143,6 +143,19 @@ describe("leftovers", () => {
     expect(found).toEqual(expect.arrayContaining(["smell package.json (request)", "smell package.json (moment)", "smell src/"]));
   });
 
+  it("knows a built executable without an extension, and more installers, by their headers", async () => {
+    expect(
+      await claims({
+        "server": "\u007fELF\u0002\u0001\u0001\u0000",
+        "core": "\u007fELF\u0002\u0001\u0001\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0004\u0000",
+        "deploy": "#!/bin/sh\necho deploy\n",
+        "Installer.pkg": "xar!\u0000\u001c",
+        "notes.pkg": "not an installer",
+        "ext.vsix": "PK\u0003\u0004rest",
+      }),
+    ).toEqual(["review server", "smell Installer.pkg", "smell core", "smell ext.vsix"].sort());
+  });
+
   it("merges root work logs into one review", async () => {
     expect(await claims({ "FIXES_SUMMARY.md": "", "IMPLEMENTATION_COMPLETE.md": "" })).toEqual(["review ./"]);
   });

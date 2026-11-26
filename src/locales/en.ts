@@ -125,6 +125,7 @@ export default {
     ...absentMessages("en"),
     chousConfig: "chous has no config, delete it",
     osJunk: "OS junk, delete it and gitignore it",
+    coreDump: "a crash dump the operating system wrote (ELF core file); delete it",
     logs: "named like a log: if a program wrote it, gitignore it; test input can stay",
     nestedLockfile: "one lockfile, at the workspace root",
     nestedPackageManager: "set it once, in the workspace root",

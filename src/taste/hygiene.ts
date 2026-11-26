@@ -168,7 +168,10 @@ const MACH_O = ["\xfe\xed\xfa\xce", "\xfe\xed\xfa\xcf", "\xce\xfa\xed\xfe", "\xc
  * reads. In the source tree they are a smell; they belong in releases.
  */
 export const INSTALLERS: Array<{ ext: RegExp; magic: string[] }> = [
-  { ext: /\.(apk|aab|ipa|msix)$/i, magic: [ZIP] },
+  { ext: /\.(apk|aab|ipa|msix|xapk|apks|vsix|nupkg)$/i, magic: [ZIP] },
+  { ext: /\.pkg$/i, magic: ["xar!"] },
+  { ext: /\.crx$/i, magic: ["Cr24"] },
+  { ext: /\.snap$/i, magic: ["hsqs"] },
   { ext: /\.msi$/i, magic: [OLE] },
   { ext: /\.deb$/i, magic: ["!<arch>"] },
   { ext: /\.rpm$/i, magic: ["\xed\xab\xee\xdb"] },
@@ -184,7 +187,18 @@ export const EXECUTABLES: Array<{ ext: RegExp; magic: string[] }> = [
   { ext: /\.(exe|dll)$/i, magic: [MZ] },
   { ext: /\.so(\.\d+)*$/i, magic: [ELF] },
   { ext: /\.dylib$/i, magic: MACH_O },
+  // What Go, Rust and C builds name `server` or `myapp`: no extension, known by the header alone.
+  { ext: /^[^.]+$/, magic: [ELF, ...MACH_O] },
+  { ext: /^(vg)?core\.\d+$/, magic: [ELF] },
 ];
+
+/** An ELF file whose type (bytes 16-17, in the byte order byte 5 names) is ET_CORE: a crash dump the OS wrote, not a program. */
+export function isCoreDump(header: string): boolean {
+  if (!header.startsWith(ELF) || header.length < 18) return false;
+  const bigEndian = header.charCodeAt(5) === 2;
+  const type = bigEndian ? (header.charCodeAt(16) << 8) | header.charCodeAt(17) : (header.charCodeAt(17) << 8) | header.charCodeAt(16);
+  return type === 4;
+}
 
 /**
  * Data, and other people's code: test fixtures may hold anything (`fixtures/`,
