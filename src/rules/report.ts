@@ -157,7 +157,7 @@ export function renderReport(
         lines.push(`      ${r.children ? text : c.cyan(text)}${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.dim(r.note)}` : ""}`);
         for (const child of r.children ?? []) lines.push(`        ${c.cyan(visible(child))}`);
       }
-      if (rows.length > shown.length) lines.push(c.dim(`      ${t("report.more", { count: rows.length - shown.length })}`));
+      if (rows.length > shown.length) lines.push(`      ${code(t("report.more", { count: rows.length - shown.length }), c.dim)}`);
       if (action) lines.push(...wrap(action, width - 6, 0).map((l, i) => `    ${i ? "  " : `${c.green("→")} `}${code(l, (x) => x)}`));
       if (verbose) {
         const nested = Object.values(group[0]!.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
