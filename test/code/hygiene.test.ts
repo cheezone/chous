@@ -229,15 +229,15 @@ describe("twins", () => {
   });
 
   it("finds names that differ only by case, never names that differ by meaning", async () => {
-    expect(
-      await findings({
-        "src/Test/a.ts": "",
-        "src/test/b.ts": "",
-        "src/tests/c.ts": "",
-        "lib/category/a.ts": "",
-        "lib/categories/b.ts": "",
-      }),
-    ).toEqual(["src/test"]);
+    const root = mkdtempSync(join(tmpdir(), "chous-case-"));
+    for (const path of ["src/Test/a.ts", "src/test/b.ts", "src/tests/c.ts", "lib/category/a.ts", "lib/categories/b.ts"]) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), "");
+    }
+    // macOS and Windows fold case themselves and keep one directory: then there is nothing to find.
+    const kept = readdirSync(join(root, "src")).length;
+    const found = (await lintWorkspace({ root })).issues.map((i) => i.displayPath);
+    expect(found).toEqual(kept === 3 ? ["src/test"] : []);
   });
 
   it("finds the two Unicode forms of one name, where the file system keeps both", async () => {
