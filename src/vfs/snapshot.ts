@@ -1,10 +1,9 @@
 import { existsSync, realpathSync, statSync } from "node:fs";
 import { basename, dirname, join, resolve, sep } from "node:path";
-import { glob } from "tinyglobby";
 import ignore from "ignore";
 import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
-import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
+import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath, walkGlob } from "../fsutil";
 import { personalExcludes, tracked as gitTracked } from "./git-index";
 import { gitignoreMatcher } from "./gitignore";
 import { declaredNotOurs } from "./gitattributes";
@@ -237,7 +236,7 @@ export function looksLikeMonorepo(root: string): boolean {
   }
 }
 
-async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
+async function listWorkspacePackages(root: string, skipDirs: string[] = []): Promise<WorkspaceInfo> {
   if (!looksLikeMonorepo(root)) return { packages: [], tool: "root" };
   try {
     const result = await getPackages(root);
@@ -246,6 +245,7 @@ async function listWorkspacePackages(root: string): Promise<WorkspaceInfo> {
       .map((p) => p.relativeDir.split(sep).join("/"))
       // `packages: ['../*']` lists projects outside the root: not this repository's to lint.
       .filter((rel) => Boolean(rel) && rel !== "." && !rel.startsWith("../") && !rel.startsWith("/"))
+      .filter((rel) => !skipDirs.some((dir) => rel === dir || rel.startsWith(dir + "/")))
       .sort();
     return { packages, tool: result.tool.type };
   } catch {
@@ -412,7 +412,7 @@ export type BuildSnapshotOptions = {
 export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promise<WorkspaceSnapshot> {
   const { root, rootOnly, relevantDirs } = opts;
   // A glob pattern matches its own syntax: a folder named `a[1]` must not become a character class.
-  const skip = (opts.skipDirs ?? []).map((d) => `${d.replace(/[*?[\]{}()!]/g, "\\$&")}/**`);
+  const skip = (opts.skipDirs ?? []).map((d) => `${d.replace(/[\\*?[\]{}()!]/g, "\\$&")}/**`);
 
   // Walker ignores must stay tiny — same idea as the old engine (3 hard dirs).
   // Pushing the full gitignore (100+ rules) into tinyglobby makes every path
@@ -448,7 +448,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
     // Shallow/root-only scans only need the root .gitignore — avoid walking
     // every nested .gitignore on 10k-file monorepos (was a multi-second tax).
     loadGitIgnorePatterns(root, { rootOnly: Boolean(rootOnly) && !relevantDirs?.size, skip }),
-    glob(globPattern, {
+    walkGlob(globPattern, {
       cwd: root,
       absolute: true,
       dot: true,
@@ -457,7 +457,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
       followSymbolicLinks: false,
     }),
     shallow
-      ? glob(rootOnly ? "*" : globPattern, {
+      ? walkGlob(rootOnly ? "*" : globPattern, {
           cwd: root,
           absolute: true,
           dot: true,
@@ -467,7 +467,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
         })
       : Promise.resolve([] as string[]),
     // looksLikeMonorepo short-circuits @manypkg on single-package repos
-    listWorkspacePackages(root),
+    listWorkspacePackages(root, opts.skipDirs),
   ]);
   // A pattern stacking `**/` segments makes the matcher backtrack for every deep path; git users never need more than a few.
   const gitignore = gitignoreMatcher(patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3));
@@ -591,7 +591,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
       const stat = statSync(real);
       if (stat.isFile()) addFile(abs);
       else if (stat.isDirectory()) {
-        const inside = await glob("**/*", { cwd: real, dot: true, onlyFiles: true, ignore: walkIgnore, followSymbolicLinks: false });
+        const inside = await walkGlob("**/*", { cwd: real, dot: true, onlyFiles: true, ignore: walkIgnore, followSymbolicLinks: false });
         for (const file of inside) addFile(join(abs, file));
       }
     }
@@ -605,7 +605,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
       }
       if (rootOnly || (relevantDirs && relevantDirs.size > 0)) {
         try {
-          const pkgFiles = await glob(`${pkg}/*`, {
+          const pkgFiles = await walkGlob(`${pkg}/*`, {
             cwd: root,
             absolute: true,
             dot: true,
@@ -615,7 +615,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
           });
           for (const raw of pkgFiles) addFile(resolve(String(raw)));
           // Also surface empty package-root subdirs (shallow) for allow/has rules
-          const pkgDirs = await glob(`${pkg}/*`, {
+          const pkgDirs = await walkGlob(`${pkg}/*`, {
             cwd: root,
             absolute: true,
             dot: true,

@@ -1,8 +1,22 @@
 import { stat } from "node:fs/promises";
-import { closeSync, constants, existsSync, fstatSync, openSync, readSync } from "node:fs";
+import { closeSync, constants, existsSync, fstatSync, openSync, readdir, readSync } from "node:fs";
 import { createHash } from "node:crypto";
-import { dirname, relative, resolve, sep } from "node:path";
-import { glob } from "tinyglobby";
+import { dirname, join, relative, resolve, sep } from "node:path";
+import { glob, type GlobOptions } from "tinyglobby";
+
+/** tinyglobby converts backslashes in cwd to slashes even on POSIX. Keep that conversion off literal names. */
+export async function walkGlob(pattern: string | string[], opts: GlobOptions & { cwd: string; followSymbolicLinks: false }): Promise<string[]> {
+  const { cwd } = opts;
+  if (sep !== "/" || !cwd.includes("\\")) return glob(pattern, opts);
+
+  // In a link-free walk readdir is the only filesystem operation. Keep matches relative
+  // to a virtual root and translate each directory read to the real working directory.
+  const rootedReaddir = new Proxy(readdir, {
+    apply: (read, self, [path, ...args]) => Reflect.apply(read, self, [join(cwd, path), ...args]),
+  });
+  const matches = await glob(pattern, { ...opts, cwd: "/", absolute: false, fs: { readdir: rootedReaddir } });
+  return opts.absolute ? matches.map((rel) => join(cwd, rel)) : matches;
+}
 
 export const DEFAULT_IGNORE_DIRS = new Set([
   "node_modules",
@@ -134,7 +148,7 @@ export async function loadGitIgnorePatterns(
       return allPatterns;
     }
 
-    const gitignoreFiles = await glob("**/.gitignore", {
+    const gitignoreFiles = await walkGlob("**/.gitignore", {
       cwd: root,
       dot: true,
       ignore: ["**/node_modules/**", "**/.git/**", ...(opts?.skip ?? [])],

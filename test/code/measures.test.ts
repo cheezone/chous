@@ -295,6 +295,20 @@ describe("directories that copy each other", () => {
     expect(sets.map((s) => [s.dirs, s.same, s.differ])).toEqual([[["a", "b"], 10, 10], [["b", "c"], 10, 10]]);
   });
 
+  it("keeps two pairs separate when the middle directory alone has both sets of files", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    for (let i = 0; i < 10; i++) {
+      for (const dir of ["a", "b"]) sizes.set(`${dir}/left${i}`, 1);
+      for (const dir of ["b", "c"]) sizes.set(`${dir}/right${i}`, 1);
+    }
+    const { sets } = mirrorSets(sizes, () => "same");
+    expect(sets).toEqual([
+      { dirs: ["a", "b"], same: 10, differ: 0, changed: [] },
+      { dirs: ["b", "c"], same: 10, differ: 0, changed: [] },
+    ]);
+  });
+
   it("judges a pair on every path both hold, common ones too", async () => {
     const { mirrorSets } = await import("../../src/rules/validators/measures");
     const sizes = new Map<string, number>();
@@ -310,6 +324,19 @@ describe("directories that copy each other", () => {
     const { sets } = mirrorSets(sizes, (rel) => content.get(rel));
     // 10 identical of 25 shared is not most of them.
     expect(sets).toEqual([]);
+  });
+
+  it("keeps identical files at different relative paths inside a mirror", async () => {
+    const files: Record<string, string> = {};
+    for (const dir of ["a", "b"]) {
+      for (let i = 0; i < 10; i++) files[`${dir}/file${i}.txt`] = `file ${i}`;
+      for (const name of ["x", "y"]) files[`${dir}/${name}.png`] = "L".repeat(5000);
+    }
+    const found = await measures(files);
+    expect(found.find((f) => f.key === "mirrors")).toBeDefined();
+    expect(found.find((f) => f.key === "copies")?.details).toEqual({
+      groups: [{ files: ["a/x.png", "a/y.png", "b/x.png", "b/y.png"], bytes: 5000 }],
+    });
   });
 
   it("reports the set, and leaves its files out of the copies", async () => {

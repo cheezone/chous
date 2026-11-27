@@ -295,7 +295,9 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     if (!style) continue;
     const key = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000dirs`;
     const styles = byDir.get(key) ?? new Map<string, string[]>();
-    styles.set(style, [...(styles.get(style) ?? []), name]);
+    const names = styles.get(style);
+    if (names) names.push(name);
+    else styles.set(style, [name]);
     byDir.set(key, styles);
   }
 

@@ -1,5 +1,6 @@
-import { existsSync, lstatSync, readdirSync } from "node:fs";
+import { type Dirent, existsSync, readdirSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
+import { toDisplayPath } from "./fsutil";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
 import { getT, type TFunction } from "./i18n";
@@ -32,26 +33,23 @@ export function findGitRepos(dir: string, maxDepth = DEFAULT_MAX_DEPTH): string[
 
   function walk(current: string, depth: number): void {
     if (depth > maxDepth) return;
-    let entries: string[];
+    let entries: Dirent[];
     try {
-      entries = readdirSync(current);
+      entries = readdirSync(current, { withFileTypes: true });
     } catch {
       return;
     }
-    if (entries.includes(".git")) {
+    if (entries.some((entry) => entry.name === ".git")) {
       found.push(current);
       // A repository is a unit: its nested folders are not searched.
       return;
     }
-    for (const name of entries) {
+    if (depth >= maxDepth) return;
+    for (const entry of entries) {
+      if (!entry.isDirectory()) continue;
+      const { name } = entry;
       if (name === "node_modules" || name === "dist" || name === "build" || name.startsWith(".")) continue;
-      const child = join(current, name);
-      try {
-        // A link to a directory is not followed: it would count a repository twice, or reach outside.
-        if (lstatSync(child).isDirectory()) walk(child, depth + 1);
-      } catch {
-        // skip
-      }
+      walk(join(current, name), depth + 1);
     }
   }
 
@@ -142,7 +140,7 @@ export async function lintRepos(dir: string, repos: string[]): Promise<LintResul
   const abs = resolve(dir);
   const started = Date.now();
   const merged: LintResult = { root: abs, tastes: [], issues: [], workspacePackages: [], fileCount: 0 };
-  const rels = repos.map((repo) => relative(abs, repo).split("\\").join("/"));
+  const rels = repos.map((repo) => toDisplayPath(repo, abs));
   // The folder's own files are checked too, without the repositories inside it.
   const outer = { root: abs, prefix: "", result: await lintWorkspace({ root: abs, skipDirs: rels }) };
   const inner = [];

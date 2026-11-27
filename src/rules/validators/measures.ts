@@ -80,7 +80,6 @@ export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => st
       contents.set(dir, set);
     }
   }
-  const same = (x: string, y: string) => sizes.get(x) === sizes.get(y) && hash(x) !== undefined && hash(x) === hash(y);
   /** The paths two or more of `dirs` hold, which of them are the same in all, and whether that is most of them. */
   const judge = (dirs: string[]) => {
     const count = new Map<string, number>();
@@ -89,8 +88,15 @@ export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => st
     const identical: string[] = [];
     for (const rest of [...count].filter(([, n]) => n >= 2).map(([r]) => r).sort()) {
       const holders = dirs.filter((d) => contents.get(d)?.has(rest)).map((d) => `${d}/${rest}`);
-      if (holders.every((h) => same(holders[0]!, h))) identical.push(rest);
-      else changed.push(rest);
+      const first = holders[0]!;
+      if (holders.length === dirs.length && holders.every((p) => sizes.get(p) === sizes.get(first))) {
+        const digest = hash(first);
+        if (digest !== undefined && holders.every((p) => p === first || hash(p) === digest)) {
+          identical.push(rest);
+          continue;
+        }
+      }
+      changed.push(rest);
     }
     const shared = identical.length + changed.length;
     const smallest = Math.min(...dirs.map((d) => under.get(d) ?? 0));
@@ -120,11 +126,22 @@ export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => st
     } else sets.push(new Set([p.a, p.b]));
   }
 
-  const covered = new Set<string>();
+  // A duplicate group is explained only if all files share a single mirror set and relative path.
+  const covered = new Map<string, number[]>();
+  let copyId = 0;
   const result = sets.flatMap((s) => {
     if (!s) return [];
     const { dirs, identical, changed } = judge([...s]);
-    for (const rest of identical) for (const d of dirs) if (contents.get(d)?.has(rest)) covered.add(`${d}/${rest}`);
+    for (const rest of identical) {
+      copyId++;
+      for (const d of dirs) {
+        if (!contents.get(d)?.has(rest)) continue;
+        const path = `${d}/${rest}`;
+        const ids = covered.get(path);
+        if (ids) ids.push(copyId);
+        else covered.set(path, [copyId]);
+      }
+    }
     return [{ dirs, same: identical.length, differ: changed.length, changed }];
   });
   result.sort((x, y) => y.same + y.differ - (x.same + x.differ) || x.dirs[0]!.localeCompare(y.dirs[0]!));
@@ -250,11 +267,13 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
     if (mirrors.sets.length) {
       report(`${root}#measure:mirrors`, "./", { key: "issue.measure.mirrors", params: { count: mirrors.sets.length } }, "review", "order", { mirrors: mirrors.sets });
     }
-    groups.splice(0, groups.length, ...groups.filter((g) => !g.files.every((f) => mirrors.covered.has(f))));
-    if (groups.length) {
+    const remaining = groups.filter(({ files }) => !mirrors.covered.get(files[0]!)?.some(
+      (id) => files.every((f) => mirrors.covered.get(f)?.includes(id)),
+    ));
+    if (remaining.length) {
       // The copies that cost the most first.
-      groups.sort((a, b) => b.bytes * (b.files.length - 1) - a.bytes * (a.files.length - 1) || a.files[0]!.localeCompare(b.files[0]!));
-      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: groups.length } }, "review", "order", { groups });
+      remaining.sort((a, b) => b.bytes * (b.files.length - 1) - a.bytes * (a.files.length - 1) || a.files[0]!.localeCompare(b.files[0]!));
+      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: remaining.length } }, "review", "order", { groups: remaining });
     }
     return { hitCount };
   }

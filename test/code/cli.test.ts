@@ -127,6 +127,35 @@ describe("a folder of repositories", () => {
     expect(paths).toEqual([".chous", "repo/.nvmrc (Node 16)"]);
   });
 
+  it("treats an independent repository under a workspace glob as its own project", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-workspace-repo-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "outer", private: true }));
+    writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - 'packages/*'\n");
+    const root = join(dir, "packages/inner");
+    mkdirSync(root, { recursive: true });
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, "package.json"), JSON.stringify({ name: "inner", packageManager: "pnpm@10.0.0", dependencies: { moment: "2" } }));
+    const { findings } = JSON.parse(runCli(["--json"], dir).stdout);
+    expect(findings.map((f: { key: string }) => f.key)).toEqual(["issue.deps.obsolete"]);
+  });
+
+  it.skipIf(process.platform === "win32")("preserves literal backslashes in repository names", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-repo-name-"));
+    const name = "repo\\[one]";
+    const root = join(dir, name);
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, ".nvmrc"), "16\n");
+    const report = JSON.parse(runCli(["--json"], dir).stdout);
+    expect(report.findings.map((f: { path: string }) => f.path)).toEqual([`${name}/.nvmrc (Node 16)`]);
+  });
+
   it("scan gives the same full JSON, every list in its details", async () => {
     const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
     const { tmpdir } = await import("node:os");
