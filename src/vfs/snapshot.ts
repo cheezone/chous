@@ -5,7 +5,7 @@ import ignore from "ignore";
 import picomatch from "picomatch";
 import { getPackages } from "@manypkg/get-packages";
 import { DEFAULT_IGNORE_DIRS, loadGitIgnorePatterns, readText, toDisplayPath } from "../fsutil";
-import { tracked as gitTracked } from "./git-index";
+import { personalExcludes, tracked as gitTracked } from "./git-index";
 import { gitignoreMatcher } from "./gitignore";
 import { declaredNotOurs } from "./gitattributes";
 import { NOT_OURS } from "../taste/hygiene";
@@ -473,7 +473,10 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   for (const rel of tracked ?? []) {
     for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) trackedDirs.add(rel.slice(0, i));
   }
-  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && gitignore.ignores(rel) };
+  // This machine's own excludes (.git/info/exclude, core.excludesFile) hide untracked files, as in `git status`;
+  // they never make a committed file "ignored": that is the repository's .gitignore alone.
+  const personal = gitignoreMatcher(personalExcludes(root));
+  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && (gitignore.ignores(rel) || personal.ignores(rel)) };
   const ignoredTracked = new Map<string, string[]>();
   for (const rel of tracked ?? []) {
     if (!gitignore.ignores(rel)) continue;

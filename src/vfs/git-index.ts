@@ -8,7 +8,8 @@
  * kept apart: chous follows one only where it points inside the repository.
  */
 import { statSync } from "node:fs";
-import { readBytes, readText } from "../fsutil";
+import { homedir } from "node:os";
+import { appendGitIgnoreFile, readBytes, readText } from "../fsutil";
 import { resolve } from "node:path";
 
 /** The git directory of `root` when `root` is a repository's top level. */
@@ -87,3 +88,55 @@ export function tracked(root: string): { files: Set<string>; links: Set<string> 
   }
   return { files: paths, links };
 }
+
+const readOr = (path: string, limit = 1024 * 1024) => {
+  try {
+    return readText(path, limit);
+  } catch {
+    return "";
+  }
+};
+
+/** `excludesFile` in a config file's `[core]` section; the last one wins, as in git. */
+function excludesFileIn(config: string): string | undefined {
+  let core = false;
+  let found: string | undefined;
+  for (const raw of config.split(/\r?\n/)) {
+    const line = raw.trim();
+    const section = /^\[([^\]\s"]+)/.exec(line);
+    if (section) core = section[1]!.toLowerCase() === "core";
+    else if (core) {
+      const m = /^excludesfile[ \t]*=[ \t]*(.*)$/i.exec(line);
+      if (m) found = m[1]!.replace(/^"(.*)"$/, "$1").trim();
+    }
+  }
+  return found;
+}
+
+/**
+ * What git hides on this machine besides the repository's .gitignore files:
+ * `$GIT_DIR/info/exclude`, and the file `core.excludesFile` names (by default
+ * `$XDG_CONFIG_HOME/git/ignore`). Both are personal, so they hide untracked
+ * files only: what is committed stays what the repository says. Patterns are
+ * relative to `root`, the repository's top level; none outside a repository.
+ */
+export function personalExcludes(root: string, env: NodeJS.ProcessEnv = process.env): string[] {
+  const dir = gitDir(root);
+  if (!dir) return [];
+  // A linked worktree keeps info/ in the main repository's git directory.
+  const common = readOr(resolve(dir, "commondir"), 4096).trim();
+  const shared = common ? resolve(dir, common) : dir;
+  const home = env.HOME || env.USERPROFILE || homedir();
+  const xdg = env.XDG_CONFIG_HOME || resolve(home, ".config");
+  // Global, then the repository's own config: a later setting wins. GIT_CONFIG_GLOBAL replaces the global files, as in git.
+  const globals = env.GIT_CONFIG_GLOBAL ? [resolve(env.GIT_CONFIG_GLOBAL)] : [resolve(xdg, "git/config"), resolve(home, ".gitconfig")];
+  let excludes: string | undefined;
+  for (const config of [...globals, resolve(shared, "config")]) {
+    excludes = excludesFileIn(readOr(config)) ?? excludes;
+  }
+  const global = excludes ? resolve(root, excludes.replace(/^~(?=$|[\\/])/, home)) : resolve(xdg, "git/ignore");
+  const patterns: string[] = [];
+  for (const file of [resolve(shared, "info/exclude"), global]) appendGitIgnoreFile(patterns, readOr(file), "");
+  return patterns;
+}
+

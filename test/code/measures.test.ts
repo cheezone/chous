@@ -202,3 +202,55 @@ describe("what an agent is told", () => {
     expect(text).toMatch(/├─\[b\/\]\s+camelCase ×1 \+ kebab-case ×1/);
   });
 });
+
+describe("what this machine's git hides", () => {
+  it("leaves out untracked files .git/info/exclude hides, never a committed one", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-exclude-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".git/info/exclude"), "scratch/\nkept.ts\n");
+    mkdirSync(join(dir, "scratch"));
+    writeFileSync(join(dir, "scratch/huge.ts"), lines(3000));
+    writeFileSync(join(dir, "kept.ts"), lines(2000));
+    git("add", "-f", "kept.ts");
+    const result = await lintWorkspace({ root: dir });
+    const long = result.issues.find((i) => i.message.key === "issue.measure.longFiles");
+    expect((long?.details?.files as Array<{ path: string }>).map((f) => f.path)).toEqual(["kept.ts"]);
+    // A personal exclude is not the repository's .gitignore: nothing is "committed although ignored".
+    expect(result.issues.filter((i) => i.message.key === "issue.leftover.ignoredTracked")).toEqual([]);
+  });
+
+  it("reads core.excludesFile, or git's default global ignore file", async () => {
+    const { personalExcludes } = await import("../../src/vfs/git-index");
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-global-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    const home = mkdtempSync(join(tmpdir(), "chous-home-"));
+    mkdirSync(join(home, ".config/git"), { recursive: true });
+    writeFileSync(join(home, ".config/git/ignore"), "*.default\n");
+    expect(personalExcludes(dir, { HOME: home })).toContain("**/*.default");
+    writeFileSync(join(home, ".gitconfig"), "[core]\n\texcludesFile = ~/my-ignore\n");
+    writeFileSync(join(home, "my-ignore"), "*.mine\n");
+    expect(personalExcludes(dir, { HOME: home })).toContain("**/*.mine");
+    expect(personalExcludes(dir, { HOME: home })).not.toContain("**/*.default");
+    expect(personalExcludes(home, { HOME: home })).toEqual([]);
+  });
+});
+
+describe("git's own environment", () => {
+  it("lets GIT_CONFIG_GLOBAL replace the global config, as git does", async () => {
+    const { personalExcludes } = await import("../../src/vfs/git-index");
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-gcg-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    const home = mkdtempSync(join(tmpdir(), "chous-gcg-home-"));
+    writeFileSync(join(home, ".gitconfig"), "[core]\n\texcludesFile = ~/ignored-by-home\n");
+    writeFileSync(join(home, "ignored-by-home"), "*.home\n");
+    writeFileSync(join(home, "alt"), "[core]\n\texcludesFile = ~/ignored-by-alt\n");
+    writeFileSync(join(home, "ignored-by-alt"), "*.alt\n");
+    const patterns = personalExcludes(dir, { HOME: home, GIT_CONFIG_GLOBAL: join(home, "alt") });
+    expect(patterns).toContain("**/*.alt");
+    expect(patterns).not.toContain("**/*.home");
+  });
+});

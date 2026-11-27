@@ -87,7 +87,7 @@ export async function isDirectory(p: string): Promise<boolean> {
   }
 }
 
-function appendGitIgnoreFile(
+export function appendGitIgnoreFile(
   allPatterns: string[],
   content: string,
   prefix: string,
