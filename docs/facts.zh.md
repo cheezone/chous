@@ -68,7 +68,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 现代 | … 个 Cargo.toml 在 [package] 里写了 authors，这个字段 Cargo 已废弃 | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
+| 现代 | … 个 Cargo.toml 在 [package] 里写了 authors：这个字段 Cargo 已废弃 | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
 
 ### Python
 

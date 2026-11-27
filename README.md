@@ -74,7 +74,8 @@ Order 3
    ╰────
   help: keep one name
 
-  × mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
+  × mixed naming styles
+    camelCase ×1 + kebab-case ×1 (asyncData.ts, lazy-hydration.ts)
    ╭─[src/composables/]
    ╰────
   help: one directory, one way of naming

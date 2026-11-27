@@ -68,7 +68,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | Cargo.toml files that set authors in [package]: …; Cargo has deprecated the field | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
+| Modernity | authors set in [package] of … Cargo.toml: Cargo has deprecated the field | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
 
 ### Python
 

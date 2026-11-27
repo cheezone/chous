@@ -90,9 +90,17 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
  * languages' habits, not a mix. Languages that prescribe the style themselves
  * are held to it by their facts instead (src/facts/tools/: Rust, Dart, Kotlin,
  * Elixir), and so are camelCase Python modules (PEP 8).
+ *
+ * A single-file component format is a kind of its own: the extension says so,
+ * and a component may be named apart from the modules beside it (as PascalCase
+ * already may). Vue's style guide allows `export-excel.vue` beside the
+ * `exportExcel.ts` it uses; two components named two ways are still a mix.
  */
 const LANGUAGES: Array<[string, RegExp]> = [
-  ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro)$/],
+  ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs)$/],
+  ["vue", /\.vue$/],
+  ["svelte", /\.svelte$/],
+  ["astro", /\.astro$/],
   ["py", /\.py$/],
   ["go", /\.go$/],
   ["zig", /\.zig$/],

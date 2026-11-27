@@ -185,4 +185,20 @@ describe("what an agent is told", () => {
     const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
     expect(text).toContain("╭─[asset (git)]");
   });
+
+  it("reports the same headline once, each place with its own detail", async () => {
+    const root = mkdtempSync(join(tmpdir(), "chous-headline-"));
+    for (const [path, content] of Object.entries({ "a/fooBar.ts": "", "a/foo-baz.ts": "", "a/qux-quux.ts": "", "b/oneTwo.ts": "", "b/three-four.ts": "" })) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const result = await lintWorkspace({ root });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(text.match(/× /g)).toHaveLength(1);
+    expect(text).toMatch(/╭─\[a\/\]\s+kebab-case ×2 \+ camelCase ×1/);
+    expect(text).toMatch(/├─\[b\/\]\s+camelCase ×1 \+ kebab-case ×1/);
+  });
 });

@@ -208,6 +208,18 @@ describe("twins", () => {
     ).toEqual(["src/composables/", "src/views/"]);
   });
 
+  it("compares a single-file component with components, not with the modules beside it", async () => {
+    expect(
+      await findings({
+        "src/export/export-excel.vue": "",
+        "src/export/exportExcel.ts": "",
+        "src/history/delete-version-dialog.vue": "",
+        "src/history/startApprove.vue": "",
+        "src/history/useHistory.ts": "",
+      }),
+    ).toEqual(["src/history/"]);
+  });
+
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
     expect(
       await findings({
