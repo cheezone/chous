@@ -200,3 +200,24 @@ describe("lint pipeline integration", () => {
     expect((await lintWorkspace({ root: dir })).issues).toEqual([]);
   });
 });
+
+describe("workspace versions", () => {
+  it("lists each package once, the major fewer packages are on first", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-drift-"));
+    const write = (path: string, pkg: object) => {
+      mkdirSync(join(dir, path, ".."), { recursive: true });
+      writeFileSync(join(dir, path), JSON.stringify(pkg), "utf8");
+    };
+    writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - apps/*\n", "utf8");
+    write("package.json", { name: "r", private: true, devDependencies: { vite: "4.0.0" } });
+    write("apps/a/package.json", { name: "a", dependencies: { vite: "4.0.0" }, devDependencies: { vite: "4.0.0" } });
+    write("apps/b/package.json", { name: "b", devDependencies: { vite: "^5.0.0" } });
+    const [drift] = (await lintWorkspace({ root: dir })).issues.filter((i) => i.message.key === "issue.workspace.drift");
+    expect(drift!.message.params).toEqual({ name: "vite", majors: "4, 5" });
+    expect(drift!.details).toEqual({ versions: [
+      { path: "apps/b/package.json", spec: "^5.0.0" },
+      { path: "package.json", spec: "4.0.0" },
+      { path: "apps/a/package.json", spec: "4.0.0" },
+    ] });
+  });
+});

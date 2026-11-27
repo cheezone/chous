@@ -29,12 +29,15 @@ const COPIES_SHOWN = 3;
 const columns = (s: string) => [...s.replace(ANSI_RE, "")].reduce((n, ch) => n + (ch.codePointAt(0)! >= 0x2e80 ? 2 : 1), 0);
 
 /** Wrap at `width` columns; lines after the first start at `indent`. Breaks at spaces, or anywhere in CJK text. */
+const NO_LINE_START = /^[，。、；：！？）」』”’,.;:!?)\]]/u;
+
 function wrap(text: string, width: number, indent: number): string[] {
   const out: string[] = [];
   let line = "";
   for (const token of text.split(/(?<= )|(?<=[\u2e80-\uffff])(?=[\u2e80-\uffff])/u)) {
     const room = width - (out.length ? indent : 0);
-    if (line && columns(line + token) > room) {
+    // A line never starts with closing punctuation: `，` stays with the word before it.
+    if (line && columns(line + token) > room && !NO_LINE_START.test(token)) {
       out.push(line.trimEnd());
       line = token.trimStart();
     } else line += token;
@@ -88,6 +91,7 @@ export function detailItems(t: TFunction, issue: Issue): Array<{ text: string; n
     return (d.groups as Array<{ files: string[]; bytes: number }>).map((g) => ({ text: `${g.files.length} × ${g.bytes >= 1024 * 1024 ? `${(g.bytes / 1024 / 1024).toFixed(1)} MiB` : `${kib(g.bytes)} KiB`}`, children: g.files }));
   }
   if (Array.isArray(d.docs)) return (d.docs as string[]).map((text) => ({ text }));
+  if (Array.isArray(d.versions)) return (d.versions as Array<{ path: string; spec: string }>).map((v) => ({ text: v.path, note: v.spec }));
   return [];
 }
 

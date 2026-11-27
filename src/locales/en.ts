@@ -78,7 +78,7 @@ export default {
       remove: "\"{{field}}\" in a workspace package → {{reason}}",
     },
     workspace: {
-      drift: "{{name}} is on several major versions ({{versions}}), so it gets installed twice → move to one major version",
+      drift: "{{name}} is on major versions {{majors}}: each gets installed → move to one major version",
       listsDiffer: "package.json lists {{json}}, pnpm-workspace.yaml lists {{yaml}}: one fact said twice, and the two disagree → make them the same",
     },
     leftover: {

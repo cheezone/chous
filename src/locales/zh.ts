@@ -79,7 +79,7 @@ export default {
       remove: "工作区包里的 \"{{field}}\" → {{reason}}",
     },
     workspace: {
-      drift: "{{name}} 同时用了不同的大版本（{{versions}}），会被装两份 → 统一到一个大版本",
+      drift: "{{name}} 同时用了大版本 {{majors}}：每个都会被装一份 → 统一到一个大版本",
       listsDiffer: "package.json 写的是 {{json}}，pnpm-workspace.yaml 写的是 {{yaml}}：同一件事说了两遍，而且两遍不一样 → 改成一致",
     },
     leftover: {
