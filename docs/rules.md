@@ -13,10 +13,11 @@ Sizes and counts only put something up for review; they settle nothing. The numb
 | Files at the root | more than 30 |
 | Docs at the root, besides README, LICENSE and the like | more than 3 (this one is a smell) |
 | Agent instructions (AGENTS.md, CLAUDE.md, GEMINI.md, Copilot's) | over 300 lines |
+| Directories that copy each other | at least 10 files at the same relative paths byte for byte, and at least half of what both hold; only the outermost pair, and directories copied from one another as one set; their files leave the files with identical content |
 | Files with identical content | 4 KiB and up; agent instructions at any size |
 | One file | 50 MiB and up (a smell) |
 
-`chous --json` gives every fact behind a finding in full: every long file, flat directory, set of copies, root doc and committed-but-ignored file, untruncated. The human report lists the first few.
+`chous --json` gives every fact behind a finding in full: every long file, flat directory, set of directories copying each other (with the files that changed), set of copies, root doc and committed-but-ignored file, untruncated. The human report lists the first few.
 
 ## How chous makes sure of a fact
 
@@ -47,6 +48,7 @@ Untracked files are seen as git sees them: what `.gitignore`, `.git/info/exclude
 | Source files over 1000 lines or 100 KiB (not generated or someone else's) | Lines and bytes; long lines are not skipped | Whether one does too much is the agent's call; never split mechanically | Order | Review |
 | A directory with more than 50 source files laid out flat | The count | Whether to group by responsibility is the agent's call | Order | Review |
 | More than 30 files at the root | The count | The root is an entrance | Order | Review |
+| Directories that copy each other | How many files at the same relative paths are identical, and how many have changed (paths and bytes only) | Whether they should be one is for an agent to judge, starting with the files that changed | Order | Review |
 | Files with identical content (4 KiB and up; agent instructions at any size) | The same bytes; one file reached through a symlink counts once | Keep one, or have a reason for several | Order | Review |
 | Agent instructions (AGENTS.md, CLAUDE.md, GEMINI.md, Copilot's) over 300 lines | The line count | Keep what applies every time | Order | Review |
 | Names against a language's naming rules (file and directory names, or a package declared inside) | The name, and the language's style guide | Name things the language's way | Convention | Smell |

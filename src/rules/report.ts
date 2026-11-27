@@ -87,6 +87,9 @@ export function detailItems(t: TFunction, issue: Issue): Array<{ text: string; n
     return (files as Array<{ path: string; lines: number; bytes: number }>).map((f) => ({ text: f.path, note: t("report.lines", { lines: f.lines, kib: kib(f.bytes) }) }));
   }
   if (Array.isArray(d.dirs)) return (d.dirs as Array<{ path: string; files: number }>).map((f) => ({ text: f.path, note: t("report.files", { count: f.files }) }));
+  if (Array.isArray(d.mirrors)) {
+    return (d.mirrors as Array<{ dirs: string[]; same: number; differ: number }>).map((m) => ({ text: t("report.mirror", { same: m.same, differ: m.differ }), children: m.dirs.map((dir) => `${dir}/`) }));
+  }
   if (Array.isArray(d.groups)) {
     return (d.groups as Array<{ files: string[]; bytes: number }>).map((g) => ({ text: `${g.files.length} × ${g.bytes >= 1024 * 1024 ? `${(g.bytes / 1024 / 1024).toFixed(1)} MiB` : `${kib(g.bytes)} KiB`}`, children: g.files }));
   }

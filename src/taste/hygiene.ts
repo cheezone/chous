@@ -60,6 +60,8 @@ export const MEASURES = {
   filesPerDir: 50,
   rootFiles: 30,
   duplicateBytes: 4096,
+  /** Directories that copy each other: this many identical files at the same paths, and most of what they share. */
+  mirrorFiles: 10,
   instructionLines: 300,
   /** The files agents read whole whenever they work in that directory. */
   instructions: /(^|\/)(AGENTS|CLAUDE|GEMINI)\.md$|^\.github\/copilot-instructions\.md$/,

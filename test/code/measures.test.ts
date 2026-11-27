@@ -254,3 +254,40 @@ describe("git's own environment", () => {
     expect(patterns).not.toContain("**/*.home");
   });
 });
+
+describe("directories that copy each other", () => {
+  it("pairs directories by the paths they share, keeps the outermost, and makes copies of copies one set", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    for (let i = 0; i < 12; i++) for (const app of ["apps/a", "apps/b", "apps/c"]) add(`${app}/src/m${i}.ts`, `same ${i}`);
+    for (let i = 0; i < 3; i++) {
+      add(`apps/a/src/x${i}.ts`, `a ${i}`);
+      add(`apps/b/src/x${i}.ts`, `b ${i}!`);
+    }
+    // index.ts in every directory pairs nothing.
+    for (let i = 0; i < 20; i++) add(`lib/p${i}/index.ts`, "export {}");
+    const { sets, covered } = mirrorSets(sizes, (rel) => content.get(rel));
+    expect(sets).toEqual([{ dirs: ["apps/a", "apps/b", "apps/c"], same: 12, differ: 3, changed: ["src/x0.ts", "src/x1.ts", "src/x2.ts"] }]);
+    expect(covered.has("apps/c/src/m0.ts")).toBe(true);
+    expect(covered.has("apps/a/src/x0.ts")).toBe(false);
+  });
+
+  it("reports the set, and leaves its files out of the copies", async () => {
+    const files: Record<string, string> = {};
+    for (let i = 0; i < 12; i++) {
+      files[`web/assets/a${i}.svg`] = `${i}`.repeat(5000);
+      files[`docs/assets/a${i}.svg`] = `${i}`.repeat(5000);
+    }
+    files["logo.png"] = "L".repeat(5000);
+    files["brand/logo.png"] = "L".repeat(5000);
+    const found = await measures(files);
+    const mirrors = found.find((f) => f.key === "mirrors");
+    expect(mirrors?.details).toEqual({ mirrors: [{ dirs: ["docs", "web"], same: 12, differ: 0, changed: [] }] });
+    expect(found.find((f) => f.key === "copies")?.details).toEqual({ groups: [{ files: ["brand/logo.png", "logo.png"], bytes: 5000 }] });
+  });
+});

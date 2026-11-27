@@ -131,6 +131,7 @@ function prefixDetails(details: Record<string, unknown>, prefix: string): Record
   if (list(out.dirs)) out.dirs = list(out.dirs)!.map((d) => ({ ...(d as object), path: at((d as { path: unknown }).path) }));
   if (list(out.versions)) out.versions = list(out.versions)!.map((v) => ({ ...(v as object), path: at((v as { path: unknown }).path) }));
   if (list(out.docs)) out.docs = list(out.docs)!.map(at);
+  if (list(out.mirrors)) out.mirrors = list(out.mirrors)!.map((m) => ({ ...(m as object), dirs: ((m as { dirs: unknown[] }).dirs ?? []).map(at) }));
   if (list(out.groups)) out.groups = list(out.groups)!.map((g) => ({ ...(g as object), files: ((g as { files: unknown[] }).files ?? []).map(at) }));
   return out;
 }
