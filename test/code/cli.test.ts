@@ -5,9 +5,11 @@ import { resolve } from "node:path";
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
 const PASS_JS = resolve(PROJECT_ROOT, "test/fixtures/pass/js");
+// By URL: a folder outside the project cannot resolve the package by name.
+const TSX = import.meta.resolve("tsx");
 
 function runCli(args: string[], cwd = PASS_JS) {
-  const proc = spawnSync(process.execPath, ["--import", "tsx", CLI_PATH, ...args], {
+  const proc = spawnSync(process.execPath, ["--import", TSX, CLI_PATH, ...args], {
     cwd,
     encoding: "utf8",
     env: { ...process.env, NO_COLOR: "1", COLUMNS: "200" },
@@ -83,5 +85,30 @@ describe("colors", () => {
     expect(createColorizer({ enabled: false }).smell("x")).toBe("x");
     expect(supportsTruecolor({ COLORTERM: "truecolor" })).toBe(true);
     expect(supportsTruecolor({ TERM: "xterm-256color" })).toBe(false);
+  });
+});
+
+describe("a folder of repositories", () => {
+  it("checks each repository as git sees it, in one report", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-repos-"));
+    for (const repo of ["web", "api"]) {
+      const root = join(dir, repo);
+      mkdirSync(join(root, "build"), { recursive: true });
+      spawnSync("git", ["init", "-q"], { cwd: root });
+      writeFileSync(join(root, ".nvmrc"), "16\n");
+      writeFileSync(join(root, ".gitignore"), "build/\n");
+      writeFileSync(join(root, "build/out.js"), "x\n");
+      spawnSync("git", ["add", "-f", ".gitignore", ".nvmrc", "build/out.js"], { cwd: root });
+    }
+    const r = runCli(["-l", "en", "--json"], dir);
+    const paths = (JSON.parse(r.stdout).findings as Array<{ path: string }>).map((f) => f.path).sort();
+    // Only a repository's own index knows build/out.js is committed.
+    expect(paths).toEqual(["api/.nvmrc (Node 16)", "api/build/", "web/.nvmrc (Node 16)", "web/build/"]);
+    const text = runCli(["-l", "en", "--no-color"], dir).stdout;
+    expect(text.match(/× Node 16/g)).toHaveLength(1);
+    expect(text).toContain("├─[web/.nvmrc]");
   });
 });

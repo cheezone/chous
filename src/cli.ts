@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import { checkWorkspaces } from "./agents/core";
 import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
+import { lintRepos, reposBelow } from "./scan";
 import { renderReport, reportToJSON } from "./rules/report";
 import { createColorizer } from "./color";
 import { getT, isLocale, locales, type MessageKey, type TFunction } from "./i18n";
@@ -222,7 +223,9 @@ function relevantDirsFor(cwd: string, filePaths: string[]): Set<string> {
 
 async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
-  const result = await lintWorkspace({ root: opts.cwd, relevantDirs });
+  // A folder of repositories: each is checked as git sees it, with its own index and ignore rules.
+  const repos = relevantDirs ? undefined : reposBelow(opts.cwd);
+  const result = repos ? await lintRepos(opts.cwd, repos) : await lintWorkspace({ root: opts.cwd, relevantDirs });
 
   if (opts.json) {
     console.log(JSON.stringify(reportToJSON(result, t, VERSION), null, 2));

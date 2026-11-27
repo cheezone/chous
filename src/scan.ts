@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, statSync } from "node:fs";
-import { join, relative, resolve } from "node:path";
+import { dirname, join, relative, resolve } from "node:path";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
 import { getT, type TFunction } from "./i18n";
@@ -98,5 +98,56 @@ export function formatScanText(result: ScanResult, t: TFunction): string {
     lines.push("");
   }
   return lines.join("\n");
+}
+
+/**
+ * The repositories to check when `dir` is a folder that holds some but is none
+ * itself (nor inside one): each is its own project, with its own index and
+ * ignore rules, as git sees it. Undefined when `dir` is checked as it is.
+ */
+export function reposBelow(dir: string): string[] | undefined {
+  const abs = resolve(dir);
+  for (let d = abs; ; d = dirname(d)) {
+    if (existsSync(join(d, ".git"))) return undefined;
+    if (dirname(d) === d) break;
+  }
+  const repos = findGitRepos(abs).filter((r) => r !== abs);
+  return repos.length ? repos : undefined;
+}
+
+/** Paths inside a finding's details, from its repository's root to the folder's. */
+function prefixDetails(details: Record<string, unknown>, prefix: string): Record<string, unknown> {
+  const at = (p: unknown) => (typeof p === "string" ? `${prefix}${p}` : p);
+  const out: Record<string, unknown> = { ...details };
+  const list = (v: unknown) => (Array.isArray(v) ? v : undefined);
+  if (list(out.files)) out.files = list(out.files)!.map((f) => (typeof f === "object" && f ? { ...f, path: at((f as { path: unknown }).path) } : at(f)));
+  if (list(out.dirs)) out.dirs = list(out.dirs)!.map((d) => ({ ...(d as object), path: at((d as { path: unknown }).path) }));
+  if (list(out.versions)) out.versions = list(out.versions)!.map((v) => ({ ...(v as object), path: at((v as { path: unknown }).path) }));
+  if (list(out.docs)) out.docs = list(out.docs)!.map(at);
+  if (list(out.groups)) out.groups = list(out.groups)!.map((g) => ({ ...(g as object), files: ((g as { files: unknown[] }).files ?? []).map(at) }));
+  return out;
+}
+
+/** Each repository checked on its own, then one report: the same finding in three repositories is one entry. */
+export async function lintRepos(dir: string, repos: string[]): Promise<LintResult> {
+  const abs = resolve(dir);
+  const started = Date.now();
+  const merged: LintResult = { root: abs, tastes: [], issues: [], workspacePackages: [], fileCount: 0 };
+  for (const repo of repos) {
+    const result = await lintWorkspace({ root: repo });
+    const prefix = `${relative(abs, repo).split("\\").join("/")}/`;
+    for (const taste of result.tastes) if (!merged.tastes.includes(taste)) merged.tastes.push(taste);
+    merged.workspacePackages!.push(...(result.workspacePackages ?? []).map((p) => `${prefix}${p}`));
+    merged.fileCount! += result.fileCount ?? 0;
+    for (const issue of result.issues) {
+      merged.issues.push({
+        ...issue,
+        displayPath: issue.displayPath === "./" ? prefix : `${prefix}${issue.displayPath}`,
+        ...(issue.details ? { details: prefixDetails(issue.details, prefix) } : {}),
+      });
+    }
+  }
+  merged.duration = Date.now() - started;
+  return merged;
 }
 

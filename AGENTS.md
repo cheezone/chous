@@ -42,7 +42,7 @@
   - 停止维护日期不手写：`eol.parse` 读官方数据，`pnpm run sync` 只追加已经过去的日期，写进 `data/eol/`（禁止手改）。已记录的和官方数据不一致时只报告、不覆盖。
 - **`src/taste/`：chous 自己的规则**，以及按项目形态叠加规则（`resolveTaste`）：`base` 总是生效，`js`、`monorepo` 按项目叠加。`hygiene.ts` 是构建产物、残留文件、根目录的名单和体积立场（`MEASURES`）；`sources.ts` 是这些规则的原话。
 - `src/rules/validators/measures.ts`：通用的体积、数量、重复检测，只在仓库根目录跑一次。
-- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；`test/`、`__tests__/` 里的子项目是测试输入，不检查。
+- 检查的范围：`.git/index` 里被跟踪的文件就是已提交的，`.gitignore` 和 `node_modules/`、`dist/`、`build/` 都藏不住它（`src/vfs/git-index.ts`，离线读取）。未跟踪的文件按 git 的眼光看：`.git/info/exclude` 和全局忽略文件（`personalExcludes`）也算，但它们只属于这台机器，只藏未跟踪的文件，不进「被忽略却仍被提交」。测试套件用 `GIT_CONFIG_GLOBAL` 和 `XDG_CONFIG_HOME` 隔开开发者自己的全局配置（`vitest.config.ts`）。在一个不是仓库、但下面有仓库的文件夹里运行时，逐个仓库检查再合并（`src/scan.ts` 的 `reposBelow` / `lintRepos`）。工作区包、以及有自己 lockfile 的子项目（`frontend/`、`backend/`）各自当项目检查；`test/`、`__tests__/` 里的子项目是测试输入，不检查。
 - 读文件一律用 `readText` / `readBytes`（`src/fsutil.ts`）：只读普通文件，最多 16 MiB，非阻塞打开。仓库是不可信的输入：软链接可以指向 `/dev/zero`、`/`、`../secret`，文件名可以带 `..\\`、`#`、终端控制字符，manifest 可以是 `null` 或嵌套上万层。遍历不跟随软链接，只有 git 跟踪的、指向仓库内部的软链接才跟随。多行正则不要用 `^\\s*`（在空行上是平方复杂度），用 `^[ \\t]*`。`.gitignore` 规则按词建索引（`src/vfs/gitignore.ts`），两万行规则也不会让每个路径都试一遍；结果和 `ignore` 库逐条比对一致（`test/code/gitignore.test.ts`）。`test/code/robustness.test.ts` 锁住了这些攻击。
 - `src/rules/validators/`：每种规则的执行。
 - 文案：i18next，只有 `en` 和 `zh`，在 `src/locales/{en,zh}.ts`（TS 模块，tsdown 的 dts 不支持 JSON）。工具的文案写在工具文件里，由注册表并入。不要再引入 typesafe-i18n（不支持 TS 7）。

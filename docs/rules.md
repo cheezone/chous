@@ -29,6 +29,8 @@ Sizes and counts only put something up for review; they settle nothing. The numb
 
 Only two kinds of things go unchecked, under the names the tools that put them there define: npm's `node_modules/`; `vendor/` (the name Go requires, and `vendors?/` in GitHub Linguist's vendor.yml); Go's `testdata/` ("The go tool will ignore a directory named "testdata""); the `__snapshots__/` Jest and Vitest write; the test fixtures Linguist knows, `tests/fixtures/` and `specs/fixtures/`. Any other name chous does not guess: the repository declares it in `.gitattributes`, the way GitHub reads it (`upstream/** linguist-vendored`; `linguist-generated` counts too, and `-linguist-vendored` takes a path back). `tests/`, `examples/` and `playground/` are your own code and are checked like the rest.
 
+Untracked files are seen as git sees them: what `.gitignore`, `.git/info/exclude` and the global excludes file (`core.excludesFile`, by default `~/.config/git/ignore`) hide, `git status` does not show, and neither does chous. The last two belong to one machine, so they hide untracked files only; "committed although ignored" reads the repository's own `.gitignore` alone. Run in a folder that is no repository but holds several, chous checks each repository on its own and gives one report, its paths starting with the repository's folder.
+
 ## What each rule knows, and what it claims
 
 | Rule | What chous knows | What chous claims | Taste | Finding |
