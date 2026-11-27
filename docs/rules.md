@@ -4,7 +4,7 @@
 
 ## The stance
 
-Sizes and counts only put something up for review; they settle nothing. The numbers are chous's stance, not a measure of quality: in 85 real repositories (`test/corpus.json`) they pick out the tail of the distribution.
+Sizes and counts only put something up for review; they settle nothing. The numbers are chous's stance, not a measure of quality: in 87 real repositories (`test/corpus.json`) they pick out the tail of the distribution.
 
 | Check | Stance |
 |---|---|
@@ -40,6 +40,7 @@ Untracked files are seen as git sees them: what `.gitignore`, `.git/info/exclude
 | Dependencies deprecated or called legacy by their authors | The name, and the authors' public words: npm's deprecated field (copied into the lockfile by pnpm and npm at install time; chous reads it there, for the dependencies package.json names), the README, a security advisory | Build nothing on what is dead | Modernity | Smell |
 | A manifest field its tool deprecated (Cargo's `authors`) | The field, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Names that differ only in case or Unicode form | Both names exist | One thing, one name | Order | Smell |
+| Names Windows cannot check out | The reserved device names Microsoft lists (with an extension too), the characters it does not allow, a name ending in a space or a period | A repository checks out on every system | Order | Smell |
 | Naming styles mixed in one directory | The style of each file name, compared within one language, not one extension (`.ts`, `.js` and `.vue` are one language); subdirectory names too, but only subdirectories holding JavaScript or TypeScript alone (a Python package, a Rust module or a Gradle source set is named by its language or tool); dot directories and `node_modules` are not compared; PascalCase and one-word names fit any style | One directory, one style | Order | Smell |
 | Too many docs at the root | How many docs without a claim to the root sit there | The root is an entrance | Order | Smell |
 | In a monorepo: a dependency on several majors, nested lockfiles, workspace lists that disagree | Versions, file locations, the two lists | One fact, said once | Order | Smell |

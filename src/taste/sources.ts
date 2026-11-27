@@ -24,6 +24,16 @@ export const SOURCES: Partial<Record<MessageKey, Source[]>> = {
   ],
   // Files with a claim to the root, and where releases belong (taste/hygiene.ts). Build output is
   // known by the marker its tool writes: a fact, not someone's word.
+  // Names Windows cannot create (rules/validators/hygiene.ts, twins).
+  "issue.twins.winReserved": [
+    { url: "https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file", check: `${GH}/MicrosoftDocs/win32/docs/desktop-src/FileIO/naming-a-file.md`, quote: "Also avoid these names followed immediately by an extension; for example, NUL.txt and NUL.tar.gz are both equivalent to NUL." },
+  ],
+  "issue.twins.winChars": [
+    { url: "https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file", check: `${GH}/MicrosoftDocs/win32/docs/desktop-src/FileIO/naming-a-file.md`, quote: "Characters whose integer representations are in the range from 1 through 31" },
+  ],
+  "issue.twins.winTrailing": [
+    { url: "https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file", check: `${GH}/MicrosoftDocs/win32/docs/desktop-src/FileIO/naming-a-file.md`, quote: "Do not end a file or directory name with a space or a period." },
+  ],
   "issue.leak.venv": [
     { url: "https://docs.python.org/3/library/venv.html", check: `${GH}/python/cpython/main/Doc/library/venv.rst`, quote: "Not checked into source control systems such as Git." },
   ],

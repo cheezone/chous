@@ -76,7 +76,7 @@
 
 | 品味 | chous 说 | 来源 | 真实命中 |
 |---|---|---|---|
-| 约定 | 名字带大写字母的 Python 文件（… 个，如 …）：PEP 8 规定模块名全小写 | peps.python.org | zopefoundation/ZODB, wilsonzlin/fastrender |
+| 约定 | 名字带大写字母的 Python 文件（… 个，如 …）：PEP 8 规定模块名全小写 | peps.python.org | abdur75648/Deep-Learning-Specialization-Coursera, zopefoundation/ZODB, wilsonzlin/fastrender |
 | 约定 | 包 … 的名字带大写字母：PEP 8 规定包名全小写 | peps.python.org | zopefoundation/ZODB, Ayato-kosaka/nanitabeyo |
 
 停止维护：Python 的 13 个版本，从 2.6 到 3.10；最近一个在 2026-10-01 停止维护。来源：peps.python.org；真实命中：comfyanonymous/ComfyUI, astral-sh/uv, MUKUL-PRASAD-SIGH/AetherSentrix

@@ -92,6 +92,9 @@ export default {
     },
     twins: {
       case: "same name as {{other}} except for case: macOS and Windows keep only one of them on checkout → keep one name",
+      winReserved: "a name Windows cannot check out: a reserved device name, with an extension or without → rename it",
+      winChars: "a name Windows cannot check out: it contains {{chars}}, which Windows does not allow → rename it",
+      winTrailing: "a name Windows cannot check out: it ends in a space or a period → rename it",
       unicode: "same name as {{other}}, its accents written in another Unicode form: macOS keeps only one of them on checkout → keep one name",
       styles: "mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",
       dirStyles: "subdirectories with mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",

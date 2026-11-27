@@ -93,6 +93,9 @@ export default {
     },
     twins: {
       case: "和 {{other}} 只差大小写：在 macOS 和 Windows 上检出时只会留下一个 → 只留一个名字",
+      winReserved: "Windows 上无法检出的名字：是 Windows 的保留设备名，带扩展名也一样 → 改名",
+      winChars: "Windows 上无法检出的名字：含有 Windows 不允许的字符 {{chars}} → 改名",
+      winTrailing: "Windows 上无法检出的名字：以空格或句点结尾 → 改名",
       unicode: "和 {{other}} 是同一个名字，只是重音字符用了另一种 Unicode 写法：在 macOS 上检出时只会留下一个 → 只留一个名字",
       styles: "命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",
       dirStyles: "子目录命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",

@@ -423,5 +423,15 @@
     "repo": "lohanidamodar/flutter_ui_challenges",
     "commit": "ceb75ee00d097990fab747d1ce650874f90769f5",
     "group": "dart"
+  },
+  {
+    "repo": "Gearhj/SAS-Python-and-R-A-Cross-Reference-Guide",
+    "commit": "1e2c7c7fde2fc9d691a7ec4c7fc23998e6409aa1",
+    "group": "windows"
+  },
+  {
+    "repo": "abdur75648/Deep-Learning-Specialization-Coursera",
+    "commit": "cd9cb9a20b62aa2e1fbe52766a09f12edbb19001",
+    "group": "windows"
   }
 ]

@@ -186,6 +186,19 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   }
 }
 
+/** Microsoft's "Naming Files, Paths, and Namespaces": reserved device names, with or without an extension. */
+const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9\u00b9\u00b2\u00b3]|lpt[1-9\u00b9\u00b2\u00b3])(\.|$)/i;
+/** The reserved characters, and the integers 0 through 31 (`/` cannot be in a name anywhere). */
+const WINDOWS_CHARS = /[<>:"\\|?*\u0000-\u001f]/g;
+
+export function windowsProblem(name: string): { key: MessageKey; chars?: string } | undefined {
+  if (WINDOWS_RESERVED.test(name)) return { key: "issue.twins.winReserved" };
+  const chars = [...new Set(name.match(WINDOWS_CHARS) ?? [])];
+  if (chars.length) return { key: "issue.twins.winChars", chars: chars.map((c) => (c < " " ? `\\x${c.charCodeAt(0).toString(16).padStart(2, "0")}` : c)).join(" ") };
+  if (/[ .]$/.test(name) && name !== "." && name !== "..") return { key: "issue.twins.winTrailing" };
+  return undefined;
+}
+
 /**
  * One thing, two spellings: `README.md` next to `Readme.md` (case-insensitive
  * file systems keep one), one directory naming files two ways. What names mean (`test/` and `tests/`, `plugin/` and
@@ -221,6 +234,17 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
       const other = seen.get(key);
       if (other === undefined) seen.set(key, rel);
       else report(rel, rel.normalize("NFC") === other.normalize("NFC") ? "issue.twins.unicode" : "issue.twins.case", other);
+      // A name Windows cannot create: git for Windows refuses to check it out.
+      const windows = windowsProblem(name);
+      if (windows) {
+        hitCount++;
+        context.rawIssues.push(issueFromRule(rule, {
+          path: resolve(context.root, rel),
+          displayPath: snapshot.byRel.get(rel)?.isDir ? `${rel}/` : rel,
+          message: { key: windows.key, ...(windows.chars ? { params: { chars: windows.chars } } : {}) },
+          reason: false,
+        }));
+      }
     }
 
     hitCount += mixedStyles(rule, context);
@@ -280,7 +304,7 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     if (styles.size < 2) continue;
     hits++;
     const [dir, language] = key.split("\u0000") as [string, string];
-    const ordered = [...styles].sort((a, b) => b[1].length - a[1].length);
+    const ordered = [...styles].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
     context.rawIssues.push(issueFromRule(rule, {
       path: `${resolve(context.root, dir)}#styles:${language}`,
       displayPath: dir === "." ? "./" : `${dir}/`,
