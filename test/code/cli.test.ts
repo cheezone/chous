@@ -111,4 +111,20 @@ describe("a folder of repositories", () => {
     expect(text.match(/× Node 16/g)).toHaveLength(1);
     expect(text).toContain("├─[web/.nvmrc]");
   });
+
+  it("scan gives the same full JSON, every list in its details", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-scan-"));
+    const root = join(dir, "app");
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, "a.woff"), "x".repeat(5000));
+    writeFileSync(join(root, "b.woff"), "x".repeat(5000));
+    const report = JSON.parse(runCli(["scan", dir, "-l", "en", "--json"]).stdout);
+    const copies = report.findings.find((f: { key: string }) => f.key === "issue.measure.copies");
+    expect(copies.details).toEqual({ groups: [{ files: ["app/a.woff", "app/b.woff"], bytes: 5000 }] });
+  });
 });
+

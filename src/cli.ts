@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { checkWorkspaces } from "./agents/core";
 import { handleClaudeHook, installClaudeHooks } from "./agents/claude";
 import { lintWorkspace } from "./rules/lint";
-import { lintRepos, reposBelow } from "./scan";
+import { findGitRepos, lintRepos, reposBelow } from "./scan";
 import { renderReport, reportToJSON } from "./rules/report";
 import { createColorizer } from "./color";
 import { getT, isLocale, locales, type MessageKey, type TFunction } from "./i18n";
@@ -32,6 +32,8 @@ type CliOptions = {
   filePaths?: string[];
   json?: boolean;
   scanDir?: string;
+  /** `scan`: check every repository below, one report. */
+  scanAll?: boolean;
 };
 
 function detectLangArg(argv: string[]): string | undefined {
@@ -224,7 +226,9 @@ function relevantDirsFor(cwd: string, filePaths: string[]): Set<string> {
 async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
   const relevantDirs = opts.filePaths?.length ? relevantDirsFor(opts.cwd, opts.filePaths) : undefined;
   // A folder of repositories: each is checked as git sees it, with its own index and ignore rules.
-  const repos = relevantDirs ? undefined : reposBelow(opts.cwd);
+  // `scan` asks for every repository below, even inside one.
+  const below = relevantDirs ? undefined : opts.scanAll ? findGitRepos(opts.cwd).filter((r) => r !== resolve(opts.cwd)) : reposBelow(opts.cwd);
+  const repos = below?.length ? below : undefined;
   const result = repos ? await lintRepos(opts.cwd, repos) : await lintWorkspace({ root: opts.cwd, relevantDirs });
 
   if (opts.json) {
@@ -296,13 +300,8 @@ async function main() {
   }
 
   if (opts.command === "scan") {
-    const { scanDirectory, formatScanText } = await import("./scan");
-    const result = await scanDirectory({
-      dir: resolve(opts.cwd, opts.scanDir ?? "."),
-      lang,
-    });
-    console.log(opts.json ? JSON.stringify(result, null, 2) : formatScanText(result, getT(lang).t));
-    process.exitCode = result.repos.some((r) => r.issues.some((i) => i.verdict === "smell")) ? 1 : 0;
+    // The same report as a plain run, repository by repository: --json keeps every fact (details, key, sources).
+    process.exitCode = await runLint({ ...opts, cwd: resolve(opts.cwd, opts.scanDir ?? "."), scanAll: true }, getT(lang).t);
     return;
   }
 

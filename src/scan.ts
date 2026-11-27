@@ -14,6 +14,10 @@ export type ScanRepoResult = {
     message: string;
     verdict: string;
     reason?: string;
+    key: string;
+    value: string;
+    /** Every fact behind the finding, untruncated: the files, directories, copies. */
+    details?: Record<string, unknown>;
   }>;
 };
 
@@ -63,6 +67,9 @@ async function scanOneRepo(opts: { root: string; lang: string }): Promise<ScanRe
     message: formatIssueMessage(t, i.message),
     verdict: i.verdict,
     reason: i.reason && t(i.reason),
+    key: i.message.key,
+    value: i.value,
+    ...(i.details ? { details: i.details } : {}),
   }));
 
   return { root: opts.root, issues };
