@@ -1,9 +1,20 @@
 name: Release
 
+# Two ways in, one job:
+# - push a `v*` tag (`pnpm run release` on a computer);
+# - or run this workflow from the Actions tab (or `gh api .../dispatches`) with a
+#   version: it bumps package.json on main, tags it, and publishes, no computer needed.
+# A tag pushed by this workflow does not start it again (GITHUB_TOKEN events never do).
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "patch, minor, major, or an exact version such as 0.3.0"
+        required: true
+        default: patch
 
 permissions:
   contents: write
@@ -25,6 +36,16 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
+      - name: Bump version
+        if: github.event_name == 'workflow_dispatch'
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          [ "$GITHUB_REF" = refs/heads/main ] || { echo "release from main only"; exit 1; }
+          [[ "$VERSION" =~ ^(patch|minor|major|[0-9]+\.[0-9]+\.[0-9]+)$ ]] || { echo "not a version: $VERSION"; exit 1; }
+          npm version "$VERSION" --no-git-tag-version
+          echo "TAG=v$(node -p "require('./package.json').version")" >> "$GITHUB_ENV"
+
       - name: Install
         run: pnpm install --frozen-lockfile
 
@@ -34,11 +55,20 @@ jobs:
       - name: Test
         run: pnpm run test
 
+      - name: Commit and tag
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): $TAG"
+          git tag "$TAG"
+          git push origin HEAD:main "$TAG"
+
       - name: Publish to npm
         run: npm publish --access public
 
       - name: GitHub Release
         uses: softprops/action-gh-release@v3
         with:
+          tag_name: ${{ env.TAG || github.ref_name }}
           generate_release_notes: true
-

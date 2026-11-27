@@ -84,10 +84,13 @@ node dist/cli.mjs    # 用 chous 检查本仓库（CI 也会跑）
 ## 发版（重要，别再犯蠢）
 
 - 机制：**npm OIDC Trusted Publishing**。`.github/workflows/release.yml` 用 `permissions: id-token: write` + `npm publish --access public`，**不需要 `NPM_TOKEN` secret**，所以 `gh secret list` 为空是正常的。**不要**引入 `NPM_TOKEN` 相关逻辑。
-- 流程：打 `v*` tag 并 push → `release.yml` 自动 `npm publish` + 创建 GitHub Release。
-- 发版命令（先本地验证，再打 tag）：
+- 流程，两种入口，同一个 job：
+  - **不用电脑**：在 Actions 里运行 Release（`workflow_dispatch`，输入 `patch` / `minor` / `major` 或确切版本），或 `gh api -X POST repos/cheezone/chous/actions/workflows/release.yml/dispatches -f ref=main -f 'inputs[version]=patch'`。它在 main 上改 `package.json` 版本、测试、提交 `chore(release): vX`、打 tag 并 push，再 `npm publish` + 创建 GitHub Release。只能从 main 跑。
+  - **本地**：打 `v*` tag 并 push → `release.yml` 自动 `npm publish` + 创建 GitHub Release。
+  - 发版必须留在 `release.yml` 这个文件里：npm 的 Trusted Publishing 绑定的是这个工作流文件名。工作流自己 push 的 tag 不会再触发它（GITHUB_TOKEN 的事件不触发工作流），所以不会重复发布。
+- 本地发版命令（先本地验证，再打 tag）：
   ```bash
   pnpm run test && pnpm run build && pnpm exec changelogen --bump <version> --release --push --no-output --no-changelog
   ```
   - `--bump <version>` 强制指定版本；`--no-changelog` / `--no-output` 是既定选项（不维护 CHANGELOG 文件）。
-- 版本号处于 `0.x`。不要手动改 `package.json` 版本，交给 changelogen（不是 semantic-release）。
+- 版本号处于 `0.x`。不要手动改 `package.json` 版本：交给 Release 工作流或 changelogen（不是 semantic-release）。
