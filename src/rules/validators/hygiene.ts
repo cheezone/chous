@@ -19,6 +19,7 @@ import {
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
   languageOf,
+  OTHER_CODE,
   goStem,
   nameStyle,
 } from "../../taste/hygiene";
@@ -251,6 +252,29 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     else styles.set(style, [entry.name]);
     byDir.set(dir, styles);
   }
+  // Directories are named too: siblings that hold only JavaScript or TypeScript should agree, like files.
+  const code = new Map<string, "js" | "other">();
+  for (const [rel, entry] of context.snapshot.byRel) {
+    if (entry.isDir || context.snapshot.notOurs.test(rel)) continue;
+    const kind = languageOf(entry.name) === "js" ? "js" : OTHER_CODE.test(entry.name) ? "other" : undefined;
+    if (!kind) continue;
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      const dir = rel.slice(0, i);
+      if (code.get(dir) !== "other") code.set(dir, kind);
+    }
+  }
+  for (const [rel, kind] of code) {
+    // A dot directory is a tool's; node_modules is npm's, wherever it sits.
+    if (kind !== "js" || rel.split("/").some((seg) => seg.startsWith(".") || seg === "node_modules")) continue;
+    const name = rel.slice(rel.lastIndexOf("/") + 1);
+    const style = nameStyle(name.replace(/^[_$]+/, ""));
+    if (!style) continue;
+    const key = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000dirs`;
+    const styles = byDir.get(key) ?? new Map<string, string[]>();
+    styles.set(style, [...(styles.get(style) ?? []), name]);
+    byDir.set(key, styles);
+  }
+
   let hits = 0;
   for (const [key, styles] of byDir) {
     if (styles.size < 2) continue;
@@ -261,7 +285,7 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
       path: `${resolve(context.root, dir)}#styles:${language}`,
       displayPath: dir === "." ? "./" : `${dir}/`,
       message: {
-        key: "issue.twins.styles",
+        key: language === "dirs" ? "issue.twins.dirStyles" : "issue.twins.styles",
         params: {
           styles: ordered.map(([s, names]) => `${s} ×${names.length}`).join(" + "),
           examples: ordered.map(([, names]) => names.sort()[0]).join(", "),

@@ -95,6 +95,7 @@ export default {
       case: "和 {{other}} 只差大小写：在 macOS 和 Windows 上检出时只会留下一个 → 只留一个名字",
       unicode: "和 {{other}} 是同一个名字，只是重音字符用了另一种 Unicode 写法：在 macOS 上检出时只会留下一个 → 只留一个名字",
       styles: "命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",
+      dirStyles: "子目录命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",
     },
     measure: {
       longFiles_one: "{{count}} 个源文件超过 {{lines}} 行或 {{kib}} KiB → 是否承担了太多职责，由你或你的 agent 判断；不要机械拆分",

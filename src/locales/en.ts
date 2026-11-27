@@ -94,6 +94,7 @@ export default {
       case: "same name as {{other}} except for case: macOS and Windows keep only one of them on checkout → keep one name",
       unicode: "same name as {{other}}, its accents written in another Unicode form: macOS keeps only one of them on checkout → keep one name",
       styles: "mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",
+      dirStyles: "subdirectories with mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",
     },
     measure: {
       longFiles_one: "{{count}} source file over {{lines}} lines or {{kib}} KiB → whether it holds too many jobs is for you or your agent to judge; never split mechanically",

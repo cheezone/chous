@@ -109,6 +109,14 @@ const LANGUAGES: Array<[string, RegExp]> = [
 export const languageOf = (name: string) => LANGUAGES.find(([, ext]) => ext.test(name))?.[0];
 
 /**
+ * Source code of any other language. A directory holding some names itself by
+ * that language's rules (a Python package or a Rust module must be snake_case
+ * to be imported; a Kotlin source set is named by Gradle), so only directories
+ * of JavaScript and TypeScript alone are compared with their siblings.
+ */
+export const OTHER_CODE = /\.(py|pyi|go|rs|rb|java|kt|kts|scala|swift|dart|ex|exs|erl|php|cs|fs|c|h|cc|cpp|cxx|hpp|m|mm|zig|lua|r|jl|hs|ml|nim|cr|v|sol)$/i;
+
+/**
  * The chosen part of a Go file name. go/build reads a `_test` suffix, then
  * `_GOOS`, `_GOARCH` or `_GOOS_GOARCH`, as build constraints: they are the go
  * command's words, not a naming style.

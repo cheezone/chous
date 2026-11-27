@@ -222,6 +222,28 @@ describe("twins", () => {
     ).toEqual(["src/legacy/", "src/picker/"]);
   });
 
+  it("compares subdirectories that hold only JavaScript or TypeScript, not those a language names", async () => {
+    const { lintWorkspace } = await import("../../src/rules/lint");
+    const root = mkdtempSync(join(tmpdir(), "chous-dirs-"));
+    const files = {
+      "src/components/date-picker/index.ts": "",
+      "src/components/color-input/index.ts": "",
+      "src/components/buttonGroup/index.ts": "",
+      "src/components/assets/logo.svg": "",
+      "tools/web-ui/main.ts": "",
+      "tools/data_loader/__init__.py": "",
+      "tools/data_loader/web.ts": "",
+      ".hidden/fooBar/a.ts": "",
+      ".hidden/baz-qux/a.ts": "",
+    };
+    for (const [path, content] of Object.entries(files)) {
+      mkdirSync(join(root, path, ".."), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const found = (await lintWorkspace({ root })).issues.filter((i) => i.message.key === "issue.twins.dirStyles");
+    expect(found.map((i) => [i.displayPath, i.message.params?.styles])).toEqual([["src/components/", "kebab-case ×2 + camelCase ×1"]]);
+  });
+
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
     expect(
       await findings({
