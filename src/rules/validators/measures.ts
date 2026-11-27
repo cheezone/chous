@@ -22,6 +22,132 @@ function identity(path: string): { id: string; size: number } | undefined {
   }
 }
 
+/**
+ * Directories that copy each other: `apps/a/src` and `apps/b/src` hold the
+ * same relative paths, most of them byte for byte, and some changed on one
+ * side since. Found from paths and bytes alone. Candidates come from the
+ * paths few directories share (`index.ts` or `package.json`, everywhere,
+ * pairs nothing); a candidate is then judged on everything both hold. Only
+ * the outermost pair is kept (`apps/a`, not also `apps/a/src`), and
+ * directories copied from one another are one set, as long as the whole set
+ * still is mostly the same; a set that is not stays apart.
+ */
+export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => string | undefined) {
+  const FANOUT = 8;
+  const under = new Map<string, number>();
+  const index = new Map<string, string[] | null>();
+  for (const rel of sizes.keys()) {
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      const dir = rel.slice(0, i);
+      under.set(dir, (under.get(dir) ?? 0) + 1);
+      const rest = rel.slice(i + 1);
+      const list = index.get(rest);
+      if (list === null) continue;
+      if (!list) index.set(rest, [dir]);
+      else if (list.length >= FANOUT) index.set(rest, null);
+      else list.push(dir);
+    }
+  }
+  const pairs = new Map<string, { a: string; b: string; seen: number }>();
+  for (const list of index.values()) {
+    if (!list || list.length < 2) continue;
+    const dirs = [...list].sort();
+    for (let i = 0; i < dirs.length; i++) {
+      for (let j = i + 1; j < dirs.length; j++) {
+        const [a, b] = [dirs[i]!, dirs[j]!];
+        if (b.startsWith(`${a}/`)) continue; // a directory and one inside it
+        const key = `${a}\u0000${b}`;
+        const pair = pairs.get(key) ?? { a, b, seen: 0 };
+        pair.seen++;
+        pairs.set(key, pair);
+      }
+    }
+  }
+  const depth = (p: { a: string; b: string }) => p.a.split("/").length + p.b.split("/").length;
+  const candidates = [...pairs.values()]
+    .filter((p) => p.seen >= MEASURES.mirrorFiles)
+    .sort((x, y) => depth(x) - depth(y) || x.a.localeCompare(y.a) || x.b.localeCompare(y.b));
+
+  // What each candidate directory holds, in full: common paths count once a pair is judged.
+  const wanted = new Set(candidates.flatMap((p) => [p.a, p.b]));
+  const contents = new Map<string, Set<string>>();
+  for (const rel of sizes.keys()) {
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      const dir = rel.slice(0, i);
+      if (!wanted.has(dir)) continue;
+      const set = contents.get(dir) ?? new Set<string>();
+      set.add(rel.slice(i + 1));
+      contents.set(dir, set);
+    }
+  }
+  /** The paths two or more of `dirs` hold, which of them are the same in all, and whether that is most of them. */
+  const judge = (dirs: string[]) => {
+    const count = new Map<string, number>();
+    for (const d of dirs) for (const r of contents.get(d) ?? []) count.set(r, (count.get(r) ?? 0) + 1);
+    const changed: string[] = [];
+    const identical: string[] = [];
+    for (const rest of [...count].filter(([, n]) => n >= 2).map(([r]) => r).sort()) {
+      const holders = dirs.filter((d) => contents.get(d)?.has(rest)).map((d) => `${d}/${rest}`);
+      const first = holders[0]!;
+      if (holders.length === dirs.length && holders.every((p) => sizes.get(p) === sizes.get(first))) {
+        const digest = hash(first);
+        if (digest !== undefined && holders.every((p) => p === first || hash(p) === digest)) {
+          identical.push(rest);
+          continue;
+        }
+      }
+      changed.push(rest);
+    }
+    const shared = identical.length + changed.length;
+    const smallest = Math.min(...dirs.map((d) => under.get(d) ?? 0));
+    const ok = identical.length >= MEASURES.mirrorFiles && identical.length * 2 >= shared && shared * 2 >= smallest;
+    return { dirs: [...dirs].sort(), identical, changed, ok };
+  };
+
+  const sets: Array<Set<string> | undefined> = [];
+  const setsOf = (dir: string) => sets.flatMap((s, i) => (s?.has(dir) ? [i] : []));
+  // `apps/a/src` and `apps/b/src` say again what `apps/a` and `apps/b`, in one set, already say.
+  const inside = ({ a, b }: { a: string; b: string }) => {
+    for (let i = a.indexOf("/"); i > 0; i = a.indexOf("/", i + 1)) {
+      const [x, offset] = [a.slice(0, i), a.slice(i)];
+      if (!b.endsWith(offset)) continue;
+      const y = b.slice(0, b.length - offset.length);
+      if (sets.some((s) => s?.has(x) && s.has(y))) return true;
+    }
+    return false;
+  };
+  for (const p of candidates) {
+    if (inside(p) || !judge([p.a, p.b]).ok) continue;
+    const touching = [...new Set([...setsOf(p.a), ...setsOf(p.b)])];
+    const merged = new Set<string>([p.a, p.b, ...touching.flatMap((i) => [...sets[i]!])]);
+    if (touching.length && judge([...merged]).ok) {
+      for (const i of touching) sets[i] = undefined;
+      sets.push(merged);
+    } else sets.push(new Set([p.a, p.b]));
+  }
+
+  // A duplicate group is explained only if all files share a single mirror set and relative path.
+  const covered = new Map<string, number[]>();
+  let copyId = 0;
+  const result = sets.flatMap((s) => {
+    if (!s) return [];
+    const { dirs, identical, changed } = judge([...s]);
+    for (const rest of identical) {
+      copyId++;
+      for (const d of dirs) {
+        if (!contents.get(d)?.has(rest)) continue;
+        const path = `${d}/${rest}`;
+        const ids = covered.get(path);
+        if (ids) ids.push(copyId);
+        else covered.set(path, [copyId]);
+      }
+    }
+    return [{ dirs, same: identical.length, differ: changed.length, changed }];
+  });
+  result.sort((x, y) => y.same + y.differ - (x.same + x.differ) || x.dirs[0]!.localeCompare(y.dirs[0]!));
+  return { sets: result, covered };
+}
+
 /** Newlines in a buffer. */
 function lineCount(bytes: Buffer): number {
   let lines = 0;
@@ -55,6 +181,7 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
     const long: Array<{ path: string; lines: number; bytes: number }> = [];
     const perDir = new Map<string, number>();
     const bySize = new Map<number, string[]>();
+    const ours = new Map<string, number>();
     let rootFiles = 0;
 
     for (const entry of files) {
@@ -70,6 +197,7 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
       }
       if (!rel.includes("/")) rootFiles++;
       if (snapshot.notOurs.test(rel)) continue;
+      ours.set(rel, size);
 
       // Copies: large files, and instructions at any size (a CLAUDE.md that repeats AGENTS.md).
       // A README or LICENSE in every package is what their hosts ask for.
@@ -91,6 +219,8 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
       if (!SOURCE_FILE.test(entry.name)) continue;
       const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/") + 1) : "./";
       perDir.set(dir, (perDir.get(dir) ?? 0) + 1);
+      // A newline takes at least one byte. Files this small cannot exceed either limit.
+      if (size <= MEASURES.sourceLines && size <= MEASURES.sourceBytes) continue;
       const text = readBytes(entry.absPath, 16 * 1024 * 1024);
       if (GENERATED.test(text.subarray(0, 1024).toString("latin1"))) continue;
       const lines = lineCount(text);
@@ -127,10 +257,23 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
       }
       for (const same of byHash.values()) if (same.length > 1) groups.push({ files: same, bytes });
     }
-    if (groups.length) {
+    // Whole directories copied: one finding for them, and their files leave the list of copies.
+    const hashes = new Map<string, string | undefined>();
+    const hashOf = (rel: string) => {
+      if (!hashes.has(rel)) hashes.set(rel, hashFile(resolve(root, rel)));
+      return hashes.get(rel);
+    };
+    const mirrors = mirrorSets(ours, hashOf);
+    if (mirrors.sets.length) {
+      report(`${root}#measure:mirrors`, "./", { key: "issue.measure.mirrors", params: { count: mirrors.sets.length } }, "review", "order", { mirrors: mirrors.sets });
+    }
+    const remaining = groups.filter(({ files }) => !mirrors.covered.get(files[0]!)?.some(
+      (id) => files.every((f) => mirrors.covered.get(f)?.includes(id)),
+    ));
+    if (remaining.length) {
       // The copies that cost the most first.
-      groups.sort((a, b) => b.bytes * (b.files.length - 1) - a.bytes * (a.files.length - 1) || a.files[0]!.localeCompare(b.files[0]!));
-      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: groups.length } }, "review", "order", { groups });
+      remaining.sort((a, b) => b.bytes * (b.files.length - 1) - a.bytes * (a.files.length - 1) || a.files[0]!.localeCompare(b.files[0]!));
+      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: remaining.length } }, "review", "order", { groups: remaining });
     }
     return { hitCount };
   }

@@ -54,6 +54,7 @@ export default {
     more: "… 另外 {{count}} 个（`chous --json` 有完整列表）",
     lines: "{{lines}} 行 · {{kib}} KiB",
     files: "{{count}} 个文件",
+    mirror: "{{same}} 个相同 · {{differ}} 个已不同",
     found: "臭味 {{smells}} 处 · 待审视 {{reviews}} 处",
     noIssues: "没有臭味",
     reason: "（{{reason}}）",
@@ -79,7 +80,7 @@ export default {
       remove: "工作区包里的 \"{{field}}\" → {{reason}}",
     },
     workspace: {
-      drift: "{{name}} 同时用了不同的大版本（{{versions}}），会被装两份 → 统一到一个大版本",
+      drift: "{{name}} 同时用了大版本 {{majors}}：每个都会被装一份 → 统一到一个大版本",
       listsDiffer: "package.json 写的是 {{json}}，pnpm-workspace.yaml 写的是 {{yaml}}：同一件事说了两遍，而且两遍不一样 → 改成一致",
     },
     leftover: {
@@ -93,8 +94,12 @@ export default {
     },
     twins: {
       case: "和 {{other}} 只差大小写：在 macOS 和 Windows 上检出时只会留下一个 → 只留一个名字",
+      winReserved: "Windows 上无法检出的名字：是 Windows 的保留设备名，带扩展名也一样 → 改名",
+      winChars: "Windows 上无法检出的名字：含有 Windows 不允许的字符 {{chars}} → 改名",
+      winTrailing: "Windows 上无法检出的名字：以空格或句点结尾 → 改名",
       unicode: "和 {{other}} 是同一个名字，只是重音字符用了另一种 Unicode 写法：在 macOS 上检出时只会留下一个 → 只留一个名字",
       styles: "命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",
+      dirStyles: "子目录命名风格混用：{{styles}}（{{examples}}）→ 同一个目录只用一种起名方式",
     },
     measure: {
       longFiles_one: "{{count}} 个源文件超过 {{lines}} 行或 {{kib}} KiB → 是否承担了太多职责，由你或你的 agent 判断；不要机械拆分",
@@ -102,6 +107,8 @@ export default {
       flatDirs_one: "{{count}} 个目录平铺了 {{limit}} 个以上源文件 → 如果它管着几件事，按职责分组",
       flatDirs_other: "{{count}} 个目录各自平铺了 {{limit}} 个以上源文件 → 哪个目录管着几件事，就按职责分组",
       crowdedRoot: "根目录有 {{count}} 个文件，超过 {{limit}} 个：根目录是入口 → 不必放在根目录的，移走",
+      mirrors_one: "{{count}} 组互为副本的目录：相同路径下的文件大多一模一样 → 是否该共用一份，由你或你的 agent 判断；先看已经改得不一样的文件（`chous --json` 有列表）",
+      mirrors_other: "{{count}} 组互为副本的目录：相同路径下的文件大多一模一样 → 是否该共用一份，由你或你的 agent 判断；先看已经改得不一样的文件（`chous --json` 有列表）",
       copies_one: "{{count}} 组内容完全相同的文件 → 只留一份、改用链接，或者说明为什么要有多份",
       copies_other: "{{count}} 组内容完全相同的文件 → 只留一份、改用链接，或者说明为什么要有多份",
       instructions: "{{lines}} 行 agent 指令，超过 {{limit}} 行：agent 每次在这里工作都会全部读一遍 → 只留每次都用得上的，其余放到用得上的地方",

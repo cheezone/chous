@@ -90,8 +90,8 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
     }
 
     const internal = new Set(manifests.map((m) => m.pkg.name).filter((n): n is string => Boolean(n)));
-    // name → major → [spec in dir]
-    const majors = new Map<string, Map<string, string[]>>();
+    // name → major → "dir\0spec" (a set: one package may list a dependency in two fields)
+    const majors = new Map<string, Map<string, Set<string>>>();
 
     for (const { dir, pkg } of manifests) {
       for (const field of DEP_FIELDS) {
@@ -105,9 +105,9 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
           const spec = raw;
           const major = majorOf(spec);
           if (major === undefined) continue;
-          const byMajor = majors.get(name) ?? new Map<string, string[]>();
-          const specs = byMajor.get(major) ?? [];
-          specs.push(`${dir}: ${spec}`);
+          const byMajor = majors.get(name) ?? new Map<string, Set<string>>();
+          const specs = byMajor.get(major) ?? new Set<string>();
+          specs.add(`${dir}\u0000${spec}`);
           byMajor.set(major, specs);
           majors.set(name, byMajor);
         }
@@ -134,12 +134,20 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
       hitCount++;
       // Different majors can never resolve to one copy; same-major ranges usually do.
       if (byMajor.size < 2) continue;
-      const versions = Array.from(byMajor.values()).flat().join("; ");
+      // The odd ones out first: the major fewer packages are on is the one a person looks for.
+      const groups = [...byMajor].sort(([a, x], [b, y]) => x.size - y.size || Number(a) - Number(b));
+      const versions = groups.flatMap(([, specs]) =>
+        [...specs].map((s) => {
+          const [dir, spec] = s.split("\u0000") as [string, string];
+          return { path: dir === "." ? "package.json" : `${dir}/package.json`, spec };
+        }),
+      );
       context.rawIssues.push(issueFromRule(rule, {
         path: `${snapshot.manifest.path}#drift:${name}`,
         displayPath: "package.json",
         label: name,
-        message: { key: "issue.workspace.drift", params: { name, versions } },
+        message: { key: "issue.workspace.drift", params: { name, majors: [...byMajor.keys()].sort((a, b) => Number(a) - Number(b)).join(", ") } },
+        details: { versions },
       }));
     }
     return { hitCount };

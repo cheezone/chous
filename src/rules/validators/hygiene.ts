@@ -19,6 +19,7 @@ import {
   ROOT_CONTRACT_DOCS,
   ROOT_DOCS_LIMIT,
   languageOf,
+  OTHER_CODE,
   goStem,
   nameStyle,
 } from "../../taste/hygiene";
@@ -185,6 +186,19 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
   }
 }
 
+/** Microsoft's "Naming Files, Paths, and Namespaces": reserved device names, with or without an extension. */
+const WINDOWS_RESERVED = /^(con|prn|aux|nul|com[1-9\u00b9\u00b2\u00b3]|lpt[1-9\u00b9\u00b2\u00b3])(\.|$)/i;
+/** The reserved characters, and the integers 0 through 31 (`/` cannot be in a name anywhere). */
+const WINDOWS_CHARS = /[<>:"\\|?*\u0000-\u001f]/g;
+
+export function windowsProblem(name: string): { key: MessageKey; chars?: string } | undefined {
+  if (WINDOWS_RESERVED.test(name)) return { key: "issue.twins.winReserved" };
+  const chars = [...new Set(name.match(WINDOWS_CHARS) ?? [])];
+  if (chars.length) return { key: "issue.twins.winChars", chars: chars.map((c) => (c < " " ? `\\x${c.charCodeAt(0).toString(16).padStart(2, "0")}` : c)).join(" ") };
+  if (/[ .]$/.test(name) && name !== "." && name !== "..") return { key: "issue.twins.winTrailing" };
+  return undefined;
+}
+
 /**
  * One thing, two spellings: `README.md` next to `Readme.md` (case-insensitive
  * file systems keep one), one directory naming files two ways. What names mean (`test/` and `tests/`, `plugin/` and
@@ -220,6 +234,17 @@ export class TwinsRuleValidator extends BaseRuleValidator<TwinsRule> {
       const other = seen.get(key);
       if (other === undefined) seen.set(key, rel);
       else report(rel, rel.normalize("NFC") === other.normalize("NFC") ? "issue.twins.unicode" : "issue.twins.case", other);
+      // A name Windows cannot create: git for Windows refuses to check it out.
+      const windows = windowsProblem(name);
+      if (windows) {
+        hitCount++;
+        context.rawIssues.push(issueFromRule(rule, {
+          path: resolve(context.root, rel),
+          displayPath: snapshot.byRel.get(rel)?.isDir ? `${rel}/` : rel,
+          message: { key: windows.key, ...(windows.chars ? { params: { chars: windows.chars } } : {}) },
+          reason: false,
+        }));
+      }
     }
 
     hitCount += mixedStyles(rule, context);
@@ -251,17 +276,42 @@ function mixedStyles(rule: TwinsRule, context: RuleValidatorContext): number {
     else styles.set(style, [entry.name]);
     byDir.set(dir, styles);
   }
+  // Directories are named too: siblings that hold only JavaScript or TypeScript should agree, like files.
+  const code = new Map<string, "js" | "other">();
+  for (const [rel, entry] of context.snapshot.byRel) {
+    if (entry.isDir || context.snapshot.notOurs.test(rel)) continue;
+    const kind = languageOf(entry.name) === "js" ? "js" : OTHER_CODE.test(entry.name) ? "other" : undefined;
+    if (!kind) continue;
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      const dir = rel.slice(0, i);
+      if (code.get(dir) !== "other") code.set(dir, kind);
+    }
+  }
+  for (const [rel, kind] of code) {
+    // A dot directory is a tool's; node_modules is npm's, wherever it sits.
+    if (kind !== "js" || rel.split("/").some((seg) => seg.startsWith(".") || seg === "node_modules")) continue;
+    const name = rel.slice(rel.lastIndexOf("/") + 1);
+    const style = nameStyle(name.replace(/^[_$]+/, ""));
+    if (!style) continue;
+    const key = `${rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/")) : "."}\u0000dirs`;
+    const styles = byDir.get(key) ?? new Map<string, string[]>();
+    const names = styles.get(style);
+    if (names) names.push(name);
+    else styles.set(style, [name]);
+    byDir.set(key, styles);
+  }
+
   let hits = 0;
   for (const [key, styles] of byDir) {
     if (styles.size < 2) continue;
     hits++;
     const [dir, language] = key.split("\u0000") as [string, string];
-    const ordered = [...styles].sort((a, b) => b[1].length - a[1].length);
+    const ordered = [...styles].sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
     context.rawIssues.push(issueFromRule(rule, {
       path: `${resolve(context.root, dir)}#styles:${language}`,
       displayPath: dir === "." ? "./" : `${dir}/`,
       message: {
-        key: "issue.twins.styles",
+        key: language === "dirs" ? "issue.twins.dirStyles" : "issue.twins.styles",
         params: {
           styles: ordered.map(([s, names]) => `${s} ×${names.length}`).join(" + "),
           examples: ordered.map(([, names]) => names.sort()[0]).join(", "),

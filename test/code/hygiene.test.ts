@@ -208,6 +208,70 @@ describe("twins", () => {
     ).toEqual(["src/composables/", "src/views/"]);
   });
 
+  it("compares within a language, not an extension: a kebab component beside a camelCase module is a mix", async () => {
+    expect(
+      await findings({
+        "src/picker/date-picker.vue": "",
+        "src/picker/datePicker.ts": "",
+        "src/legacy/fooBar.js": "",
+        "src/legacy/baz-qux.ts": "",
+        "src/same/date-picker.vue": "",
+        "src/same/date-picker.ts": "",
+        "src/same/AppButton.vue": "",
+      }),
+    ).toEqual(["src/legacy/", "src/picker/"]);
+  });
+
+  it("compares subdirectories that hold only JavaScript or TypeScript, not those a language names", async () => {
+    const { lintWorkspace } = await import("../../src/rules/lint");
+    const root = mkdtempSync(join(tmpdir(), "chous-dirs-"));
+    const files = {
+      "src/components/date-picker/index.ts": "",
+      "src/components/color-input/index.ts": "",
+      "src/components/buttonGroup/index.ts": "",
+      "src/components/assets/logo.svg": "",
+      "tools/web-ui/main.ts": "",
+      "tools/data_loader/__init__.py": "",
+      "tools/data_loader/web.ts": "",
+      ".hidden/fooBar/a.ts": "",
+      ".hidden/baz-qux/a.ts": "",
+    };
+    for (const [path, content] of Object.entries(files)) {
+      mkdirSync(join(root, path, ".."), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const found = (await lintWorkspace({ root })).issues.filter((i) => i.message.key === "issue.twins.dirStyles");
+    expect(found.map((i) => [i.displayPath, i.message.params?.styles])).toEqual([["src/components/", "kebab-case ×2 + camelCase ×1"]]);
+  });
+
+  it("knows the names Windows cannot create, as Microsoft lists them", async () => {
+    const { windowsProblem } = await import("../../src/rules/validators/hygiene");
+    expect(windowsProblem("NUL.tar.gz")?.key).toBe("issue.twins.winReserved");
+    expect(windowsProblem("aux.ts")?.key).toBe("issue.twins.winReserved");
+    expect(windowsProblem("COM\u00b9")?.key).toBe("issue.twins.winReserved");
+    expect(windowsProblem("a:b.md")).toEqual({ key: "issue.twins.winChars", chars: ":" });
+    expect(windowsProblem("what?|.png")).toEqual({ key: "issue.twins.winChars", chars: "? |" });
+    expect(windowsProblem("notes.")?.key).toBe("issue.twins.winTrailing");
+    expect(windowsProblem("draft ")?.key).toBe("issue.twins.winTrailing");
+    for (const ok of [".temp", "console.ts", "auxiliary.md", "com10.txt", "nullish.ts", "Microsoft Yahei.woff", "L形.png", "a.b.c"]) {
+      expect(windowsProblem(ok), ok).toBeUndefined();
+    }
+  });
+
+  it.skipIf(process.platform === "win32")("reports a committed name Windows cannot check out, once per directory", async () => {
+    const root = mkdtempSync(join(tmpdir(), "chous-win-"));
+    mkdirSync(join(root, "docs/aux"), { recursive: true });
+    writeFileSync(join(root, "docs/aux/index.md"), "");
+    writeFileSync(join(root, "docs/a:b.md"), "");
+    writeFileSync(join(root, "notes."), "");
+    const found = (await lintWorkspace({ root })).issues.filter((i) => i.message.key.startsWith("issue.twins.win"));
+    expect(found.map((i) => [i.displayPath, i.message.key]).sort()).toEqual([
+      ["docs/a:b.md", "issue.twins.winChars"],
+      ["docs/aux/", "issue.twins.winReserved"],
+      ["notes.", "issue.twins.winTrailing"],
+    ]);
+  });
+
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
     expect(
       await findings({

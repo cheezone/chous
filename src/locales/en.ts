@@ -53,6 +53,7 @@ export default {
     more: "… and {{count}} more (`chous --json` lists all)",
     lines: "{{lines}} lines · {{kib}} KiB",
     files: "{{count}} files",
+    mirror: "{{same}} identical · {{differ}} changed",
     found: "Smells: {{smells}} · to review: {{reviews}}",
     noIssues: "Nothing smells",
     reason: "({{reason}})",
@@ -78,7 +79,7 @@ export default {
       remove: "\"{{field}}\" in a workspace package → {{reason}}",
     },
     workspace: {
-      drift: "{{name}} is on several major versions ({{versions}}), so it gets installed twice → move to one major version",
+      drift: "{{name}} is on major versions {{majors}}: each gets installed → move to one major version",
       listsDiffer: "package.json lists {{json}}, pnpm-workspace.yaml lists {{yaml}}: one fact said twice, and the two disagree → make them the same",
     },
     leftover: {
@@ -92,8 +93,12 @@ export default {
     },
     twins: {
       case: "same name as {{other}} except for case: macOS and Windows keep only one of them on checkout → keep one name",
+      winReserved: "a name Windows cannot check out: a reserved device name, with an extension or without → rename it",
+      winChars: "a name Windows cannot check out: it contains {{chars}}, which Windows does not allow → rename it",
+      winTrailing: "a name Windows cannot check out: it ends in a space or a period → rename it",
       unicode: "same name as {{other}}, its accents written in another Unicode form: macOS keeps only one of them on checkout → keep one name",
-      styles: "mixes {{styles}} names ({{examples}}) → one directory, one way of naming",
+      styles: "mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",
+      dirStyles: "subdirectories with mixed naming styles: {{styles}} ({{examples}}) → one directory, one way of naming",
     },
     measure: {
       longFiles_one: "{{count}} source file over {{lines}} lines or {{kib}} KiB → whether it holds too many jobs is for you or your agent to judge; never split mechanically",
@@ -101,6 +106,8 @@ export default {
       flatDirs_one: "{{count}} directory holds more than {{limit}} source files → if it holds several concerns, group them",
       flatDirs_other: "{{count}} directories hold more than {{limit}} source files each → where one holds several concerns, group them",
       crowdedRoot: "{{count}} files at the root, more than {{limit}}: the root is an entrance → move what does not need to be there",
+      mirrors_one: "{{count}} set of directories that copy each other: most files at the same paths are identical → whether they should be one is for you or your agent to judge; look first at the files that changed (`chous --json` lists them)",
+      mirrors_other: "{{count}} sets of directories that copy each other: most files at the same paths are identical → whether they should be one is for you or your agent to judge; look first at the files that changed (`chous --json` lists them)",
       copies_one: "{{count}} set of identical files → keep one, link to it, or say why there are several",
       copies_other: "{{count}} sets of identical files → keep one, link to it, or say why there are several",
       instructions: "{{lines}} lines of agent instructions, more than {{limit}}: an agent reads all of it whenever it works here → keep what applies every time, move the rest where it is needed",

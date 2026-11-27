@@ -5,9 +5,11 @@ import { resolve } from "node:path";
 const PROJECT_ROOT = resolve(import.meta.dirname, "../..");
 const CLI_PATH = resolve(PROJECT_ROOT, "src/cli.ts");
 const PASS_JS = resolve(PROJECT_ROOT, "test/fixtures/pass/js");
+// By URL: a folder outside the project cannot resolve the package by name.
+const TSX = import.meta.resolve("tsx");
 
 function runCli(args: string[], cwd = PASS_JS) {
-  const proc = spawnSync(process.execPath, ["--import", "tsx", CLI_PATH, ...args], {
+  const proc = spawnSync(process.execPath, ["--import", TSX, CLI_PATH, ...args], {
     cwd,
     encoding: "utf8",
     env: { ...process.env, NO_COLOR: "1", COLUMNS: "200" },
@@ -85,3 +87,88 @@ describe("colors", () => {
     expect(supportsTruecolor({ TERM: "xterm-256color" })).toBe(false);
   });
 });
+
+describe("a folder of repositories", () => {
+  it("checks each repository as git sees it, in one report", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-repos-"));
+    for (const repo of ["web", "api"]) {
+      const root = join(dir, repo);
+      mkdirSync(join(root, "build"), { recursive: true });
+      spawnSync("git", ["init", "-q"], { cwd: root });
+      writeFileSync(join(root, ".nvmrc"), "16\n");
+      writeFileSync(join(root, ".gitignore"), "build/\n");
+      writeFileSync(join(root, "build/out.js"), "x\n");
+      spawnSync("git", ["add", "-f", ".gitignore", ".nvmrc", "build/out.js"], { cwd: root });
+    }
+    const r = runCli(["-l", "en", "--json"], dir);
+    const paths = (JSON.parse(r.stdout).findings as Array<{ path: string }>).map((f) => f.path).sort();
+    // Only a repository's own index knows build/out.js is committed.
+    expect(paths).toEqual(["api/.nvmrc (Node 16)", "api/build/", "web/.nvmrc (Node 16)", "web/build/"]);
+    const text = runCli(["-l", "en", "--no-color"], dir).stdout;
+    expect(text.match(/× Node 16/g)).toHaveLength(1);
+    expect(text).toContain("├─[web/.nvmrc]");
+  });
+
+  it("checks the folder's own files too, and follows no link to a repository", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync, symlinkSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-outer-"));
+    writeFileSync(join(dir, ".chous"), "{}\n");
+    const root = join(dir, "repo");
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, ".nvmrc"), "16\n");
+    if (process.platform !== "win32") symlinkSync(root, join(dir, "alias"), "dir");
+    const paths = (JSON.parse(runCli(["-l", "en", "--json"], dir).stdout).findings as Array<{ path: string }>).map((f) => f.path).sort();
+    expect(paths).toEqual([".chous", "repo/.nvmrc (Node 16)"]);
+  });
+
+  it("treats an independent repository under a workspace glob as its own project", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-workspace-repo-"));
+    writeFileSync(join(dir, "package.json"), JSON.stringify({ name: "outer", private: true }));
+    writeFileSync(join(dir, "pnpm-workspace.yaml"), "packages:\n  - 'packages/*'\n");
+    const root = join(dir, "packages/inner");
+    mkdirSync(root, { recursive: true });
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, "package.json"), JSON.stringify({ name: "inner", packageManager: "pnpm@10.0.0", dependencies: { moment: "2" } }));
+    const { findings } = JSON.parse(runCli(["--json"], dir).stdout);
+    expect(findings.map((f: { key: string }) => f.key)).toEqual(["issue.deps.obsolete"]);
+  });
+
+  it.skipIf(process.platform === "win32")("preserves literal backslashes in repository names", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-repo-name-"));
+    const name = "repo\\[one]";
+    const root = join(dir, name);
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, ".nvmrc"), "16\n");
+    const report = JSON.parse(runCli(["--json"], dir).stdout);
+    expect(report.findings.map((f: { path: string }) => f.path)).toEqual([`${name}/.nvmrc (Node 16)`]);
+  });
+
+  it("scan gives the same full JSON, every list in its details", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-scan-"));
+    const root = join(dir, "app");
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, "a.woff"), "x".repeat(5000));
+    writeFileSync(join(root, "b.woff"), "x".repeat(5000));
+    const report = JSON.parse(runCli(["scan", dir, "-l", "en", "--json"]).stdout);
+    const copies = report.findings.find((f: { key: string }) => f.key === "issue.measure.copies");
+    expect(copies.details).toEqual({ groups: [{ files: ["app/a.woff", "app/b.woff"], bytes: 5000 }] });
+  });
+});
+

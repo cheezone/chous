@@ -46,6 +46,8 @@ export function gitignoreMatcher(patterns: string[]): { ignores(rel: string): bo
     else byWord.set(rarest, [i]);
   });
 
+  // Candidate sets overlap. Reuse the compiled rule when the same pattern occurs in another set.
+  const compiled: Ignore[] = [];
   const matchers = new Map<string, Ignore>();
   const answers = new Map<string, boolean>();
   return {
@@ -57,7 +59,15 @@ export function gitignoreMatcher(patterns: string[]): { ignores(rel: string): bo
       const chosen = [...candidates].sort((a, b) => a - b);
       const key = chosen.join(",");
       let matcher = matchers.get(key);
-      if (!matcher) matchers.set(key, (matcher = ignore().add(chosen.map((i) => lines[i]!))));
+      if (!matcher) {
+        // Adding Ignore instances concatenates their rule arrays. Add strings in bulk for wide sets
+        // to avoid repeatedly copying a growing array of rules.
+        const rules = chosen.length > 256
+          ? chosen.map((i) => lines[i]!)
+          : chosen.map((i) => compiled[i] ??= ignore().add([lines[i]!]));
+        matcher = ignore().add(rules);
+        matchers.set(key, matcher);
+      }
       const answer = chosen.length > 0 && matcher.ignores(rel);
       answers.set(rel, answer);
       return answer;

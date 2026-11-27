@@ -4,7 +4,7 @@
 
 ## The stance
 
-Sizes and counts only put something up for review; they settle nothing. The numbers are chous's stance, not a measure of quality: in 85 real repositories (`test/corpus.json`) they pick out the tail of the distribution.
+Sizes and counts only put something up for review; they settle nothing. The numbers are chous's stance, not a measure of quality: in 87 real repositories (`test/corpus.json`) they pick out the tail of the distribution.
 
 | Check | Stance |
 |---|---|
@@ -13,10 +13,11 @@ Sizes and counts only put something up for review; they settle nothing. The numb
 | Files at the root | more than 30 |
 | Docs at the root, besides README, LICENSE and the like | more than 3 (this one is a smell) |
 | Agent instructions (AGENTS.md, CLAUDE.md, GEMINI.md, Copilot's) | over 300 lines |
+| Directories that copy each other | at least 10 files at the same relative paths byte for byte, and at least half of what both hold; only the outermost pair; directories copied from one another are one set while the whole set still meets this, apart otherwise; common names are skipped only to find candidates, never when counting; their files leave the files with identical content |
 | Files with identical content | 4 KiB and up; agent instructions at any size |
 | One file | 50 MiB and up (a smell) |
 
-`chous --json` gives every fact behind a finding in full: every long file, flat directory, set of copies, root doc and committed-but-ignored file, untruncated. The human report lists the first few.
+`chous --json` gives every fact behind a finding in full: every long file, flat directory, set of directories copying each other (with the files that changed), set of copies, root doc and committed-but-ignored file, untruncated. The human report lists the first few.
 
 ## How chous makes sure of a fact
 
@@ -29,6 +30,8 @@ Sizes and counts only put something up for review; they settle nothing. The numb
 
 Only two kinds of things go unchecked, under the names the tools that put them there define: npm's `node_modules/`; `vendor/` (the name Go requires, and `vendors?/` in GitHub Linguist's vendor.yml); Go's `testdata/` ("The go tool will ignore a directory named "testdata""); the `__snapshots__/` Jest and Vitest write; the test fixtures Linguist knows, `tests/fixtures/` and `specs/fixtures/`. Any other name chous does not guess: the repository declares it in `.gitattributes`, the way GitHub reads it (`upstream/** linguist-vendored`; `linguist-generated` counts too, and `-linguist-vendored` takes a path back). `tests/`, `examples/` and `playground/` are your own code and are checked like the rest.
 
+Untracked files are seen as git sees them: what `.gitignore`, `.git/info/exclude` and the global excludes file (`core.excludesFile`, by default `~/.config/git/ignore`) hide, `git status` does not show, and neither does chous. The last two belong to one machine, so they hide untracked files only; "committed although ignored" reads the repository's own `.gitignore` alone. Run in a folder that is no repository but holds several, chous checks each repository on its own and gives one report, its paths starting with the repository's folder.
+
 ## What each rule knows, and what it claims
 
 | Rule | What chous knows | What chous claims | Taste | Finding |
@@ -38,12 +41,14 @@ Only two kinds of things go unchecked, under the names the tools that put them t
 | Dependencies deprecated or called legacy by their authors | The name, and the authors' public words: npm's deprecated field (copied into the lockfile by pnpm and npm at install time; chous reads it there, for the dependencies package.json names), the README, a security advisory | Build nothing on what is dead | Modernity | Smell |
 | A manifest field its tool deprecated (Cargo's `authors`) | The field, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Names that differ only in case or Unicode form | Both names exist | One thing, one name | Order | Smell |
-| Naming styles mixed in one directory | The style of each file name | One directory, one style | Order | Smell |
+| Names Windows cannot check out | The reserved device names Microsoft lists (with an extension too), the characters it does not allow, a name ending in a space or a period | A repository checks out on every system | Order | Smell |
+| Naming styles mixed in one directory | The style of each file name, compared within one language, not one extension (`.ts`, `.js` and `.vue` are one language); subdirectory names too, but only subdirectories holding JavaScript or TypeScript alone (a Python package, a Rust module or a Gradle source set is named by its language or tool); dot directories and `node_modules` are not compared; PascalCase and one-word names fit any style | One directory, one style | Order | Smell |
 | Too many docs at the root | How many docs without a claim to the root sit there | The root is an entrance | Order | Smell |
 | In a monorepo: a dependency on several majors, nested lockfiles, workspace lists that disagree | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | Source files over 1000 lines or 100 KiB (not generated or someone else's) | Lines and bytes; long lines are not skipped | Whether one does too much is the agent's call; never split mechanically | Order | Review |
 | A directory with more than 50 source files laid out flat | The count | Whether to group by responsibility is the agent's call | Order | Review |
 | More than 30 files at the root | The count | The root is an entrance | Order | Review |
+| Directories that copy each other | How many files at the same relative paths are identical, and how many have changed (paths and bytes only) | Whether they should be one is for an agent to judge, starting with the files that changed | Order | Review |
 | Files with identical content (4 KiB and up; agent instructions at any size) | The same bytes; one file reached through a symlink counts once | Keep one, or have a reason for several | Order | Review |
 | Agent instructions (AGENTS.md, CLAUDE.md, GEMINI.md, Copilot's) over 300 lines | The line count | Keep what applies every time | Order | Review |
 | Names against a language's naming rules (file and directory names, or a package declared inside) | The name, and the language's style guide | Name things the language's way | Convention | Smell |

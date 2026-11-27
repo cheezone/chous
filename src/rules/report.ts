@@ -29,12 +29,15 @@ const COPIES_SHOWN = 3;
 const columns = (s: string) => [...s.replace(ANSI_RE, "")].reduce((n, ch) => n + (ch.codePointAt(0)! >= 0x2e80 ? 2 : 1), 0);
 
 /** Wrap at `width` columns; lines after the first start at `indent`. Breaks at spaces, or anywhere in CJK text. */
+const NO_LINE_START = /^[，。、；：！？）」』”’,.;:!?)\]]/u;
+
 function wrap(text: string, width: number, indent: number): string[] {
   const out: string[] = [];
   let line = "";
   for (const token of text.split(/(?<= )|(?<=[\u2e80-\uffff])(?=[\u2e80-\uffff])/u)) {
     const room = width - (out.length ? indent : 0);
-    if (line && columns(line + token) > room) {
+    // A line never starts with closing punctuation: `，` stays with the word before it.
+    if (line && columns(line + token) > room && !NO_LINE_START.test(token)) {
       out.push(line.trimEnd());
       line = token.trimStart();
     } else line += token;
@@ -84,10 +87,14 @@ export function detailItems(t: TFunction, issue: Issue): Array<{ text: string; n
     return (files as Array<{ path: string; lines: number; bytes: number }>).map((f) => ({ text: f.path, note: t("report.lines", { lines: f.lines, kib: kib(f.bytes) }) }));
   }
   if (Array.isArray(d.dirs)) return (d.dirs as Array<{ path: string; files: number }>).map((f) => ({ text: f.path, note: t("report.files", { count: f.files }) }));
+  if (Array.isArray(d.mirrors)) {
+    return (d.mirrors as Array<{ dirs: string[]; same: number; differ: number }>).map((m) => ({ text: t("report.mirror", { same: m.same, differ: m.differ }), children: m.dirs.map((dir) => `${dir}/`) }));
+  }
   if (Array.isArray(d.groups)) {
     return (d.groups as Array<{ files: string[]; bytes: number }>).map((g) => ({ text: `${g.files.length} × ${g.bytes >= 1024 * 1024 ? `${(g.bytes / 1024 / 1024).toFixed(1)} MiB` : `${kib(g.bytes)} KiB`}`, children: g.files }));
   }
   if (Array.isArray(d.docs)) return (d.docs as string[]).map((text) => ({ text }));
+  if (Array.isArray(d.versions)) return (d.versions as Array<{ path: string; spec: string }>).map((v) => ({ text: v.path, note: v.spec }));
   return [];
 }
 
@@ -114,15 +121,20 @@ export function renderReport(
   const reviews = result.issues.filter((i) => i.verdict === "review");
 
   // One explanation, then where it applies: findings that say the same thing are one entry.
+  // Findings with the same headline and the same way out are one entry: twenty directories that mix naming
+  // styles are one thing to fix, each with its own counts beside it.
+  type Member = { issue: Issue; message: string; detail?: string };
   const entries = (issues: Issue[]) => {
-    const byMessage = new Map<string, Issue[]>();
+    const byHeadline = new Map<string, { subject: string; action?: string; members: Member[] }>();
     for (const issue of [...issues].sort((a, b) => a.displayPath.localeCompare(b.displayPath))) {
-      const text = formatIssueMessage(t, issue.message);
-      const group = byMessage.get(text);
-      if (group) group.push(issue);
-      else byMessage.set(text, [issue]);
+      const message = formatIssueMessage(t, issue.message);
+      const { subject, detail, action } = messageParts(message);
+      const key = `${subject}\u0000${action ?? ""}`;
+      const entry = byHeadline.get(key) ?? { subject, ...(action ? { action } : {}), members: [] };
+      entry.members.push({ issue, message, ...(detail ? { detail } : {}) });
+      byHeadline.set(key, entry);
     }
-    return [...byMessage];
+    return [...byHeadline.values()];
   };
 
   // `git rm --cached` in a message is something to type: without color it keeps its backticks; with color it
@@ -133,25 +145,30 @@ export function renderReport(
   // After oxlint: the headline in the verdict's color, the places in a frame, then `help:`.
   const block = (issues: Issue[], smell: boolean) => {
     const tone = smell ? c.smell : c.review;
-    for (const [message, group] of entries(issues)) {
+    for (const { subject, action, members } of entries(issues)) {
       // `package.json (moment)` under a line about moment says it twice: the path is enough. Only a label the
       // rule appended is dropped; a file really named `asset (git)` keeps its name.
-      const where = (issue: Issue) => {
+      const where = ({ issue, message }: Member) => {
         const { displayPath: path, label } = issue;
         return label !== undefined && path.endsWith(` (${label})`) && message.includes(label) ? path.slice(0, -label.length - 3) : path;
       };
+      // One detail for all is said once; details that differ go beside their own place.
+      const detail = members.every((m) => m.detail === members[0]!.detail) ? members[0]!.detail : undefined;
       const rows: Array<{ text: string; note?: string; children?: string[] }> = [];
-      const { subject, detail, action } = messageParts(message);
       const [first, ...rest] = wrap(subject, width - 4, 4);
       lines.push(`  ${tone(smell ? "×" : "⚠")} ${code(first!, tone, tone)}`, ...rest.map((l) => `    ${code(l.trimStart(), tone, tone)}`));
       if (detail) lines.push(...wrap(detail, width - 4, 0).map((l) => `    ${code(l, plain)}`));
-      if (verbose && group[0]!.reason) lines.push(...wrap(t("report.reason", { reason: t(group[0]!.reason) }), width - 4, 0).map((l) => `    ${c.dim(l)}`));
-      for (const issue of group) {
+      const reason = members[0]!.issue.reason;
+      if (verbose && reason) lines.push(...wrap(t("report.reason", { reason: t(reason) }), width - 4, 0).map((l) => `    ${c.dim(l)}`));
+      for (const member of members) {
+        const { issue } = member;
+        const own = detail === undefined ? member.detail : undefined;
         const items = detailItems(t, issue);
         if (items.length) rows.push(...items);
-        else if (issue.displayPath !== "./") {
+        else if (issue.displayPath !== "./" || own) {
           const count = Array.isArray(issue.details?.files) ? (issue.details!.files as unknown[]).length : 0;
-          rows.push({ text: where(issue), ...(count > 1 ? { note: t("report.files", { count }) } : {}) });
+          const note = [own, count > 1 ? t("report.files", { count }) : undefined].filter(Boolean).join(" · ");
+          rows.push({ text: where(member), ...(note ? { note } : {}) });
         }
       }
       // Sets of copies take several lines each: fewer of them.
@@ -179,8 +196,8 @@ export function renderReport(
       }
       if (action) lines.push(...wrap(action, width - 8, 0).map((l, i) => `  ${i ? "      " : c.help("help: ")}${code(l, plain)}`));
       if (verbose) {
-        const nested = Object.values(group[0]!.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
-        for (const { url } of sourcesFor([group[0]!.reason, group[0]!.message.key, ...nested])) lines.push(c.dim(`  ${t("report.source", { url })}`));
+        const nested = Object.values(members[0]!.issue.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
+        for (const { url } of sourcesFor([members[0]!.issue.reason, members[0]!.issue.message.key, ...nested])) lines.push(c.dim(`  ${t("report.source", { url })}`));
       }
       lines.push("");
     }

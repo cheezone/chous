@@ -185,4 +185,189 @@ describe("what an agent is told", () => {
     const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
     expect(text).toContain("╭─[asset (git)]");
   });
+
+  it("reports the same headline once, each place with its own detail", async () => {
+    const root = mkdtempSync(join(tmpdir(), "chous-headline-"));
+    for (const [path, content] of Object.entries({ "a/fooBar.ts": "", "a/foo-baz.ts": "", "a/qux-quux.ts": "", "b/oneTwo.ts": "", "b/three-four.ts": "" })) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const result = await lintWorkspace({ root });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(text.match(/× /g)).toHaveLength(1);
+    expect(text).toMatch(/╭─\[a\/\]\s+kebab-case ×2 \+ camelCase ×1/);
+    expect(text).toMatch(/├─\[b\/\]\s+camelCase ×1 \+ kebab-case ×1/);
+  });
+});
+
+describe("what this machine's git hides", () => {
+  it("leaves out untracked files .git/info/exclude hides, never a committed one", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-exclude-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".git/info/exclude"), "scratch/\nkept.ts\n");
+    mkdirSync(join(dir, "scratch"));
+    writeFileSync(join(dir, "scratch/huge.ts"), lines(3000));
+    writeFileSync(join(dir, "kept.ts"), lines(2000));
+    git("add", "-f", "kept.ts");
+    const result = await lintWorkspace({ root: dir });
+    const long = result.issues.find((i) => i.message.key === "issue.measure.longFiles");
+    expect((long?.details?.files as Array<{ path: string }>).map((f) => f.path)).toEqual(["kept.ts"]);
+    // A personal exclude is not the repository's .gitignore: nothing is "committed although ignored".
+    expect(result.issues.filter((i) => i.message.key === "issue.leftover.ignoredTracked")).toEqual([]);
+  });
+
+  it("reads core.excludesFile, or git's default global ignore file", async () => {
+    const { personalExcludes } = await import("../../src/vfs/git-index");
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-global-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    const home = mkdtempSync(join(tmpdir(), "chous-home-"));
+    mkdirSync(join(home, ".config/git"), { recursive: true });
+    writeFileSync(join(home, ".config/git/ignore"), "*.default\n");
+    expect(personalExcludes(dir, { HOME: home })).toContain("**/*.default");
+    writeFileSync(join(home, ".gitconfig"), "[core]\n\texcludesFile = ~/my-ignore\n");
+    writeFileSync(join(home, "my-ignore"), "*.mine\n");
+    expect(personalExcludes(dir, { HOME: home })).toContain("**/*.mine");
+    expect(personalExcludes(dir, { HOME: home })).not.toContain("**/*.default");
+    expect(personalExcludes(home, { HOME: home })).toEqual([]);
+  });
+});
+
+describe("git's own environment", () => {
+  it("lets GIT_CONFIG_GLOBAL replace the global config, as git does", async () => {
+    const { personalExcludes } = await import("../../src/vfs/git-index");
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-gcg-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    const home = mkdtempSync(join(tmpdir(), "chous-gcg-home-"));
+    writeFileSync(join(home, ".gitconfig"), "[core]\n\texcludesFile = ~/ignored-by-home\n");
+    writeFileSync(join(home, "ignored-by-home"), "*.home\n");
+    writeFileSync(join(home, "alt"), "[core]\n\texcludesFile = ~/ignored-by-alt\n");
+    writeFileSync(join(home, "ignored-by-alt"), "*.alt\n");
+    const patterns = personalExcludes(dir, { HOME: home, GIT_CONFIG_GLOBAL: join(home, "alt") });
+    expect(patterns).toContain("**/*.alt");
+    expect(patterns).not.toContain("**/*.home");
+  });
+});
+
+describe("directories that copy each other", () => {
+  it("pairs directories by the paths they share, keeps the outermost, and makes copies of copies one set", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    for (let i = 0; i < 12; i++) for (const app of ["apps/a", "apps/b", "apps/c"]) add(`${app}/src/m${i}.ts`, `same ${i}`);
+    for (let i = 0; i < 3; i++) {
+      add(`apps/a/src/x${i}.ts`, `a ${i}`);
+      add(`apps/b/src/x${i}.ts`, `b ${i}!`);
+    }
+    // index.ts in every directory pairs nothing.
+    for (let i = 0; i < 20; i++) add(`lib/p${i}/index.ts`, "export {}");
+    const { sets, covered } = mirrorSets(sizes, (rel) => content.get(rel));
+    expect(sets).toEqual([{ dirs: ["apps/a", "apps/b", "apps/c"], same: 12, differ: 3, changed: ["src/x0.ts", "src/x1.ts", "src/x2.ts"] }]);
+    expect(covered.has("apps/c/src/m0.ts")).toBe(true);
+    expect(covered.has("apps/a/src/x0.ts")).toBe(false);
+  });
+
+  it("keeps a set together only while the whole set is mostly the same", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    // a and b share the first ten, b and c the last ten: nothing is the same in all three.
+    for (let i = 0; i < 20; i++) {
+      add(`a/f${i}.ts`, i < 10 ? `ab${i}` : `a-${i}`);
+      add(`b/f${i}.ts`, i < 10 ? `ab${i}` : `bc${i}`);
+      add(`c/f${i}.ts`, i < 10 ? `c-${i}` : `bc${i}`);
+    }
+    const { sets } = mirrorSets(sizes, (rel) => content.get(rel));
+    expect(sets.map((s) => [s.dirs, s.same, s.differ])).toEqual([[["a", "b"], 10, 10], [["b", "c"], 10, 10]]);
+  });
+
+  it("keeps two pairs separate when the middle directory alone has both sets of files", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    for (let i = 0; i < 10; i++) {
+      for (const dir of ["a", "b"]) sizes.set(`${dir}/left${i}`, 1);
+      for (const dir of ["b", "c"]) sizes.set(`${dir}/right${i}`, 1);
+    }
+    const { sets } = mirrorSets(sizes, () => "same");
+    expect(sets).toEqual([
+      { dirs: ["a", "b"], same: 10, differ: 0, changed: [] },
+      { dirs: ["b", "c"], same: 10, differ: 0, changed: [] },
+    ]);
+  });
+
+  it("judges a pair on every path both hold, common ones too", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    for (let i = 0; i < 10; i++) for (const d of ["a", "b"]) add(`${d}/same${i}.ts`, `s${i}`);
+    for (let i = 0; i < 5; i++) for (const d of ["a", "b"]) add(`${d}/own${i}.ts`, `${d}${i}`);
+    // Ten more paths both hold, different in each, and held by seven other directories as well.
+    for (let i = 0; i < 10; i++) for (const d of ["a", "b", "o1", "o2", "o3", "o4", "o5", "o6", "o7"]) add(`${d}/common${i}.ts`, `${d}-${i}`);
+    const { sets } = mirrorSets(sizes, (rel) => content.get(rel));
+    // 10 identical of 25 shared is not most of them.
+    expect(sets).toEqual([]);
+  });
+
+  it("keeps identical files at different relative paths inside a mirror", async () => {
+    const files: Record<string, string> = {};
+    for (const dir of ["a", "b"]) {
+      for (let i = 0; i < 10; i++) files[`${dir}/file${i}.txt`] = `file ${i}`;
+      for (const name of ["x", "y"]) files[`${dir}/${name}.png`] = "L".repeat(5000);
+    }
+    const found = await measures(files);
+    expect(found.find((f) => f.key === "mirrors")).toBeDefined();
+    expect(found.find((f) => f.key === "copies")?.details).toEqual({
+      groups: [{ files: ["a/x.png", "a/y.png", "b/x.png", "b/y.png"], bytes: 5000 }],
+    });
+  });
+
+  it("reports the set, and leaves its files out of the copies", async () => {
+    const files: Record<string, string> = {};
+    for (let i = 0; i < 12; i++) {
+      files[`web/assets/a${i}.svg`] = `${i}`.repeat(5000);
+      files[`docs/assets/a${i}.svg`] = `${i}`.repeat(5000);
+    }
+    files["logo.png"] = "L".repeat(5000);
+    files["brand/logo.png"] = "L".repeat(5000);
+    const found = await measures(files);
+    const mirrors = found.find((f) => f.key === "mirrors");
+    expect(mirrors?.details).toEqual({ mirrors: [{ dirs: ["docs", "web"], same: 12, differ: 0, changed: [] }] });
+    expect(found.find((f) => f.key === "copies")?.details).toEqual({ groups: [{ files: ["brand/logo.png", "logo.png"], bytes: 5000 }] });
+  });
+});
+
+describe("git's order of ignore rules", () => {
+  it("lets a `!` in .gitignore take back what .git/info/exclude hides, as git does", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-order-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    writeFileSync(join(dir, ".git/info/exclude"), "*.ts\n");
+    writeFileSync(join(dir, ".gitignore"), "!kept.ts\n");
+    writeFileSync(join(dir, "kept.ts"), lines(2000));
+    writeFileSync(join(dir, "hidden.ts"), lines(2000));
+    const listed = spawnSync("git", ["ls-files", "--others", "--exclude-standard"], { cwd: dir, encoding: "utf8" }).stdout.trim().split("\n");
+    const result = await lintWorkspace({ root: dir });
+    const long = result.issues.find((i) => i.message.key === "issue.measure.longFiles");
+    const paths = (long?.details?.files as Array<{ path: string }>).map((f) => f.path);
+    expect(paths).toEqual(listed.filter((p) => p.endsWith(".ts")));
+    expect(paths).toEqual(["kept.ts"]);
+  });
 });

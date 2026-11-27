@@ -68,7 +68,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | Cargo.toml files that set authors in [package]: …; Cargo has deprecated the field | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
+| Modernity | authors set in [package] of … Cargo.toml: Cargo has deprecated the field | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
 
 ### Python
 
@@ -76,7 +76,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org | zopefoundation/ZODB, wilsonzlin/fastrender |
+| Convention | Python files with capitals in their names (…, e.g. …): PEP 8 gives modules all-lowercase names | peps.python.org | abdur75648/Deep-Learning-Specialization-Coursera, zopefoundation/ZODB, wilsonzlin/fastrender |
 | Convention | package … has capitals in its name: PEP 8 gives packages all-lowercase names | peps.python.org | zopefoundation/ZODB, Ayato-kosaka/nanitabeyo |
 
 End of life: 13 versions of Python, from 2.6 to 3.10; the latest ended on 2026-10-01. Source: peps.python.org · Seen in real projects: comfyanonymous/ComfyUI, astral-sh/uv, MUKUL-PRASAD-SIGH/AetherSentrix

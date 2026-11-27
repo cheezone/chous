@@ -74,7 +74,8 @@ Order 3
    ╰────
   help: keep one name
 
-  × mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
+  × mixed naming styles
+    camelCase ×1 + kebab-case ×1 (asyncData.ts, lazy-hydration.ts)
    ╭─[src/composables/]
    ╰────
   help: one directory, one way of naming
@@ -144,7 +145,7 @@ What each check looks at, its numbers and its evidence: [chous's rules](docs/rul
 
 Nothing missing is reported (no tests, no CI, no license); a line count, size or file count only ever puts something up for review, never settles it; neither correctness nor security is checked; and the words in a name are never read: `FIXES_SUMMARY.md` or `index.ts.bak` is for your agent to judge. Other people's code and test data are skipped under the names their tools define (`node_modules/`, `vendor/`, `testdata/`, `__snapshots__/`, `tests/fixtures/`) or wherever `.gitattributes` says `linguist-vendored` or `linguist-generated`, in any language; `tests/` and `examples/` are your own code and are checked.
 
-Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 85 real repositories against [the recorded claims](test/corpus.claims.txt).
+Every reason that rests on someone else's word links to it: `--verbose` shows the source under each finding, `--json` gives them as data. A weekly job checks that every end-of-life date still matches its makers' data, and `pnpm run corpus` checks every claim chous makes about 87 real repositories against [the recorded claims](test/corpus.claims.txt).
 
 The little chous knows about named software (end-of-life schedules, deprecations, a language's naming rules) lives in [`src/facts/tools/`](src/facts/tools/). It stays little on purpose: a tool's config fields, read order and version-specific behaviour change, and the tool diagnoses them itself.
 

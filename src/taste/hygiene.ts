@@ -60,6 +60,8 @@ export const MEASURES = {
   filesPerDir: 50,
   rootFiles: 30,
   duplicateBytes: 4096,
+  /** Directories that copy each other: this many identical files at the same paths, and most of what they share. */
+  mirrorFiles: 10,
   instructionLines: 300,
   /** The files agents read whole whenever they work in that directory. */
   instructions: /(^|\/)(AGENTS|CLAUDE|GEMINI)\.md$|^\.github\/copilot-instructions\.md$/,
@@ -90,6 +92,13 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
  * languages' habits, not a mix. Languages that prescribe the style themselves
  * are held to it by their facts instead (src/facts/tools/: Rust, Dart, Kotlin,
  * Elixir), and so are camelCase Python modules (PEP 8).
+ *
+ * The unit is the language, not the extension: `fooBar.js` beside `baz-qux.ts`
+ * is one kind of module named two ways. Single-file components belong to their
+ * language too: Vue's style guide names component files (PascalCase or
+ * kebab-case throughout) and nothing else, so `date-picker.vue` beside
+ * `datePicker.ts` is two conventions in one place, where `date-picker.ts`
+ * would be one.
  */
 const LANGUAGES: Array<[string, RegExp]> = [
   ["js", /\.(ts|tsx|mts|cts|js|jsx|mjs|cjs|vue|svelte|astro)$/],
@@ -100,6 +109,14 @@ const LANGUAGES: Array<[string, RegExp]> = [
   ["swift", /\.swift$/],
 ];
 export const languageOf = (name: string) => LANGUAGES.find(([, ext]) => ext.test(name))?.[0];
+
+/**
+ * Source code of any other language. A directory holding some names itself by
+ * that language's rules (a Python package or a Rust module must be snake_case
+ * to be imported; a Kotlin source set is named by Gradle), so only directories
+ * of JavaScript and TypeScript alone are compared with their siblings.
+ */
+export const OTHER_CODE = /\.(py|pyi|go|rs|rb|java|kt|kts|scala|swift|dart|ex|exs|erl|php|cs|fs|c|h|cc|cpp|cxx|hpp|m|mm|zig|lua|r|jl|hs|ml|nim|cr|v|sol)$/i;
 
 /**
  * The chosen part of a Go file name. go/build reads a `_test` suffix, then

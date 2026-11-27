@@ -35,9 +35,11 @@ const EXPECTED: Record<string, Array<[string, string]>> = {
     ["moment", "package.json"],
     ["node-sass 9.0.0, deprecated by its authors on npm", "package.json"],
   ],
-  js: [["mixes camelCase ×1 + kebab-case ×1 names", "src/"]],
+  js: [["mixed naming styles", "src/"]],
   monorepo: [
-    ["zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)", "package.json"],
+    ["zod is on major versions 3, 4", "packages/ui/package.json"],
+    ["zod is on major versions 3, 4", "package.json"],
+    ["zod is on major versions 3, 4", "apps/web/package.json"],
     ["a lockfile inside a workspace package", "apps/web/pnpm-lock.yaml"],
   ],
 };
