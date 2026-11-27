@@ -107,12 +107,6 @@ export class ArtifactsRuleValidator extends BaseRuleValidator<ArtifactsRule> {
   }
 }
 
-/** `a, b, c, d, e, …` */
-function list(names: string[], max = 5): string {
-  const sorted = [...names].sort();
-  return sorted.slice(0, max).join(", ") + (sorted.length > max ? ", …" : "");
-}
-
 /** The first bytes of a file, as latin1; NULs dropped for text (desktop.ini is often UTF-16), kept for signatures. */
 function head(path: string, bytes = 512, keepNul = false): string {
   const text = readBytes(path, bytes).toString("latin1");
@@ -174,7 +168,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
     // The repository says two things: .gitignore keeps it out, the index has it in.
     for (const { path, files } of snapshot.ignoredTracked ?? []) {
       if (context.snapshot.notOurs.test(path)) continue;
-      report(path, { key: "issue.leftover.ignoredTracked", params: { count: files.length } }, "smell", { files });
+      report(path, { key: "issue.leftover.ignoredTracked" }, "smell", { files });
     }
 
     if (rule.rootDocs && extraDocs.length > ROOT_DOCS_LIMIT) {
@@ -182,7 +176,7 @@ export class LeftoverRuleValidator extends BaseRuleValidator<LeftoverRule> {
       rawIssues.push(issueFromRule(rule, {
         path: `${context.root}#root-docs`,
         displayPath: "./",
-        message: { key: "issue.leftover.rootDocs", params: { count: extraDocs.length, limit: ROOT_DOCS_LIMIT, names: list(extraDocs) } },
+        message: { key: "issue.leftover.rootDocs", params: { count: extraDocs.length, limit: ROOT_DOCS_LIMIT } },
         value: "order",
         details: { docs: [...extraDocs].sort() },
       }));

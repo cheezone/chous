@@ -12,7 +12,7 @@ function runCli(cwd: string, verbose = false) {
   const proc = spawnSync(process.execPath, args, {
     cwd,
     encoding: "utf8",
-    env: { ...process.env, NO_COLOR: "1" },
+    env: { ...process.env, NO_COLOR: "1", COLUMNS: "200" },
   });
   return { code: proc.status, stdout: proc.stdout ?? "", stderr: proc.stderr ?? "" };
 }
@@ -24,23 +24,38 @@ function fixtures(kind: "pass" | "fail"): string[] {
     .sort();
 }
 
-/** What each failing fixture must report — failing for the wrong reason is a bug. */
-const EXPECTED: Record<string, string[]> = {
+/** What each failing fixture must report, as [what, where] — failing for the wrong reason is a bug. */
+const EXPECTED: Record<string, Array<[string, string]>> = {
   eol: [
-    ".nvmrc (Node 16) → Node 16 reached end of life on 2023-09-11",
-    "Dockerfile (Python 2.7) → Python 2.7 reached end of life on 2020-01-01",
-    "package.json (Vue 2) → Vue 2 reached end of life on 2023-12-31",
+    ["Node 16 reached end of life on 2023-09-11", ".nvmrc"],
+    ["Python 2.7 reached end of life on 2020-01-01", "Dockerfile"],
+    ["Vue 2 reached end of life on 2023-12-31", "package.json"],
   ],
   garbage: [
-    "moment: Its maintainers call it a legacy project in maintenance mode. → dayjs",
-    "node-sass 9.0.0, deprecated by its authors on npm: “Node Sass is no longer supported. Please use `sass` or `sass-embedded` instead.”",
+    ["moment", "package.json"],
+    ["node-sass 9.0.0, deprecated by its authors on npm", "package.json"],
   ],
-  js: ["src/ → mixes camelCase ×1 + kebab-case ×1 names"],
+  js: [["mixes camelCase ×1 + kebab-case ×1 names", "src/"]],
   monorepo: [
-    "zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)",
-    "apps/web/pnpm-lock.yaml → not allowed: one lockfile, at the workspace root",
+    ["zod is on several major versions (.: ^3.0.0; apps/web: ^3.0.0; packages/ui: ^4.0.0)", "package.json"],
+    ["a lockfile inside a workspace package", "apps/web/pnpm-lock.yaml"],
   ],
 };
+
+/** The report's smells as [what, where]: the headline, then the places framed under it. */
+function smells(stdout: string): Array<[string, string]> {
+  const out: Array<[string, string]> = [];
+  let what: string | undefined;
+  for (const line of stdout.split("\n")) {
+    if (/^  [×⚠] /.test(line)) what = line.startsWith("  ×") ? line.slice(4).trim() : undefined;
+    else if (what !== undefined) {
+      const m = /^   [╭├]─\[(.+?)\](?: {2,}.*)?$/.exec(line);
+      if (m) out.push([what, m[1]!]);
+    }
+    if (!line.startsWith(" ") && line) what = undefined;
+  }
+  return out;
+}
 
 describe("fixtures that match the taste", () => {
   for (const name of fixtures("pass")) {
@@ -56,14 +71,14 @@ describe("fixtures that match the taste", () => {
 describe("fixtures that break the taste", () => {
   for (const name of fixtures("fail")) {
     it(name, () => {
-      const r = runCli(resolve(FIXTURES, "fail", name), true);
+      const r = runCli(resolve(FIXTURES, "fail", name));
       expect(r.code, r.stdout + r.stderr).toBe(1);
       const expected = EXPECTED[name];
       expect(expected, `add an EXPECTED entry for fail/${name}`).toBeDefined();
-      // Verbose mode lists every finding once, flat. Each must be expected — nothing more.
-      const errors = r.stdout.split("\n").filter((line) => /^\s+✗ /.test(line)).map((line) => line.trim().replace(/ +/g, " "));
-      for (const text of expected!) expect(errors.some((line) => line.includes(text)), text).toBe(true);
-      expect(errors, "unexpected findings").toHaveLength(expected!.length);
+      // Every smell, as what and where, must be expected — nothing more.
+      const found = smells(r.stdout);
+      for (const [what, where] of expected!) expect(found.some(([w, p]) => w.includes(what) && p === where), `${what} @ ${where}`).toBe(true);
+      expect(found, "unexpected findings").toHaveLength(expected!.length);
     });
   }
 });

@@ -123,4 +123,14 @@ describe("lockfiles", () => {
       ["package.json (vue-i18n)", { name: "vue-i18n", version: "9.14.5", message: "v9 and v10 no longer supported. please migrate to v11." }],
     ]);
   });
+
+  it("quotes 300 characters of a long deprecation to a person, and all of it in the details", async () => {
+    const root = mkdtempSync(join(tmpdir(), "chous-lock-long-"));
+    const words = "x".repeat(1000);
+    writeFileSync(join(root, "package.json"), JSON.stringify({ name: "a", private: true, dependencies: { old: "1.0.0" } }));
+    writeFileSync(join(root, "package-lock.json"), JSON.stringify({ lockfileVersion: 3, packages: { "": { dependencies: { old: "1.0.0" } }, "node_modules/old": { version: "1.0.0", deprecated: words } } }));
+    const [issue] = (await lintWorkspace({ root })).issues.filter((i) => i.ruleKind === "deprecated");
+    expect(String(issue!.message.params?.message)).toHaveLength(300);
+    expect(issue!.details).toEqual({ message: words });
+  });
 });

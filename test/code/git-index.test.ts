@@ -43,7 +43,7 @@ describe("what git tracks", () => {
       ["dist/a.js", "dist/b.js", "x.log", "fixtures/y.log", "models/.gitignore", "models/checkpoints/put_here"],
     );
     const found = (await lintWorkspace({ root })).issues.filter((i) => i.message.key === "issue.leftover.ignoredTracked");
-    expect(found.map((i) => [i.displayPath, i.message.params?.count])).toEqual([["dist/", 2], ["x.log", 1]]);
+    expect(found.map((i) => [i.displayPath, (i.details?.files as string[]).length])).toEqual([["dist/", 2], ["x.log", 1]]);
   });
 
   it("checks what is committed, however .gitignore or a folder name would hide it; leaves untracked node_modules alone", async () => {

@@ -29,7 +29,8 @@ export class ManifestRuleValidator extends BaseRuleValidator<ManifestRule> {
     if (pkg?.[rule.field] === undefined) return { hitCount: 0 };
     context.rawIssues.push(issueFromRule(rule, {
       path: `${manifest.path}#field:${rule.field}`,
-      displayPath: `package.json (${rule.field})`,
+      displayPath: "package.json",
+      label: rule.field,
       message: { key: "issue.manifest.remove", params: { field: rule.field, reason: { t: rule.reason! } } },
       reason: false,
     }));
@@ -136,7 +137,8 @@ export class WorkspaceRuleValidator extends BaseRuleValidator<WorkspaceRule> {
       const versions = Array.from(byMajor.values()).flat().join("; ");
       context.rawIssues.push(issueFromRule(rule, {
         path: `${snapshot.manifest.path}#drift:${name}`,
-        displayPath: `package.json (${name})`,
+        displayPath: "package.json",
+        label: name,
         message: { key: "issue.workspace.drift", params: { name, versions } },
       }));
     }

@@ -46,7 +46,7 @@ for (const { repo, commit } of corpus) {
   process.stderr.write(`${repo}\n`);
   const result = await lintWorkspace({ root: checkout(repo, commit), today: TODAY });
   for (const i of result.issues) {
-    lines.push([repo, i.verdict, i.value, i.displayPath, i.message.key, JSON.stringify(i.message.params ?? {})].join("\t"));
+    lines.push([repo, i.verdict, i.value, i.displayPath, i.message.key, JSON.stringify(i.message.params ?? {}), ...(i.details ? [JSON.stringify(i.details)] : [])].join("\t"));
   }
 }
 lines.sort();

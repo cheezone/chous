@@ -12,7 +12,7 @@ async function measures(files: Record<string, string | Buffer>, links: Record<st
   }
   for (const [path, target] of Object.entries(links)) symlinkSync(target, join(root, path));
   const result = await lintWorkspace({ root });
-  return result.issues.filter((i) => i.ruleKind === "measures").map((i) => ({ verdict: i.verdict, path: i.displayPath, key: i.message.key.replace("issue.measure.", ""), params: i.message.params }));
+  return result.issues.filter((i) => i.ruleKind === "measures").map((i) => ({ verdict: i.verdict, path: i.displayPath, key: i.message.key.replace("issue.measure.", ""), params: i.message.params, details: i.details }));
 }
 
 const lines = (n: number, width = 20) => `${"x".repeat(width)}\n`.repeat(n);
@@ -29,7 +29,19 @@ describe("measures", () => {
       "data/big.json": lines(9000),
     });
     expect(found).toEqual([
-      { verdict: "review", path: "./", key: "longFiles", params: { count: 3, lines: 1000, kib: 100, files: "src/a.ts 1500 / 31 KiB, src/b.py 1200 / 25 KiB, dist-like/bundle.js 300 / 117 KiB" } },
+      {
+        verdict: "review",
+        path: "./",
+        key: "longFiles",
+        params: { count: 3, lines: 1000, kib: 100 },
+        details: {
+          files: [
+            { path: "src/a.ts", lines: 1500, bytes: 31500 },
+            { path: "src/b.py", lines: 1200, bytes: 25200 },
+            { path: "dist-like/bundle.js", lines: 300, bytes: 120300 },
+          ],
+        },
+      },
     ]);
   });
 
@@ -50,8 +62,14 @@ describe("measures", () => {
       return dir;
     })() });
     const long = result.issues.find((i) => i.message.key === "issue.measure.longFiles")!;
-    expect(String(long.message.params?.files)).toMatch(/, …$/);
     expect((long.details?.files as unknown[]).length).toBe(8);
+    // A person sees the first five, and how many more there are.
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(text.split("\n").filter((l) => /^   [╭├]─\[src\/m\d\.ts\]/.test(l))).toHaveLength(5);
+    expect(text).toContain("… and 3 more (`chous --json` lists all)");
   });
 
   it("finds directories laid out flat, and a crowded root", async () => {
@@ -59,7 +77,7 @@ describe("measures", () => {
     const root = Object.fromEntries(Array.from({ length: 31 }, (_, i) => [`note${i}.txt`, "x"]));
     const found = await measures({ ...flat, ...root });
     expect(found.map((f) => [f.key, f.params])).toEqual([
-      ["flatDirs", { count: 1, limit: 50, dirs: "src/handlers/ 51" }],
+      ["flatDirs", { count: 1, limit: 50 }],
       ["crowdedRoot", { count: 31, limit: 30 }],
     ]);
   });
@@ -80,7 +98,13 @@ describe("measures", () => {
       { "linked": "real" },
     );
     expect(found).toEqual([
-      { verdict: "review", path: "./", key: "copies", params: { count: 2, groups: "3 × 8 KiB: a/fonts/雅黑.woff, b/static/雅黑.woff, c/res/font.woff; 2 × 1 KiB: AGENTS.md, CLAUDE.md" } },
+      {
+        verdict: "review",
+        path: "./",
+        key: "copies",
+        params: { count: 2 },
+        details: { groups: [{ files: ["a/fonts/雅黑.woff", "b/static/雅黑.woff", "c/res/font.woff"], bytes: 8192 }, { files: ["AGENTS.md", "CLAUDE.md"], bytes: 10 }] },
+      },
     ]);
   });
 
@@ -90,5 +114,75 @@ describe("measures", () => {
       ["review", "AGENTS.md", "instructions"],
       ["smell", "assets/video.mp4", "hugeFile"],
     ]);
+  });
+});
+
+describe("what an agent is told", () => {
+  it("lists the files behind a finding, not only how many", async () => {
+    const dir = mkdtempSync(join(tmpdir(), "chous-agent-"));
+    for (let i = 0; i < 7; i++) {
+      mkdirSync(join(dir, "src"), { recursive: true });
+      writeFileSync(join(dir, `src/m${i}.ts`), lines(1001 + i));
+    }
+    const { checkWorkspaces } = await import("../../src/agents/core");
+    const { summary } = await checkWorkspaces({ workspaceRoots: [dir], lang: "en" });
+    for (let i = 0; i < 7; i++) expect(summary).toContain(`  - src/m${i}.ts (${1001 + i} lines`);
+    expect(summary).toContain("`chous --json` has every fact in full");
+  });
+
+  it("gives an agent each file a person sees as a directory", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-agent-files-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".gitignore"), "dist/\n");
+    mkdirSync(join(dir, "dist"));
+    writeFileSync(join(dir, "dist/a.js"), "a\n");
+    writeFileSync(join(dir, "dist/b.js"), "b\n");
+    git("add", "-f", ".gitignore", "dist/a.js", "dist/b.js");
+    const { checkWorkspaces } = await import("../../src/agents/core");
+    const { issues, summary } = await checkWorkspaces({ workspaceRoots: [dir], lang: "en" });
+    expect(issues.find((i) => i.displayPath === "dist/")?.items).toEqual(["dist/a.js", "dist/b.js"]);
+    expect(summary).toContain("  - dist/b.js");
+  });
+
+  it("keeps one name on one line in the agent summary", async () => {
+    const { formatAgentSummary } = await import("../../src/agents/core");
+    const summary = formatAgentSummary("en", [{ root: "/r", displayPath: "a\nb.ts", message: "m", verdict: "smell", items: ["c\u001b[2Jd.ts"] }]);
+    expect(summary).toContain("- a\\x0ab.ts: m");
+    expect(summary).toContain("  - c\\x1b[2Jd.ts");
+  });
+
+  it("shows a few copies of a file copied many times, and how many more", async () => {
+    const files = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`assets/c${i}.svg`, "x".repeat(5000)]));
+    const root = mkdtempSync(join(tmpdir(), "chous-copies-"));
+    for (const [path, content] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const result = await lintWorkspace({ root });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const render = (verbose: boolean) => renderReport(result, { verbose, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(render(false).split("\n").filter((l) => /^ {3}│ {3}assets\/c\d\.svg$/.test(l))).toHaveLength(5);
+    expect(render(false)).toContain("│   … and 3 more");
+    expect(render(true).split("\n").filter((l) => /^ {3}│ {3}assets\/c\d\.svg$/.test(l))).toHaveLength(8);
+  });
+
+  it("shows a real name with brackets whole: only a label the rule appended is left out", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-label-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".gitignore"), "asset*\n");
+    writeFileSync(join(dir, "asset (git)"), "a\n");
+    git("add", "-f", ".gitignore", "asset (git)");
+    const result = await lintWorkspace({ root: dir });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(text).toContain("╭─[asset (git)]");
   });
 });

@@ -10,11 +10,6 @@ import { MEASURES, ROOT_CONTRACT_DOCS, SOURCE_FILE } from "../../taste/hygiene";
 /** A tool says it wrote the file: its name and size are the generator's, not the project's. */
 const GENERATED = /@generated\b|\bDO NOT (EDIT|MODIFY)\b|\b[Gg]enerated\b[^\n]{0,80}\b[Dd]o not (edit|modify)\b/;
 
-/** `a 6763, b 6503, …`: the largest first, a few for the message (the details hold them all). */
-function top(items: Array<[string, number | string]>, max = 5): string {
-  return items.slice(0, max).map(([name, n]) => `${name} ${n}`).join(", ") + (items.length > max ? ", …" : "");
-}
-
 const kib = (bytes: number) => Math.max(1, Math.round(bytes / 1024));
 
 /** One file on disk, however many paths reach it (a tracked symlink to it is the same file), and its size. */
@@ -108,12 +103,11 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
 
     if (long.length) {
       long.sort((a, b) => b.lines - a.lines || b.bytes - a.bytes || a.path.localeCompare(b.path));
-      const files = top(long.map((f) => [f.path, `${f.lines} / ${kib(f.bytes)} KiB`]));
-      report(`${root}#measure:long`, "./", { key: "issue.measure.longFiles", params: { count: long.length, lines: MEASURES.sourceLines, kib: kib(MEASURES.sourceBytes), files } }, "review", "order", { files: long });
+      report(`${root}#measure:long`, "./", { key: "issue.measure.longFiles", params: { count: long.length, lines: MEASURES.sourceLines, kib: kib(MEASURES.sourceBytes) } }, "review", "order", { files: long });
     }
     const flat = [...perDir].filter(([, n]) => n > MEASURES.filesPerDir).sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
     if (flat.length) {
-      report(`${root}#measure:flat`, "./", { key: "issue.measure.flatDirs", params: { count: flat.length, limit: MEASURES.filesPerDir, dirs: top(flat) } }, "review", "order", { dirs: flat.map(([path, files]) => ({ path, files })) });
+      report(`${root}#measure:flat`, "./", { key: "issue.measure.flatDirs", params: { count: flat.length, limit: MEASURES.filesPerDir } }, "review", "order", { dirs: flat.map(([path, files]) => ({ path, files })) });
     }
     if (rootFiles > MEASURES.rootFiles) {
       report(`${root}#measure:root`, "./", { key: "issue.measure.crowdedRoot", params: { count: rootFiles, limit: MEASURES.rootFiles } }, "review", "order");
@@ -136,9 +130,7 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
     if (groups.length) {
       // The copies that cost the most first.
       groups.sort((a, b) => b.bytes * (b.files.length - 1) - a.bytes * (a.files.length - 1) || a.files[0]!.localeCompare(b.files[0]!));
-      const size = (bytes: number) => (bytes >= 1024 * 1024 ? `${(bytes / 1024 / 1024).toFixed(1)} MiB` : `${Math.max(1, Math.round(bytes / 1024))} KiB`);
-      const shown = groups.slice(0, 3).map((g) => `${g.files.length} × ${size(g.bytes)}: ${g.files.slice(0, 3).join(", ")}${g.files.length > 3 ? ", …" : ""}`);
-      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: groups.length, groups: shown.join("; ") + (groups.length > 3 ? "; …" : "") } }, "review", "order", { groups });
+      report(`${root}#measure:copies`, "./", { key: "issue.measure.copies", params: { count: groups.length } }, "review", "order", { groups });
     }
     return { hitCount };
   }

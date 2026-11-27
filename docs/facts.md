@@ -28,7 +28,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Cleanliness | Should not be committed: `**/.env*.local` — local env file that may hold secrets; Vite and Next.js say to gitignore *.local | vite.dev, nextjs.org | not yet |
+| Cleanliness | Should not be committed: `**/.env*.local` — a local env file that may hold secrets: Vite and Next.js say to gitignore *.local → gitignore it | vite.dev, nextjs.org | not yet |
 
 ### Vue
 
@@ -68,7 +68,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Modernity | … Cargo.toml files set authors in [package], a field Cargo has deprecated | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
+| Modernity | Cargo.toml files that set authors in [package]: …; Cargo has deprecated the field | doc.rust-lang.org | oxc-project/oxc, astral-sh/uv, BurntSushi/ripgrep +3 |
 
 ### Python
 
@@ -134,7 +134,7 @@ Researched 2026-11.
 
 | Taste | chous says | Source | Seen in real projects |
 |---|---|---|---|
-| Cleanliness | Should not be committed: `**/.idea/workspace.xml` — personal IDE state; JetBrains says workspace.xml should not be shared, the rest of .idea may be | jetbrains.com | Beeta-inc/nbheditor.apps.beeta.com |
+| Cleanliness | Should not be committed: `**/.idea/workspace.xml` — personal IDE state: JetBrains says workspace.xml should not be shared; the rest of .idea may be → gitignore it | jetbrains.com | Beeta-inc/nbheditor.apps.beeta.com |
 
 ## npm packages
 

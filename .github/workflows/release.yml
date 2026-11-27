@@ -1,17 +1,85 @@
 name: Release
 
+# Publishing always runs on a `v*` tag, so npm's provenance names the commit
+# that carries the version. Two ways to get a tag:
+# - push one (`pnpm run release` on a computer);
+# - or run this workflow on main from the Actions tab (or `gh api .../dispatches`)
+#   with a version: `prepare` bumps package.json, tests, pushes the commit and the
+#   tag together, then runs this workflow again on the tag. A tag pushed with
+#   GITHUB_TOKEN starts nothing by itself; a dispatch does.
 on:
   push:
     tags:
       - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "On main: patch, minor, major, or an exact version such as 0.3.0"
+        required: true
+        default: patch
 
 permissions:
-  contents: write
-  id-token: write
+  contents: read
 
 jobs:
-  publish:
+  prepare:
+    if: github.event_name == 'workflow_dispatch' && github.ref_type == 'branch'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: From main only
+        run: '[ "$GITHUB_REF" = refs/heads/main ] || { echo "release from main only"; exit 1; }'
+
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+
+      - name: Bump version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          [[ "$VERSION" =~ ^(patch|minor|major|[0-9]+\.[0-9]+\.[0-9]+)$ ]] || { echo "not a version: $VERSION"; exit 1; }
+          npm version "$VERSION" --no-git-tag-version
+          echo "TAG=v$(node -p "require('./package.json').version")" >> "$GITHUB_ENV"
+
+      - name: Install
+        run: pnpm install --frozen-lockfile
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Test
+        run: pnpm run test
+
+      - name: Commit, tag and push together
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(release): $TAG"
+          git tag "$TAG"
+          # Both or neither: a tag without its commit on main would block retrying the version.
+          git push --atomic origin HEAD:main "$TAG"
+
+      - name: Publish from the tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run release.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"
+
+  publish:
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -24,6 +92,12 @@ jobs:
         with:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
+
+      # A dispatch can name any tag: only the one that is exactly this package's version publishes.
+      - name: The tag is the package version
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          [ "$GITHUB_REF_NAME" = "$version" ] || { echo "tag $GITHUB_REF_NAME is not $version"; exit 1; }
 
       - name: Install
         run: pnpm install --frozen-lockfile
@@ -41,4 +115,3 @@ jobs:
         uses: softprops/action-gh-release@v3
         with:
           generate_release_notes: true
-

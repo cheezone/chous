@@ -36,7 +36,8 @@ export class DepsRuleValidator extends BaseRuleValidator<DepsRule> {
         hitCount++;
         context.rawIssues.push(issueFromRule(rule, {
           path: `${manifest.path}#forbidden:${name}`,
-          displayPath: `package.json (${safeLabel(name)})`,
+          displayPath: "package.json",
+          label: safeLabel(name),
           message: { key: "issue.deps.obsolete", params: { name, why: { t: rule.reason! }, use: rule.use } },
           // The authors' own words are in the message already.
           reason: false,
@@ -97,8 +98,11 @@ export class LockedDeprecationsValidator extends BaseRuleValidator<DeprecatedRul
       hitCount++;
       context.rawIssues.push(issueFromRule(rule, {
         path: `${manifest.path}#deprecated:${name}`,
-        displayPath: `package.json (${safeLabel(name)})`,
+        displayPath: "package.json",
+        label: safeLabel(name),
+        // The lockfile is untrusted: a person's report quotes 300 characters; --json keeps the author's words whole.
         message: { key: "issue.deps.deprecated", params: { name, version, message: deprecated.slice(0, 300) } },
+        details: { message: deprecated },
       }));
     }
     return { hitCount };

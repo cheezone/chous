@@ -40,27 +40,89 @@ npx chous
 ### Output
 
 ```
-Modernity
-  ✗ .nvmrc (Node 16)       → Node 16 reached end of life on 2023-09-11 → a supported LTS release
-  ✗ package.json (request) → request 2.88.2, deprecated by its authors on npm: “request has been deprecated, see https://github.com/request/request/issues/3142”
-  ✗ package.json (Vue 2)   → Vue 2 reached end of life on 2023-12-31 → Vue 3
+Modernity 3
 
-Order
-  ✗ ./                             → 4 docs at the root besides README, LICENSE and the like (ARCHITECTURE.md, DEPLOYMENT.md, FIXES_SUMMARY.md, IMPLEMENTATION_COMPLETE.md): the root is an entrance, keep at most 3 and move the rest into docs/
-  ✗ src/composables/               → mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts); one directory, one way of naming
-  ✗ Readme.md                      → same name as README.md except for case; macOS and Windows keep only one of them on checkout
+  × Node 16 reached end of life on 2023-09-11
+   ╭─[.nvmrc]
+   ╰────
+  help: a supported LTS release
 
-Cleanliness
-  ✗ .DS_Store        → not allowed: OS junk, delete it and gitignore it
-  ✗ dist/            → 3 committed file(s) that .gitignore ignores: untrack them with `git rm --cached`, or unignore them with a `!` pattern
+  × request 2.88.2, deprecated by its authors on npm
+    “request has been deprecated, see https://github.com/request/request/issues/3142”
+   ╭─[package.json]
+   ╰────
 
-To review: chous knows the fact, not the purpose. You or your agent decide.
-  ? bin/server                → a compiled executable or library: if this project builds it, it belongs in releases; if a build reads it, keep it
-  ? ./                        → 2 source files over 1000 lines (src/api.ts 6763, src/board.ts 1840): whether one holds too many jobs is for you or your agent to judge; never split mechanically
+  × Vue 2 reached end of life on 2023-12-31
+   ╭─[package.json]
+   ╰────
+  help: Vue 3
 
-Smells: 9 · to review: 2
+Order 3
+
+  × 4 docs at the root besides README, LICENSE and the like
+    the root is an entrance
+   ╭─[ARCHITECTURE.md]
+   ├─[DEPLOYMENT.md]
+   ├─[FIXES_SUMMARY.md]
+   ├─[IMPLEMENTATION_COMPLETE.md]
+   ╰────
+  help: keep at most 3, move the rest into docs/
+
+  × same name as README.md except for case
+    macOS and Windows keep only one of them on checkout
+   ╭─[Readme.md]
+   ╰────
+  help: keep one name
+
+  × mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
+   ╭─[src/composables/]
+   ╰────
+  help: one directory, one way of naming
+
+Cleanliness 2
+
+  × OS junk
+   ╭─[.DS_Store]
+   ╰────
+  help: delete it and gitignore it
+
+  × committed although .gitignore ignores it
+   ╭─[dist/]  3 files
+   ╰────
+  help: untrack it with `git rm --cached`, or unignore it with a `!` pattern
+
+To review 2  chous knows the fact, not the purpose. You or your agent decide.
+
+  ⚠ 2 source files over 1000 lines or 100 KiB
+   ╭─[src/api.ts]    6763 lines · 132 KiB
+   ├─[src/board.ts]  1840 lines · 36 KiB
+   ╰────
+  help: whether one holds too many jobs is for you or your agent to judge; never split mechanically
+
+  ⚠ a compiled executable or library
+   ╭─[bin/server]
+   ╰────
+  help: if this project builds it, put it in releases; if a build reads it, keep it
+
+Smells: 8 · to review: 2
 Taste only: correctness, security and tests are not checked.
+Hand it to an agent: `chous claude install`, or have it run `chous manifesto` and `chous --json`.
 ```
+
+### With an agent
+
+chous lists facts; deciding what to do about them, and doing it, is an agent's job. Two ways to hand it over:
+
+- **Hooks**: `npx chous claude install` (or `cursor install`). Whenever the agent stops, chous runs and hands it a summary: up to 40 findings, up to 50 places each. Past that, the summary says how many are left, and `chous --json` has every one.
+- **A prompt**, in any agent:
+
+  ```text
+  Run `npx chous manifesto` and read the taste it describes. Then run `npx chous --json` and clean up the repository:
+  fix every smell, and for each item to review, look at it, decide whether it stays, and say why.
+  Do not split files mechanically. Run `npx chous` again at the end.
+  ```
+
+`--json` holds every fact in full (`details`: every long file, flat directory, set of copies); the report above shows the first few.
 
 ### Two kinds of finding
 

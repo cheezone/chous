@@ -235,6 +235,8 @@ async function runLint(opts: CliOptions, t: TFunction): Promise<number> {
       color: createColorizer({ enabled: opts.color }),
       t,
       version: VERSION,
+      // A terminal reports its width; a pipe or a pseudo-terminal of size 0 does not.
+      width: process.stdout.columns || Number(process.env.COLUMNS) || 100,
     }) + "\n",
   );
 
