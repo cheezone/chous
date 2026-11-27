@@ -41,48 +41,68 @@ npx chous
 
 ```
 Modernity 3
-  ✗ Node 16 reached end of life on 2023-09-11
-      .nvmrc
-    → a supported LTS release
-  ✗ request 2.88.2, deprecated by its authors on npm
+
+  × Node 16 reached end of life on 2023-09-11
+   ╭─[.nvmrc]
+   ╰────
+  help: a supported LTS release
+
+  × request 2.88.2, deprecated by its authors on npm
     “request has been deprecated, see https://github.com/request/request/issues/3142”
-      package.json
-  ✗ Vue 2 reached end of life on 2023-12-31
-      package.json
-    → Vue 3
+   ╭─[package.json]
+   ╰────
+
+  × Vue 2 reached end of life on 2023-12-31
+   ╭─[package.json]
+   ╰────
+  help: Vue 3
 
 Order 3
-  ✗ 4 docs at the root besides README, LICENSE and the like
+
+  × 4 docs at the root besides README, LICENSE and the like
     the root is an entrance
-      ARCHITECTURE.md
-      DEPLOYMENT.md
-      FIXES_SUMMARY.md
-      IMPLEMENTATION_COMPLETE.md
-    → keep at most 3, move the rest into docs/
-  ✗ same name as README.md except for case
+   ╭─[ARCHITECTURE.md]
+   ├─[DEPLOYMENT.md]
+   ├─[FIXES_SUMMARY.md]
+   ├─[IMPLEMENTATION_COMPLETE.md]
+   ╰────
+  help: keep at most 3, move the rest into docs/
+
+  × same name as README.md except for case
     macOS and Windows keep only one of them on checkout
-      Readme.md
-    → keep one name
-  ✗ mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
-      src/composables/
-    → one directory, one way of naming
+   ╭─[Readme.md]
+   ╰────
+  help: keep one name
+
+  × mixes camelCase ×1 + kebab-case ×1 names (asyncData.ts, lazy-hydration.ts)
+   ╭─[src/composables/]
+   ╰────
+  help: one directory, one way of naming
 
 Cleanliness 2
-  ✗ OS junk
-      .DS_Store
-    → delete it and gitignore it
-  ✗ committed although .gitignore ignores it
-      dist/  3 files
-    → untrack it with `git rm --cached`, or unignore it with a `!` pattern
+
+  × OS junk
+   ╭─[.DS_Store]
+   ╰────
+  help: delete it and gitignore it
+
+  × committed although .gitignore ignores it
+   ╭─[dist/]  3 files
+   ╰────
+  help: untrack it with `git rm --cached`, or unignore it with a `!` pattern
 
 To review 2  chous knows the fact, not the purpose. You or your agent decide.
-  ? 2 source files over 1000 lines or 100 KiB
-      src/api.ts    6763 lines · 132 KiB
-      src/board.ts  1840 lines · 36 KiB
-    → whether one holds too many jobs is for you or your agent to judge; never split mechanically
-  ? a compiled executable or library
-      bin/server
-    → if this project builds it, put it in releases; if a build reads it, keep it
+
+  ⚠ 2 source files over 1000 lines or 100 KiB
+   ╭─[src/api.ts]    6763 lines · 132 KiB
+   ├─[src/board.ts]  1840 lines · 36 KiB
+   ╰────
+  help: whether one holds too many jobs is for you or your agent to judge; never split mechanically
+
+  ⚠ a compiled executable or library
+   ╭─[bin/server]
+   ╰────
+  help: if this project builds it, put it in releases; if a build reads it, keep it
 
 Smells: 8 · to review: 2
 Taste only: correctness, security and tests are not checked.

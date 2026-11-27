@@ -122,10 +122,14 @@ export function renderReport(
     return [...byMessage];
   };
 
-  // `git rm --cached` in a message is something to type: in bold instead of backticks, or as written without color.
-  const code = (s: string, base: (x: string) => string) =>
-    c.enabled ? s.split(/`([^`]+)`/).map((part, i) => (i % 2 ? c.bold(part) : base(part))).join("") : s;
-  const block = (issues: Issue[], mark: string) => {
+  // `git rm --cached` in a message is something to type: without color it keeps its backticks; with color it
+  // drops them and takes `span` (bold, or the headline's own color).
+  const code = (s: string, base: (x: string) => string, span: (x: string) => string = c.bold) =>
+    c.enabled ? s.split(/`([^`]+)`/).map((part, i) => (i % 2 ? span(part) : base(part))).join("") : s;
+  const plain = (x: string) => x;
+  // After oxlint: the headline in the verdict's color, the places in a frame, then `help:`.
+  const block = (issues: Issue[], smell: boolean) => {
+    const tone = smell ? c.smell : c.review;
     for (const [message, group] of entries(issues)) {
       // `package.json (moment)` under a line about moment says it twice: the path is enough.
       const where = (path: string) => {
@@ -135,9 +139,9 @@ export function renderReport(
       const rows: Array<{ text: string; note?: string; children?: string[] }> = [];
       const { subject, detail, action } = messageParts(message);
       const [first, ...rest] = wrap(subject, width - 4, 4);
-      lines.push(`  ${mark} ${code(first!, c.bold)}`, ...rest.map((l) => code(l, c.bold)));
-      if (detail) lines.push(...wrap(detail, width - 4, 0).map((l) => `    ${code(l, c.dim)}`));
-      if (verbose && group[0]!.reason) lines.push(...wrap(c.dim(t("report.reason", { reason: t(group[0]!.reason) })), width - 4, 4).map((l) => `    ${l.trimStart()}`));
+      lines.push(`  ${tone(smell ? "×" : "⚠")} ${code(first!, tone, tone)}`, ...rest.map((l) => `    ${code(l.trimStart(), tone, tone)}`));
+      if (detail) lines.push(...wrap(detail, width - 4, 0).map((l) => `    ${code(l, plain)}`));
+      if (verbose && group[0]!.reason) lines.push(...wrap(t("report.reason", { reason: t(group[0]!.reason) }), width - 4, 0).map((l) => `    ${c.dim(l)}`));
       for (const issue of group) {
         const items = detailItems(t, issue);
         if (items.length) rows.push(...items);
@@ -149,41 +153,48 @@ export function renderReport(
       // Sets of copies take several lines each: fewer of them.
       const limit = verbose ? Infinity : rows.some((r) => r.children) ? COPIES_SHOWN : ITEMS_SHOWN;
       const shown = rows.slice(0, limit);
-      // Notes in one column, when the paths leave room for it.
-      const pad = Math.max(...shown.map((r) => columns(visible(r.text))));
-      const aligned = pad + 30 <= width;
-      for (const r of shown) {
-        const text = visible(r.text);
-        lines.push(`      ${r.children ? text : c.cyan(text)}${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.dim(r.note)}` : ""}`);
-        for (const child of r.children ?? []) lines.push(`        ${c.cyan(visible(child))}`);
+      if (shown.length) {
+        // Notes in one column, when the paths leave room for it.
+        const pad = Math.max(...shown.map((r) => columns(visible(r.text))));
+        const aligned = pad + 30 <= width;
+        shown.forEach((r, i) => {
+          const text = visible(r.text);
+          const lead = i === 0 ? "╭─" : "├─";
+          if (r.children) {
+            lines.push(`   ${lead}[${c.label(text)}]`);
+            for (const child of r.children) lines.push(`   │   ${c.link(visible(child))}`);
+          } else {
+            lines.push(`   ${lead}[${c.link(text)}]${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.label(r.note)}` : ""}`);
+          }
+        });
+        if (rows.length > shown.length) lines.push(`   │ ${code(t("report.more", { count: rows.length - shown.length }), c.dim)}`);
+        lines.push("   ╰────");
       }
-      if (rows.length > shown.length) lines.push(`      ${code(t("report.more", { count: rows.length - shown.length }), c.dim)}`);
-      if (action) lines.push(...wrap(action, width - 6, 0).map((l, i) => `    ${i ? "  " : `${c.green("→")} `}${code(l, (x) => x)}`));
+      if (action) lines.push(...wrap(action, width - 8, 0).map((l, i) => `  ${i ? "      " : c.help("help: ")}${code(l, plain)}`));
       if (verbose) {
         const nested = Object.values(group[0]!.message.params ?? {}).map((v) => (typeof v === "object" ? v.t : undefined));
-        for (const { url } of sourcesFor([group[0]!.reason, group[0]!.message.key, ...nested])) lines.push(c.dim(`      ${t("report.source", { url })}`));
+        for (const { url } of sourcesFor([group[0]!.reason, group[0]!.message.key, ...nested])) lines.push(c.dim(`  ${t("report.source", { url })}`));
       }
+      lines.push("");
     }
   };
 
   for (const value of VALUES) {
     const issues = smells.filter((i) => i.value === value);
     if (!issues.length) continue;
-    lines.push(`${c.bold(t(`report.value.${value}`))} ${c.dim(String(issues.length))}`);
-    block(issues, c.red("✗"));
-    lines.push("");
+    lines.push(`${c.bold(t(`report.value.${value}`))} ${c.dim(String(issues.length))}`, "");
+    block(issues, true);
   }
   if (reviews.length) {
     const { subject, detail } = messageParts(t("report.review"));
-    lines.push(`${c.bold(c.yellow(subject))} ${c.dim(String(reviews.length))}${detail ? `  ${c.dim(detail)}` : ""}`);
-    block(reviews, c.yellow("?"));
-    lines.push("");
+    lines.push(`${c.review(subject)} ${c.dim(String(reviews.length))}${detail ? `  ${c.dim(detail)}` : ""}`, "");
+    block(reviews, false);
   }
 
   lines.push(
     result.issues.length === 0
       ? c.green(t("report.noIssues"))
-      : t("report.found", { smells: smells.length ? c.bold(c.red(String(smells.length))) : "0", reviews: reviews.length ? c.bold(c.yellow(String(reviews.length))) : "0" }),
+      : t("report.found", { smells: smells.length ? c.smell(String(smells.length)) : "0", reviews: reviews.length ? c.review(String(reviews.length)) : "0" }),
   );
   lines.push(c.dim(t("report.scope")));
   if (result.issues.length) lines.push(code(t("report.agentHint"), c.dim));

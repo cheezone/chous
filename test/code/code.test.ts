@@ -42,25 +42,17 @@ const EXPECTED: Record<string, Array<[string, string]>> = {
   ],
 };
 
-/** The report's smells as [what, where]: the subject line (wrapped lines joined), then the paths listed under it. */
+/** The report's smells as [what, where]: the headline, then the places framed under it. */
 function smells(stdout: string): Array<[string, string]> {
   const out: Array<[string, string]> = [];
   let what: string | undefined;
-  let inSmell = false;
-  let wrapped = false;
   for (const line of stdout.split("\n")) {
-    if (/^  [✗?] /.test(line)) {
-      inSmell = line.startsWith("  ✗");
-      what = line.slice(4).trim();
-      wrapped = true;
-    } else if (inSmell && what !== undefined && wrapped && /^ {4}\S/.test(line) && !line.startsWith("    →")) {
-      // A subject wraps with the same indent as its detail; the detail is checked by the tests that read words.
-      continue;
-    } else if (inSmell && what !== undefined && /^ {6}\S/.test(line)) {
-      wrapped = false;
-      out.push([what, line.trim()]);
-    } else if (inSmell && what !== undefined && /^ {6}\S/.test(line)) out.push([what, line.trim()]);
-    else if (!line.startsWith(" ")) inSmell = false;
+    if (/^  [×⚠] /.test(line)) what = line.startsWith("  ×") ? line.slice(4).trim() : undefined;
+    else if (what !== undefined) {
+      const m = /^   [╭├]─\[(.+?)\](?: {2,}.*)?$/.exec(line);
+      if (m) out.push([what, m[1]!]);
+    }
+    if (!line.startsWith(" ") && line) what = undefined;
   }
   return out;
 }

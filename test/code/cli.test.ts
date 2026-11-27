@@ -31,9 +31,9 @@ describe("cli", () => {
     const garbage = resolve(PROJECT_ROOT, "test/fixtures/fail/garbage");
     const zh = runCli(["-l", "zh", "-v"], garbage).stdout;
     const en = runCli(["-l", "en", "-v"], garbage).stdout;
-    // Subject, then the reason, then what to do, each on its own line.
-    expect(zh).toMatch(/✗ moment\n {4}维护者称它为处于维护模式的遗留项目。\n[\s\S]*?\n {4}→ dayjs \/ date-fns \/ Temporal\n/);
-    expect(en).toMatch(/✗ moment\n {4}Its maintainers call it a legacy project in maintenance mode\.\n[\s\S]*?\n {4}→ dayjs \/ date-fns \/ Temporal\n/);
+    // Headline, then the reason, then the places, then what to do.
+    expect(zh).toMatch(/× moment\n {4}维护者称它为处于维护模式的遗留项目。\n[\s\S]*?\n {2}help: dayjs \/ date-fns \/ Temporal\n/);
+    expect(en).toMatch(/× moment\n {4}Its maintainers call it a legacy project in maintenance mode\.\n[\s\S]*?\n {2}help: dayjs \/ date-fns \/ Temporal\n/);
   });
 
   it("speaks JSON to agents: every finding with its verdict, taste and sources", () => {
@@ -72,5 +72,16 @@ describe("plurals", () => {
     expect(t("issue.measure.copies", { count: 2 })).toMatch(/^2 sets of identical files/);
     expect(t("issue.measure.flatDirs", { count: 1, limit: 50 })).toMatch(/^1 directory holds/);
     expect(t("issue.measure.flatDirs", { count: 3, limit: 50 })).toMatch(/^3 directories hold/);
+  });
+});
+
+describe("colors", () => {
+  it("uses 24-bit color where the terminal says so, and the nearest of 256 elsewhere", async () => {
+    const { createColorizer, supportsTruecolor } = await import("../../src/color");
+    expect(createColorizer({ enabled: true, truecolor: true }).smell("x")).toBe("\u001b[38;2;225;80;80;1mx\u001b[0m");
+    expect(createColorizer({ enabled: true, truecolor: false }).smell("x")).toBe("\u001b[38;5;167;1mx\u001b[0m");
+    expect(createColorizer({ enabled: false }).smell("x")).toBe("x");
+    expect(supportsTruecolor({ COLORTERM: "truecolor" })).toBe(true);
+    expect(supportsTruecolor({ TERM: "xterm-256color" })).toBe(false);
   });
 });

@@ -68,7 +68,7 @@ describe("measures", () => {
     const { getT } = await import("../../src/i18n");
     const { createColorizer } = await import("../../src/color");
     const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
-    expect(text.split("\n").filter((l) => /^ {6}src\/m\d\.ts/.test(l))).toHaveLength(5);
+    expect(text.split("\n").filter((l) => /^   [╭├]─\[src\/m\d\.ts\]/.test(l))).toHaveLength(5);
     expect(text).toContain("… and 3 more (`chous --json` lists all)");
   });
 
