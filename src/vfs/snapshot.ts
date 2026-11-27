@@ -397,6 +397,8 @@ function buildMatchers(root: string, byRel: Map<string, VfsEntry>, byAbs: Map<st
 
 export type BuildSnapshotOptions = {
   root: string;
+  /** Directories, relative to root, left out entirely: repositories checked on their own. */
+  skipDirs?: string[];
   /** When true, only scan the root directory (non-recursive). */
   rootOnly?: boolean;
   /** When set, only scan these relative directories (plus root). */
@@ -409,6 +411,8 @@ export type BuildSnapshotOptions = {
  */
 export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promise<WorkspaceSnapshot> {
   const { root, rootOnly, relevantDirs } = opts;
+  // A glob pattern matches its own syntax: a folder named `a[1]` must not become a character class.
+  const skip = (opts.skipDirs ?? []).map((d) => `${d.replace(/[*?[\]{}()!]/g, "\\$&")}/**`);
 
   // Walker ignores must stay tiny — same idea as the old engine (3 hard dirs).
   // Pushing the full gitignore (100+ rules) into tinyglobby makes every path
@@ -417,6 +421,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   // never walks into what it points to (`/`, `~`, `../secret`).
   const walkIgnore = [
     ...HARD_IGNORE,
+    ...skip,
     ...Array.from(DEFAULT_IGNORE_DIRS).map((d) => `**/${d}/**`),
   ];
 
@@ -442,7 +447,7 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   const [patterns, fileMatches, dirMatches, workspace] = await Promise.all([
     // Shallow/root-only scans only need the root .gitignore — avoid walking
     // every nested .gitignore on 10k-file monorepos (was a multi-second tax).
-    loadGitIgnorePatterns(root, { rootOnly: Boolean(rootOnly) && !relevantDirs?.size }),
+    loadGitIgnorePatterns(root, { rootOnly: Boolean(rootOnly) && !relevantDirs?.size, skip }),
     glob(globPattern, {
       cwd: root,
       absolute: true,
@@ -475,8 +480,10 @@ export async function buildWorkspaceSnapshot(opts: BuildSnapshotOptions): Promis
   }
   // This machine's own excludes (.git/info/exclude, core.excludesFile) hide untracked files, as in `git status`;
   // they never make a committed file "ignored": that is the repository's .gitignore alone.
-  const personal = gitignoreMatcher(personalExcludes(root));
-  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && (gitignore.ignores(rel) || personal.ignores(rel)) };
+  // One list in git's order, so a `!` in .gitignore takes back what info/exclude hides.
+  const personal = personalExcludes(root);
+  const untracked = personal.length ? gitignoreMatcher([...personal, ...patterns.filter((p) => (p.match(/\*\*/g)?.length ?? 0) <= 3)]) : gitignore;
+  const ig = { ignores: (rel: string) => !(tracked?.has(rel) || trackedDirs.has(rel)) && untracked.ignores(rel) };
   const ignoredTracked = new Map<string, string[]>();
   for (const rel of tracked ?? []) {
     if (!gitignore.ignores(rel)) continue;

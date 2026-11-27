@@ -120,7 +120,7 @@ export function appendGitIgnoreFile(
  */
 export async function loadGitIgnorePatterns(
   root: string,
-  opts?: { rootOnly?: boolean },
+  opts?: { rootOnly?: boolean; skip?: string[] },
 ): Promise<string[]> {
   const allPatterns: string[] = [];
   try {
@@ -137,7 +137,7 @@ export async function loadGitIgnorePatterns(
     const gitignoreFiles = await glob("**/.gitignore", {
       cwd: root,
       dot: true,
-      ignore: ["**/node_modules/**", "**/.git/**"],
+      ignore: ["**/node_modules/**", "**/.git/**", ...(opts?.skip ?? [])],
       followSymbolicLinks: false,
     });
 

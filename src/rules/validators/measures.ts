@@ -25,11 +25,12 @@ function identity(path: string): { id: string; size: number } | undefined {
 /**
  * Directories that copy each other: `apps/a/src` and `apps/b/src` hold the
  * same relative paths, most of them byte for byte, and some changed on one
- * side since. Found from paths and bytes alone: for every file, each split
- * into a directory and the rest of its path; two directories that share many
- * rests are paired. A rest shared by many directories (`index.ts`, `package.json`)
- * pairs nothing. Only the outermost pair is kept (`apps/a`, not also `apps/a/src`),
- * and directories copied from one another are one set.
+ * side since. Found from paths and bytes alone. Candidates come from the
+ * paths few directories share (`index.ts` or `package.json`, everywhere,
+ * pairs nothing); a candidate is then judged on everything both hold. Only
+ * the outermost pair is kept (`apps/a`, not also `apps/a/src`), and
+ * directories copied from one another are one set, as long as the whole set
+ * still is mostly the same; a set that is not stays apart.
  */
 export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => string | undefined) {
   const FANOUT = 8;
@@ -47,8 +48,8 @@ export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => st
       else list.push(dir);
     }
   }
-  const pairs = new Map<string, { a: string; b: string; rests: string[] }>();
-  for (const [rest, list] of index) {
+  const pairs = new Map<string, { a: string; b: string; seen: number }>();
+  for (const list of index.values()) {
     if (!list || list.length < 2) continue;
     const dirs = [...list].sort();
     for (let i = 0; i < dirs.length; i++) {
@@ -56,66 +57,75 @@ export function mirrorSets(sizes: Map<string, number>, hash: (rel: string) => st
         const [a, b] = [dirs[i]!, dirs[j]!];
         if (b.startsWith(`${a}/`)) continue; // a directory and one inside it
         const key = `${a}\u0000${b}`;
-        const pair = pairs.get(key) ?? { a, b, rests: [] };
-        pair.rests.push(rest);
+        const pair = pairs.get(key) ?? { a, b, seen: 0 };
+        pair.seen++;
         pairs.set(key, pair);
       }
     }
   }
-  const same = (x: string, y: string) => sizes.get(x) === sizes.get(y) && hash(x) !== undefined && hash(x) === hash(y);
   const depth = (p: { a: string; b: string }) => p.a.split("/").length + p.b.split("/").length;
   const candidates = [...pairs.values()]
-    .filter((p) => p.rests.length >= MEASURES.mirrorFiles && p.rests.length * 2 >= Math.min(under.get(p.a)!, under.get(p.b)!))
+    .filter((p) => p.seen >= MEASURES.mirrorFiles)
     .sort((x, y) => depth(x) - depth(y) || x.a.localeCompare(y.a) || x.b.localeCompare(y.b));
-  // Copies of copies are one set.
-  const parent = new Map<string, string>();
-  const find = (x: string): string => {
-    const p = parent.get(x) ?? x;
-    if (p === x) return x;
-    const r = find(p);
-    parent.set(x, r);
-    return r;
+
+  // What each candidate directory holds, in full: common paths count once a pair is judged.
+  const wanted = new Set(candidates.flatMap((p) => [p.a, p.b]));
+  const contents = new Map<string, Set<string>>();
+  for (const rel of sizes.keys()) {
+    for (let i = rel.indexOf("/"); i > 0; i = rel.indexOf("/", i + 1)) {
+      const dir = rel.slice(0, i);
+      if (!wanted.has(dir)) continue;
+      const set = contents.get(dir) ?? new Set<string>();
+      set.add(rel.slice(i + 1));
+      contents.set(dir, set);
+    }
+  }
+  const same = (x: string, y: string) => sizes.get(x) === sizes.get(y) && hash(x) !== undefined && hash(x) === hash(y);
+  /** The paths two or more of `dirs` hold, which of them are the same in all, and whether that is most of them. */
+  const judge = (dirs: string[]) => {
+    const count = new Map<string, number>();
+    for (const d of dirs) for (const r of contents.get(d) ?? []) count.set(r, (count.get(r) ?? 0) + 1);
+    const changed: string[] = [];
+    const identical: string[] = [];
+    for (const rest of [...count].filter(([, n]) => n >= 2).map(([r]) => r).sort()) {
+      const holders = dirs.filter((d) => contents.get(d)?.has(rest)).map((d) => `${d}/${rest}`);
+      if (holders.every((h) => same(holders[0]!, h))) identical.push(rest);
+      else changed.push(rest);
+    }
+    const shared = identical.length + changed.length;
+    const smallest = Math.min(...dirs.map((d) => under.get(d) ?? 0));
+    const ok = identical.length >= MEASURES.mirrorFiles && identical.length * 2 >= shared && shared * 2 >= smallest;
+    return { dirs: [...dirs].sort(), identical, changed, ok };
   };
-  // `apps/a/src` and `apps/b/src` say again what `apps/a` and `apps/b`, one set, already say.
+
+  const sets: Array<Set<string> | undefined> = [];
+  const setsOf = (dir: string) => sets.flatMap((s, i) => (s?.has(dir) ? [i] : []));
+  // `apps/a/src` and `apps/b/src` say again what `apps/a` and `apps/b`, in one set, already say.
   const inside = ({ a, b }: { a: string; b: string }) => {
     for (let i = a.indexOf("/"); i > 0; i = a.indexOf("/", i + 1)) {
       const [x, offset] = [a.slice(0, i), a.slice(i)];
       if (!b.endsWith(offset)) continue;
       const y = b.slice(0, b.length - offset.length);
-      if (parent.has(x) && parent.has(y) && find(x) === find(y)) return true;
+      if (sets.some((s) => s?.has(x) && s.has(y))) return true;
     }
     return false;
   };
-  const kept: Array<{ a: string; b: string; rests: string[] }> = [];
   for (const p of candidates) {
-    if (inside(p)) continue;
-    const identical = p.rests.filter((r) => same(`${p.a}/${r}`, `${p.b}/${r}`)).length;
-    if (identical < MEASURES.mirrorFiles || identical * 2 < p.rests.length) continue;
-    kept.push(p);
-    for (const d of [p.a, p.b]) if (!parent.has(d)) parent.set(d, d);
-    parent.set(find(p.a), find(p.b));
+    if (inside(p) || !judge([p.a, p.b]).ok) continue;
+    const touching = [...new Set([...setsOf(p.a), ...setsOf(p.b)])];
+    const merged = new Set<string>([p.a, p.b, ...touching.flatMap((i) => [...sets[i]!])]);
+    if (touching.length && judge([...merged]).ok) {
+      for (const i of touching) sets[i] = undefined;
+      sets.push(merged);
+    } else sets.push(new Set([p.a, p.b]));
   }
-  const sets = new Map<string, { dirs: Set<string>; rests: Set<string> }>();
-  for (const { a, b, rests } of kept) {
-    const set = sets.get(find(a)) ?? { dirs: new Set<string>(), rests: new Set<string>() };
-    set.dirs.add(a).add(b);
-    for (const r of rests) set.rests.add(r);
-    sets.set(find(a), set);
-  }
+
   const covered = new Set<string>();
-  const result = [...sets.values()].map(({ dirs, rests }) => {
-    const members = [...dirs].sort();
-    const changed: string[] = [];
-    let identical = 0;
-    for (const rest of [...rests].sort()) {
-      const holders = members.map((m) => `${m}/${rest}`).filter((p) => sizes.has(p));
-      if (holders.length < 2) continue;
-      if (holders.every((p) => same(holders[0]!, p))) {
-        identical++;
-        for (const p of holders) covered.add(p);
-      } else changed.push(rest);
-    }
-    return { dirs: members, same: identical, differ: changed.length, changed };
+  const result = sets.flatMap((s) => {
+    if (!s) return [];
+    const { dirs, identical, changed } = judge([...s]);
+    for (const rest of identical) for (const d of dirs) if (contents.get(d)?.has(rest)) covered.add(`${d}/${rest}`);
+    return [{ dirs, same: identical.length, differ: changed.length, changed }];
   });
   result.sort((x, y) => y.same + y.differ - (x.same + x.differ) || x.dirs[0]!.localeCompare(y.dirs[0]!));
   return { sets: result, covered };

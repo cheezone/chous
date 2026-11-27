@@ -135,8 +135,9 @@ export function personalExcludes(root: string, env: NodeJS.ProcessEnv = process.
     excludes = excludesFileIn(readOr(config)) ?? excludes;
   }
   const global = excludes ? resolve(root, excludes.replace(/^~(?=$|[\\/])/, home)) : resolve(xdg, "git/ignore");
+  // Lowest precedence first, as git reads them: the global file, then info/exclude; .gitignore files come after both.
   const patterns: string[] = [];
-  for (const file of [resolve(shared, "info/exclude"), global]) appendGitIgnoreFile(patterns, readOr(file), "");
+  for (const file of [global, resolve(shared, "info/exclude")]) appendGitIgnoreFile(patterns, readOr(file), "");
   return patterns;
 }
 

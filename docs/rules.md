@@ -13,7 +13,7 @@ Sizes and counts only put something up for review; they settle nothing. The numb
 | Files at the root | more than 30 |
 | Docs at the root, besides README, LICENSE and the like | more than 3 (this one is a smell) |
 | Agent instructions (AGENTS.md, CLAUDE.md, GEMINI.md, Copilot's) | over 300 lines |
-| Directories that copy each other | at least 10 files at the same relative paths byte for byte, and at least half of what both hold; only the outermost pair, and directories copied from one another as one set; their files leave the files with identical content |
+| Directories that copy each other | at least 10 files at the same relative paths byte for byte, and at least half of what both hold; only the outermost pair; directories copied from one another are one set while the whole set still meets this, apart otherwise; common names are skipped only to find candidates, never when counting; their files leave the files with identical content |
 | Files with identical content | 4 KiB and up; agent instructions at any size |
 | One file | 50 MiB and up (a smell) |
 

@@ -41,10 +41,12 @@ export async function lintWorkspace(opts: {
   relevantDirs?: Set<string>;
   /** YYYY-MM-DD; defaults to today. End-of-life checks compare against it. */
   today?: string;
+  /** Directories, relative to root, left out: repositories checked on their own. */
+  skipDirs?: string[];
 }): Promise<LintResult> {
   const startTime = performance.now();
   const { root, relevantDirs, today } = opts;
-  const snapshot = await buildWorkspaceSnapshot({ root, relevantDirs });
+  const snapshot = await buildWorkspaceSnapshot({ root, relevantDirs, ...(opts.skipDirs?.length ? { skipDirs: opts.skipDirs } : {}) });
   // A pnpm-workspace.yaml may only hold settings; packages make it a monorepo.
   const monorepo = snapshot.workspace.packages.length > 0;
   const taste = resolveTaste(root, { monorepo });

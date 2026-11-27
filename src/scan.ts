@@ -1,4 +1,4 @@
-import { existsSync, readdirSync, statSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { lintWorkspace } from "./rules/lint";
 import { formatIssueMessage } from "./rules/report";
@@ -47,7 +47,8 @@ export function findGitRepos(dir: string, maxDepth = DEFAULT_MAX_DEPTH): string[
       if (name === "node_modules" || name === "dist" || name === "build" || name.startsWith(".")) continue;
       const child = join(current, name);
       try {
-        if (statSync(child).isDirectory()) walk(child, depth + 1);
+        // A link to a directory is not followed: it would count a repository twice, or reach outside.
+        if (lstatSync(child).isDirectory()) walk(child, depth + 1);
       } catch {
         // skip
       }
@@ -141,17 +142,20 @@ export async function lintRepos(dir: string, repos: string[]): Promise<LintResul
   const abs = resolve(dir);
   const started = Date.now();
   const merged: LintResult = { root: abs, tastes: [], issues: [], workspacePackages: [], fileCount: 0 };
-  for (const repo of repos) {
-    const result = await lintWorkspace({ root: repo });
-    const prefix = `${relative(abs, repo).split("\\").join("/")}/`;
+  const rels = repos.map((repo) => relative(abs, repo).split("\\").join("/"));
+  // The folder's own files are checked too, without the repositories inside it.
+  const outer = { root: abs, prefix: "", result: await lintWorkspace({ root: abs, skipDirs: rels }) };
+  const inner = [];
+  for (const [i, repo] of repos.entries()) inner.push({ root: repo, prefix: `${rels[i]}/`, result: await lintWorkspace({ root: repo }) });
+  for (const { prefix, result } of [outer, ...inner]) {
     for (const taste of result.tastes) if (!merged.tastes.includes(taste)) merged.tastes.push(taste);
     merged.workspacePackages!.push(...(result.workspacePackages ?? []).map((p) => `${prefix}${p}`));
     merged.fileCount! += result.fileCount ?? 0;
     for (const issue of result.issues) {
       merged.issues.push({
         ...issue,
-        displayPath: issue.displayPath === "./" ? prefix : `${prefix}${issue.displayPath}`,
-        ...(issue.details ? { details: prefixDetails(issue.details, prefix) } : {}),
+        displayPath: issue.displayPath === "./" ? prefix || "./" : `${prefix}${issue.displayPath}`,
+        ...(issue.details && prefix ? { details: prefixDetails(issue.details, prefix) } : issue.details ? { details: issue.details } : {}),
       });
     }
   }

@@ -277,6 +277,41 @@ describe("directories that copy each other", () => {
     expect(covered.has("apps/a/src/x0.ts")).toBe(false);
   });
 
+  it("keeps a set together only while the whole set is mostly the same", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    // a and b share the first ten, b and c the last ten: nothing is the same in all three.
+    for (let i = 0; i < 20; i++) {
+      add(`a/f${i}.ts`, i < 10 ? `ab${i}` : `a-${i}`);
+      add(`b/f${i}.ts`, i < 10 ? `ab${i}` : `bc${i}`);
+      add(`c/f${i}.ts`, i < 10 ? `c-${i}` : `bc${i}`);
+    }
+    const { sets } = mirrorSets(sizes, (rel) => content.get(rel));
+    expect(sets.map((s) => [s.dirs, s.same, s.differ])).toEqual([[["a", "b"], 10, 10], [["b", "c"], 10, 10]]);
+  });
+
+  it("judges a pair on every path both hold, common ones too", async () => {
+    const { mirrorSets } = await import("../../src/rules/validators/measures");
+    const sizes = new Map<string, number>();
+    const content = new Map<string, string>();
+    const add = (rel: string, text: string) => {
+      sizes.set(rel, text.length);
+      content.set(rel, text);
+    };
+    for (let i = 0; i < 10; i++) for (const d of ["a", "b"]) add(`${d}/same${i}.ts`, `s${i}`);
+    for (let i = 0; i < 5; i++) for (const d of ["a", "b"]) add(`${d}/own${i}.ts`, `${d}${i}`);
+    // Ten more paths both hold, different in each, and held by seven other directories as well.
+    for (let i = 0; i < 10; i++) for (const d of ["a", "b", "o1", "o2", "o3", "o4", "o5", "o6", "o7"]) add(`${d}/common${i}.ts`, `${d}-${i}`);
+    const { sets } = mirrorSets(sizes, (rel) => content.get(rel));
+    // 10 identical of 25 shared is not most of them.
+    expect(sets).toEqual([]);
+  });
+
   it("reports the set, and leaves its files out of the copies", async () => {
     const files: Record<string, string> = {};
     for (let i = 0; i < 12; i++) {
@@ -289,5 +324,23 @@ describe("directories that copy each other", () => {
     const mirrors = found.find((f) => f.key === "mirrors");
     expect(mirrors?.details).toEqual({ mirrors: [{ dirs: ["docs", "web"], same: 12, differ: 0, changed: [] }] });
     expect(found.find((f) => f.key === "copies")?.details).toEqual({ groups: [{ files: ["brand/logo.png", "logo.png"], bytes: 5000 }] });
+  });
+});
+
+describe("git's order of ignore rules", () => {
+  it("lets a `!` in .gitignore take back what .git/info/exclude hides, as git does", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-order-"));
+    spawnSync("git", ["init", "-q"], { cwd: dir });
+    writeFileSync(join(dir, ".git/info/exclude"), "*.ts\n");
+    writeFileSync(join(dir, ".gitignore"), "!kept.ts\n");
+    writeFileSync(join(dir, "kept.ts"), lines(2000));
+    writeFileSync(join(dir, "hidden.ts"), lines(2000));
+    const listed = spawnSync("git", ["ls-files", "--others", "--exclude-standard"], { cwd: dir, encoding: "utf8" }).stdout.trim().split("\n");
+    const result = await lintWorkspace({ root: dir });
+    const long = result.issues.find((i) => i.message.key === "issue.measure.longFiles");
+    const paths = (long?.details?.files as Array<{ path: string }>).map((f) => f.path);
+    expect(paths).toEqual(listed.filter((p) => p.endsWith(".ts")));
+    expect(paths).toEqual(["kept.ts"]);
   });
 });

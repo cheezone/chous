@@ -112,6 +112,21 @@ describe("a folder of repositories", () => {
     expect(text).toContain("├─[web/.nvmrc]");
   });
 
+  it("checks the folder's own files too, and follows no link to a repository", async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync, symlinkSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const dir = mkdtempSync(join(tmpdir(), "chous-outer-"));
+    writeFileSync(join(dir, ".chous"), "{}\n");
+    const root = join(dir, "repo");
+    mkdirSync(root);
+    spawnSync("git", ["init", "-q"], { cwd: root });
+    writeFileSync(join(root, ".nvmrc"), "16\n");
+    if (process.platform !== "win32") symlinkSync(root, join(dir, "alias"), "dir");
+    const paths = (JSON.parse(runCli(["-l", "en", "--json"], dir).stdout).findings as Array<{ path: string }>).map((f) => f.path).sort();
+    expect(paths).toEqual([".chous", "repo/.nvmrc (Node 16)"]);
+  });
+
   it("scan gives the same full JSON, every list in its details", async () => {
     const { mkdtempSync, mkdirSync, writeFileSync } = await import("node:fs");
     const { tmpdir } = await import("node:os");
