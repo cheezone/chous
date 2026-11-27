@@ -1,7 +1,7 @@
 import { isAbsolute, relative, resolve, sep } from "node:path";
 import { getT, type TFunction } from "../i18n";
 import { lintWorkspace } from "../rules/lint";
-import { detailItems, formatIssueMessage } from "../rules/report";
+import { detailItems, formatIssueMessage, visible } from "../rules/report";
 
 export type AgentIssue = {
   root: string;
@@ -69,7 +69,7 @@ export async function checkWorkspaces(opts: {
         message: formatIssueMessage(t, issue.message),
         verdict: issue.verdict,
         reason: issue.reason && t(issue.reason),
-        items: detailItems(t, issue).flatMap((it) => [`${it.text}${it.note ? ` (${it.note})` : ""}`, ...(it.children ?? []).map((c) => `  ${c}`)]),
+        items: agentItems(t, issue),
       });
     }
   }
@@ -77,13 +77,26 @@ export async function checkWorkspaces(opts: {
   return { issues, summary: formatAgentSummary(opts.lang, issues) };
 }
 
+/**
+ * Every place behind a finding, one per entry. A person reads `dist/  3 files`;
+ * an agent gets the three files, since it is the one who will act on each.
+ */
+function agentItems(t: TFunction, issue: Parameters<typeof detailItems>[1]): string[] {
+  const rows = detailItems(t, issue);
+  if (rows.length) return rows.flatMap((it) => [`${it.text}${it.note ? ` (${it.note})` : ""}`, ...(it.children ?? []).map((c) => `  ${c}`)]);
+  const files = issue.details?.files;
+  return Array.isArray(files) ? files.filter((f): f is string => typeof f === "string") : [];
+}
+
+// The summary is read line by line: a name with a newline in it must not become two lines.
+// JSON keeps names as they are.
 function formatIssueBlock(t: TFunction, issues: AgentIssue[]): string[] {
   const lines: string[] = [];
   for (const issue of issues) {
-    lines.push(`- ${issue.displayPath}: ${issue.message}`);
+    lines.push(`- ${visible(issue.displayPath)}: ${visible(issue.message)}`);
     if (issue.reason) lines.push(`  ${t("agent.reason", { reason: issue.reason })}`);
     const items = issue.items ?? [];
-    for (const item of items.slice(0, SUMMARY_ITEM_LIMIT)) lines.push(`  - ${item}`);
+    for (const item of items.slice(0, SUMMARY_ITEM_LIMIT)) lines.push(`  - ${visible(item)}`);
     if (items.length > SUMMARY_ITEM_LIMIT) lines.push(`  - ${t("report.more", { count: items.length - SUMMARY_ITEM_LIMIT })}`);
   }
   return lines;

@@ -9,7 +9,8 @@ const ANSI_RE = new RegExp(`${String.fromCharCode(27)}\\[[0-9;]*m`, "g");
 /** Translate a message; params that are messages themselves are translated first. */
 /** File names can hold terminal control sequences that erase or hide lines: show them, escaped. */
 // eslint-disable-next-line no-control-regex -- matching control characters is the point
-const visible = (s: string) => s.replace(/[\u0000-\u001f\u007f-\u009f]/g, (ch) => `\\x${ch.charCodeAt(0).toString(16).padStart(2, "0")}`);
+/** Control characters in a name (a newline, an escape) shown as `\x0a`, so one name stays one line. */
+export const visible = (s: string) => s.replace(/[\u0000-\u001f\u007f-\u009f]/g, (ch) => `\\x${ch.charCodeAt(0).toString(16).padStart(2, "0")}`);
 
 export function formatIssueMessage(t: TFunction, msg: IssueMessage): string {
   const params = Object.fromEntries(
@@ -117,7 +118,9 @@ export function renderReport(
     const byMessage = new Map<string, Issue[]>();
     for (const issue of [...issues].sort((a, b) => a.displayPath.localeCompare(b.displayPath))) {
       const text = formatIssueMessage(t, issue.message);
-      byMessage.set(text, [...(byMessage.get(text) ?? []), issue]);
+      const group = byMessage.get(text);
+      if (group) group.push(issue);
+      else byMessage.set(text, [issue]);
     }
     return [...byMessage];
   };
@@ -162,7 +165,10 @@ export function renderReport(
           const lead = i === 0 ? "╭─" : "├─";
           if (r.children) {
             lines.push(`   ${lead}[${c.label(text)}]`);
-            for (const child of r.children) lines.push(`   │   ${c.link(visible(child))}`);
+            // A file copied hundreds of times is still one set: a few of its copies, then how many more.
+            const copies = verbose ? r.children : r.children.slice(0, ITEMS_SHOWN);
+            for (const child of copies) lines.push(`   │   ${c.link(visible(child))}`);
+            if (r.children.length > copies.length) lines.push(`   │   ${code(t("report.more", { count: r.children.length - copies.length }), c.dim)}`);
           } else {
             lines.push(`   ${lead}[${c.link(text)}]${r.note ? `${aligned ? " ".repeat(pad - columns(text) + 2) : "  "}${c.label(r.note)}` : ""}`);
           }

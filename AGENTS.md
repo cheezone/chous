@@ -85,9 +85,10 @@ node dist/cli.mjs    # 用 chous 检查本仓库（CI 也会跑）
 
 - 机制：**npm OIDC Trusted Publishing**。`.github/workflows/release.yml` 用 `permissions: id-token: write` + `npm publish --access public`，**不需要 `NPM_TOKEN` secret**，所以 `gh secret list` 为空是正常的。**不要**引入 `NPM_TOKEN` 相关逻辑。
 - 流程，两种入口，同一个 job：
-  - **不用电脑**：在 Actions 里运行 Release（`workflow_dispatch`，输入 `patch` / `minor` / `major` 或确切版本），或 `gh api -X POST repos/cheezone/chous/actions/workflows/release.yml/dispatches -f ref=main -f 'inputs[version]=patch'`。它在 main 上改 `package.json` 版本、测试、提交 `chore(release): vX`、打 tag 并 push，再 `npm publish` + 创建 GitHub Release。只能从 main 跑。
+  - **不用电脑**：在 Actions 里运行 Release（`workflow_dispatch`，输入 `patch` / `minor` / `major` 或确切版本），或 `gh api -X POST repos/cheezone/chous/actions/workflows/release.yml/dispatches -f ref=main -f 'inputs[version]=patch'`。`prepare` 在 main 上改 `package.json` 版本、测试、提交 `chore(release): vX`、打 tag，用 `git push --atomic` 把提交和 tag 一起推上去（要么都成功，要么都不推），再以这个 tag 重新触发工作流，由 `publish` 发布。只能从 main 跑。
   - **本地**：打 `v*` tag 并 push → `release.yml` 自动 `npm publish` + 创建 GitHub Release。
-  - 发版必须留在 `release.yml` 这个文件里：npm 的 Trusted Publishing 绑定的是这个工作流文件名。工作流自己 push 的 tag 不会再触发它（GITHUB_TOKEN 的事件不触发工作流），所以不会重复发布。
+  - 发布（`publish`）只在 tag 上跑：npm 的来源证明记录的是这次运行的 `GITHUB_SHA` 和 `GITHUB_REF`，在 main 上直接发布会指向升版之前的提交。用 GITHUB_TOKEN push 的 tag 不会触发工作流，`workflow_dispatch` 会，所以由 `prepare` 显式触发，不会重复发布。
+  - 发版必须留在 `release.yml` 这个文件里：npm 的 Trusted Publishing 绑定的是这个工作流文件名。
 - 本地发版命令（先本地验证，再打 tag）：
   ```bash
   pnpm run test && pnpm run build && pnpm exec changelogen --bump <version> --release --push --no-output --no-changelog

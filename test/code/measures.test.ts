@@ -129,4 +129,44 @@ describe("what an agent is told", () => {
     for (let i = 0; i < 7; i++) expect(summary).toContain(`  - src/m${i}.ts (${1001 + i} lines`);
     expect(summary).toContain("`chous --json` has every fact in full");
   });
+
+  it("gives an agent each file a person sees as a directory", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-agent-files-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".gitignore"), "dist/\n");
+    mkdirSync(join(dir, "dist"));
+    writeFileSync(join(dir, "dist/a.js"), "a\n");
+    writeFileSync(join(dir, "dist/b.js"), "b\n");
+    git("add", "-f", ".gitignore", "dist/a.js", "dist/b.js");
+    const { checkWorkspaces } = await import("../../src/agents/core");
+    const { issues, summary } = await checkWorkspaces({ workspaceRoots: [dir], lang: "en" });
+    expect(issues.find((i) => i.displayPath === "dist/")?.items).toEqual(["dist/a.js", "dist/b.js"]);
+    expect(summary).toContain("  - dist/b.js");
+  });
+
+  it("keeps one name on one line in the agent summary", async () => {
+    const { formatAgentSummary } = await import("../../src/agents/core");
+    const summary = formatAgentSummary("en", [{ root: "/r", displayPath: "a\nb.ts", message: "m", verdict: "smell", items: ["c\u001b[2Jd.ts"] }]);
+    expect(summary).toContain("- a\\x0ab.ts: m");
+    expect(summary).toContain("  - c\\x1b[2Jd.ts");
+  });
+
+  it("shows a few copies of a file copied many times, and how many more", async () => {
+    const files = Object.fromEntries(Array.from({ length: 8 }, (_, i) => [`assets/c${i}.svg`, "x".repeat(5000)]));
+    const root = mkdtempSync(join(tmpdir(), "chous-copies-"));
+    for (const [path, content] of Object.entries(files)) {
+      mkdirSync(dirname(join(root, path)), { recursive: true });
+      writeFileSync(join(root, path), content);
+    }
+    const result = await lintWorkspace({ root });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const render = (verbose: boolean) => renderReport(result, { verbose, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(render(false).split("\n").filter((l) => /^ {3}│ {3}assets\/c\d\.svg$/.test(l))).toHaveLength(5);
+    expect(render(false)).toContain("│   … and 3 more");
+    expect(render(true).split("\n").filter((l) => /^ {3}│ {3}assets\/c\d\.svg$/.test(l))).toHaveLength(8);
+  });
 });

@@ -3,3 +3,6 @@
 
 # Exclude entire test directory (contains sample projects in various languages)
 tests/** linguist-vendored
+
+# Fixtures are inputs, byte for byte: no line-ending conversion on Windows checkouts.
+test/fixtures/** -text
