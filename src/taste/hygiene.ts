@@ -94,8 +94,8 @@ export function nameStyle(stem: string): "kebab-case" | "snake_case" | "camelCas
  * The unit is the language, not the extension: `fooBar.js` beside `baz-qux.ts`
  * is one kind of module named two ways. Single-file components belong to their
  * language too: Vue's style guide names component files (PascalCase or
- * kebab-case throughout) and nothing else, so `export-excel.vue` beside
- * `exportExcel.ts` is two conventions in one place, where `export-excel.ts`
+ * kebab-case throughout) and nothing else, so `date-picker.vue` beside
+ * `datePicker.ts` is two conventions in one place, where `date-picker.ts`
  * would be one.
  */
 const LANGUAGES: Array<[string, RegExp]> = [

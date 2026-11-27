@@ -211,15 +211,15 @@ describe("twins", () => {
   it("compares within a language, not an extension: a kebab component beside a camelCase module is a mix", async () => {
     expect(
       await findings({
-        "src/export/export-excel.vue": "",
-        "src/export/exportExcel.ts": "",
+        "src/picker/date-picker.vue": "",
+        "src/picker/datePicker.ts": "",
         "src/legacy/fooBar.js": "",
         "src/legacy/baz-qux.ts": "",
-        "src/same/export-excel.vue": "",
-        "src/same/export-excel.ts": "",
-        "src/same/ExportButton.vue": "",
+        "src/same/date-picker.vue": "",
+        "src/same/date-picker.ts": "",
+        "src/same/AppButton.vue": "",
       }),
-    ).toEqual(["src/export/", "src/legacy/"]);
+    ).toEqual(["src/legacy/", "src/picker/"]);
   });
 
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
