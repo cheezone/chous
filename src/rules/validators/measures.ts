@@ -202,6 +202,8 @@ export class MeasuresRuleValidator extends BaseRuleValidator<MeasuresRule> {
       if (!SOURCE_FILE.test(entry.name)) continue;
       const dir = rel.includes("/") ? rel.slice(0, rel.lastIndexOf("/") + 1) : "./";
       perDir.set(dir, (perDir.get(dir) ?? 0) + 1);
+      // A newline takes at least one byte. Files this small cannot exceed either limit.
+      if (size <= MEASURES.sourceLines && size <= MEASURES.sourceBytes) continue;
       const text = readBytes(entry.absPath, 16 * 1024 * 1024);
       if (GENERATED.test(text.subarray(0, 1024).toString("latin1"))) continue;
       const lines = lineCount(text);
