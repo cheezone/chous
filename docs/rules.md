@@ -38,7 +38,7 @@ Only two kinds of things go unchecked, under the names the tools that put them t
 | Dependencies deprecated or called legacy by their authors | The name, and the authors' public words: npm's deprecated field (copied into the lockfile by pnpm and npm at install time; chous reads it there, for the dependencies package.json names), the README, a security advisory | Build nothing on what is dead | Modernity | Smell |
 | A manifest field its tool deprecated (Cargo's `authors`) | The field, and the tool's own words | Use what the tool recommends | Modernity | Smell |
 | Names that differ only in case or Unicode form | Both names exist | One thing, one name | Order | Smell |
-| Naming styles mixed in one directory | The style of each file name, compared within one language; single-file components (`.vue`, `.svelte`, `.astro`) only against their own format; PascalCase and one-word names fit any style | One directory, one style | Order | Smell |
+| Naming styles mixed in one directory | The style of each file name, compared within one language, not one extension (`.ts`, `.js` and `.vue` are one language); PascalCase and one-word names fit any style | One directory, one style | Order | Smell |
 | Too many docs at the root | How many docs without a claim to the root sit there | The root is an entrance | Order | Smell |
 | In a monorepo: a dependency on several majors, nested lockfiles, workspace lists that disagree | Versions, file locations, the two lists | One fact, said once | Order | Smell |
 | Source files over 1000 lines or 100 KiB (not generated or someone else's) | Lines and bytes; long lines are not skipped | Whether one does too much is the agent's call; never split mechanically | Order | Review |

@@ -208,16 +208,18 @@ describe("twins", () => {
     ).toEqual(["src/composables/", "src/views/"]);
   });
 
-  it("compares a single-file component with components, not with the modules beside it", async () => {
+  it("compares within a language, not an extension: a kebab component beside a camelCase module is a mix", async () => {
     expect(
       await findings({
         "src/export/export-excel.vue": "",
         "src/export/exportExcel.ts": "",
-        "src/history/delete-version-dialog.vue": "",
-        "src/history/startApprove.vue": "",
-        "src/history/useHistory.ts": "",
+        "src/legacy/fooBar.js": "",
+        "src/legacy/baz-qux.ts": "",
+        "src/same/export-excel.vue": "",
+        "src/same/export-excel.ts": "",
+        "src/same/ExportButton.vue": "",
       }),
-    ).toEqual(["src/history/"]);
+    ).toEqual(["src/export/", "src/legacy/"]);
   });
 
   it("compares names within one language, and reads Go's _test and _GOOS_GOARCH as the go command's, not a style", async () => {
