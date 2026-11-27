@@ -212,7 +212,8 @@ export class LifecycleRuleValidator extends BaseRuleValidator<LifecycleRule> {
       const name = `${label} ${lineOf(product, version)}`;
       context.rawIssues.push(issueFromRule(rule, {
         path: `${resolve(context.root, file)}#eol:${product}`,
-        displayPath: `${file} (${name})`,
+        displayPath: file,
+        label: name,
         message: date
           ? { key: "issue.lifecycle.ended", params: { name, date, use: { t: `eol.${product}` } } }
           : { key: "issue.lifecycle.unsupported", params: { name, use: { t: `eol.${product}` } } },

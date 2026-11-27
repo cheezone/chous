@@ -22,6 +22,8 @@ export function issueFromRule(
   partial: {
     path: string;
     displayPath: string;
+    /** Appended to the path as ` (label)`: say so, so the report can tell it from a name with brackets. */
+    label?: string;
     message: IssueMessage;
     verdict?: Verdict;
     /** When one rule reports for another value (a crowded root is disorder, not dirt). */
@@ -38,7 +40,8 @@ export function issueFromRule(
     ruleSource: rule.source,
     ...(reason ? { reason } : {}),
     path: partial.path,
-    displayPath: partial.displayPath,
+    displayPath: partial.label === undefined ? partial.displayPath : `${partial.displayPath} (${partial.label})`,
+    ...(partial.label === undefined ? {} : { label: partial.label }),
     message: partial.message,
     verdict: rule.verdict ?? partial.verdict ?? "smell",
     value: partial.value ?? rule.value,

@@ -114,7 +114,7 @@ npx chous
 
 chous 只列事实；决定怎么处理、动手处理，是 agent 的事。两种交法：
 
-- **钩子**：`npx chous claude install`（或 `cursor install`）。agent 每次停下时 chous 自动运行，把所有臭味和待审视的完整清单交给它。
+- **钩子**：`npx chous claude install`（或 `cursor install`）。agent 每次停下时 chous 自动运行，交给它一份摘要：最多 40 条结果，每条最多 50 个位置。超出时摘要会写明还剩多少，完整清单在 `chous --json` 里。
 - **一句提示词**，任何 agent 都能用：
 
   ```text

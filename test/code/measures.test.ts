@@ -169,4 +169,20 @@ describe("what an agent is told", () => {
     expect(render(false)).toContain("│   … and 3 more");
     expect(render(true).split("\n").filter((l) => /^ {3}│ {3}assets\/c\d\.svg$/.test(l))).toHaveLength(8);
   });
+
+  it("shows a real name with brackets whole: only a label the rule appended is left out", async () => {
+    const { spawnSync } = await import("node:child_process");
+    const dir = mkdtempSync(join(tmpdir(), "chous-label-"));
+    const git = (...args: string[]) => spawnSync("git", ["-c", "user.name=t", "-c", "user.email=t@t", ...args], { cwd: dir });
+    git("init", "-q");
+    writeFileSync(join(dir, ".gitignore"), "asset*\n");
+    writeFileSync(join(dir, "asset (git)"), "a\n");
+    git("add", "-f", ".gitignore", "asset (git)");
+    const result = await lintWorkspace({ root: dir });
+    const { renderReport } = await import("../../src/rules/report");
+    const { getT } = await import("../../src/i18n");
+    const { createColorizer } = await import("../../src/color");
+    const text = renderReport(result, { verbose: false, color: createColorizer({ enabled: false }), t: getT("en").t, width: 120 });
+    expect(text).toContain("╭─[asset (git)]");
+  });
 });

@@ -134,10 +134,11 @@ export function renderReport(
   const block = (issues: Issue[], smell: boolean) => {
     const tone = smell ? c.smell : c.review;
     for (const [message, group] of entries(issues)) {
-      // `package.json (moment)` under a line about moment says it twice: the path is enough.
-      const where = (path: string) => {
-        const m = /^(.*) \(([^()]+)\)$/.exec(path);
-        return m && message.includes(m[2]!) ? m[1]! : path;
+      // `package.json (moment)` under a line about moment says it twice: the path is enough. Only a label the
+      // rule appended is dropped; a file really named `asset (git)` keeps its name.
+      const where = (issue: Issue) => {
+        const { displayPath: path, label } = issue;
+        return label !== undefined && path.endsWith(` (${label})`) && message.includes(label) ? path.slice(0, -label.length - 3) : path;
       };
       const rows: Array<{ text: string; note?: string; children?: string[] }> = [];
       const { subject, detail, action } = messageParts(message);
@@ -150,7 +151,7 @@ export function renderReport(
         if (items.length) rows.push(...items);
         else if (issue.displayPath !== "./") {
           const count = Array.isArray(issue.details?.files) ? (issue.details!.files as unknown[]).length : 0;
-          rows.push({ text: where(issue.displayPath), ...(count > 1 ? { note: t("report.files", { count }) } : {}) });
+          rows.push({ text: where(issue), ...(count > 1 ? { note: t("report.files", { count }) } : {}) });
         }
       }
       // Sets of copies take several lines each: fewer of them.

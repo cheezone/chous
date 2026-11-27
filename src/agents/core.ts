@@ -111,7 +111,7 @@ export function formatAgentSummary(lang: string, issues: AgentIssue[]): string {
 
   if (smells.length) lines.push(t("agent.smells"), ...formatIssueBlock(t, smells), "");
   if (reviews.length) lines.push(t("agent.review"), ...formatIssueBlock(t, reviews), "");
-  if (issues.length > SUMMARY_ISSUE_LIMIT) lines.push(`- ... ${issues.length - SUMMARY_ISSUE_LIMIT}`, "");
+  if (issues.length > SUMMARY_ISSUE_LIMIT) lines.push(`- ${t("report.more", { count: issues.length - SUMMARY_ISSUE_LIMIT })}`, "");
   lines.push(t("agent.fix"));
   return lines.join("\n");
 }

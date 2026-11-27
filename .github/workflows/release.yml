@@ -93,6 +93,12 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
 
+      # A dispatch can name any tag: only the one that is exactly this package's version publishes.
+      - name: The tag is the package version
+        run: |
+          version="v$(node -p "require('./package.json').version")"
+          [ "$GITHUB_REF_NAME" = "$version" ] || { echo "tag $GITHUB_REF_NAME is not $version"; exit 1; }
+
       - name: Install
         run: pnpm install --frozen-lockfile
 

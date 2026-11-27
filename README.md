@@ -113,7 +113,7 @@ Hand it to an agent: `chous claude install`, or have it run `chous manifesto` an
 
 chous lists facts; deciding what to do about them, and doing it, is an agent's job. Two ways to hand it over:
 
-- **Hooks**: `npx chous claude install` (or `cursor install`). Whenever the agent stops, chous runs and hands it every smell and every item to review, with the full lists.
+- **Hooks**: `npx chous claude install` (or `cursor install`). Whenever the agent stops, chous runs and hands it a summary: up to 40 findings, up to 50 places each. Past that, the summary says how many are left, and `chous --json` has every one.
 - **A prompt**, in any agent:
 
   ```text

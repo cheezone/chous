@@ -124,6 +124,8 @@ export type Issue = {
   path: string;
   /** Relative to the linted root. */
   displayPath: string;
+  /** What the rule appended to the path, `package.json (moment)` → `moment`; a person's report leaves it out when the message names it. */
+  label?: string;
   message: IssueMessage;
   verdict: Verdict;
   value: Value;
